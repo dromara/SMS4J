@@ -17,11 +17,13 @@
         <module>sms-aggregation-unisms</module>
         <module>sms-aggregation-tencent</module>
         <module>sms-aggregation-yunpian</module>
+        <module>sms-aggregation-spring-boot-starter</module>
     </modules>
 
     <properties>
         <java.version>1.8</java.version>
         <spring.boot.version>2.7.10</spring.boot.version>
+        <modules.version>1.0.0</modules.version>
     </properties>
 
     <dependencyManagement>
@@ -55,7 +57,32 @@
                 <artifactId>sms-aggregation-aliyun</artifactId>
             </dependency>
 
+            <dependency>
+                <groupId>kim.wind</groupId>
+                <artifactId>sms-aggregation-tencent</artifactId>
+            </dependency>
+
+            <dependency>
+                <groupId>kim.wind</groupId>
+                <artifactId>sms-aggregation-unisms</artifactId>
+            </dependency>
+
+            <dependency>
+                <groupId>kim.wind</groupId>
+                <artifactId>sms-aggregation-yunpian</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>kim.wind</groupId>
+                <artifactId>sms-aggregation-spring-boot-starter</artifactId>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
 </project>

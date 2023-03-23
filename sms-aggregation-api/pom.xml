@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <artifactId>sms-aggregation-api</artifactId>
-    <version>1.0.0</version>
+    <version>${modules.version</version>
     <name>sms-aggregation-api</name>
     <description>sms-aggregation-api</description>
     <properties>

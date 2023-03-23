@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <artifactId>sms-aggregation-aliyun</artifactId>
-    <version>1.0.0</version>
+    <version>${modules.version</version>
     <name>sms-aggregation-aliyun</name>
     <description>sms-aggregation-aliyun</description>
     <properties>

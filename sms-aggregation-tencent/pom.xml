@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <artifactId>sms-aggregation-tencent</artifactId>
-    <version>1.0.0</version>
+    <version>${modules.version</version>
     <name>sms-aggregation-tencent</name>
     <description>sms-aggregation-tencent</description>
     <properties>

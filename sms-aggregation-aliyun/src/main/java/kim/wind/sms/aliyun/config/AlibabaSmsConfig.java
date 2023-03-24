@@ -1,4 +1,4 @@
-package kim.wind.sms.starter.config;
+package kim.wind.sms.aliyun.config;
 
 import com.aliyun.dysmsapi20170525.Client;
 import com.aliyun.teaopenapi.models.Config;

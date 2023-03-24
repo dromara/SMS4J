@@ -6,12 +6,12 @@
         <groupId>kim.wind</groupId>
         <artifactId>sms_aggregation</artifactId>
         <version>1.0.0</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>sms-aggregation-spring-boot-starter</artifactId>
-    <version>${modules.version</version>
     <name>sms-aggregation-spring-boot-starter</name>
     <description>sms-aggregation-spring-boot-starter</description>
+    <packaging>jar</packaging>
 
     <properties>
         <java.version>1.8</java.version>
@@ -30,5 +30,12 @@
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
     </dependencies>
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

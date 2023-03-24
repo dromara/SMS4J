@@ -6,10 +6,9 @@
         <groupId>kim.wind</groupId>
         <artifactId>sms_aggregation</artifactId>
         <version>1.0.0</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>sms-aggregation-api</artifactId>
-    <version>${modules.version</version>
     <name>sms-aggregation-api</name>
     <description>sms-aggregation-api</description>
     <properties>

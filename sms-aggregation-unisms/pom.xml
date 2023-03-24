@@ -6,10 +6,9 @@
         <groupId>kim.wind</groupId>
         <artifactId>sms_aggregation</artifactId>
         <version>1.0.0</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>sms-aggregation-unisms</artifactId>
-    <version>${modules.version</version>
     <name>sms-aggregation-unisms</name>
     <description>sms-aggregation-unisms</description>
 

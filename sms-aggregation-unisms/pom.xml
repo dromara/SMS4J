@@ -11,7 +11,7 @@
     <artifactId>sms-aggregation-unisms</artifactId>
     <name>sms-aggregation-unisms</name>
     <description>sms-aggregation-unisms</description>
-
+    <version>${modules.version}</version>
     <properties>
         <java.version>1.8</java.version>
     </properties>

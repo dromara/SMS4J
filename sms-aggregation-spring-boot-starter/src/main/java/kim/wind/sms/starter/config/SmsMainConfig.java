@@ -3,7 +3,9 @@ package kim.wind.sms.starter.config;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import kim.wind.sms.comm.utils.SpringUtil;
 
 @Configuration
 @ConfigurationProperties(prefix = "sms")     //指定配置文件注入属性前缀
@@ -18,4 +20,9 @@ public class SmsMainConfig {
     private Integer accountMax;
     /** 单账号每分钟最大发送*/
     private Integer minuteMax;
+
+    @Bean
+    public SpringUtil springUtil(){
+        return new SpringUtil();
+    }
 }

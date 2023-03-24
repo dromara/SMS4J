@@ -11,6 +11,7 @@
     <artifactId>sms-aggregation-spring-boot-starter</artifactId>
     <name>sms-aggregation-spring-boot-starter</name>
     <description>sms-aggregation-spring-boot-starter</description>
+    <version>${modules.version}</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -28,6 +29,31 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>kim.wind</groupId>
+            <artifactId>sms-aggregation-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>kim.wind</groupId>
+            <artifactId>sms-aggregation-aliyun</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>kim.wind</groupId>
+            <artifactId>sms-aggregation-tencent</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>kim.wind</groupId>
+            <artifactId>sms-aggregation-unisms</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>kim.wind</groupId>
+            <artifactId>sms-aggregation-yunpian</artifactId>
         </dependency>
     </dependencies>
     <build>

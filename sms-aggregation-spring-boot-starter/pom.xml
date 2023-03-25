@@ -11,7 +11,7 @@
     <artifactId>sms-aggregation-spring-boot-starter</artifactId>
     <name>sms-aggregation-spring-boot-starter</name>
     <description>sms-aggregation-spring-boot-starter</description>
-    <version>${modules.version}</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -33,11 +33,6 @@
 
         <dependency>
             <groupId>kim.wind</groupId>
-            <artifactId>sms-aggregation-api</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>kim.wind</groupId>
             <artifactId>sms-aggregation-aliyun</artifactId>
         </dependency>
 
@@ -54,6 +49,17 @@
         <dependency>
             <groupId>kim.wind</groupId>
             <artifactId>sms-aggregation-yunpian</artifactId>
+        </dependency>
+
+        <!--aop依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
     </dependencies>
     <build>

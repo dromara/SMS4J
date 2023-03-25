@@ -1,5 +1,7 @@
 package kim.wind.sms.api;
 
+import kim.wind.sms.api.callback.CallBack;
+import kim.wind.sms.comm.annotation.Restricted;
 import kim.wind.sms.comm.entity.SmsResponse;
 
 import java.util.LinkedHashMap;
@@ -17,6 +19,7 @@ public interface SmsBlend {
      * message 消息内容
      * @author :Wind
      */
+
     SmsResponse sendMessage(String phone,String message);
 
     /**
@@ -26,6 +29,7 @@ public interface SmsBlend {
      * @param messages key为模板变量名称 value为模板变量值
      * @author :Wind
      */
+
     SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String,String> messages);
 
     /**
@@ -33,6 +37,7 @@ public interface SmsBlend {
      * massTexting
      * @author :Wind
      */
+
     SmsResponse massTexting(List<String> phones, String message);
 
     /**
@@ -40,7 +45,28 @@ public interface SmsBlend {
      * massTexting
      * @author :Wind
      */
+
     SmsResponse massTexting(List<String> phones,String templateId, LinkedHashMap<String, String> messages);
 
-    void sendMessageAsync(String phone,String message);
+    /**
+     * <p>说明：异步短信发送，固定消息模板短信
+     * sendMessageAsync
+     * @param phone 要发送的号码
+     * @param message 发送内容
+     * @param callBack 回调
+     * @author :Wind
+    */
+
+    void sendMessageAsync(String phone, String message, CallBack callBack);
+
+    /**
+     * <p>说明：异步短信发送，使用自定义模板发送短信
+     * sendMessage
+     * @param templateId 模板id
+     * @param messages key为模板变量名称 value为模板变量值
+     * @param callBack 回调
+     * @author :Wind
+    */
+
+    void sendMessage(String phone, String templateId, LinkedHashMap<String,String> messages, CallBack callBack);
 }

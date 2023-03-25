@@ -49,6 +49,9 @@
         <java.version>1.8</java.version>
         <spring.boot.version>2.7.10</spring.boot.version>
         <modules.version>1.0.0</modules.version>
+        <aliyun.version>2.0.23</aliyun.version>
+        <json.version>2.0.15</json.version>
+        <okhttp.version>3.14.9</okhttp.version>
     </properties>
 
     <dependencyManagement>
@@ -66,11 +69,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter</artifactId>
                 <version>${spring.boot.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>kim.wind</groupId>
-                <artifactId>sms-aggregation-api</artifactId>
-                <version>${modules.version}</version>
             </dependency>
 
             <dependency>
@@ -96,11 +94,67 @@
                 <artifactId>sms-aggregation-yunpian</artifactId>
                 <version>${modules.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>kim.wind</groupId>
                 <artifactId>sms-aggregation-spring-boot-starter</artifactId>
                 <version>${modules.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>kim.wind</groupId>
+                <artifactId>sms-aggregation-comm</artifactId>
+                <version>${modules.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>kim.wind</groupId>
+                <artifactId>sms-aggregation-api</artifactId>
+                <version>${modules.version}</version>
+            </dependency>
+
+            <!-- 阿里云短信依赖-->
+            <dependency>
+                <groupId>com.aliyun</groupId>
+                <artifactId>dysmsapi20170525</artifactId>
+                <version>${aliyun.version}</version>
+            </dependency>
+
+            <!-- 阿里JSON解析器 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${json.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.squareup.okhttp3</groupId>
+                        <artifactId>okhttp</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- okhttp依赖-->
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttp.version}</version>
+            </dependency>
+
+            <!--aop依赖-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-aop</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+
+            <!-- redis 缓存操作 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-redis</artifactId>
+                <version>${spring.boot.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -112,10 +166,11 @@
         </dependency>
 
         <dependency>
-            <groupId>kim.wind</groupId>
-            <artifactId>sms-aggregation-comm</artifactId>
-            <version>${modules.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
         </dependency>
+
     </dependencies>
 
     <distributionManagement>
@@ -202,6 +257,19 @@
                     <artifactId>maven-release-plugin</artifactId>
                     <version>2.5.1</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.2.2</version>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            </manifest>
+                        </archive>
+                    </configuration>
+                </plugin>
+
             </plugins>
     </build>
 </project>

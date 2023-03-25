@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  
+  kim.wind.sms.starter.config.SmsMainConfig,\
+  kim.wind.sms.aliyun.config.AlibabaSmsConfig

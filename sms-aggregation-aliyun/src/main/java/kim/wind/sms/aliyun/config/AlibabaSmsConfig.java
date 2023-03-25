@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnProperty(prefix = "sms", name = "supplier", havingValue = "alibaba")
 public class AlibabaSmsConfig {
 
+    /** accessKey*/
     private String accessKeyId;
     /** 访问键秘钥 */
     private String accessKeySecret;
@@ -26,7 +27,7 @@ public class AlibabaSmsConfig {
     private String templateId;
     /** 模板变量名称*/
     private String templateName;
-
+    /** 请求地址*/
     private String requestUrl = "dysmsapi.aliyuncs.com";
 
 

@@ -1,7 +1,6 @@
 package kim.wind.sms.api;
 
 import kim.wind.sms.api.callback.CallBack;
-import kim.wind.sms.comm.annotation.Restricted;
 import kim.wind.sms.comm.entity.SmsResponse;
 
 import java.util.LinkedHashMap;

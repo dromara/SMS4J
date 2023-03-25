@@ -68,5 +68,26 @@ public interface SmsBlend {
      * @author :Wind
     */
 
-    void sendMessage(String phone, String templateId, LinkedHashMap<String,String> messages, CallBack callBack);
+    void sendMessageAsync(String phone, String templateId, LinkedHashMap<String,String> messages, CallBack callBack);
+
+    /**
+     * <p>说明：
+     * delayedMessage
+     * @param phone 接收短信的手机号
+     * @param message 要发送的短信
+     * @param delayedTime 延迟时间
+     * @author :Wind
+    */
+    void delayedMessage(String phone ,String message,Long delayedTime);
+
+    /**
+     * <p>说明：使用自定义模板发送定时短信 sendMessage
+     * delayedMessage
+     * @param templateId 模板id
+     * @param messages key为模板变量名称 value为模板变量值
+     * @param phone 要发送的手机号
+     * @param delayedTime 延迟的时间
+     * @author :Wind
+    */
+    void delayedMessage(String phone ,String templateId, LinkedHashMap<String,String> messages,Long delayedTime);
 }

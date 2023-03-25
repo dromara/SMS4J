@@ -12,6 +12,7 @@ import kim.wind.sms.aliyun.config.AlibabaSmsConfig;
 import kim.wind.sms.api.SmsBlend;
 import kim.wind.sms.api.callback.CallBack;
 import kim.wind.sms.comm.annotation.Restricted;
+import kim.wind.sms.comm.delayedTime.DelayedTime;
 import kim.wind.sms.comm.entity.SmsResponse;
 import kim.wind.sms.comm.exception.SmsBlendException;
 import kim.wind.sms.comm.utils.HTTPUtils;
@@ -19,11 +20,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.TimerTask;
 import java.util.concurrent.Executor;
 
 @EnableConfigurationProperties({AlibabaSmsConfig.class})
@@ -38,6 +38,9 @@ public class AlibabaSmsImpl implements SmsBlend {
     @Autowired
     @Qualifier("smsExecutor")
     private Executor pool;
+
+    @Autowired
+    private DelayedTime delayed;
 
     @Override
     @Restricted
@@ -131,10 +134,32 @@ public class AlibabaSmsImpl implements SmsBlend {
 
     @Override
     @Restricted
-    public void sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages, CallBack callBack) {
+    public void sendMessageAsync(String phone, String templateId, LinkedHashMap<String, String> messages, CallBack callBack) {
         pool.execute(()->{
             SmsResponse smsResponse = sendMessage(phone,templateId,messages);
             callBack.callBack(smsResponse);
         });
+    }
+
+    @Override
+    @Restricted
+    public void delayedMessage(String phone, String message, Long delayedTime) {
+        this.delayed.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                sendMessage(phone,message);
+            }
+        },delayedTime);
+    }
+
+    @Override
+    @Restricted
+    public void delayedMessage(String phone, String templateId, LinkedHashMap<String, String> messages, Long delayedTime) {
+        this.delayed.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                sendMessage(phone,templateId,messages);
+            }
+        },delayedTime);
     }
 }

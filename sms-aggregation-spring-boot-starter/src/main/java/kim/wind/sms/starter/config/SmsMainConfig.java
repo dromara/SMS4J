@@ -1,5 +1,6 @@
 package kim.wind.sms.starter.config;
 
+import com.example.sms.unisms.service.UniSmsImpl;
 import kim.wind.sms.aliyun.service.AlibabaSmsImpl;
 import kim.wind.sms.api.SmsBlend;
 import kim.wind.sms.comm.delayedTime.DelayedTime;
@@ -69,6 +70,10 @@ public class SmsMainConfig {
         switch (supplier){
             case "alibaba":
                 smsBlend = new AlibabaSmsImpl();
+                break;
+            case "uniSms":
+                smsBlend = new UniSmsImpl();
+                break;
         }
         return smsBlend;
     }
@@ -79,8 +84,8 @@ public class SmsMainConfig {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(corePoolSize);
         executor.setMaxPoolSize(maxPoolSize);
-        executor.setQueueCapacity(100);
-        executor.setKeepAliveSeconds(60);
+        executor.setQueueCapacity(queueCapacity);
+        executor.setKeepAliveSeconds(keepAliveSeconds);
         executor.setThreadNamePrefix(threadNamePrefix);
         executor.setWaitForTasksToCompleteOnShutdown(true);
         // 线程池对拒绝任务的处理策略,当线程池没有处理能力的时候，该策略会直接在 execute 方法的调用线程中运行被拒绝的任务；如果执行程序已关闭，则会丢弃该任务
@@ -103,6 +108,7 @@ public class SmsMainConfig {
         return new RedisUtils(redisTemplate);
     }
 
+    /** 注入一个定时器*/
     @Bean
     public DelayedTime delayedTime(){
         return new DelayedTime();

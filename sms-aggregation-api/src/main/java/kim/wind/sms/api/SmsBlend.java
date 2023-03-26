@@ -59,6 +59,15 @@ public interface SmsBlend {
     void sendMessageAsync(String phone, String message, CallBack callBack);
 
     /**
+     * <p>说明：异步发送短信，不关注发送结果
+     * sendMessageAsync
+     * @param phone 要发送的号码
+     * @param message 发送内容
+     * @author :Wind
+    */
+    void sendMessageAsync(String phone, String message);
+
+    /**
      * <p>说明：异步短信发送，使用自定义模板发送短信
      * sendMessage
      * @param templateId 模板id
@@ -70,7 +79,16 @@ public interface SmsBlend {
     void sendMessageAsync(String phone, String templateId, LinkedHashMap<String,String> messages, CallBack callBack);
 
     /**
-     * <p>说明：
+     * <p>说明：异步短信发送，使用自定义模板发送短信，不关注发送结果
+     * sendMessageAsync
+     * @param templateId 模板id
+     * @param messages key为模板变量名称 value为模板变量值
+     * @author :Wind
+    */
+    void sendMessageAsync(String phone, String templateId, LinkedHashMap<String,String> messages);
+
+    /**
+     * <p>说明：使用固定模板发送延时短信
      * delayedMessage
      * @param phone 接收短信的手机号
      * @param message 要发送的短信
@@ -89,4 +107,23 @@ public interface SmsBlend {
      * @author :Wind
     */
     void delayedMessage(String phone ,String templateId, LinkedHashMap<String,String> messages,Long delayedTime);
+
+    /**
+     * <p>说明：群发延迟短信
+     * delayMassTexting
+     * @param phones 要群体发送的手机号码
+     * @author :Wind
+    */
+    void delayMassTexting(List<String> phones, String message,Long delayedTime);
+
+    /**
+     * <p>说明：使用自定义模板发送群体延迟短信
+     * delayMassTexting
+     * @param phones 要群体发送的手机号码
+     * @param templateId 模板id
+     * @param messages key为模板变量名称 value为模板变量值
+     * @param delayedTime 延迟的时间
+     * @author :Wind
+    */
+    void delayMassTexting(List<String> phones,String templateId, LinkedHashMap<String, String> messages,Long delayedTime);
 }

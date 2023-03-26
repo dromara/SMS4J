@@ -56,7 +56,6 @@
    minuteMax: 2
    ```
 
-```
 阿里云配置示意
 ```yaml
 sms:

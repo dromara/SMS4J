@@ -3,11 +3,14 @@ package kim.wind.sms.starter.config;
 import com.example.sms.unisms.service.UniSmsImpl;
 import kim.wind.sms.aliyun.service.AlibabaSmsImpl;
 import kim.wind.sms.api.SmsBlend;
+import kim.wind.sms.comm.config.SmsBanner;
 import kim.wind.sms.comm.delayedTime.DelayedTime;
 import kim.wind.sms.comm.utils.RedisUtils;
 import kim.wind.sms.comm.utils.SpringUtil;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.Banner;
+import org.springframework.boot.ResourceBanner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -28,6 +31,8 @@ public class SmsMainConfig {
     /** 短信服务商*/
     @Value("${sms.supplier}")
     private String supplier;
+    /** 打印banner*/
+    private String isPrint = "true";
 
     /** 是否开启短信限制*/
     private String restricted;
@@ -66,6 +71,9 @@ public class SmsMainConfig {
 
     @Bean
     public SmsBlend smsBlend(){
+        if ("true".equals(isPrint)){
+            SmsBanner.PrintBanner();
+        }
         SmsBlend smsBlend = null;
         switch (supplier){
             case "alibaba":
@@ -104,8 +112,8 @@ public class SmsMainConfig {
     /** 如果启用了redis作为缓存则注入redis工具类*/
     @Bean
     @ConditionalOnProperty(prefix = "sms", name = "redisCache", havingValue = "true")
-    public RedisUtils redisUtils(RedisTemplate<String, Object> redisTemplate){
-        return new RedisUtils(redisTemplate);
+    public RedisUtils redisUtils(){
+        return new RedisUtils();
     }
 
     /** 注入一个定时器*/
@@ -113,4 +121,5 @@ public class SmsMainConfig {
     public DelayedTime delayedTime(){
         return new DelayedTime();
     }
+
 }

@@ -1,6 +1,6 @@
 <h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">sms-aggregation v1.0.1</h1>
 <h2 align="center" style="margin: 30px 0 30px; font-weight: bold;">短信聚合工具</h2>
-<h4 align="center" style="margin: 30px 0 30px; font-weight: bold;">让发送短信变动更简单</h4>
+<h4 align="center" style="margin: 30px 0 30px; font-weight: bold;">让发送短信变的更简单</h4>
 <p align="center">
 <a href="https://gitee.com/the-wind-is-like-a-song/sms_aggregation/stargazers"><img src="https://gitee.com/the-wind-is-like-a-song/sms_aggregation/badge/star.svg?theme=gvp"></a>
 <a href="https://gitee.com/the-wind-is-like-a-song/sms_aggregation/master/LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-green"></a>
@@ -17,7 +17,8 @@
 [gitee](https://gitee.com/the-wind-is-like-a-song/sms_aggregation)
 [github](https://github.com/fengruge/sms_aggregation)
 
-#### [在线文档](https://apidoc.gitee.com/the-wind-is-like-a-song/sms_aggregation)
+#### [官方文档](http://wind.kim)
+#### [JavaDoc文档](https://apidoc.gitee.com/the-wind-is-like-a-song/sms_aggregation)
 
 ## 支持厂商一览
 

@@ -17,7 +17,8 @@
 [gitee](https://gitee.com/the-wind-is-like-a-song/sms_aggregation)
 [github](https://github.com/fengruge/sms_aggregation)
 
-#### [在线文档](https://apidoc.gitee.com/the-wind-is-like-a-song/sms_aggregation)
+#### [官方文档](http://wind.kim)
+#### [JavaDoc文档](https://apidoc.gitee.com/the-wind-is-like-a-song/sms_aggregation)
 
 ## 支持厂商一览
 

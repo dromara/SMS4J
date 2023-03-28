@@ -140,6 +140,7 @@ public class AlibabaSmsImpl implements SmsBlend {
     }
 
     @Override
+    @Restricted
     public void sendMessageAsync(String phone, String message) {
         pool.execute(() -> {
            sendMessage(phone, message);
@@ -156,6 +157,7 @@ public class AlibabaSmsImpl implements SmsBlend {
     }
 
     @Override
+    @Restricted
     public void sendMessageAsync(String phone, String templateId, LinkedHashMap<String, String> messages) {
         pool.execute(()->{
             sendMessage(phone,templateId,messages);
@@ -185,6 +187,7 @@ public class AlibabaSmsImpl implements SmsBlend {
     }
 
     @Override
+    @Restricted
     public void delayMassTexting(List<String> phones, String message, Long delayedTime) {
         this.delayed.schedule(new TimerTask() {
             @Override
@@ -195,6 +198,7 @@ public class AlibabaSmsImpl implements SmsBlend {
     }
 
     @Override
+    @Restricted
     public void delayMassTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages, Long delayedTime) {
         this.delayed.schedule(new TimerTask() {
             @Override

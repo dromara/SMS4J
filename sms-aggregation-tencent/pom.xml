@@ -5,18 +5,30 @@
     <parent>
         <groupId>kim.wind</groupId>
         <artifactId>sms_aggregation</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>sms-aggregation-tencent</artifactId>
     <name>sms-aggregation-tencent</name>
     <description>sms-aggregation-tencent</description>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <properties>
         <java.version>1.8</java.version>
     </properties>
-    <dependencies>
 
+    <dependencies>
+        <dependency>
+            <groupId>kim.wind</groupId>
+            <artifactId>sms-aggregation-comm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>kim.wind</groupId>
+            <artifactId>sms-aggregation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.tencentcloudapi</groupId>
+            <artifactId>tencentcloud-sdk-java</artifactId>
+        </dependency>
     </dependencies>
 
 

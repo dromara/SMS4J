@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>kim.wind</groupId>
     <artifactId>sms_aggregation</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <name>sms-aggregation</name>
     <packaging>pom</packaging>
     <description>sms_aggregation</description>
@@ -48,11 +48,12 @@
     <properties>
         <java.version>1.8</java.version>
         <spring.boot.version>2.7.10</spring.boot.version>
-        <modules.version>1.0.1</modules.version>
+        <modules.version>1.0.2</modules.version>
         <aliyun.version>2.0.23</aliyun.version>
         <json.version>2.0.15</json.version>
         <okhttp.version>3.14.9</okhttp.version>
         <unisms.version>0.0.4</unisms.version>
+        <tencent.version>3.1.622</tencent.version>
     </properties>
 
     <dependencyManagement>
@@ -163,6 +164,13 @@
                 <groupId>com.apistd.uni</groupId>
                 <artifactId>uni-sdk</artifactId>
                 <version>${unisms.version}</version>
+            </dependency>
+
+            <!-- 腾讯云短信-->
+            <dependency>
+                <groupId>com.tencentcloudapi</groupId>
+                <artifactId>tencentcloud-sdk-java</artifactId>
+                <version>${tencent.version}</version>
             </dependency>
 
         </dependencies>

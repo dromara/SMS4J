@@ -7,15 +7,14 @@ import kim.wind.sms.comm.config.SmsBanner;
 import kim.wind.sms.comm.delayedTime.DelayedTime;
 import kim.wind.sms.comm.utils.RedisUtils;
 import kim.wind.sms.comm.utils.SpringUtil;
+import kim.wind.sms.tencent.service.TencentSmsImpl;
+import kim.wind.sms.yunpian.service.YunPianSmsImpl;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.Banner;
-import org.springframework.boot.ResourceBanner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
@@ -71,9 +70,6 @@ public class SmsMainConfig {
 
     @Bean
     public SmsBlend smsBlend(){
-        if ("true".equals(isPrint)){
-            SmsBanner.PrintBanner();
-        }
         SmsBlend smsBlend = null;
         switch (supplier){
             case "alibaba":
@@ -82,6 +78,15 @@ public class SmsMainConfig {
             case "uniSms":
                 smsBlend = new UniSmsImpl();
                 break;
+            case "yunpian":
+                smsBlend = new YunPianSmsImpl();
+                break;
+            case "tencent":
+                smsBlend = new TencentSmsImpl();
+                break;
+        }
+        if ("true".equals(isPrint)){
+            SmsBanner.PrintBanner();
         }
         return smsBlend;
     }

@@ -26,6 +26,13 @@ import java.util.List;
 import java.util.TimerTask;
 import java.util.concurrent.Executor;
 
+/**
+ * <p>类名: AlibabaSmsImpl
+ * <p>说明：  阿里云短信实现
+ *
+ * @author :Wind
+ * 2023/3/26  17:16
+ **/
 @EnableConfigurationProperties({AlibabaSmsConfig.class})
 @Slf4j
 public class AlibabaSmsImpl implements SmsBlend {
@@ -134,10 +141,26 @@ public class AlibabaSmsImpl implements SmsBlend {
 
     @Override
     @Restricted
+    public void sendMessageAsync(String phone, String message) {
+        pool.execute(() -> {
+           sendMessage(phone, message);
+        });
+    }
+
+    @Override
+    @Restricted
     public void sendMessageAsync(String phone, String templateId, LinkedHashMap<String, String> messages, CallBack callBack) {
         pool.execute(()->{
             SmsResponse smsResponse = sendMessage(phone,templateId,messages);
             callBack.callBack(smsResponse);
+        });
+    }
+
+    @Override
+    @Restricted
+    public void sendMessageAsync(String phone, String templateId, LinkedHashMap<String, String> messages) {
+        pool.execute(()->{
+            sendMessage(phone,templateId,messages);
         });
     }
 
@@ -159,6 +182,28 @@ public class AlibabaSmsImpl implements SmsBlend {
             @Override
             public void run() {
                 sendMessage(phone,templateId,messages);
+            }
+        },delayedTime);
+    }
+
+    @Override
+    @Restricted
+    public void delayMassTexting(List<String> phones, String message, Long delayedTime) {
+        this.delayed.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                massTexting(phones,message);
+            }
+        },delayedTime);
+    }
+
+    @Override
+    @Restricted
+    public void delayMassTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages, Long delayedTime) {
+        this.delayed.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                massTexting(phones,templateId,messages);
             }
         },delayedTime);
     }

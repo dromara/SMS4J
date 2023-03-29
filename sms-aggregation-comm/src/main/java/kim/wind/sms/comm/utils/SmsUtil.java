@@ -1,5 +1,7 @@
 package kim.wind.sms.comm.utils;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Random;
 
 public class SmsUtil {
@@ -8,45 +10,53 @@ public class SmsUtil {
 
 
     /**
-     * <p>说明：生成一个指定长度的随机字符串，包含大小写英文字母和数字
-     * @name: getRandomString
+     * <p>说明：生成一个指定长度的随机字符串，包含大小写英文字母和数字但不包含符号
+     *
      * @param len 要生成的字符串的长度
+     * getRandomString
      * @author :Wind
-    */
-    public static String getRandomString(int len){
+     */
+    public static String getRandomString(int len) {
         String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        Random random = new Random();
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < len; i++) {
-            int number = random.nextInt(62);
-            sb.append(str.charAt(number));
+        StringBuilder sb = new StringBuilder();
+        try {
+            Random random = SecureRandom.getInstanceStrong();
+            for (int i = 0; i < len; i++) {
+                int number = random.nextInt(62);
+                sb.append(str.charAt(number));
+            }
+        } catch (NoSuchAlgorithmException e){
+            throw new RuntimeException(e);
         }
         return sb.toString();
     }
 
     /**
      * <p>说明：获取一个长度为6的随机字符串
-     * @name: getRandomString
-     * @param
+     *getRandomString
      * @author :Wind
-    */
-    public static String getRandomString(){
+     */
+    public static String getRandomString() {
         return getRandomString(6);
     }
 
     /**
      * <p>说明：生成一个指定长度的只有数字组成的随机字符串
-     * @name: getRandomInt
      * @param len 要生成的长度
+     * getRandomInt
      * @author :Wind
-    */
-    public static String getRandomInt(int len){
+     */
+    public static String getRandomInt(int len) {
         String str = "0123456789";
-        Random random = new Random();
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
+        try {
+        Random random = SecureRandom.getInstanceStrong();
         for (int i = 0; i < len; i++) {
             int number = random.nextInt(10);
             sb.append(str.charAt(number));
+        }
+        } catch (NoSuchAlgorithmException e){
+            throw new RuntimeException(e);
         }
         return sb.toString();
     }
@@ -55,7 +65,7 @@ public class SmsUtil {
      * 指定元素是否为null或者空字符串
      * @param str 指定元素
      * @return 是否为null或者空字符串
-     *  @author :Wind
+     * @author :Wind
      */
     public static boolean isEmpty(Object str) {
         return str == null || "".equals(str);
@@ -65,7 +75,7 @@ public class SmsUtil {
      * 指定元素是否不为 (null或者空字符串)
      * @param str 指定元素
      * @return 是否为null或者空字符串
-     *  @author :Wind
+     * @author :Wind
      */
     public static boolean isNotEmpty(Object str) {
         return !isEmpty(str);

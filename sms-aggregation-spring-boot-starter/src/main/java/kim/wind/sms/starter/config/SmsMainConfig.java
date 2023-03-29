@@ -1,17 +1,20 @@
 package kim.wind.sms.starter.config;
 
+import com.example.sms.unisms.service.UniSmsImpl;
 import kim.wind.sms.aliyun.service.AlibabaSmsImpl;
 import kim.wind.sms.api.SmsBlend;
+import kim.wind.sms.comm.config.SmsBanner;
 import kim.wind.sms.comm.delayedTime.DelayedTime;
 import kim.wind.sms.comm.utils.RedisUtils;
 import kim.wind.sms.comm.utils.SpringUtil;
+import kim.wind.sms.tencent.service.TencentSmsImpl;
+import kim.wind.sms.yunpian.service.YunPianSmsImpl;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
@@ -27,6 +30,8 @@ public class SmsMainConfig {
     /** 短信服务商*/
     @Value("${sms.supplier}")
     private String supplier;
+    /** 打印banner*/
+    private String isPrint = "true";
 
     /** 是否开启短信限制*/
     private String restricted;
@@ -69,6 +74,19 @@ public class SmsMainConfig {
         switch (supplier){
             case "alibaba":
                 smsBlend = new AlibabaSmsImpl();
+                break;
+            case "uniSms":
+                smsBlend = new UniSmsImpl();
+                break;
+            case "yunpian":
+                smsBlend = new YunPianSmsImpl();
+                break;
+            case "tencent":
+                smsBlend = new TencentSmsImpl();
+                break;
+        }
+        if ("true".equals(isPrint)){
+            SmsBanner.PrintBanner();
         }
         return smsBlend;
     }
@@ -79,8 +97,8 @@ public class SmsMainConfig {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(corePoolSize);
         executor.setMaxPoolSize(maxPoolSize);
-        executor.setQueueCapacity(100);
-        executor.setKeepAliveSeconds(60);
+        executor.setQueueCapacity(queueCapacity);
+        executor.setKeepAliveSeconds(keepAliveSeconds);
         executor.setThreadNamePrefix(threadNamePrefix);
         executor.setWaitForTasksToCompleteOnShutdown(true);
         // 线程池对拒绝任务的处理策略,当线程池没有处理能力的时候，该策略会直接在 execute 方法的调用线程中运行被拒绝的任务；如果执行程序已关闭，则会丢弃该任务
@@ -99,12 +117,14 @@ public class SmsMainConfig {
     /** 如果启用了redis作为缓存则注入redis工具类*/
     @Bean
     @ConditionalOnProperty(prefix = "sms", name = "redisCache", havingValue = "true")
-    public RedisUtils redisUtils(RedisTemplate<String, Object> redisTemplate){
-        return new RedisUtils(redisTemplate);
+    public RedisUtils redisUtils(){
+        return new RedisUtils();
     }
 
+    /** 注入一个定时器*/
     @Bean
     public DelayedTime delayedTime(){
         return new DelayedTime();
     }
+
 }

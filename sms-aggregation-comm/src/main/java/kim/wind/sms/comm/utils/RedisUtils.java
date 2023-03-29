@@ -1,6 +1,7 @@
 package kim.wind.sms.comm.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +13,11 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class RedisUtils {
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
+
+    public RedisUtils() {
+    }
 
     public RedisUtils(RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;

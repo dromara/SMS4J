@@ -5,20 +5,27 @@
     <parent>
         <groupId>kim.wind</groupId>
         <artifactId>sms_aggregation</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.2</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>sms-aggregation-yunpian</artifactId>
     <name>sms-aggregation-yunpian</name>
     <description>sms-aggregation-yunpian</description>
-    <version>1.0.0</version>
+    <version>1.0.2</version>
     <properties>
         <java.version>1.8</java.version>
     </properties>
 
     <dependencies>
-
+        <dependency>
+            <groupId>kim.wind</groupId>
+            <artifactId>sms-aggregation-comm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>kim.wind</groupId>
+            <artifactId>sms-aggregation-api</artifactId>
+        </dependency>
     </dependencies>
 
 

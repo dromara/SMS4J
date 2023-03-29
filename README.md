@@ -124,5 +124,9 @@ sms:
 1.  Fork 本仓库
 2.  新建 Feat_xxx 分支
 3.  提交代码
-4.  新建 Pull Request
+4.  新建 Pull Request 到 dev分支
 ```
+### 分支介绍
+1. master 正式版分支，最终发布到maven中央仓库的版本
+2. dev 开发分支，贡献的代码将合并到这里，无误后合并至preview
+3. preview 预览版分支，新的版本和测试性功能将在这里发布

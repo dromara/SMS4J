@@ -63,6 +63,7 @@ public class SmsMainConfig {
     /** 设置线程池关闭的时候等待所有任务都完成再继续销毁其他的Bean*/
     private Boolean shutdownStrategy = true;
 
+
     @Bean
     public SpringUtil springUtil(){
         return new SpringUtil();

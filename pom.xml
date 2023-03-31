@@ -18,6 +18,7 @@
         <module>sms-aggregation-tencent</module>
         <module>sms-aggregation-yunpian</module>
         <module>sms-aggregation-spring-boot-starter</module>
+        <module>sms-aggregation-huawei</module>
     </modules>
     <!-- 开源协议 apache 2.0 -->
     <licenses>
@@ -54,6 +55,7 @@
         <okhttp.version>3.14.9</okhttp.version>
         <unisms.version>0.0.4</unisms.version>
         <tencent.version>3.1.622</tencent.version>
+        <forest.version>1.5.30</forest.version>
     </properties>
 
     <dependencyManagement>
@@ -99,6 +101,12 @@
 
             <dependency>
                 <groupId>kim.wind</groupId>
+                <artifactId>sms-aggregation-huawei</artifactId>
+                <version>${modules.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>kim.wind</groupId>
                 <artifactId>sms-aggregation-spring-boot-starter</artifactId>
                 <version>${modules.version}</version>
             </dependency>
@@ -122,6 +130,12 @@
                 <groupId>com.aliyun</groupId>
                 <artifactId>dysmsapi20170525</artifactId>
                 <version>${aliyun.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>okhttp</artifactId>
+                        <groupId>com.squareup.okhttp3</groupId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <!-- 阿里JSON解析器 -->
@@ -142,6 +156,12 @@
                 <groupId>com.squareup.okhttp3</groupId>
                 <artifactId>okhttp</artifactId>
                 <version>${okhttp.version}</version>
+            </dependency>
+            <!--Forest依赖 声明式HTTP客户端框架-->
+            <dependency>
+                <groupId>com.dtflys.forest</groupId>
+                <artifactId>forest-core</artifactId>
+                <version>${forest.version}</version>
             </dependency>
 
             <!--aop依赖-->
@@ -164,6 +184,12 @@
                 <groupId>com.apistd.uni</groupId>
                 <artifactId>uni-sdk</artifactId>
                 <version>${unisms.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>okhttp</artifactId>
+                        <groupId>com.squareup.okhttp3</groupId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <!-- 腾讯云短信-->
@@ -171,6 +197,12 @@
                 <groupId>com.tencentcloudapi</groupId>
                 <artifactId>tencentcloud-sdk-java</artifactId>
                 <version>${tencent.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>okhttp</artifactId>
+                        <groupId>com.squareup.okhttp3</groupId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
         </dependencies>

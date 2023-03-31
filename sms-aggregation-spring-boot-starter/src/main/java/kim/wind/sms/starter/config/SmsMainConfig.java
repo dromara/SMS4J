@@ -1,5 +1,8 @@
 package kim.wind.sms.starter.config;
 
+import kim.wind.sms.comm.utils.HTTPUtils;
+import kim.wind.sms.huawei.config.HuaweiSmsConfig;
+import kim.wind.sms.huawei.service.HuaweiSmsImpl;
 import kim.wind.sms.unisms.service.UniSmsImpl;
 import kim.wind.sms.aliyun.service.AlibabaSmsImpl;
 import kim.wind.sms.api.SmsBlend;
@@ -70,6 +73,36 @@ public class SmsMainConfig {
     }
 
     @Bean
+    @ConditionalOnProperty(prefix = "sms", name = "supplier", havingValue = "huawei")
+    public HuaweiSmsConfig huaweiSmsConfig(){
+        return new HuaweiSmsConfig();
+    }
+
+    @Bean
+    public HTTPUtils okhttpBean(){
+        return new HTTPUtils();
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "sms", name = "restricted", havingValue = "true")
+    public AopAdvice aopAdvice(){
+        return new AopAdvice();
+    }
+
+    /** 如果启用了redis作为缓存则注入redis工具类*/
+    @Bean
+    @ConditionalOnProperty(prefix = "sms", name = "redisCache", havingValue = "true")
+    public RedisUtils redisUtils(){
+        return new RedisUtils();
+    }
+
+    /** 注入一个定时器*/
+    @Bean
+    public DelayedTime delayedTime(){
+        return new DelayedTime();
+    }
+
+    @Bean
     public SmsBlend smsBlend(){
         SmsBlend smsBlend = null;
         switch (supplier){
@@ -84,6 +117,9 @@ public class SmsMainConfig {
                 break;
             case "tencent":
                 smsBlend = new TencentSmsImpl();
+                break;
+            case "huawei":
+                smsBlend = new HuaweiSmsImpl();
                 break;
         }
         if ("true".equals(isPrint)){
@@ -107,25 +143,6 @@ public class SmsMainConfig {
         //初始化线程池
         executor.initialize();
         return executor;
-    }
-
-    @Bean
-    @ConditionalOnProperty(prefix = "sms", name = "restricted", havingValue = "true")
-    public AopAdvice aopAdvice(){
-        return new AopAdvice();
-    }
-
-    /** 如果启用了redis作为缓存则注入redis工具类*/
-    @Bean
-    @ConditionalOnProperty(prefix = "sms", name = "redisCache", havingValue = "true")
-    public RedisUtils redisUtils(){
-        return new RedisUtils();
-    }
-
-    /** 注入一个定时器*/
-    @Bean
-    public DelayedTime delayedTime(){
-        return new DelayedTime();
     }
 
 }

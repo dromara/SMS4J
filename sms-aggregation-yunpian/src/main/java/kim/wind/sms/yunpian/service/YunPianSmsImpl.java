@@ -8,6 +8,7 @@ import kim.wind.sms.comm.delayedTime.DelayedTime;
 import kim.wind.sms.comm.entity.SmsResponse;
 import kim.wind.sms.comm.exception.SmsBlendException;
 import kim.wind.sms.comm.utils.HTTPUtils;
+import kim.wind.sms.comm.utils.http.OKResponse;
 import kim.wind.sms.yunpian.config.YunPianSmsConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -49,7 +50,7 @@ public class YunPianSmsImpl implements SmsBlend {
         body.put("tpl_value",formattingMap(messages));
         Map<String,String> map = new HashMap<>();
         map.put("Accept","application/json;charset=utf-8");
-        HTTPUtils.OKResponse sync = http.setBaseURL("https://sms.yunpian.com/v2").builder()
+        OKResponse sync = http.setBaseURL("https://sms.yunpian.com/v2").builder()
                 .headers(map)
                 .postOrBody("/sms/tpl_single_send.json", body)
                 .sync();
@@ -85,7 +86,7 @@ public class YunPianSmsImpl implements SmsBlend {
         body.put("tpl_value",formattingMap(messages));
         Map<String,String> map = new HashMap<>();
         map.put("Accept","application/json;charset=utf-8");
-        HTTPUtils.OKResponse sync = http.setBaseURL("https://sms.yunpian.com/v2").builder()
+        OKResponse sync = http.setBaseURL("https://sms.yunpian.com/v2").builder()
                 .headers(map)
                 .postOrBody("/tpl_batch_send.json", body)
                 .sync();
@@ -202,7 +203,7 @@ public class YunPianSmsImpl implements SmsBlend {
         body.put("text",message);
         Map<String,String> map = new HashMap<>();
         map.put("Accept","application/json;charset=utf-8");
-        HTTPUtils.OKResponse sync = http.setBaseURL("http://sms.yunpian.com/v2").builder()
+        OKResponse sync = http.setBaseURL("http://sms.yunpian.com/v2").builder()
                 .headers(map)
                 .postOrBody("/sms/single_send.json", body)
                 .sync();

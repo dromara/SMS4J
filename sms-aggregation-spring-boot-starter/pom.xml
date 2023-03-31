@@ -51,6 +51,11 @@
             <artifactId>sms-aggregation-yunpian</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>kim.wind</groupId>
+            <artifactId>sms-aggregation-huawei</artifactId>
+        </dependency>
+
         <!--aop依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

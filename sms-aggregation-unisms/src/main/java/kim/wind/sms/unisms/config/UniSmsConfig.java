@@ -1,4 +1,4 @@
-package com.example.sms.unisms.config;
+package kim.wind.sms.unisms.config;
 
 import com.apistd.uni.Uni;
 import lombok.Data;

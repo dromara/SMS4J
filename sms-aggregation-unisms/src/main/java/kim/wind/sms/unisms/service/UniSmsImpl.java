@@ -1,9 +1,9 @@
-package com.example.sms.unisms.service;
+package kim.wind.sms.unisms.service;
 
 import com.apistd.uni.UniResponse;
 import com.apistd.uni.sms.UniMessage;
 import com.apistd.uni.sms.UniSMS;
-import com.example.sms.unisms.config.UniSmsConfig;
+import kim.wind.sms.unisms.config.UniSmsConfig;
 import kim.wind.sms.api.SmsBlend;
 import kim.wind.sms.api.callback.CallBack;
 import kim.wind.sms.comm.annotation.Restricted;

@@ -1,6 +1,6 @@
 package kim.wind.sms.starter.config;
 
-import com.example.sms.unisms.service.UniSmsImpl;
+import kim.wind.sms.unisms.service.UniSmsImpl;
 import kim.wind.sms.aliyun.service.AlibabaSmsImpl;
 import kim.wind.sms.api.SmsBlend;
 import kim.wind.sms.comm.config.SmsBanner;

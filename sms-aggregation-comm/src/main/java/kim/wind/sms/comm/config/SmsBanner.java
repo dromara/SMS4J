@@ -1,5 +1,7 @@
 package kim.wind.sms.comm.config;
 
+import kim.wind.sms.comm.constant.Constant;
+
 public class SmsBanner {
 
     private static final String banner =
@@ -10,8 +12,8 @@ public class SmsBanner {
                     "  ____) | | |  | |  ____) |        / ____ \\  | |__| | | |__| | | | \\ \\  | |____  | |__| |  / ____ \\     | |     _| |_  | |__| | | |\\  |\n" +
                     " |_____/  |_|  |_| |_____/        /_/    \\_\\  \\_____|  \\_____| |_|  \\_\\ |______|  \\_____| /_/    \\_\\    |_|    |_____|  \\____/  |_| \\_|\n" +
                     "                                                                                                                                       \n" +
-                    "                                                                                                                             V1.0.2";
-    public static void PrintBanner() {
-        System.out.println(banner);
+                    "                                                                                                                             ";
+    public static void PrintBanner(String version) {
+        System.out.println(banner+version);
     }
 }

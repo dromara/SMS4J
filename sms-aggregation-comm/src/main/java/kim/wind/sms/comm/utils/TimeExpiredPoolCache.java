@@ -46,9 +46,7 @@ public class TimeExpiredPoolCache {
     private static synchronized void syncInit() {
         if (instance == null) {
             instance = new TimeExpiredPoolCache();
-            if (!persistenceInit()){
-                dataPool = new ConcurrentHashMap<String, DataWrapper<?>>();
-            }
+            dataPool = new ConcurrentHashMap<String, DataWrapper<?>>();
             initTimer();
         }
     }
@@ -60,12 +58,15 @@ public class TimeExpiredPoolCache {
         return instance;
     }
 
-    /** 读取持久化文件*/
+    /**
+     * 读取持久化文件
+     */
     private static boolean persistenceInit() {
         String path = FileTool.getPath() + FILE_TYPE;
         try {
-            dataPool = JSONObject.parseObject(FileTool.readFile(path), ConcurrentHashMap.class);
-            if (dataPool != null){
+
+            DataWrapper d = JSONObject.parseObject(FileTool.readFile(path), DataWrapper.class);
+            if (dataPool != null) {
                 return true;
             }
         } catch (IOException ignored) {
@@ -79,7 +80,6 @@ public class TimeExpiredPoolCache {
             public void run() {
                 try {
                     clearExpiredCaches();
-                    persistence();
                 } catch (Exception e) {
                     throw new SmsBlendException(e.getMessage());
                 }
@@ -87,10 +87,11 @@ public class TimeExpiredPoolCache {
         }, timerMillis, timerMillis);
     }
 
-    private static void persistence(){
+    /** 写入持久化文件*/
+    private static void persistence() {
         String path = FileTool.getPath() + FILE_TYPE;
         FileTool.createFile(path);
-        FileTool.writeFile(new File(path),JSONObject.toJSONString(dataPool),false);
+        FileTool.writeFile(new File(path), JSONObject.toJSONString(dataPool), false);
     }
 
     /**

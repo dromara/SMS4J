@@ -2,6 +2,7 @@ package kim.wind.sms.comm.utils;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.List;
 import java.util.Random;
 
 public class SmsUtil {
@@ -79,6 +80,19 @@ public class SmsUtil {
      */
     public static boolean isNotEmpty(Object str) {
         return !isEmpty(str);
+    }
+
+    public static String listToString(List<String> list) {
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < list.size(); i++) {
+            if (i == list.size() - 1) {
+                str.append(list.get(i));
+            } else {
+                str.append(list.get(i));
+                str.append(",");
+            }
+        }
+        return str.toString();
     }
 
 }

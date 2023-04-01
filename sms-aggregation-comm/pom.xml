@@ -5,13 +5,13 @@
     <parent>
         <groupId>kim.wind</groupId>
         <artifactId>sms_aggregation</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>sms-aggregation-comm</artifactId>
     <name>sms-aggregation-comm</name>
     <description>sms-aggregation-comm</description>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <properties>
         <java.version>1.8</java.version>
     </properties>
@@ -25,11 +25,6 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
         </dependency>
 
         <dependency>

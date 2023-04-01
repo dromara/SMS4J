@@ -22,5 +22,5 @@ public class HuaweiResponse {
 
     /** 短信ID列表，当目的号码存在多个时，每个号码都会返回一个SmsID。
      当返回异常响应时不携带此字段*/
-    private List<SmsId> smsId;
+    private List<SmsId> result;
 }

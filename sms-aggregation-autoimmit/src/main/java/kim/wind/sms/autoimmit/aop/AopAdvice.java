@@ -1,6 +1,7 @@
-package kim.wind.sms.starter.config;
+package kim.wind.sms.autoimmit.aop;
 
 
+import kim.wind.sms.autoimmit.config.SmsConfig;
 import kim.wind.sms.comm.exception.SmsBlendException;
 import kim.wind.sms.comm.utils.RedisUtils;
 import kim.wind.sms.comm.utils.SmsUtil;
@@ -23,7 +24,10 @@ public class AopAdvice {
     private static final String REDIS_KEY = "sms:restricted:";
 
     @Autowired
-    private SmsMainConfig config;
+    private SmsConfig config;
+
+    @Autowired
+    private SpringUtil springUtil;
 
 
     @Pointcut("@annotation(kim.wind.sms.comm.annotation.Restricted)")
@@ -90,32 +94,36 @@ public class AopAdvice {
     }
 
     private SmsBlendException redisProcess(String args) throws Exception{
-        RedisUtils redis = SpringUtil.getBean(RedisUtils.class);
-        if (redis == null || config.getRedisCache().equals("false")){
-           return process(args);
+        if (config.getRedisCache().equals("false")){
+            return process(args);
         }
+//        else {
+//            springUtil.createBean(RedisUtils.class.getName(),new RedisUtils());
+//        }
+        RedisUtils redis = SpringUtil.getBean(RedisUtils.class);
+
         Integer accountMax = config.getAccountMax();//每日最大发送量
         Integer minuteMax = config.getMinuteMax();//每分钟最大发送量
         if (SmsUtil.isNotEmpty(accountMax)) {   //是否配置了每日限制
             Integer i = (Integer) redis.getByKey(REDIS_KEY+args + "max");
             if (SmsUtil.isEmpty(i)) {
-                redis.set(REDIS_KEY+args + "max", 1);
+                redis.setOrTime(REDIS_KEY+args + "max", 1,accTimer/1000);
             } else if (i > accountMax) {
                 return new SmsBlendException("accountMax", args + "今日短信已达最大次数");
             } else {
-                redis.set(REDIS_KEY+args + "max", i + 1);
+                redis.setOrTime(REDIS_KEY+args + "max", i + 1,accTimer/1000);
             }
         }
         if (SmsUtil.isNotEmpty(minuteMax)) {  //是否配置了每分钟最大限制
             Integer o = (Integer) redis.getByKey(REDIS_KEY+args);
             if (SmsUtil.isNotEmpty(o)) {
                 if (o < minuteMax) {
-                    redis.set(REDIS_KEY+args, o + 1);
+                    redis.setOrTime(REDIS_KEY+args, o + 1,minTimer/1000);
                 } else {
                     return new SmsBlendException("minuteMax", args + "短信发送过于频繁！");
                 }
             } else {
-                redis.set(REDIS_KEY+args, 1);
+                redis.setOrTime(REDIS_KEY+args, 1,minTimer/1000);
             }
         }
         return null;

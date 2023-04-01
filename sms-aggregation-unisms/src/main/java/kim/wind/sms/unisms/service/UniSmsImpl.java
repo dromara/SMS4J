@@ -3,14 +3,14 @@ package kim.wind.sms.unisms.service;
 import com.apistd.uni.UniResponse;
 import com.apistd.uni.sms.UniMessage;
 import com.apistd.uni.sms.UniSMS;
-import kim.wind.sms.unisms.config.UniSmsConfig;
 import kim.wind.sms.api.SmsBlend;
 import kim.wind.sms.api.callback.CallBack;
 import kim.wind.sms.comm.annotation.Restricted;
 import kim.wind.sms.comm.delayedTime.DelayedTime;
 import kim.wind.sms.comm.entity.SmsResponse;
 import kim.wind.sms.comm.exception.SmsBlendException;
-import kim.wind.sms.comm.utils.HTTPUtils;
+import kim.wind.sms.comm.utils.http.HttpJsonTool;
+import kim.wind.sms.unisms.config.UniSmsConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -169,7 +169,7 @@ public class UniSmsImpl implements SmsBlend {
             smsResponse.setErrorCode(send.code);
             smsResponse.setMessage(send.message);
             smsResponse.setBizId(send.requestId);
-            smsResponse.setData(HTTPUtils.getJSONObject(send));
+            smsResponse.setData(HttpJsonTool.getJSONObject(send));
         }catch(Exception e){
             smsResponse.setErrMessage(e.getMessage());
         }

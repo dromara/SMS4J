@@ -53,6 +53,6 @@ public enum HuaweiError {
            case "E200041":
                return E200041.getValue();
        }
-       return "";
+       return "服务异常，请查看官方异常码，异常码："+code;
     }
 }

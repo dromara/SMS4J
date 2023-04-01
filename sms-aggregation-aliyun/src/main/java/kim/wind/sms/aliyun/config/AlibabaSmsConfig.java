@@ -5,16 +5,16 @@ import com.aliyun.teaopenapi.models.Config;
 import kim.wind.sms.aliyun.service.AlibabaSmsImpl;
 import kim.wind.sms.api.SmsBlend;
 import lombok.Data;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+
+@Data
 @Configuration
 @ConfigurationProperties(prefix = "sms.alibaba")     //指定配置文件注入属性前缀
-@Data
-@ConditionalOnProperty(prefix = "sms", name = "supplier", havingValue = "alibaba")
+@ConditionalOnProperty(name = "sms.supplier", havingValue = "alibaba")
 public class AlibabaSmsConfig {
 
     /** accessKey*/
@@ -32,7 +32,7 @@ public class AlibabaSmsConfig {
 
 
     @Bean
-    public Client config() throws Exception {
+    public Client client() throws Exception {
        Config config = new Config()
                 //  AccessKey ID
                 .setAccessKeyId(accessKeyId)
@@ -43,8 +43,8 @@ public class AlibabaSmsConfig {
         return new Client(config);
     }
 
-//    @Bean
-//    public SmsBlend smsBlend(){
-//        return new AlibabaSmsImpl();
-//    }
+    @Bean
+    public SmsBlend smsBlend(){
+        return new AlibabaSmsImpl();
+    }
 }

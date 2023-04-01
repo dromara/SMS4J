@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 public class SmsResponse {
     /** 状态码*/
-    private Integer code;
+    private String code;
     /** 返回消息*/
     private String message;
     /** 错误码，没有错误信息则为空*/

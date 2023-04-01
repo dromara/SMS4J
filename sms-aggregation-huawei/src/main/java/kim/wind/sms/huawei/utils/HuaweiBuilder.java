@@ -1,7 +1,6 @@
-package kim.wind.sms.huawei.service;
+package kim.wind.sms.huawei.utils;
 
-import kim.wind.sms.huawei.constant.Constant;
-import kim.wind.sms.huawei.entity.HuaweiError;
+import kim.wind.sms.comm.constant.Constant;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -25,7 +24,7 @@ public class HuaweiBuilder {
      * <p>构造X-WSSE参数值
      * @author :Wind
     */
-    static String buildWsseHeader(String appKey, String appSecret) {
+    public static String buildWsseHeader(String appKey, String appSecret) {
         if (null == appKey || null == appSecret || appKey.isEmpty() || appSecret.isEmpty()) {
             System.out.println("buildWsseHeader(): appKey or appSecret is null.");
             return null;
@@ -46,7 +45,7 @@ public class HuaweiBuilder {
         String passwordDigestBase64Str = Base64.getEncoder().encodeToString(passwordDigest); //PasswordDigest
         //若passwordDigestBase64Str中包含换行符,请执行如下代码进行修正
         //passwordDigestBase64Str = passwordDigestBase64Str.replaceAll("[\\s*\t\n\r]", "");
-        return String.format(Constant.WSSE_HEADER_FORMAT, appKey, passwordDigestBase64Str, nonce, time);
+        return String.format(Constant.HUAWEI_WSSE_HEADER_FORMAT, appKey, passwordDigestBase64Str, nonce, time);
     }
 
     static void trustAllHttpsCertificates() throws Exception {
@@ -79,8 +78,8 @@ public class HuaweiBuilder {
      * @param signature | 签名名称,使用国内短信通用模板时填写
      * @author :Wind
     */
-    static String buildRequestBody(String sender, String receiver, String templateId, String templateParas,
-                                   String statusCallBack, String signature) {
+    public static String buildRequestBody(String sender, String receiver, String templateId, String templateParas,
+                                          String statusCallBack, String signature) {
         if (null == sender || null == receiver || null == templateId || sender.isEmpty() || receiver.isEmpty()
                 || templateId.isEmpty()) {
             System.out.println("buildRequestBody(): sender, receiver or templateId is null.");
@@ -116,7 +115,7 @@ public class HuaweiBuilder {
         return sb.deleteCharAt(sb.length()-1).toString();
     }
 
-    static String listToString(List<String> list){
+    public static String listToString(List<String> list){
         StringBuilder stringBuffer = new StringBuilder();
         stringBuffer.append("[\"");
         for (String s : list) {
@@ -130,12 +129,12 @@ public class HuaweiBuilder {
     }
 
     static String dateFormat(Date date){
-        SimpleDateFormat sdf = new SimpleDateFormat(Constant.JAVA_DATE);
+        SimpleDateFormat sdf = new SimpleDateFormat(Constant.HUAWEI_JAVA_DATE);
        return sdf.format(date);
     }
 
     static Date strForDate(String date){
-        SimpleDateFormat sdf = new SimpleDateFormat(Constant.JAVA_DATE);
+        SimpleDateFormat sdf = new SimpleDateFormat(Constant.HUAWEI_JAVA_DATE);
         try {
            return sdf.parse(date);
         } catch (ParseException e) {

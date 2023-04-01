@@ -1,16 +1,18 @@
 package kim.wind.sms.unisms.config;
 
 import com.apistd.uni.Uni;
+import kim.wind.sms.api.SmsBlend;
+import kim.wind.sms.unisms.service.UniSmsImpl;
 import lombok.Data;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+@Data
 @Configuration
 @ConfigurationProperties(prefix = "sms.uni-sms")     //指定配置文件注入属性前缀
-@Data
-@ConditionalOnProperty(prefix = "sms", name = "supplier", havingValue = "uni-sms")
+@ConditionalOnProperty(name = "sms.supplier", havingValue = "uniSms")
 public class UniSmsConfig {
 
     /** 访问键标识*/
@@ -34,5 +36,10 @@ public class UniSmsConfig {
         }else {
             Uni.init(accessKeyId,accessKeySecret);
         }
+    }
+
+    @Bean
+    public SmsBlend smsBlend(){
+        return new UniSmsImpl();
     }
 }

@@ -165,7 +165,7 @@ public class UniSmsImpl implements SmsBlend {
         SmsResponse smsResponse = new SmsResponse();
         try {
             UniResponse send = uniMes.send();
-            smsResponse.setCode(send.status);
+            smsResponse.setCode(String.valueOf(send.status));
             smsResponse.setErrorCode(send.code);
             smsResponse.setMessage(send.message);
             smsResponse.setBizId(send.requestId);

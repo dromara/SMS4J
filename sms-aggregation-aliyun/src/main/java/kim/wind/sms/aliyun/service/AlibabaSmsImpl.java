@@ -72,7 +72,7 @@ public class AlibabaSmsImpl implements SmsBlend {
             SendSmsResponse sendSmsResponse = client.sendSmsWithOptions(sendSmsRequest, runtime);
             smsResponse.setBizId(sendSmsResponse.body.getBizId());
             smsResponse.setData(sendSmsResponse.body);
-            smsResponse.setCode(sendSmsResponse.statusCode);
+            smsResponse.setCode(String.valueOf(sendSmsResponse.statusCode));
             if (!"OK".equals(sendSmsResponse.body.code)) {
                 smsResponse.setErrMessage((sendSmsResponse.body.message));
                 smsResponse.setErrorCode(sendSmsResponse.body.code);
@@ -112,7 +112,7 @@ public class AlibabaSmsImpl implements SmsBlend {
             SendBatchSmsResponse sendBatchSmsResponse = client.sendBatchSmsWithOptions(sendBatchSmsRequest, runtime);
             smsResponse.setBizId(sendBatchSmsResponse.body.getBizId());
             smsResponse.setData(HttpJsonTool.getJSONObject(sendBatchSmsResponse.body));
-            smsResponse.setCode(sendBatchSmsResponse.statusCode);
+            smsResponse.setCode(String.valueOf(sendBatchSmsResponse.statusCode));
             if (!"OK".equals(sendBatchSmsResponse.body.code)) {
                 smsResponse.setErrMessage((sendBatchSmsResponse.body.message));
                 smsResponse.setErrorCode(sendBatchSmsResponse.body.code);

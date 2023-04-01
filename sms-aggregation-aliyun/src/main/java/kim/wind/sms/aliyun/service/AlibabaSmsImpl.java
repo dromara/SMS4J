@@ -15,7 +15,7 @@ import kim.wind.sms.comm.annotation.Restricted;
 import kim.wind.sms.comm.delayedTime.DelayedTime;
 import kim.wind.sms.comm.entity.SmsResponse;
 import kim.wind.sms.comm.exception.SmsBlendException;
-import kim.wind.sms.comm.utils.HTTPUtils;
+import kim.wind.sms.comm.utils.http.HttpJsonTool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -111,7 +111,7 @@ public class AlibabaSmsImpl implements SmsBlend {
         try {
             SendBatchSmsResponse sendBatchSmsResponse = client.sendBatchSmsWithOptions(sendBatchSmsRequest, runtime);
             smsResponse.setBizId(sendBatchSmsResponse.body.getBizId());
-            smsResponse.setData(HTTPUtils.getJSONObject(sendBatchSmsResponse.body));
+            smsResponse.setData(HttpJsonTool.getJSONObject(sendBatchSmsResponse.body));
             smsResponse.setCode(sendBatchSmsResponse.statusCode);
             if (!"OK".equals(sendBatchSmsResponse.body.code)) {
                 smsResponse.setErrMessage((sendBatchSmsResponse.body.message));

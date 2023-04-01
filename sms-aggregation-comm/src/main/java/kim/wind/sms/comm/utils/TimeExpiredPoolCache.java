@@ -1,8 +1,11 @@
 package kim.wind.sms.comm.utils;
 
 
+import com.alibaba.fastjson.JSONObject;
 import kim.wind.sms.comm.exception.SmsBlendException;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -13,10 +16,15 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * <p>类名: TimeExpiredPoolCache
  * <p>说明：  一个自实现的内部缓存，可用于无法使用redis的场景
+ *
  * @author :Wind
  * 2023/3/25  18:26
  **/
 public class TimeExpiredPoolCache {
+    /**
+     * 持久化文件格式
+     */
+    private static final String FILE_TYPE = "persistence.data";
     private static long defaultCachedMillis = 24 * 60 * 60 * 1000L;//过期时间默认24小时
     private static long timerMillis = 30 * 1000L;//定时清理默认1分钟
     /**
@@ -27,14 +35,18 @@ public class TimeExpiredPoolCache {
      * 对象单例
      */
     private static TimeExpiredPoolCache instance = null;
+    /**
+     * 定时器定时清理过期缓存
+     */
+    private static Timer timer = new Timer();
 
     private TimeExpiredPoolCache() {
-        dataPool = new ConcurrentHashMap<String, DataWrapper<?>>();
     }
 
     private static synchronized void syncInit() {
         if (instance == null) {
             instance = new TimeExpiredPoolCache();
+            dataPool = new ConcurrentHashMap<String, DataWrapper<?>>();
             initTimer();
         }
     }
@@ -47,9 +59,20 @@ public class TimeExpiredPoolCache {
     }
 
     /**
-     * 定时器定时清理过期缓存
+     * 读取持久化文件
      */
-    private static Timer timer = new Timer();
+    private static boolean persistenceInit() {
+        String path = FileTool.getPath() + FILE_TYPE;
+        try {
+
+            DataWrapper d = JSONObject.parseObject(FileTool.readFile(path), DataWrapper.class);
+            if (dataPool != null) {
+                return true;
+            }
+        } catch (IOException ignored) {
+        }
+        return false;
+    }
 
     private static void initTimer() {
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -62,6 +85,29 @@ public class TimeExpiredPoolCache {
                 }
             }
         }, timerMillis, timerMillis);
+    }
+
+    /** 写入持久化文件*/
+    private static void persistence() {
+        String path = FileTool.getPath() + FILE_TYPE;
+        FileTool.createFile(path);
+        FileTool.writeFile(new File(path), JSONObject.toJSONString(dataPool), false);
+    }
+
+    /**
+     * 清除过期的缓存
+     */
+    private static void clearExpiredCaches() {
+        List<String> expiredKeyList = new LinkedList<String>();
+
+        for (Entry<String, DataWrapper<?>> entry : dataPool.entrySet()) {
+            if (entry.getValue().isExpired()) {
+                expiredKeyList.add(entry.getKey());
+            }
+        }
+        for (String key : expiredKeyList) {
+            dataPool.remove(key);
+        }
     }
 
     /**
@@ -152,6 +198,13 @@ public class TimeExpiredPoolCache {
     }
 
     /**
+     * 数据构造
+     */
+    public interface DataRenewer<T> {
+        public T renewData();
+    }
+
+    /**
      * 数据封装
      */
     private class DataWrapper<T> {
@@ -193,26 +246,4 @@ public class TimeExpiredPoolCache {
         }
     }
 
-    /**
-     * 数据构造
-     */
-    public interface DataRenewer<T> {
-        public T renewData();
-    }
-
-    /**
-     * 清除过期的缓存
-     */
-    private static void clearExpiredCaches() {
-        List<String> expiredKeyList = new LinkedList<String>();
-
-        for (Entry<String, DataWrapper<?>> entry : dataPool.entrySet()) {
-            if (entry.getValue().isExpired()) {
-                expiredKeyList.add(entry.getKey());
-            }
-        }
-        for (String key : expiredKeyList) {
-            dataPool.remove(key);
-        }
-    }
 }

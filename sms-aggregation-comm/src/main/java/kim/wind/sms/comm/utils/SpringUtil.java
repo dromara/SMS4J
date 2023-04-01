@@ -1,6 +1,9 @@
 package kim.wind.sms.comm.utils;
 
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
@@ -13,6 +16,9 @@ import org.springframework.context.ApplicationContextAware;
 public class SpringUtil implements ApplicationContextAware {
 
     private static ApplicationContext applicationContext;
+
+    @Autowired
+    DefaultListableBeanFactory beanFactory;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -48,5 +54,21 @@ public class SpringUtil implements ApplicationContextAware {
         }catch (Exception e){
             return null ;
         }
+    }
+
+    /**
+     * <p>说明：创建一个bean
+     * @name: createBean
+     * @param
+     * @author :Wind
+     */
+    public void createBean(Class<?>clazz){
+        String name = clazz.getName();
+        beanFactory.createBean(clazz);
+        BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(clazz);
+        beanFactory.registerBeanDefinition(name, beanDefinitionBuilder.getBeanDefinition());
+    }
+    public void createBean(String name,Object o){
+        beanFactory.registerSingleton(name,o);
     }
 }

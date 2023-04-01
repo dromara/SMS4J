@@ -5,13 +5,13 @@
     <parent>
         <groupId>kim.wind</groupId>
         <artifactId>sms_aggregation</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>sms-aggregation-spring-boot-starter</artifactId>
     <name>sms-aggregation-spring-boot-starter</name>
     <description>sms-aggregation-spring-boot-starter</description>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -27,47 +27,24 @@
         </dependency>
 
         <dependency>
+            <groupId>kim.wind</groupId>
+            <artifactId>sms-aggregation-autoimmit</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
 
         <dependency>
             <groupId>kim.wind</groupId>
-            <artifactId>sms-aggregation-aliyun</artifactId>
+            <artifactId>sms-aggregation-autoimmit</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>kim.wind</groupId>
-            <artifactId>sms-aggregation-tencent</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>kim.wind</groupId>
-            <artifactId>sms-aggregation-unisms</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>kim.wind</groupId>
-            <artifactId>sms-aggregation-yunpian</artifactId>
-        </dependency>
-
-        <!--aop依赖-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
     </dependencies>
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
+
         </plugins>
     </build>
 </project>

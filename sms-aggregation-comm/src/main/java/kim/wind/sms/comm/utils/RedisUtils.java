@@ -2,10 +2,12 @@ package kim.wind.sms.comm.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import javax.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -13,8 +15,27 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class RedisUtils {
 
-    @Autowired
     private RedisTemplate<String, Object> redisTemplate;
+
+    @Autowired
+    public void init(RedisConnectionFactory connectionFactory){
+        // 指定相应的序列化方案
+        StringRedisSerializer keySerializer = new StringRedisSerializer();
+        JdkSerializationRedisSerializer valueSerializer = new JdkSerializationRedisSerializer();
+        // 构建StringRedisTemplate
+        StringRedisTemplate stringTemplate = new StringRedisTemplate();
+        stringTemplate.setConnectionFactory(connectionFactory);
+        stringTemplate.afterPropertiesSet();
+        // 构建RedisTemplate
+        RedisTemplate<String, Object> template = new RedisTemplate<String, Object>();
+        template.setConnectionFactory(connectionFactory);
+        template.setKeySerializer(keySerializer);
+        template.setHashKeySerializer(keySerializer);
+        template.setValueSerializer(valueSerializer);
+        template.setHashValueSerializer(valueSerializer);
+        template.afterPropertiesSet();
+        this.redisTemplate = template;
+    }
 
     public RedisUtils() {
     }

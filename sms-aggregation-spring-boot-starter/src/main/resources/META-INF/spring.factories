@@ -1,3 +1,9 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   kim.wind.sms.starter.config.SmsMainConfig,\
-  kim.wind.sms.aliyun.config.AlibabaSmsConfig
+  kim.wind.sms.autoimmit.config.SmsAutowiredConfig,\
+kim.wind.sms.aliyun.config.AlibabaSmsConfig,\
+kim.wind.sms.huawei.config.HuaweiSmsConfig,\
+kim.wind.sms.tencent.config.TencentSmsConfig,\
+kim.wind.sms.unisms.config.UniSmsConfig,\
+kim.wind.sms.yunpian.config.YunPianSmsConfig
+

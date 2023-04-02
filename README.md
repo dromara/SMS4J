@@ -6,7 +6,7 @@
 <a href="https://gitee.com/the-wind-is-like-a-song/sms_aggregation/master/LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-green"></a>
 <a href="https://gitee.com/the-wind-is-like-a-song/sms_aggregation"><img src="https://img.shields.io/badge/version-v1.0.3-blue"></a>
 </p>
-<img src="http://wind.kim/logo.png">
+<img src="/public/logo.png">
 
 ## 前言
 

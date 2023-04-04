@@ -1,10 +1,8 @@
 package kim.wind.sms.autoimmit.config;
 
 import kim.wind.sms.autoimmit.aop.AopAdvice;
-import kim.wind.sms.comm.config.SmsBanner;
 import kim.wind.sms.comm.delayedTime.DelayedTime;
 import kim.wind.sms.comm.utils.RedisUtils;
-import lombok.Data;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -13,13 +11,10 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
 
-@Data
-public class SmsAutowiredConfig {
-    public void init(){
-        SmsBanner.PrintBanner("V1.0.3");
-    }
 
-    @Bean
+public class SmsAutowiredConfig {
+
+    @Bean(initMethod = "init")
     @ConfigurationProperties(prefix = "sms")     //指定配置文件注入属性前缀
     public SmsConfig smsConfig(){
         return new SmsConfig();
@@ -62,7 +57,4 @@ public class SmsAutowiredConfig {
         executor.initialize();
         return executor;
     }
-
-
-
 }

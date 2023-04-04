@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>kim.wind</groupId>
     <artifactId>sms_aggregation</artifactId>
-    <version>1.0.3</version>
+    <version>${revision}</version>
     <name>sms-aggregation</name>
     <packaging>pom</packaging>
     <description>sms_aggregation</description>
-    <url>https://gitee.com/the-wind-is-like-a-song/sms_aggregation</url>
+    <url>https://gitee.com/MR-wind/sms_aggregation</url>
 
     <modules>
         <module>sms-aggregation-api</module>
@@ -42,15 +42,14 @@
     <!-- 仓库信息 -->
     <scm>
         <tag>master</tag>
-        <url>https://gitee.com/the-wind-is-like-a-song/sms_aggregation.git</url>
-        <connection>scm:git:https://gitee.com/the-wind-is-like-a-song/sms_aggregation.git</connection>
-        <developerConnection>scm:git:https://gitee.com/the-wind-is-like-a-song/sms_aggregation.git</developerConnection>
+        <url>https://gitee.com/MR-wind/sms_aggregation.git</url>
+        <connection>scm:git:https://gitee.com/MR-wind/sms_aggregation.git</connection>
+        <developerConnection>scm:git:https://gitee.com/MR-wind/sms_aggregation.git</developerConnection>
     </scm>
 
     <properties>
-        <java.version>1.8</java.version>
-        <spring.boot.version>2.7.10</spring.boot.version>
-        <modules.version>1.0.3</modules.version>
+        <spring.boot.version>3.0.5</spring.boot.version>
+        <revision>1.0.3</revision>
         <aliyun.version>2.0.23</aliyun.version>
         <json.version>2.0.15</json.version>
         <okhttp.version>3.14.9</okhttp.version>
@@ -79,57 +78,57 @@
             <dependency>
                 <groupId>kim.wind</groupId>
                 <artifactId>sms-aggregation-aliyun</artifactId>
-                <version>${modules.version}</version>
+                <version>${revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>kim.wind</groupId>
                 <artifactId>sms-aggregation-tencent</artifactId>
-                <version>${modules.version}</version>
+                <version>${revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>kim.wind</groupId>
                 <artifactId>sms-aggregation-unisms</artifactId>
-                <version>${modules.version}</version>
+                <version>${revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>kim.wind</groupId>
                 <artifactId>sms-aggregation-yunpian</artifactId>
-                <version>${modules.version}</version>
+                <version>${revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>kim.wind</groupId>
                 <artifactId>sms-aggregation-huawei</artifactId>
-                <version>${modules.version}</version>
+                <version>${revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>kim.wind</groupId>
                 <artifactId>sms-aggregation-spring-boot-starter</artifactId>
-                <version>${modules.version}</version>
+                <version>${revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>kim.wind</groupId>
                 <artifactId>sms-aggregation-autoimmit</artifactId>
-                <version>${modules.version}</version>
+                <version>${revision}</version>
             </dependency>
 
             <!--通用模块-->
             <dependency>
                 <groupId>kim.wind</groupId>
                 <artifactId>sms-aggregation-comm</artifactId>
-                <version>${modules.version}</version>
+                <version>${revision}</version>
             </dependency>
 
             <!--api模块-->
             <dependency>
                 <groupId>kim.wind</groupId>
                 <artifactId>sms-aggregation-api</artifactId>
-                <version>${modules.version}</version>
+                <version>${revision}</version>
             </dependency>
 
             <!-- 阿里云短信依赖-->
@@ -296,6 +295,32 @@
                         </manifest>
                     </archive>
                 </configuration>
+            </plugin>
+            <!-- version number -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.2.7</version>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
         </plugins>

@@ -18,7 +18,7 @@ public class SmsMainConfig {
     }
 
     /** 主要配置注入*/
-    @Bean(initMethod = "init")
+    @Bean
     public SmsAutowiredConfig smsAutowiredConfig(){
         return new SmsAutowiredConfig();
     }

@@ -1,9 +1,6 @@
 package kim.wind.sms.comm.config;
 
-import kim.wind.sms.comm.constant.Constant;
-
 public class SmsBanner {
-
     private static final String banner =
             "   _____   __  __    _____                     _____    _____   _____    ______    _____              _______   _____    ____    _   _ \n" +
                     "  / ____| |  \\/  |  / ____|           /\\      / ____|  / ____| |  __ \\  |  ____|  / ____|     /\\     |__   __| |_   _|  / __ \\  | \\ | |\n" +
@@ -13,6 +10,7 @@ public class SmsBanner {
                     " |_____/  |_|  |_| |_____/        /_/    \\_\\  \\_____|  \\_____| |_|  \\_\\ |______|  \\_____| /_/    \\_\\    |_|    |_____|  \\____/  |_| \\_|\n" +
                     "                                                                                                                                       \n" +
                     "                                                                                                                             ";
+    /** 初始化配置文件时打印banner*/
     public static void PrintBanner(String version) {
         System.out.println(banner+version);
     }

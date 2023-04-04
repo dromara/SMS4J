@@ -5,13 +5,13 @@
     <parent>
         <groupId>kim.wind</groupId>
         <artifactId>sms_aggregation</artifactId>
-        <version>1.0.3</version>
+        <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>sms-aggregation-tencent</artifactId>
     <name>sms-aggregation-tencent</name>
     <description>sms-aggregation-tencent</description>
-    <version>1.0.3</version>
+    <version>${revision}</version>
     <properties>
         <java.version>1.8</java.version>
     </properties>

@@ -5,17 +5,17 @@
     <parent>
         <groupId>kim.wind</groupId>
         <artifactId>sms_aggregation</artifactId>
-        <version>1.0.3</version>
+        <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>sms-aggregation-spring-boot-starter</artifactId>
     <name>sms-aggregation-spring-boot-starter</name>
     <description>sms-aggregation-spring-boot-starter</description>
-    <version>1.0.3</version>
+    <version>${revision}</version>
     <packaging>jar</packaging>
 
     <properties>
-        <java.version>1.8</java.version>
+
     </properties>
     <dependencies>
         <dependency>
@@ -34,11 +34,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>kim.wind</groupId>
-            <artifactId>sms-aggregation-autoimmit</artifactId>
         </dependency>
 
     </dependencies>

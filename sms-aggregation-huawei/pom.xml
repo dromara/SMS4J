@@ -5,16 +5,16 @@
     <parent>
         <groupId>kim.wind</groupId>
         <artifactId>sms_aggregation</artifactId>
-        <version>1.0.3</version>
+        <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>sms-aggregation-huawei</artifactId>
-    <version>1.0.3</version>
+    <version>${revision}</version>
     <name>sms-aggregation-huawei</name>
     <description>sms-aggregation-huawei</description>
 
     <properties>
-        <java.version>1.8</java.version>
+
     </properties>
 
     <dependencies>

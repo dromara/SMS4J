@@ -5,11 +5,11 @@
 	<parent>
 		<groupId>kim.wind</groupId>
 		<artifactId>sms_aggregation</artifactId>
-		<version>1.0.3</version>
+		<version>${revision}</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>sms-aggregation-autoimmit</artifactId>
-	<version>1.0.3</version>
+	<version>${revision}</version>
 	<name>sms-aggregation-autoimmit</name>
 	<description>sms-aggregation-autoimmit</description>
 

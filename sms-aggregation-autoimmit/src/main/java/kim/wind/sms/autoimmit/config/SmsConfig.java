@@ -1,6 +1,6 @@
 package kim.wind.sms.autoimmit.config;
 
-import kim.wind.sms.comm.config.SmsBanner;
+import kim.wind.sms.autoimmit.enumerate.ConfigType;
 import lombok.Data;
 
 @Data
@@ -9,6 +9,10 @@ public class SmsConfig {
      * 短信服务商
      */
     private String supplier;
+
+    /** 是否使用数据库作为配置源*/
+    private ConfigType configType = ConfigType.CONFIG_FILE;
+
     /**
      * 打印banner
      */
@@ -64,9 +68,5 @@ public class SmsConfig {
      */
     private Boolean shutdownStrategy = true;
 
-void init(){
-    if (isPrint) {
-        SmsBanner.PrintBanner("v1.0.3");
-    }
-}
+
 }

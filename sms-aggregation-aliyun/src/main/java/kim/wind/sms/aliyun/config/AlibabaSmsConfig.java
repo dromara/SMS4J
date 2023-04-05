@@ -13,33 +13,26 @@ import org.springframework.context.annotation.Configuration;
 
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "sms.alibaba")     //指定配置文件注入属性前缀
 @ConditionalOnProperty(name = "sms.supplier", havingValue = "alibaba")
 public class AlibabaSmsConfig {
 
-    /** accessKey*/
-    private String accessKeyId;
-    /** 访问键秘钥 */
-    private String accessKeySecret;
-    /** 短信签名*/
-    private String signature;
-    /** 模板Id*/
-    private String templateId;
-    /** 模板变量名称*/
-    private String templateName;
-    /** 请求地址*/
-    private String requestUrl = "dysmsapi.aliyuncs.com";
+
+    @Bean
+    @ConfigurationProperties(prefix = "sms.alibaba")     //指定配置文件注入属性前缀
+    public AlibabaConfig alibabaConfig(){
+        return new AlibabaConfig();
+    }
 
 
     @Bean
-    public Client client() throws Exception {
+    public Client client(AlibabaConfig alibabaConfig) throws Exception {
        Config config = new Config()
                 //  AccessKey ID
-                .setAccessKeyId(accessKeyId)
+                .setAccessKeyId(alibabaConfig.getAccessKeyId())
                 //  AccessKey Secret
-                .setAccessKeySecret(accessKeySecret);
+                .setAccessKeySecret(alibabaConfig.getAccessKeySecret());
         // 访问的域名
-        config.endpoint = requestUrl;
+        config.endpoint = alibabaConfig.getRequestUrl();
         return new Client(config);
     }
 

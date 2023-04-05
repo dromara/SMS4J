@@ -8,6 +8,7 @@ import com.aliyun.dysmsapi20170525.models.SendSmsRequest;
 import com.aliyun.dysmsapi20170525.models.SendSmsResponse;
 import com.aliyun.tea.TeaException;
 import com.aliyun.teautil.models.RuntimeOptions;
+import kim.wind.sms.aliyun.config.AlibabaConfig;
 import kim.wind.sms.aliyun.config.AlibabaSmsConfig;
 import kim.wind.sms.api.SmsBlend;
 import kim.wind.sms.api.callback.CallBack;
@@ -40,7 +41,7 @@ public class AlibabaSmsImpl implements SmsBlend {
     @Autowired
     private Client client;
     @Autowired
-    private AlibabaSmsConfig alibabaSmsConfig;
+    private AlibabaConfig alibabaSmsConfig;
 
     @Autowired
     @Qualifier("smsExecutor")

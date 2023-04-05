@@ -7,6 +7,7 @@ import kim.wind.sms.comm.annotation.Restricted;
 import kim.wind.sms.comm.constant.Constant;
 import kim.wind.sms.comm.delayedTime.DelayedTime;
 import kim.wind.sms.comm.entity.SmsResponse;
+import kim.wind.sms.huawei.config.HuaweiConfig;
 import kim.wind.sms.huawei.config.HuaweiSmsConfig;
 import kim.wind.sms.huawei.entity.HuaweiResponse;
 import kim.wind.sms.huawei.utils.HuaweiBuilder;
@@ -25,7 +26,7 @@ import static kim.wind.sms.comm.utils.SmsUtil.listToString;
 public class HuaweiSmsImpl implements SmsBlend {
 
     @Autowired
-    private HuaweiSmsConfig config;
+    private HuaweiConfig config;
 
     @Autowired
     @Qualifier("smsExecutor")

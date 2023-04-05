@@ -10,6 +10,7 @@ import kim.wind.sms.comm.delayedTime.DelayedTime;
 import kim.wind.sms.comm.entity.SmsResponse;
 import kim.wind.sms.comm.exception.SmsBlendException;
 import kim.wind.sms.comm.utils.http.HttpJsonTool;
+import kim.wind.sms.unisms.config.UniConfig;
 import kim.wind.sms.unisms.config.UniSmsConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ import java.util.concurrent.Executor;
 public class UniSmsImpl implements SmsBlend {
 
     @Autowired
-    private UniSmsConfig config;
+    private UniConfig config;
 
     @Autowired
     @Qualifier("smsExecutor")

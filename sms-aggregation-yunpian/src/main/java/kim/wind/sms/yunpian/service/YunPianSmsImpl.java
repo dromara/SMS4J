@@ -10,6 +10,7 @@ import kim.wind.sms.comm.delayedTime.DelayedTime;
 import kim.wind.sms.comm.entity.SmsResponse;
 import kim.wind.sms.comm.exception.SmsBlendException;
 import kim.wind.sms.yunpian.config.YunPianSmsConfig;
+import kim.wind.sms.yunpian.config.YunpianConfig;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -30,7 +31,7 @@ public class YunPianSmsImpl implements SmsBlend {
     private DelayedTime delayed;
 
     @Autowired
-    private YunPianSmsConfig config;
+    private YunpianConfig config;
 
     @Autowired
     private ForestConfiguration http;

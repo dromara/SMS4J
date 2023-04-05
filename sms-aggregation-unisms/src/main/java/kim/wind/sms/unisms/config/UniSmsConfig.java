@@ -11,30 +11,22 @@ import org.springframework.context.annotation.Configuration;
 
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "sms.uni-sms")     //指定配置文件注入属性前缀
 @ConditionalOnProperty(name = "sms.supplier", havingValue = "uniSms")
 public class UniSmsConfig {
 
-    /** 访问键标识*/
-    private String accessKeyId;
-    /** 访问键秘钥 简易模式不需要配置*/
-    private String accessKeySecret;
-    /** 是否为简易模式*/
-    private String isSimple = "true";
-    /** 短信签名*/
-    private String signature;
-    /** 模板Id*/
-    private String templateId;
-    /** 模板变量名称*/
-    private String templateName;
+    @Bean
+    @ConfigurationProperties(prefix = "sms.uni-sms")     //指定配置文件注入属性前缀
+    public UniConfig uniConfig(){
+    return new UniConfig();
+    }
 
     /** 自动注入短信配置*/
     @Bean
-    public void buildSms(){
-        if ("true".equals(isSimple)){
-            Uni.init(accessKeyId);
+    public void buildSms(UniConfig uniConfig){
+        if ("true".equals(uniConfig.getIsSimple())){
+            Uni.init(uniConfig.getAccessKeyId());
         }else {
-            Uni.init(accessKeyId,accessKeySecret);
+            Uni.init(uniConfig.getAccessKeyId(),uniConfig.getAccessKeySecret());
         }
     }
 

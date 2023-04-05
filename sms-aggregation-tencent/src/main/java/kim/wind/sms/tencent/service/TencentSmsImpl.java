@@ -12,6 +12,7 @@ import kim.wind.sms.comm.annotation.Restricted;
 import kim.wind.sms.comm.delayedTime.DelayedTime;
 import kim.wind.sms.comm.entity.SmsResponse;
 import kim.wind.sms.comm.exception.SmsBlendException;
+import kim.wind.sms.tencent.config.TencentConfig;
 import kim.wind.sms.tencent.config.TencentSmsConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,7 +23,7 @@ import java.util.concurrent.Executor;
 public class TencentSmsImpl implements SmsBlend {
 
     @Autowired
-    private TencentSmsConfig tencentSmsConfig;
+    private TencentConfig tencentSmsConfig;
 
     @Autowired
     private SmsClient client;

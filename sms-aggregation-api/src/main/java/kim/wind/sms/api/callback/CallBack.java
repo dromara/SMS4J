@@ -1,6 +1,6 @@
 package kim.wind.sms.api.callback;
 
-import kim.wind.sms.comm.entity.SmsResponse;
+import kim.wind.sms.api.entity.SmsResponse;
 
 @FunctionalInterface
 public interface CallBack {

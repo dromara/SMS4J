@@ -14,7 +14,7 @@
     <description>sms-aggregation-yunpian</description>
     <version>${revision}</version>
     <properties>
-        <java.version>1.8</java.version>
+
     </properties>
 
     <dependencies>
@@ -25,6 +25,14 @@
         <dependency>
             <groupId>kim.wind</groupId>
             <artifactId>sms-aggregation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.dtflys.forest</groupId>
+            <artifactId>forest-core</artifactId>
         </dependency>
     </dependencies>
 

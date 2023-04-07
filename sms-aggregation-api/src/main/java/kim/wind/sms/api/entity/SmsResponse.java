@@ -1,4 +1,4 @@
-package kim.wind.sms.comm.entity;
+package kim.wind.sms.api.entity;
 
 import lombok.Data;
 

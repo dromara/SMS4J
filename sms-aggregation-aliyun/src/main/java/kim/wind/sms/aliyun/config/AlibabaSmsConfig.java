@@ -4,11 +4,14 @@ import com.aliyun.dysmsapi20170525.Client;
 import com.aliyun.teaopenapi.models.Config;
 import kim.wind.sms.aliyun.service.AlibabaSmsImpl;
 import kim.wind.sms.api.SmsBlend;
+import kim.wind.sms.comm.delayedTime.DelayedTime;
 import lombok.Data;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.concurrent.Executor;
 
 
 @Data
@@ -37,7 +40,7 @@ public class AlibabaSmsConfig {
     }
 
     @Bean
-    public SmsBlend smsBlend(){
-        return new AlibabaSmsImpl();
+    public SmsBlend smsBlend(Client client, AlibabaConfig alibabaConfig){
+        return new AlibabaSmsImpl(client,alibabaConfig);
     }
 }

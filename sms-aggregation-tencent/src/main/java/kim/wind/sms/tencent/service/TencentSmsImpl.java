@@ -10,10 +10,9 @@ import kim.wind.sms.api.SmsBlend;
 import kim.wind.sms.api.callback.CallBack;
 import kim.wind.sms.comm.annotation.Restricted;
 import kim.wind.sms.comm.delayedTime.DelayedTime;
-import kim.wind.sms.comm.entity.SmsResponse;
+import kim.wind.sms.api.entity.SmsResponse;
 import kim.wind.sms.comm.exception.SmsBlendException;
 import kim.wind.sms.tencent.config.TencentConfig;
-import kim.wind.sms.tencent.config.TencentSmsConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 

@@ -1,4 +1,4 @@
-package kim.wind.sms.autoimmit.enumerate;
+package kim.wind.sms.core.enumerate;
 
 /**
  * ConfigType

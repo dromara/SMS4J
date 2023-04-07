@@ -1,6 +1,7 @@
-package kim.wind.sms.autoimmit.config;
+package kim.wind.sms.core.config;
 
-import kim.wind.sms.autoimmit.enumerate.ConfigType;
+
+import kim.wind.sms.core.enumerate.ConfigType;
 import lombok.Data;
 
 @Data
@@ -26,7 +27,7 @@ public class SmsConfig {
     /**
      * 是否使用redis进行缓存
      */
-    private String redisCache = "false";
+    private Boolean redisCache = false;
 
     /**
      * 单账号每日最大发送量

@@ -1,4 +1,4 @@
-package kim.wind.sms.comm.utils;
+package kim.wind.sms.core.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class RedisUtils {
     private RedisTemplate<String, Object> redisTemplate;
 
     @Autowired
-    public void init(RedisConnectionFactory connectionFactory){
+    public void init(RedisConnectionFactory connectionFactory) {
         // 指定相应的序列化方案
         StringRedisSerializer keySerializer = new StringRedisSerializer();
         JdkSerializationRedisSerializer valueSerializer = new JdkSerializationRedisSerializer();
@@ -125,11 +125,12 @@ public class RedisUtils {
 
     /**
      * <p>说明：获取字符串型值
-     * @name: getKyeString
+     *
      * @param
+     * @name: getKyeString
      * @author :Wind
-    */
-    public String getKyeString(String key){
+     */
+    public String getKyeString(String key) {
         return (String) getByKey(key);
     }
 
@@ -163,8 +164,8 @@ public class RedisUtils {
         return false;
     }
 
-    public Boolean delete(String key){
-        Set<String> keys = redisTemplate.keys(key+"*");
+    public Boolean delete(String key) {
+        Set<String> keys = redisTemplate.keys(key + "*");
         redisTemplate.delete(keys);
         return true;
     }
@@ -433,11 +434,12 @@ public class RedisUtils {
     /**
      * <p>说明：获取列表元素的大小
      * <p>
-     * @name: listGetSize
+     *
      * @param
+     * @name: listGetSize
      * @author :Wind
      */
-    public Long listGetSize(String key){
+    public Long listGetSize(String key) {
         return redisTemplate.opsForList().size(key);
     }
 

@@ -7,7 +7,7 @@ import kim.wind.sms.api.SmsBlend;
 import kim.wind.sms.api.callback.CallBack;
 import kim.wind.sms.comm.annotation.Restricted;
 import kim.wind.sms.comm.delayedTime.DelayedTime;
-import kim.wind.sms.comm.entity.SmsResponse;
+import kim.wind.sms.api.entity.SmsResponse;
 import kim.wind.sms.comm.exception.SmsBlendException;
 import kim.wind.sms.comm.utils.http.HttpJsonTool;
 import kim.wind.sms.unisms.config.UniConfig;
@@ -30,7 +30,7 @@ import java.util.concurrent.Executor;
  * @author :Wind
  * 2023/3/26  17:10
  **/
-@EnableConfigurationProperties({UniSmsConfig.class})
+
 @Slf4j
 public class UniSmsImpl implements SmsBlend {
 

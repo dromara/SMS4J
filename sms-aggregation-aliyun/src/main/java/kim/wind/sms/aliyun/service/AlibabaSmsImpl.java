@@ -9,18 +9,15 @@ import com.aliyun.dysmsapi20170525.models.SendSmsResponse;
 import com.aliyun.tea.TeaException;
 import com.aliyun.teautil.models.RuntimeOptions;
 import kim.wind.sms.aliyun.config.AlibabaConfig;
-import kim.wind.sms.aliyun.config.AlibabaSmsConfig;
 import kim.wind.sms.api.SmsBlend;
 import kim.wind.sms.api.callback.CallBack;
+import kim.wind.sms.api.entity.SmsResponse;
 import kim.wind.sms.comm.annotation.Restricted;
 import kim.wind.sms.comm.delayedTime.DelayedTime;
-import kim.wind.sms.comm.entity.SmsResponse;
 import kim.wind.sms.comm.exception.SmsBlendException;
 import kim.wind.sms.comm.utils.http.HttpJsonTool;
+import kim.wind.sms.core.factory.BeanFactory;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -34,21 +31,25 @@ import java.util.concurrent.Executor;
  * @author :Wind
  * 2023/3/26  17:16
  **/
-@EnableConfigurationProperties({AlibabaSmsConfig.class})
+
 @Slf4j
 public class AlibabaSmsImpl implements SmsBlend {
 
-    @Autowired
+
     private Client client;
-    @Autowired
+
     private AlibabaConfig alibabaSmsConfig;
 
-    @Autowired
-    @Qualifier("smsExecutor")
     private Executor pool;
 
-    @Autowired
     private DelayedTime delayed;
+
+    public AlibabaSmsImpl(Client client, AlibabaConfig alibabaSmsConfig) {
+        this.client = client;
+        this.alibabaSmsConfig = alibabaSmsConfig;
+        this.pool = BeanFactory.getExecutor();
+        this.delayed = BeanFactory.getDelayedTime();
+    }
 
     @Override
     @Restricted

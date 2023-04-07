@@ -15,20 +15,6 @@ public class HttpJsonTool {
         return JSONObject.parseObject(response, t);
     }
 
-    /**
-     * <p>说明：将返回结果序列化为一个json对象
-     * <p>
-     * @name: getJSONObject
-     * @param response
-     * @author :Wind
-     */
-    public static JSONObject getJSONObject(OKResponse response){
-        try {
-            return JSONObject.parseObject(response.getBody().string());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
     public static JSONObject getJSONObject(Object obj){
         return JSONObject.parseObject(obj.toString());
     }

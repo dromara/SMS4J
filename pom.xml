@@ -20,6 +20,7 @@
         <module>sms-aggregation-spring-boot-starter</module>
         <module>sms-aggregation-huawei</module>
         <module>sms-aggregation-autoimmit</module>
+        <module>sms-aggregation-core</module>
     </modules>
     <!-- 开源协议 apache 2.0 -->
     <licenses>
@@ -48,8 +49,9 @@
     </scm>
 
     <properties>
-        <spring.boot.version>3.0.5</spring.boot.version>
-        <revision>1.0.3</revision>
+
+        <spring.boot.version>2.7.10</spring.boot.version>
+        <revision>1.0.4</revision>
         <aliyun.version>2.0.23</aliyun.version>
         <json.version>2.0.15</json.version>
         <okhttp.version>3.14.9</okhttp.version>
@@ -118,6 +120,12 @@
                 <version>${revision}</version>
             </dependency>
 
+            <dependency>
+                <groupId>kim.wind</groupId>
+                <artifactId>sms-aggregation-core</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
             <!--通用模块-->
             <dependency>
                 <groupId>kim.wind</groupId>
@@ -182,16 +190,16 @@
                 <version>${tencent.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-all</artifactId>
-                <version>${hutool.version}</version>
-            </dependency>
-
         </dependencies>
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>${hutool.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -258,20 +266,20 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- GPG -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.6</version>
-                <executions>
-                    <execution>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            &lt;!&ndash; GPG &ndash;&gt;-->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-gpg-plugin</artifactId>-->
+<!--                <version>1.6</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <phase>verify</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>sign</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
             <!--Compiler -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

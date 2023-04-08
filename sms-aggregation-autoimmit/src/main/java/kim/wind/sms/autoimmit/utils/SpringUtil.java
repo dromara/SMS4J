@@ -1,4 +1,4 @@
-package kim.wind.sms.core.utils;
+package kim.wind.sms.autoimmit.utils;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -38,7 +38,7 @@ public class SpringUtil implements ApplicationContextAware {
         try {
             return getApplicationContext().getBean(name);
         } catch (Exception e) {
-            return null;
+            throw new RuntimeException(e.getMessage());
         }
 
     }
@@ -47,7 +47,7 @@ public class SpringUtil implements ApplicationContextAware {
         try {
             return getApplicationContext().getBean(clazz);
         } catch (Exception e) {
-            return null;
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -55,7 +55,7 @@ public class SpringUtil implements ApplicationContextAware {
         try {
             return getApplicationContext().getBean(name, clazz);
         } catch (Exception e) {
-            return null;
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -73,18 +73,19 @@ public class SpringUtil implements ApplicationContextAware {
         beanFactory.registerBeanDefinition(name, beanDefinitionBuilder.getBeanDefinition());
     }
 
-    public void createBean(String name, Object o) {
-        beanFactory.registerSingleton(name, o);
+    public void createBean(Object o) {
+        applicationContext.getAutowireCapableBeanFactory().autowireBean(o);
     }
 
-    public void replaceBean(String beanName,Class<?> clazz){
+    public void replaceBean(String beanName, Class<?> clazz) {
         String name = clazz.getName();
         beanFactory.removeBeanDefinition(beanName);
         beanFactory.createBean(clazz);
         BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(clazz);
         beanFactory.registerBeanDefinition(name, beanDefinitionBuilder.getBeanDefinition());
     }
-    public void deleteBean(String beanName){
+
+    public void deleteBean(String beanName) {
         beanFactory.removeBeanDefinition(beanName);
     }
 }

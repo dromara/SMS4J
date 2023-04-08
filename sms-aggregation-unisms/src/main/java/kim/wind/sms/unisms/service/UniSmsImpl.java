@@ -5,17 +5,13 @@ import com.apistd.uni.sms.UniMessage;
 import com.apistd.uni.sms.UniSMS;
 import kim.wind.sms.api.SmsBlend;
 import kim.wind.sms.api.callback.CallBack;
+import kim.wind.sms.api.entity.SmsResponse;
 import kim.wind.sms.comm.annotation.Restricted;
 import kim.wind.sms.comm.delayedTime.DelayedTime;
-import kim.wind.sms.api.entity.SmsResponse;
 import kim.wind.sms.comm.exception.SmsBlendException;
 import kim.wind.sms.comm.utils.http.HttpJsonTool;
 import kim.wind.sms.unisms.config.UniConfig;
-import kim.wind.sms.unisms.config.UniSmsConfig;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -26,7 +22,6 @@ import java.util.concurrent.Executor;
 /**
  * <p>类名: UniSmsImpl
  * <p>说明：  uniSms短信实现
- *
  * @author :Wind
  * 2023/3/26  17:10
  **/
@@ -34,15 +29,15 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class UniSmsImpl implements SmsBlend {
 
-    @Autowired
     private UniConfig config;
-
-    @Autowired
-    @Qualifier("smsExecutor")
     private Executor pool;
-
-    @Autowired
     private DelayedTime delayed;
+
+    public UniSmsImpl(UniConfig config, Executor pool, DelayedTime delayed) {
+        this.config = config;
+        this.pool = pool;
+        this.delayed = delayed;
+    }
 
     @Override
     @Restricted

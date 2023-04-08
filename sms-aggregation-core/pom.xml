@@ -18,22 +18,27 @@
 	<dependencies>
 		<dependency>
 			<groupId>kim.wind</groupId>
-			<artifactId>sms-aggregation-comm</artifactId>
+			<artifactId>sms-aggregation-aliyun</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>kim.wind</groupId>
-			<artifactId>sms-aggregation-api</artifactId>
+			<artifactId>sms-aggregation-tencent</artifactId>
 		</dependency>
 
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
+			<groupId>kim.wind</groupId>
+			<artifactId>sms-aggregation-unisms</artifactId>
 		</dependency>
 
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-redis</artifactId>
+			<groupId>kim.wind</groupId>
+			<artifactId>sms-aggregation-yunpian</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>kim.wind</groupId>
+			<artifactId>sms-aggregation-huawei</artifactId>
 		</dependency>
 	</dependencies>
 

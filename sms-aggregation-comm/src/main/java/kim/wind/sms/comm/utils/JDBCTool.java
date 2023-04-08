@@ -1,15 +1,11 @@
-package kim.wind.sms.sql.utils;
+package kim.wind.sms.comm.utils;
 
 import cn.hutool.core.util.StrUtil;
-import kim.wind.sms.sql.config.SmsSqlConfig;
-import kim.wind.sms.sql.err.SmsSqlException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
+import kim.wind.sms.comm.config.SmsSqlConfig;
+import kim.wind.sms.comm.exception.SmsSqlException;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,7 +29,7 @@ public class JDBCTool {
             throw new SmsSqlException("The configuration file failed to be loaded. Procedure");
         }
         this.config = config;
-        if (StringUtils.isEmpty(this.config.getDatabaseName())) {
+        if (StrUtil.isEmpty(this.config.getDatabaseName())) {
             throw new SmsSqlException("You did not specify a database driver");
         }
     }

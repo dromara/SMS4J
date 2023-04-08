@@ -29,16 +29,16 @@
       <artifactId>uni-sdk</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp</artifactId>
+    </dependency>
+    <dependency>
       <groupId>kim.wind</groupId>
       <artifactId>sms-aggregation-comm</artifactId>
     </dependency>
     <dependency>
       <groupId>kim.wind</groupId>
       <artifactId>sms-aggregation-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter</artifactId>
     </dependency>
   </dependencies>
 </project>

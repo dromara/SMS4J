@@ -9,7 +9,7 @@ public class UniConfig {
     /** 访问键秘钥 简易模式不需要配置*/
     private String accessKeySecret;
     /** 是否为简易模式*/
-    private String isSimple = "true";
+    private Boolean isSimple = true;
     /** 短信签名*/
     private String signature;
     /** 模板Id*/

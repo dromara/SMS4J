@@ -5,26 +5,27 @@ import com.tencentcloudapi.common.profile.ClientProfile;
 import com.tencentcloudapi.common.profile.HttpProfile;
 import com.tencentcloudapi.sms.v20210111.SmsClient;
 import kim.wind.sms.api.SmsBlend;
+import kim.wind.sms.comm.factory.BeanFactory;
 import kim.wind.sms.tencent.service.TencentSmsImpl;
 import lombok.Data;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-@Data
-@Configuration
-@ConditionalOnProperty(name = "sms.supplier", havingValue = "tencent")
+/**
+ * TencentSmsConfig
+ * <p> 建造腾讯云短信
+ * @author :Wind
+ * 2023/4/8  16:05
+ **/
 public class TencentSmsConfig {
+    private TencentSmsConfig() {
+    }
 
-    @Bean
-    @ConfigurationProperties(prefix = "sms.tencent")     //指定配置文件注入属性前缀
-   public TencentConfig tencentConfig(){
-       return new TencentConfig();
-   }
+    private static TencentSmsImpl tencentSms;
 
-    @Bean
-    public SmsClient tencentBean( TencentConfig tencentConfig) {
+    private static TencentSmsConfig tencentSmsConfig;
+
+
+
+    private  SmsClient tencentBean( TencentConfig tencentConfig) {
         Credential cred = new Credential(tencentConfig.getAccessKeyId(),tencentConfig.getAccessKeySecret());
         HttpProfile httpProfile = new HttpProfile();
         httpProfile.setReqMethod("POST");
@@ -36,8 +37,33 @@ public class TencentSmsConfig {
         return new SmsClient(cred, tencentConfig.getTerritory(),clientProfile);
     }
 
-    @Bean
-    public SmsBlend smsBlend(){
-        return new TencentSmsImpl();
+    /** 建造一个腾讯云的短信实现*/
+    public static TencentSmsImpl createTencentSms(TencentConfig tencentConfig){
+        if (tencentSmsConfig == null){
+            tencentSmsConfig = new TencentSmsConfig();
+        }
+        if (tencentSms == null){
+            tencentSms = new TencentSmsImpl(
+                    tencentConfig,
+                    tencentSmsConfig.tencentBean(tencentConfig),
+                    BeanFactory.getExecutor(),
+                    BeanFactory.getDelayedTime()
+            );
+        }
+        return tencentSms;
+    }
+
+    /** 刷新对象*/
+    public static TencentSmsImpl refresh(TencentConfig tencentConfig){
+        if (tencentSmsConfig == null){
+            tencentSmsConfig = new TencentSmsConfig();
+        }
+        tencentSms = new TencentSmsImpl(
+                tencentConfig,
+                tencentSmsConfig.tencentBean(tencentConfig),
+                BeanFactory.getExecutor(),
+                BeanFactory.getDelayedTime()
+        );
+        return tencentSms;
     }
 }

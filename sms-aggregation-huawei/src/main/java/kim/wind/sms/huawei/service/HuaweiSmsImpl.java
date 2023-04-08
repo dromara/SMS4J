@@ -3,41 +3,37 @@ package kim.wind.sms.huawei.service;
 import com.dtflys.forest.config.ForestConfiguration;
 import kim.wind.sms.api.SmsBlend;
 import kim.wind.sms.api.callback.CallBack;
+import kim.wind.sms.api.entity.SmsResponse;
 import kim.wind.sms.comm.annotation.Restricted;
 import kim.wind.sms.comm.constant.Constant;
 import kim.wind.sms.comm.delayedTime.DelayedTime;
-import kim.wind.sms.api.entity.SmsResponse;
+import kim.wind.sms.comm.factory.BeanFactory;
 import kim.wind.sms.huawei.config.HuaweiConfig;
-import kim.wind.sms.huawei.config.HuaweiSmsConfig;
 import kim.wind.sms.huawei.entity.HuaweiResponse;
 import kim.wind.sms.huawei.utils.HuaweiBuilder;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 import java.util.*;
 import java.util.concurrent.Executor;
 
 import static kim.wind.sms.comm.utils.SmsUtil.listToString;
 
-@EnableConfigurationProperties({HuaweiSmsConfig.class})
+
 @Slf4j
 public class HuaweiSmsImpl implements SmsBlend {
+    public HuaweiSmsImpl(HuaweiConfig config, Executor pool, DelayedTime delayed) {
+        this.config = config;
+        this.pool = pool;
+        this.delayed = delayed;
+    }
 
-    @Autowired
     private HuaweiConfig config;
 
-    @Autowired
-    @Qualifier("smsExecutor")
     private Executor pool;
 
-    @Autowired
     private DelayedTime delayed;
 
-    @Autowired
-    @Qualifier("forestConfiguration")
-    private ForestConfiguration http;
+    private final ForestConfiguration http = BeanFactory.getForestConfiguration();
 
     @Override
     @Restricted

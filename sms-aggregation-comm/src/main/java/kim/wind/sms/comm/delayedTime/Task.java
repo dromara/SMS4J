@@ -8,6 +8,6 @@ import java.util.TimerTask;
 public class Task{
 
     private TimerTask runnable;//描述要执行的任务
-    private long time;//什么时间执行,用时间戳来表示
+    private Long time;//什么时间执行,用时间戳来表示
 
 }

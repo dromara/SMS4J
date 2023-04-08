@@ -8,32 +8,31 @@ import com.tencentcloudapi.sms.v20210111.models.SendSmsRequest;
 import com.tencentcloudapi.sms.v20210111.models.SendSmsResponse;
 import kim.wind.sms.api.SmsBlend;
 import kim.wind.sms.api.callback.CallBack;
+import kim.wind.sms.api.entity.SmsResponse;
 import kim.wind.sms.comm.annotation.Restricted;
 import kim.wind.sms.comm.delayedTime.DelayedTime;
-import kim.wind.sms.api.entity.SmsResponse;
 import kim.wind.sms.comm.exception.SmsBlendException;
 import kim.wind.sms.tencent.config.TencentConfig;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.*;
 import java.util.concurrent.Executor;
 
 public class TencentSmsImpl implements SmsBlend {
 
-    @Autowired
     private TencentConfig tencentSmsConfig;
 
-    @Autowired
     private SmsClient client;
 
-    @Autowired
-    @Qualifier("smsExecutor")
     private Executor pool;
 
-    @Autowired
     private DelayedTime delayed;
 
+    public TencentSmsImpl(TencentConfig tencentSmsConfig, SmsClient client, Executor pool, DelayedTime delayed) {
+        this.tencentSmsConfig = tencentSmsConfig;
+        this.client = client;
+        this.pool = pool;
+        this.delayed = delayed;
+    }
 
     @Override
     @Restricted

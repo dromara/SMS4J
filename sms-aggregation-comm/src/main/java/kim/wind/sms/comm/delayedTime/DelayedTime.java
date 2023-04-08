@@ -1,10 +1,6 @@
 package kim.wind.sms.comm.delayedTime;
 
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.PriorityBlockingQueue;
+import java.util.*;
 
 /**
  * <p>类名: DelayedTime
@@ -15,17 +11,18 @@ import java.util.concurrent.PriorityBlockingQueue;
  **/
 public class DelayedTime {
 
-    private final BlockingQueue<Task> queue = new PriorityBlockingQueue<>();
-
-
+    private final List<Task> queue = Collections.synchronizedList(new ArrayList<>());
 
     public DelayedTime() {
         Timer timer = new Timer(true);
         Thread t = new Thread(() -> {
             while (true) try {
-                Task take = queue.take();
+                if (queue.size() == 0){
+                    continue;
+                }
+                Task take = queue.remove(0);
                 timer.schedule(take.getRunnable(), take.getTime());
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         });
@@ -40,8 +37,8 @@ public class DelayedTime {
             Task tasks = new Task();
             tasks.setTime(delay);
             tasks.setRunnable(task);
-            queue.put(tasks);
-        } catch (InterruptedException e) {
+            queue.add(tasks);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

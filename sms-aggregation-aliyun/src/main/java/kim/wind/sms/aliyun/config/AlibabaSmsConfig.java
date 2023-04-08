@@ -3,44 +3,73 @@ package kim.wind.sms.aliyun.config;
 import com.aliyun.dysmsapi20170525.Client;
 import com.aliyun.teaopenapi.models.Config;
 import kim.wind.sms.aliyun.service.AlibabaSmsImpl;
-import kim.wind.sms.api.SmsBlend;
-import kim.wind.sms.comm.delayedTime.DelayedTime;
-import lombok.Data;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-import java.util.concurrent.Executor;
+import kim.wind.sms.comm.exception.SmsBlendException;
+import kim.wind.sms.comm.factory.BeanFactory;
 
 
-@Data
-@Configuration
-@ConditionalOnProperty(name = "sms.supplier", havingValue = "alibaba")
+/**
+ * AlibabaSmsConfig
+ * <p> 阿里巴巴对象建造者
+ * @author :Wind
+ * 2023/4/8  14:54
+ **/
 public class AlibabaSmsConfig {
 
+    private static AlibabaSmsImpl alibabaSms;
 
-    @Bean
-    @ConfigurationProperties(prefix = "sms.alibaba")     //指定配置文件注入属性前缀
-    public AlibabaConfig alibabaConfig(){
-        return new AlibabaConfig();
+    private static AlibabaSmsConfig alibabaSmsConfig;
+
+    private  Client client(AlibabaConfig alibabaConfig){
+        try {
+            Config config = new Config()
+                    //  AccessKey ID
+                    .setAccessKeyId(alibabaConfig.getAccessKeyId())
+                    //  AccessKey Secret
+                    .setAccessKeySecret(alibabaConfig.getAccessKeySecret());
+            // 访问的域名
+            config.endpoint = alibabaConfig.getRequestUrl();
+            return new Client(config);
+        }catch  (Exception e){
+            throw new SmsBlendException(e.getMessage());
+        }
     }
 
-
-    @Bean
-    public Client client(AlibabaConfig alibabaConfig) throws Exception {
-       Config config = new Config()
-                //  AccessKey ID
-                .setAccessKeyId(alibabaConfig.getAccessKeyId())
-                //  AccessKey Secret
-                .setAccessKeySecret(alibabaConfig.getAccessKeySecret());
-        // 访问的域名
-        config.endpoint = alibabaConfig.getRequestUrl();
-        return new Client(config);
+    /**
+     *  getAlibabaSms
+     * <p> 建造一个短信实现对像
+     * @author :Wind
+    */
+    public static AlibabaSmsImpl createAlibabaSms(AlibabaConfig alibabaConfig) {
+        if (alibabaSmsConfig == null){
+            alibabaSmsConfig = new AlibabaSmsConfig();
+        }
+        if (alibabaSms == null){
+            alibabaSms = new AlibabaSmsImpl(alibabaSmsConfig.client(alibabaConfig),
+                    alibabaConfig,
+                    BeanFactory.getExecutor(),
+                    BeanFactory.getDelayedTime());
+        }
+        return alibabaSms;
     }
 
-    @Bean
-    public SmsBlend smsBlend(Client client, AlibabaConfig alibabaConfig){
-        return new AlibabaSmsImpl(client,alibabaConfig);
+    /**
+     *  refresh
+     * <p> 刷新对象
+     * @author :Wind
+    */
+    public static AlibabaSmsImpl refresh(AlibabaConfig alibabaConfig){
+        // 如果配置对象为空则创建一个
+        if (alibabaSmsConfig == null){
+            alibabaSmsConfig = new AlibabaSmsConfig();
+        }
+        //重新构造一个实现对象
+        alibabaSms= new AlibabaSmsImpl(alibabaSmsConfig.client(alibabaConfig),
+                alibabaConfig,
+                BeanFactory.getExecutor(),
+                BeanFactory.getDelayedTime());
+        return alibabaSms;
+    }
+
+    private AlibabaSmsConfig() {
     }
 }

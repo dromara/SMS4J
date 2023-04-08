@@ -1,34 +1,40 @@
 package kim.wind.sms.huawei.config;
 
-import com.dtflys.forest.Forest;
-import com.dtflys.forest.config.ForestConfiguration;
-import kim.wind.sms.api.SmsBlend;
+import kim.wind.sms.comm.factory.BeanFactory;
 import kim.wind.sms.huawei.service.HuaweiSmsImpl;
-import lombok.Data;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-@Data
-@Configuration
-@ConditionalOnProperty(name = "sms.supplier", havingValue = "huawei")
+/**
+ * HuaweiSmsConfig
+ * <p> 华为短信对象建造
+ *
+ * @author :Wind
+ * 2023/4/8  15:27
+ **/
 public class HuaweiSmsConfig {
+    private static HuaweiSmsImpl huaweiSms;
+    private static HuaweiSmsConfig huaweiSmsConfig;
 
-    @Bean
-    @ConfigurationProperties(prefix = "sms.huawei")     //指定配置文件注入属性前缀
-    public HuaweiConfig huaweiConfig(){
-        return new HuaweiConfig();
+    private HuaweiSmsConfig() {
     }
 
-    @Bean("forestConfiguration")
-    public ForestConfiguration forestConfiguration(HuaweiConfig huaweiConfig){
-        return Forest.config().setBackendName("httpclient").setLogEnabled(huaweiConfig.getHttpLog());
+    /** 建造一个华为短信实现*/
+    public static HuaweiSmsImpl createHuaweiSms(HuaweiConfig huaweiConfig) {
+        if (huaweiSmsConfig == null){
+            huaweiSmsConfig = new HuaweiSmsConfig();
+        }
+        if (huaweiSms == null){
+            huaweiSms = new HuaweiSmsImpl(huaweiConfig, BeanFactory.getExecutor(),BeanFactory.getDelayedTime());
+        }
+        return huaweiSms;
     }
 
-    @Bean
-    public SmsBlend smsBlend (){
-        return new HuaweiSmsImpl();
+    /** 刷新对象*/
+    public static HuaweiSmsImpl refresh(HuaweiConfig huaweiConfig){
+        if (huaweiSmsConfig == null){
+            huaweiSmsConfig = new HuaweiSmsConfig();
+        }
+        huaweiSms = new HuaweiSmsImpl(huaweiConfig, BeanFactory.getExecutor(),BeanFactory.getDelayedTime());
+        return huaweiSms;
     }
 
 }

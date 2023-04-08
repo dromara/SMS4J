@@ -17,4 +17,5 @@ public class AlibabaConfig {
     private String templateName;
     /** 请求地址*/
     private String requestUrl = "dysmsapi.aliyuncs.com";
+
 }

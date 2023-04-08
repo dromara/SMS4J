@@ -1,4 +1,4 @@
-package kim.wind.sms.sql.err;
+package kim.wind.sms.comm.exception;
 
 public class SmsSqlException extends RuntimeException{
     private String message;

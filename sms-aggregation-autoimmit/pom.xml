@@ -18,30 +18,6 @@
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>kim.wind</groupId>
-			<artifactId>sms-aggregation-aliyun</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>kim.wind</groupId>
-			<artifactId>sms-aggregation-tencent</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>kim.wind</groupId>
-			<artifactId>sms-aggregation-unisms</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>kim.wind</groupId>
-			<artifactId>sms-aggregation-yunpian</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>kim.wind</groupId>
-			<artifactId>sms-aggregation-huawei</artifactId>
-		</dependency>
 
 		<!--aop依赖-->
 		<dependency>

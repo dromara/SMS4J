@@ -1,14 +1,11 @@
-package kim.wind.sms.sql.config;
+package kim.wind.sms.comm.config;
 
 
-import kim.wind.sms.sql.err.SmsSqlException;
 import lombok.Data;
-import org.springframework.util.StringUtils;
 
 /**
  * SmsSqlConfig
  * <p> sql配置信息
- *
  * @author :Wind
  * 2023/4/5  18:28
  **/

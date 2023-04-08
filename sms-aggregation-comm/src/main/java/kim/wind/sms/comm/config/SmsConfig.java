@@ -1,17 +1,13 @@
-package kim.wind.sms.core.config;
+package kim.wind.sms.comm.config;
 
 
-import kim.wind.sms.core.enumerate.ConfigType;
+import kim.wind.sms.comm.enumerate.ConfigType;
 import lombok.Data;
 
 @Data
 public class SmsConfig {
-    /**
-     * 短信服务商
-     */
-    private String supplier;
 
-    /** 是否使用数据库作为配置源*/
+    /** 配置源类型*/
     private ConfigType configType = ConfigType.CONFIG_FILE;
 
     /**
@@ -22,7 +18,7 @@ public class SmsConfig {
     /**
      * 是否开启短信限制
      */
-    private String restricted;
+    private Boolean restricted = false;
 
     /**
      * 是否使用redis进行缓存
@@ -55,19 +51,11 @@ public class SmsConfig {
     private Integer queueCapacity = 50;
 
     /**
-     * 活跃时间
-     */
-    private Integer keepAliveSeconds = 60;
-
-    /**
-     * 线程名字前缀
-     */
-    private String threadNamePrefix = "sms-executor-";
-
-    /**
      * 设置线程池关闭的时候等待所有任务都完成再继续销毁其他的Bean
      */
     private Boolean shutdownStrategy = true;
 
+    /** 是否打印http log*/
+    private Boolean HttpLog = false;
 
 }

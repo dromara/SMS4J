@@ -1,7 +1,7 @@
 package kim.wind.sms.starter.config;
 
 import kim.wind.sms.autoimmit.config.SmsAutowiredConfig;
-import kim.wind.sms.core.utils.SpringUtil;
+import kim.wind.sms.autoimmit.utils.SpringUtil;
 import lombok.Data;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.annotation.Bean;

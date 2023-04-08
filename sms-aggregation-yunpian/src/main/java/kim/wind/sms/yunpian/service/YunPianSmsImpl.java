@@ -4,15 +4,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.dtflys.forest.config.ForestConfiguration;
 import kim.wind.sms.api.SmsBlend;
 import kim.wind.sms.api.callback.CallBack;
+import kim.wind.sms.api.entity.SmsResponse;
 import kim.wind.sms.comm.annotation.Restricted;
 import kim.wind.sms.comm.constant.Constant;
 import kim.wind.sms.comm.delayedTime.DelayedTime;
-import kim.wind.sms.api.entity.SmsResponse;
 import kim.wind.sms.comm.exception.SmsBlendException;
 import kim.wind.sms.yunpian.config.YunpianConfig;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.*;
 import java.util.concurrent.Executor;
@@ -22,17 +19,12 @@ import static kim.wind.sms.comm.utils.SmsUtil.listToString;
 
 public class YunPianSmsImpl implements SmsBlend {
 
-    @Autowired
-    @Qualifier("smsExecutor")
     private Executor pool;
 
-    @Autowired
     private DelayedTime delayed;
 
-    @Autowired
     private YunpianConfig config;
 
-    @Autowired
     private ForestConfiguration http;
 
     @Override
@@ -180,7 +172,7 @@ public class YunPianSmsImpl implements SmsBlend {
         return headers;
     }
 
-    @NotNull
+
     private static SmsResponse getSmsResponse(JSONObject execute) {
         SmsResponse smsResponse = new SmsResponse();
         smsResponse.setCode(execute.getString("code"));

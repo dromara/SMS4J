@@ -1,14 +1,20 @@
 package kim.wind.sms.autoimmit.config;
 
+import kim.wind.sms.aliyun.config.AlibabaConfig;
 import kim.wind.sms.autoimmit.aop.AopAdvice;
+import kim.wind.sms.autoimmit.utils.ConfigUtil;
+import kim.wind.sms.autoimmit.utils.RedisUtils;
+import kim.wind.sms.autoimmit.utils.SpringUtil;
+import kim.wind.sms.comm.config.SmsBanner;
+import kim.wind.sms.comm.config.SmsConfig;
 import kim.wind.sms.comm.delayedTime.DelayedTime;
-import kim.wind.sms.core.utils.RedisUtils;
-import kim.wind.sms.core.config.SmsConfig;
-import kim.wind.sms.core.factory.BeanFactory;
-import kim.wind.sms.core.utils.SpringUtil;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import kim.wind.sms.comm.factory.BeanFactory;
+import kim.wind.sms.core.config.SupplierFactory;
+import kim.wind.sms.huawei.config.HuaweiConfig;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
+
 import java.util.concurrent.Executor;
 
 
@@ -22,27 +28,14 @@ public class SmsAutowiredConfig {
 
     @Bean
     @ConfigurationProperties(prefix = "sms")     //指定配置文件注入属性前缀
-    public SmsConfig smsConfig(){
+    protected SmsConfig smsConfig(){
         return BeanFactory.getSmsConfig();
     }
 
     /** 注入一个定时器*/
     @Bean
-    public DelayedTime delayedTime(){
+    protected DelayedTime delayedTime(){
       return BeanFactory.getDelayedTime();
-    }
-
-    /** 如果启用了短信限制，则注入Aop组件*/
-    @Bean
-    @ConditionalOnProperty(prefix = "sms", name = "restricted", havingValue = "true")
-    public AopAdvice aopAdvice(){
-        return new AopAdvice();
-    }
-
-    /** 如果启用了redis作为缓存则注入redis工具类*/
-    @Bean
-    public RedisUtils redisUtils(){
-        return null;
     }
 
     /** 注入线程池*/
@@ -51,11 +44,30 @@ public class SmsAutowiredConfig {
        return BeanFactory.setExecutor(config);
     }
 
+    /** 注入一个配置文件读取工具*/
+    @Bean
+    protected ConfigUtil configUtil(Environment environment){
+        return new ConfigUtil(environment);
+    }
+
+    @Bean
+    protected SupplierConfig supplierConfig(){
+        return new SupplierConfig();
+    }
+
+
 
     void init(){
+        /* 如果配置中启用了redis，则注入redis工具*/
         if (BeanFactory.getSmsConfig().getRedisCache()){
-            springUtil.createBean(RedisUtils.class.getName(),new RedisUtils());
+            springUtil.createBean(RedisUtils.class);
         }
-
+        /* 如果启用了短信限制，则注入AOP组件*/
+        if (BeanFactory.getSmsConfig().getRestricted()){
+            springUtil.createBean(AopAdvice.class);
+        }
+        if (BeanFactory.getSmsConfig().getIsPrint()){
+            SmsBanner.PrintBanner("V 1.0.4");
+        }
     }
 }

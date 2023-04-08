@@ -16,7 +16,6 @@ import kim.wind.sms.comm.annotation.Restricted;
 import kim.wind.sms.comm.delayedTime.DelayedTime;
 import kim.wind.sms.comm.exception.SmsBlendException;
 import kim.wind.sms.comm.utils.http.HttpJsonTool;
-import kim.wind.sms.core.factory.BeanFactory;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.LinkedHashMap;
@@ -27,14 +26,12 @@ import java.util.concurrent.Executor;
 /**
  * <p>类名: AlibabaSmsImpl
  * <p>说明：  阿里云短信实现
- *
  * @author :Wind
  * 2023/3/26  17:16
  **/
 
 @Slf4j
 public class AlibabaSmsImpl implements SmsBlend {
-
 
     private Client client;
 
@@ -44,11 +41,17 @@ public class AlibabaSmsImpl implements SmsBlend {
 
     private DelayedTime delayed;
 
-    public AlibabaSmsImpl(Client client, AlibabaConfig alibabaSmsConfig) {
+    /**
+     *  AlibabaSmsImpl
+     * <p>构造器，用于构造短信实现模块
+     * @author :Wind
+    */
+
+    public AlibabaSmsImpl(Client client, AlibabaConfig alibabaSmsConfig,Executor pool,DelayedTime delayedTime){
         this.client = client;
         this.alibabaSmsConfig = alibabaSmsConfig;
-        this.pool = BeanFactory.getExecutor();
-        this.delayed = BeanFactory.getDelayedTime();
+        this.pool = pool;
+        this.delayed = delayedTime;
     }
 
     @Override

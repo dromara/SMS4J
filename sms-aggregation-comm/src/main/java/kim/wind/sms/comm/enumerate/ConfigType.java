@@ -1,4 +1,4 @@
-package kim.wind.sms.core.enumerate;
+package kim.wind.sms.comm.enumerate;
 
 /**
  * ConfigType

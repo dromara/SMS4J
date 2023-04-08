@@ -59,6 +59,7 @@
         <tencent.version>3.1.622</tencent.version>
         <forest.version>1.5.30</forest.version>
         <hutool.version>5.8.16</hutool.version>
+        <okhttp.version>3.14.9</okhttp.version>
     </properties>
 
     <dependencyManagement>
@@ -145,6 +146,12 @@
                 <groupId>com.aliyun</groupId>
                 <artifactId>dysmsapi20170525</artifactId>
                 <version>${aliyun.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.squareup.okhttp3</groupId>
+                        <artifactId>okhttp</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <!-- 阿里JSON解析器 -->
@@ -181,6 +188,12 @@
                 <groupId>com.apistd.uni</groupId>
                 <artifactId>uni-sdk</artifactId>
                 <version>${unisms.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.squareup.okhttp3</groupId>
+                        <artifactId>okhttp</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <!-- 腾讯云短信-->
@@ -188,8 +201,19 @@
                 <groupId>com.tencentcloudapi</groupId>
                 <artifactId>tencentcloud-sdk-java</artifactId>
                 <version>${tencent.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.squareup.okhttp3</groupId>
+                        <artifactId>okhttp</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
-
+            <!-- okhttp依赖,防止出现java.lang.NoSuchFieldError: Companion异常-->
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttp.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

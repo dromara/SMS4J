@@ -11,7 +11,7 @@ category:
 <h4 align="center" style="margin: 0 0 0; font-weight: bold;">
 <a align="center" href="https://gitee.com/the-wind-is-like-a-song/sms_aggregation/stargazers" ><img src="https://gitee.com/the-wind-is-like-a-song/sms_aggregation/badge/star.svg?theme=gvp"></a>
 <a align="center" href="https://gitee.com/the-wind-is-like-a-song/sms_aggregation/master/LICENSE" style="padding-left: 5px"><img src="https://img.shields.io/badge/license-Apache--2.0-green"></a>
-<a align="center" href="https://gitee.com/the-wind-is-like-a-song/sms_aggregation" style="padding-left: 5px"><img src="https://img.shields.io/badge/version-v1.0.3-blue"></a>
+<a align="center" href="https://gitee.com/the-wind-is-like-a-song/sms_aggregation" style="padding-left: 5px"><img src="https://img.shields.io/badge/version-v1.1.0-blue"></a>
 </h4>
 <h4 align="center" style="margin: 0 0 0; font-weight: bold;"><img width="130" align="center" src="/dlogo.png"></h4>
 
@@ -23,14 +23,14 @@ category:
 各家都有不同的方式和标准，每次需要使用时候，都需要花费时间去阅读文档和编写相应的工具，为一个短信浪费了太多的精力和时间。
 这个工具的目的就是为了统一下各个厂商的短信发送工具的标准，甚至于更换短信厂商只需要更改yml配置文件即可。  
   
-**新人上路，还望各位大佬多多支持，如果你觉得还算值得鼓励，请用你发财的小手帮助点上一个start**  
+**如果你觉得还算值得鼓励，请用你发财的小手帮助点上一个start**  
   
-[gitee](https://gitee.com/the-wind-is-like-a-song/sms_aggregation)  
+[gitee](https://gitee.com/dromara/sms_aggregation)  
 [github](https://github.com/fengruge/sms_aggregation)  
 [在线文档](https://apidoc.gitee.com/the-wind-is-like-a-song/sms_aggregation)
 
 ## 🎁支持厂商一览
-_目前刚刚发布第一版本，支持尚少，后续会集成更多的厂商_
+_目前版本，支持尚少，后续会集成更多的厂商_
 - **阿里云国内短信**
 - **腾讯云国内短信**
 - **华为云国内短信**

@@ -42,6 +42,32 @@ footer:  © 2022 wind <a href="https://beian.miit.gov.cn/#/Integrated/index" tar
 <a align="center" href="https://gitee.com/the-wind-is-like-a-song/sms_aggregation" style="padding-left: 5px"><img src="https://img.shields.io/badge/version-v1.0.3-blue"></a>
 </h4>
 
+## 🎗️特性
+<div id="peculiarityId">
+<p class="peculiarity">
+✅ 开箱即用，简单方便
+</p>
+<p class="peculiarity">
+✅ 兼容SpringBoot3，升级无障碍  
+</p>
+<p class="peculiarity">
+✅ 支持多厂商配置，轻松便捷
+</p>
+<p class="peculiarity">
+✅ 支持异步短信延迟短信等诸多额外功能
+</p>
+<p class="peculiarity">
+✅ 使用方便，新手友好
+</p>
+<p class="peculiarity">
+✅ 最小化依赖，最大化降低依赖冲突风险
+</p>
+<p class="peculiarity">
+✅ 配置灵活，支持多种配置方式
+</p>
+</div>
+
+
 ## 📀maven安装
    ```xml
    <dependency>

@@ -43,6 +43,7 @@ footer:  © 2022 wind <a href="https://beian.miit.gov.cn/#/Integrated/index" tar
 </h4>
 
 ## 🎗️特性
+<div id="ela">
 <div id="peculiarityId">
 <p class="peculiarity">
 ✅ 开箱即用，简单方便
@@ -65,6 +66,10 @@ footer:  © 2022 wind <a href="https://beian.miit.gov.cn/#/Integrated/index" tar
 <p class="peculiarity">
 ✅ 配置灵活，支持多种配置方式
 </p>
+</div>
+<div>
+<img src="/assets/structure.png">
+</div>
 </div>
 
 

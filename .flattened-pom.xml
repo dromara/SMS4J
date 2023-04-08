@@ -8,7 +8,7 @@
   <packaging>pom</packaging>
   <name>sms-aggregation</name>
   <description>sms_aggregation</description>
-  <url>https://gitee.com/MR-wind/sms_aggregation</url>
+  <url>https://gitee.com/dromara/sms_aggregation</url>
   <licenses>
     <license>
       <name>Apache 2</name>

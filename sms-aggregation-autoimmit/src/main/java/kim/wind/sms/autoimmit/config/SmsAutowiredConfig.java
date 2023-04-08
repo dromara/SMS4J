@@ -55,7 +55,6 @@ public class SmsAutowiredConfig {
     }
 
 
-
     void init(){
         /* 如果配置中启用了redis，则注入redis工具*/
         if (BeanFactory.getSmsConfig().getRedisCache()){
@@ -68,7 +67,7 @@ public class SmsAutowiredConfig {
             log.debug("SMS restriction is enabled");
         }
         if (BeanFactory.getSmsConfig().getIsPrint()){
-            SmsBanner.PrintBanner("V 1.0.4");
+            SmsBanner.PrintBanner("V 1.0.5");
         }
     }
 }

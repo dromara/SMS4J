@@ -8,7 +8,7 @@
     <name>sms-aggregation</name>
     <packaging>pom</packaging>
     <description>sms_aggregation</description>
-    <url>https://gitee.com/MR-wind/sms_aggregation</url>
+    <url>https://gitee.com/dromara/sms_aggregation</url>
 
     <modules>
         <module>sms-aggregation-api</module>

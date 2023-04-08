@@ -4,15 +4,35 @@ index: false
 icon: play
 ---
 
-## 🪚工具注入
+## 🪚工厂获取
 ```java
 @RestController
 public class Demo{
- //此处作为演示使用，推荐使用构造注入或set注入
- @Autowired
- private final SmsBlend sms;
+    /** 阿里云短信实现*/
+    private final SmsBlend alibabaSms = SmsFactory.createSmsBlend(SupplierType.ALIBABA);
+    
+    /** 华为短信实现*/
+    private final SmsBlend huaweiSms = SmsFactory.createSmsBlend(SupplierType.HUAWEI);
 }
 ```
+
+## 工厂枚举
+
+```java
+public enum SupplierType {
+    /** 阿里云*/
+    ALIBABA("阿里云短信"),
+    /** 华为云*/
+    HUAWEI("华为云短信"),
+    /** 云片*/
+    YUNPIAN("云片短信"),
+    /** 腾讯云*/
+    TENCENT("腾讯云短信"),
+    /** 合一短信*/
+    UNI_SMS("合一短信");
+}
+```
+
 ## 📨标准短信
 
 #### 发送固定消息模板短信
@@ -57,7 +77,7 @@ callBack为发送结果回调，可以使用lambda表达式进行接收
 如果不关注发送结果，该方法有一个不接收回调的重载方法
 例如：
 ```java
-sms.sendMessageAsync("18515921810", "123456", e->log.info(e.toString()));
+sms.sendMessageAsync("18888888888", "123456", e->log.info(e.toString()));
 ```
 该回调方法中接收的参数为 SmsResponse
 :::

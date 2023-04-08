@@ -21,8 +21,6 @@ footer: © 2022 wind <a href="https://beian.miit.gov.cn/#/Integrated/index" targ
 ### 基础配置
 ```yaml
 sms:
-  # 短信服务商
-  supplier: yunpian
   yunpian:
     #账号唯一标识
     apikey: 您的apikey
@@ -32,8 +30,6 @@ sms:
     templateId: YP123456789
     #模板变量名称
     templateName: code
-    #是否打印http请求日志，默认为false
-    httpLog: false
 ```
 :::tip
 云片的基础配置相对简单，后续添加新的功能或会增加新配置

@@ -22,8 +22,6 @@ footer: © 2022 wind <a href="https://beian.miit.gov.cn/#/Integrated/index" targ
 ### 基础配置
 ```yaml
 sms:
-  # 短信服务商
-  supplier: tencent
   tencent:
     #阿里云的accessKey
     accessKeyId: 您的accessKey

@@ -6,12 +6,12 @@ heroImage: /logo1.png
 heroImageDark: /logo.png
 heroText: 短信聚合
 tagline: 短信聚合    -- 让发送短信变的更简单。
-details: V1.0.3
+details: V1.1.0
 actions:
   - text: 开始 🏡
     link: /doc/start/
     type: primary
-  - text: 🥭 V1.0.3
+  - text: 🥭 V1.1.0
     link: https://gitee.com/the-wind-is-like-a-song/sms_aggregation
     details: 最新版本
 
@@ -36,10 +36,11 @@ features:
 copyright: false
 footer:  © 2022 wind <a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank">冀ICP备2021004949号-3</a> 
 ---
+## 
 <h4 align="center" style="margin: 0 0 0; font-weight: bold;">
 <a align="center" href="https://gitee.com/the-wind-is-like-a-song/sms_aggregation/stargazers" ><img src="https://gitee.com/the-wind-is-like-a-song/sms_aggregation/badge/star.svg?theme=gvp"></a>
 <a align="center" href="https://gitee.com/the-wind-is-like-a-song/sms_aggregation/master/LICENSE" style="padding-left: 5px"><img src="https://img.shields.io/badge/license-Apache--2.0-green"></a>
-<a align="center" href="https://gitee.com/the-wind-is-like-a-song/sms_aggregation" style="padding-left: 5px"><img src="https://img.shields.io/badge/version-v1.0.3-blue"></a>
+<a align="center" href="https://gitee.com/the-wind-is-like-a-song/sms_aggregation" style="padding-left: 5px"><img src="https://img.shields.io/badge/version-v1.1.0-blue"></a>
 </h4>
 
 ## 🎗️特性
@@ -84,8 +85,6 @@ footer:  © 2022 wind <a href="https://beian.miit.gov.cn/#/Integrated/index" tar
 ## 🛠️基础配置
    ```yaml
     sms:
-       # 短信服务商 
-       supplier: alibaba
        alibaba:
          #阿里云的accessKey
          accessKeyId: 您的accessKey
@@ -99,21 +98,41 @@ footer:  © 2022 wind <a href="https://beian.miit.gov.cn/#/Integrated/index" tar
          templateName: code
          #请求地址 默认为dysmsapi.aliyuncs.com 如无特殊改变可以不用设置
          requestUrl: dysmsapi.aliyuncs.com
+       huawei:
+         #华为短信appKey
+         appKey: 5N6fvXXXX920HaWhVXXXXXX7fYa
+         #华为短信appSecret
+         app-secret: Wujt7EYzZTBXXXXXXEhSP6XXXX
+         #短信签名
+         signature: 华为短信测试
+         #通道号
+         sender: 8823040504797
+         #模板ID 如果使用自定义模板发送方法可不设定
+         template-id: acXXXXXXXXc274b2a8263479b954c1ab5
+         #华为回调地址，如不需要可不设置或为空
+         statusCallBack:
+          #华为分配的app请求地址
+         url: https://XXXXX.cn-north-4.XXXXXXXX.com:443
    ```
 ## 🧿使用
 ```java
 @RestController
 @RequestMapping("/test/")
 public class DemoController {
-
-    //注入短信工具
-    @Autowired
-    private SmsBlend sms;
+    
+    /** 阿里云短信实现*/
+    private final SmsBlend alibabaSms = SmsFactory.createSmsBlend(SupplierType.ALIBABA);
+    
+    /** 华为短信实现*/
+    private final SmsBlend huaweiSms = SmsFactory.createSmsBlend(SupplierType.HUAWEI);
 
     // 测试发送固定模板短信
     @RequestMapping("/")
     public void doLogin(String username, String password) {
-       sms.sendMessage("18888888888","测试发送固定模板短信");
+         //阿里云向此手机号发送短信
+        alibabaSms.sendMessage("18888888888","123456");
+        //华为短信向此手机号发送短信
+        huaweiSms.sendMessage("16666666666","000000");
     }
 }
 ```

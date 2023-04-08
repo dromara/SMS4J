@@ -21,8 +21,6 @@ footer: © 2022 wind <a href="https://beian.miit.gov.cn/#/Integrated/index" targ
 ### 基础配置
 ```yaml
 sms:
-  # 短信服务商
-  supplier: huawei
   huawei:
     #华为短信应用appkey
     appKey: XXXXv0Q5JXXXHaWhVnf5C20XXXX
@@ -38,6 +36,4 @@ sms:
     url: https://smsapi.cn-xxxxx-4.myhuaweicloud.com:443
     #华为云国内短信状态报告接收地
     statusCallBack: https://xxxx.com/v1
-    #是否打印http请求日志 默认false
-    httpLog: false
 ```

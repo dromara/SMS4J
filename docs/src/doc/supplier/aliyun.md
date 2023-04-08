@@ -22,8 +22,6 @@ footer: © 2022 wind <a href="https://beian.miit.gov.cn/#/Integrated/index" targ
 
 ```yaml
 sms:
-  # 短信服务商
-  supplier: alibaba
   alibaba:
     #阿里云的accessKey
     accessKeyId: 您的accessKey

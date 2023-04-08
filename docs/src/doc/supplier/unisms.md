@@ -22,8 +22,6 @@ footer: © 2022 wind <a href="https://beian.miit.gov.cn/#/Integrated/index" targ
 
 ```yaml
 sms:
-  # 短信服务商
-  supplier: uni-sms
   uni-sms:
     # 访问键标识
     accessKeyId: your accessKeyId

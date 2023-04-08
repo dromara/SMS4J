@@ -22,8 +22,6 @@ footer: © 2022 wind <a href="https://beian.miit.gov.cn/#/Integrated/index" targ
 
 ```yaml
 sms:
-    # 短信服务商枚举，具体配置请看后续文档
-    supplier: 短信服务商枚举
     # 是否开启短信发送限制 默认false
     restricted: false
     # 以下设置仅在开启短信发送限制后生效
@@ -33,11 +31,15 @@ sms:
     account-max: 20
     # 单账号每分钟最大发送
     minute-max: 2
+    #默认厂商配置来源 此处为枚举设置，支持sql和配置文件，默认为从yml配置文件获取，如无需求可不改变
+    config-type: config-file
+    #启用框架banner打印，默认开启状态
+    is-print: true
 ```
 
 ::: tip
 发送限制功能依赖于缓存，在工具的内部实现了一个基于内存的缓存，胜在不依赖于任何第三方组件和中间件，
-但是目前第一版本的缓存中并不支持持久化，也就是说在项目进行重启后，缓存的内容会丢失，限制也会消失，
+但是目前版本的缓存中并不支持持久化，也就是说在项目进行重启后，缓存的内容会丢失，限制也会消失，
 所以在这里如果项目中集成了SpringBoot的redis工具，这里建议开启`redisCache: true`。工具会自动使用redis进行缓存。
 :::
 
@@ -54,10 +56,6 @@ sms:
   maxPoolSize: 30
   #队列容量
   queueCapacity: 50
-  #活跃时间
-  keepAliveSeconds: 60
-  # 线程名字前缀
-  threadNamePrefix: sms-executor-
   #设置线程池关闭的时候等待所有任务都完成再继续销毁其他的Bean
   shutdownStrategy: true
 ```

@@ -5,7 +5,7 @@ icon: play
 ---
 <h2 align="center" style="margin: 0 0 0px; font-weight: bold;">🎁支持厂商一览</h2>
 
-_目前版本，支持尚少，后续会集成更多的厂商_
+_目前版本中支持尚少，后续会集成更多的厂商_
 - [🚁阿里云国内短信](aliyun.html)
 - [🚀腾讯云国内短信](tencent.html)
 - [🛸华为云国内短信](huawei.html)

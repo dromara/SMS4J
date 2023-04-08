@@ -38,19 +38,9 @@ footer: © 2022 wind <a href="https://beian.miit.gov.cn/#/Integrated/index" targ
    </dependency>
    ```
 ### 3.设置配置文件
-   ```yaml
+自 V1.1.0版本开始，sms-aggregator开始支持多厂商共用，可以同时配置多个厂商使用
+  ```yaml
     sms:
-       # 短信服务商 
-       supplier: alibaba
-       # 是否开启短信发送限制 默认false
-       restricted: true
-       # 以下设置仅在开启短信发送限制后生效
-       # 是否使用redis进行缓存 默认false
-       redis-cache: true
-       # 单账号每日最大发送量
-       account-max: 20
-       # 单账号每分钟最大发送
-       minute-max: 2
        alibaba:
          #阿里云的accessKey
          accessKeyId: 您的accessKey
@@ -64,22 +54,42 @@ footer: © 2022 wind <a href="https://beian.miit.gov.cn/#/Integrated/index" targ
          templateName: code
          #请求地址 默认为dysmsapi.aliyuncs.com 如无特殊改变可以不用设置
          requestUrl: dysmsapi.aliyuncs.com
+       huawei:
+         #华为短信appKey
+         appKey: 5N6fvXXXX920HaWhVXXXXXX7fYa
+         #华为短信appSecret
+         app-secret: Wujt7EYzZTBXXXXXXEhSP6XXXX
+         #短信签名
+         signature: 华为短信测试
+         #通道号
+         sender: 8823040504797
+         #模板ID 如果使用自定义模板发送方法可不设定
+         template-id: acXXXXXXXXc274b2a8263479b954c1ab5
+         #华为回调地址，如不需要可不设置或为空
+         statusCallBack:
+          #华为分配的app请求地址
+         url: https://XXXXX.cn-north-4.XXXXXXXX.com:443
    ```
 ### 4.创建测试controller
-
+为应对多厂商的不同实现自 V1.1.0版本开始不再使用springBoot注入对象的形式进行实现类的获取，改为工厂模式获取单例的实现对象
 ```java
 @RestController
 @RequestMapping("/test/")
 public class DemoController {
-
-    //注入短信工具
-    @Autowired
-    private SmsBlend sms;
+    
+    /** 阿里云短信实现*/
+    private final SmsBlend alibabaSms = SmsFactory.createSmsBlend(SupplierType.ALIBABA);
+    
+    /** 华为短信实现*/
+    private final SmsBlend huaweiSms = SmsFactory.createSmsBlend(SupplierType.HUAWEI);
 
     // 测试发送固定模板短信
     @RequestMapping("/")
     public void doLogin(String username, String password) {
-       sms.sendMessage("18888888888","测试发送固定模板短信");
+         //阿里云向此手机号发送短信
+        alibabaSms.sendMessage("18888888888","123456");
+        //华为短信向此手机号发送短信
+        huaweiSms.sendMessage("16666666666","000000");
     }
 }
 ```

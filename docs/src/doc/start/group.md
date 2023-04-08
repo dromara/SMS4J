@@ -35,3 +35,4 @@ footer: © 2022 wind <a href="https://beian.miit.gov.cn/#/Integrated/index" targ
 - 第一时间收到新增开源案例通知。
 - 第一时间获得相关的技术支持。
 - 和众多大佬一起互相 (huá shuǐ) 交流 (mō yú)。
+- 人越来越帅了，头发从来不掉了

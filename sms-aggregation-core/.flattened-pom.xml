@@ -5,11 +5,11 @@
   <parent>
     <groupId>kim.wind</groupId>
     <artifactId>sms_aggregation</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
   </parent>
   <groupId>kim.wind</groupId>
   <artifactId>sms-aggregation-core</artifactId>
-  <version>1.0.4</version>
+  <version>1.0.5</version>
   <name>sms-aggregation-core</name>
   <description>sms-aggregation-core</description>
   <licenses>

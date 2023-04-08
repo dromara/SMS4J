@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>kim.wind</groupId>
   <artifactId>sms_aggregation</artifactId>
-  <version>1.0.4</version>
+  <version>1.0.5</version>
   <packaging>pom</packaging>
   <name>sms-aggregation</name>
   <description>sms_aggregation</description>
@@ -60,7 +60,7 @@
     <spring.boot.version>2.7.10</spring.boot.version>
     <hutool.version>5.8.16</hutool.version>
     <tencent.version>3.1.622</tencent.version>
-    <revision>1.0.4</revision>
+    <revision>1.0.5</revision>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -79,52 +79,52 @@
       <dependency>
         <groupId>kim.wind</groupId>
         <artifactId>sms-aggregation-aliyun</artifactId>
-        <version>1.0.4</version>
+        <version>1.0.5</version>
       </dependency>
       <dependency>
         <groupId>kim.wind</groupId>
         <artifactId>sms-aggregation-tencent</artifactId>
-        <version>1.0.4</version>
+        <version>1.0.5</version>
       </dependency>
       <dependency>
         <groupId>kim.wind</groupId>
         <artifactId>sms-aggregation-unisms</artifactId>
-        <version>1.0.4</version>
+        <version>1.0.5</version>
       </dependency>
       <dependency>
         <groupId>kim.wind</groupId>
         <artifactId>sms-aggregation-yunpian</artifactId>
-        <version>1.0.4</version>
+        <version>1.0.5</version>
       </dependency>
       <dependency>
         <groupId>kim.wind</groupId>
         <artifactId>sms-aggregation-huawei</artifactId>
-        <version>1.0.4</version>
+        <version>1.0.5</version>
       </dependency>
       <dependency>
         <groupId>kim.wind</groupId>
         <artifactId>sms-aggregation-spring-boot-starter</artifactId>
-        <version>1.0.4</version>
+        <version>1.0.5</version>
       </dependency>
       <dependency>
         <groupId>kim.wind</groupId>
         <artifactId>sms-aggregation-autoimmit</artifactId>
-        <version>1.0.4</version>
+        <version>1.0.5</version>
       </dependency>
       <dependency>
         <groupId>kim.wind</groupId>
         <artifactId>sms-aggregation-core</artifactId>
-        <version>1.0.4</version>
+        <version>1.0.5</version>
       </dependency>
       <dependency>
         <groupId>kim.wind</groupId>
         <artifactId>sms-aggregation-comm</artifactId>
-        <version>1.0.4</version>
+        <version>1.0.5</version>
       </dependency>
       <dependency>
         <groupId>kim.wind</groupId>
         <artifactId>sms-aggregation-api</artifactId>
-        <version>1.0.4</version>
+        <version>1.0.5</version>
       </dependency>
       <dependency>
         <groupId>com.aliyun</groupId>
@@ -196,11 +196,6 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-configuration-processor</artifactId>
       <optional>true</optional>
     </dependency>
   </dependencies>

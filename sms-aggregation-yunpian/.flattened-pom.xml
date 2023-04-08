@@ -5,11 +5,11 @@
   <parent>
     <groupId>kim.wind</groupId>
     <artifactId>sms_aggregation</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
   </parent>
   <groupId>kim.wind</groupId>
   <artifactId>sms-aggregation-yunpian</artifactId>
-  <version>1.0.4</version>
+  <version>1.0.5</version>
   <name>sms-aggregation-yunpian</name>
   <description>sms-aggregation-yunpian</description>
   <licenses>

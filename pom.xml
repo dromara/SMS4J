@@ -51,7 +51,7 @@
     <properties>
 
         <spring.boot.version>2.7.10</spring.boot.version>
-        <revision>1.0.4</revision>
+        <revision>1.0.5</revision>
         <aliyun.version>2.0.23</aliyun.version>
         <json.version>2.0.15</json.version>
         <okhttp.version>3.14.9</okhttp.version>
@@ -227,13 +227,6 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <!--配置文件提示-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
 

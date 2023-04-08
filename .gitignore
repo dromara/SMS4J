@@ -3,7 +3,9 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-
+/docs/node_modules
+/docs/.idea
+/docs/.github
 ### STS ###
 .apt_generated
 .classpath

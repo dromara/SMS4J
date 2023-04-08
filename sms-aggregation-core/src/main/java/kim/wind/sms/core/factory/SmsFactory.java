@@ -10,13 +10,13 @@ import kim.wind.sms.tencent.config.TencentSmsConfig;
 import kim.wind.sms.unisms.config.UniSmsConfig;
 
 /**
- * SmsStart
+ * SmsFactory
  * <p>
  * @author :Wind
  * 2023/4/8  15:55
  **/
-public class SmsStart {
-    private SmsStart(){};
+public class SmsFactory {
+    private SmsFactory(){};
 
     /**
      *  createSmsBlend

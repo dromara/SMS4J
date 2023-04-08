@@ -1,6 +1,5 @@
 package kim.wind.sms.autoimmit.config;
 
-import kim.wind.sms.aliyun.config.AlibabaConfig;
 import kim.wind.sms.autoimmit.aop.AopAdvice;
 import kim.wind.sms.autoimmit.utils.ConfigUtil;
 import kim.wind.sms.autoimmit.utils.RedisUtils;
@@ -9,8 +8,7 @@ import kim.wind.sms.comm.config.SmsBanner;
 import kim.wind.sms.comm.config.SmsConfig;
 import kim.wind.sms.comm.delayedTime.DelayedTime;
 import kim.wind.sms.comm.factory.BeanFactory;
-import kim.wind.sms.core.config.SupplierFactory;
-import kim.wind.sms.huawei.config.HuaweiConfig;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
@@ -18,6 +16,7 @@ import org.springframework.core.env.Environment;
 import java.util.concurrent.Executor;
 
 
+@Slf4j
 public class SmsAutowiredConfig {
 
     private final SpringUtil springUtil;
@@ -61,10 +60,12 @@ public class SmsAutowiredConfig {
         /* 如果配置中启用了redis，则注入redis工具*/
         if (BeanFactory.getSmsConfig().getRedisCache()){
             springUtil.createBean(RedisUtils.class);
+            log.debug("The redis cache is enabled for sms-aggregation");
         }
         /* 如果启用了短信限制，则注入AOP组件*/
         if (BeanFactory.getSmsConfig().getRestricted()){
             springUtil.createBean(AopAdvice.class);
+            log.debug("SMS restriction is enabled");
         }
         if (BeanFactory.getSmsConfig().getIsPrint()){
             SmsBanner.PrintBanner("V 1.0.4");

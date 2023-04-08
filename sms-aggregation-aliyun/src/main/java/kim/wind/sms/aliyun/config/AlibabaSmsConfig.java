@@ -5,6 +5,7 @@ import com.aliyun.teaopenapi.models.Config;
 import kim.wind.sms.aliyun.service.AlibabaSmsImpl;
 import kim.wind.sms.comm.exception.SmsBlendException;
 import kim.wind.sms.comm.factory.BeanFactory;
+import lombok.extern.slf4j.Slf4j;
 
 
 /**
@@ -13,6 +14,7 @@ import kim.wind.sms.comm.factory.BeanFactory;
  * @author :Wind
  * 2023/4/8  14:54
  **/
+@Slf4j
 public class AlibabaSmsConfig {
 
     private static AlibabaSmsImpl alibabaSms;
@@ -30,6 +32,7 @@ public class AlibabaSmsConfig {
             config.endpoint = alibabaConfig.getRequestUrl();
             return new Client(config);
         }catch  (Exception e){
+            log.error(e.getMessage());
             throw new SmsBlendException(e.getMessage());
         }
     }

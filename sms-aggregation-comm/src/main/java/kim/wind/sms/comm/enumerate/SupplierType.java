@@ -8,15 +8,15 @@ package kim.wind.sms.comm.enumerate;
  **/
 public enum SupplierType {
     /** 阿里云*/
-    ALIBABA("alibaba"),
+    ALIBABA("阿里云短信"),
     /** 华为云*/
-    HUAWEI("huawei"),
+    HUAWEI("华为云短信"),
     /** 云片*/
-    YUNPIAN("yunpian"),
+    YUNPIAN("云片短信"),
     /** 腾讯云*/
-    TENCENT("tencent"),
+    TENCENT("腾讯云短信"),
     /** 合一短信*/
-    UNI_SMS("unisms")
+    UNI_SMS("合一短信")
     ;
 
 

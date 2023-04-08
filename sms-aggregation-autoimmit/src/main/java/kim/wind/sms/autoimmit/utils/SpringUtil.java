@@ -1,5 +1,6 @@
 package kim.wind.sms.autoimmit.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -13,6 +14,7 @@ import org.springframework.context.ApplicationContextAware;
  * @author :Wind
  * 2023/3/25  0:13
  **/
+@Slf4j
 public class SpringUtil implements ApplicationContextAware {
 
     private static ApplicationContext applicationContext;
@@ -38,6 +40,7 @@ public class SpringUtil implements ApplicationContextAware {
         try {
             return getApplicationContext().getBean(name);
         } catch (Exception e) {
+            log.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
 
@@ -47,6 +50,7 @@ public class SpringUtil implements ApplicationContextAware {
         try {
             return getApplicationContext().getBean(clazz);
         } catch (Exception e) {
+            log.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -61,7 +65,6 @@ public class SpringUtil implements ApplicationContextAware {
 
     /**
      * <p>说明：创建一个bean
-     *
      * @param
      * @name: createBean
      * @author :Wind

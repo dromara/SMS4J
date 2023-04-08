@@ -7,6 +7,7 @@ import kim.wind.sms.autoimmit.utils.RedisUtils;
 import kim.wind.sms.comm.utils.SmsUtil;
 import kim.wind.sms.comm.utils.TimeExpiredPoolCache;
 import kim.wind.sms.autoimmit.utils.SpringUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 
 @Aspect
+@Slf4j
 public class AopAdvice {
 
     private static final Long minTimer = 60 * 1000L;
@@ -55,6 +57,7 @@ public class AopAdvice {
             try {
                 proce = redisProcess(f);
             } catch (Exception e) {
+                log.error(e.getMessage());
                 throw new RuntimeException(e);
             }
             if (proce != null) {
@@ -73,7 +76,8 @@ public class AopAdvice {
             if (SmsUtil.isEmpty(i)) {
                 instance.put(args + "max", 1, accTimer);
             } else if (i > accountMax) {
-                return new SmsBlendException("accountMax", args + "今日短信已达最大次数");
+                log.info("The phone:"+args +",number of short messages reached the maximum today");
+                return new SmsBlendException("The phone:"+args +",number of short messages reached the maximum today");
             } else {
                 instance.put(args + "max", i + 1, accTimer);
             }
@@ -84,7 +88,8 @@ public class AopAdvice {
                 if (o < minuteMax) {
                     instance.put(args, o + 1, minTimer);
                 } else {
-                    return new SmsBlendException("minuteMax", args + "短信发送过于频繁！");
+                    log.info("The phone:"+args +",number of short messages reached the maximum today");
+                    return new SmsBlendException("The phone:", args + " Text messages are sent too often！");
                 }
             } else {
                 instance.put(args, 1, minTimer);
@@ -106,7 +111,8 @@ public class AopAdvice {
             if (SmsUtil.isEmpty(i)) {
                 redis.setOrTime(REDIS_KEY+args + "max", 1,accTimer/1000);
             } else if (i > accountMax) {
-                return new SmsBlendException("accountMax", args + "今日短信已达最大次数");
+                log.info("The phone:"+args +",number of short messages reached the maximum today");
+                return new SmsBlendException("The phone:"+args +",number of short messages reached the maximum today");
             } else {
                 redis.setOrTime(REDIS_KEY+args + "max", i + 1,accTimer/1000);
             }
@@ -117,7 +123,8 @@ public class AopAdvice {
                 if (o < minuteMax) {
                     redis.setOrTime(REDIS_KEY+args, o + 1,minTimer/1000);
                 } else {
-                    return new SmsBlendException("minuteMax", args + "短信发送过于频繁！");
+                    log.info("The phone:"+args +",number of short messages reached the maximum today");
+                    return new SmsBlendException("The phone:", args + " Text messages are sent too often！");
                 }
             } else {
                 redis.setOrTime(REDIS_KEY+args, 1,minTimer/1000);

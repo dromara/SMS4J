@@ -3,6 +3,7 @@ package kim.wind.sms.comm.utils;
 
 import com.alibaba.fastjson.JSONObject;
 import kim.wind.sms.comm.exception.SmsBlendException;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author :Wind
  * 2023/3/25  18:26
  **/
+@Slf4j
 public class TimeExpiredPoolCache {
     /**
      * 持久化文件格式
@@ -70,6 +72,7 @@ public class TimeExpiredPoolCache {
                 return true;
             }
         } catch (IOException ignored) {
+            log.error(ignored.getMessage());
         }
         return false;
     }
@@ -81,6 +84,7 @@ public class TimeExpiredPoolCache {
                 try {
                     clearExpiredCaches();
                 } catch (Exception e) {
+                    log.error(e.getMessage());
                     throw new SmsBlendException(e.getMessage());
                 }
             }

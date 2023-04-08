@@ -19,6 +19,9 @@ public class RedisUtils {
 
     @Autowired
     public void init(RedisConnectionFactory connectionFactory) {
+        if (connectionFactory == null){
+            log.error("RedisConnectionFactory not found");
+        }
         // 指定相应的序列化方案
         StringRedisSerializer keySerializer = new StringRedisSerializer();
         JdkSerializationRedisSerializer valueSerializer = new JdkSerializationRedisSerializer();

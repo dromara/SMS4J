@@ -13,10 +13,11 @@ import kim.wind.sms.comm.annotation.Restricted;
 import kim.wind.sms.comm.delayedTime.DelayedTime;
 import kim.wind.sms.comm.exception.SmsBlendException;
 import kim.wind.sms.tencent.config.TencentConfig;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 import java.util.concurrent.Executor;
-
+@Slf4j
 public class TencentSmsImpl implements SmsBlend {
 
     private TencentConfig tencentSmsConfig;
@@ -66,6 +67,7 @@ public class TencentSmsImpl implements SmsBlend {
             JSONObject jsonObject = JSON.parseObject(s1);
             if (!"Ok".equals(jsonObject.getString("Code"))) {
                 smsResponse.setErrMessage(jsonObject.getString("Message"));
+                log.debug(smsResponse.getErrMessage());
             }
             smsResponse.setMessage(jsonObject.getString("Message"));
             smsResponse.setBizId(res.getRequestId());
@@ -108,6 +110,7 @@ public class TencentSmsImpl implements SmsBlend {
             JSONObject jsonObject = JSON.parseObject(s1);
             if (!"Ok".equals(jsonObject.getString("Code"))) {
                 smsResponse.setErrMessage(jsonObject.getString("Message"));
+                log.debug(jsonObject.getString("Message"));
             }
             smsResponse.setMessage(jsonObject.getString("Message"));
             smsResponse.setBizId(res.getRequestId());

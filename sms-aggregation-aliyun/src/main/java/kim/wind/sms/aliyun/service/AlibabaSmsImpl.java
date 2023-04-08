@@ -85,11 +85,11 @@ public class AlibabaSmsImpl implements SmsBlend {
                 smsResponse.setMessage(sendSmsResponse.body.message);
             }
         } catch (TeaException error) {
+            log.error(error.getMessage());
             throw new SmsBlendException(error.message);
-            // 如有需要，请打印 error
         } catch (Exception _error) {
             TeaException error = new TeaException(_error.getMessage(), _error);
-            // 如有需要，请打印 error
+            log.error(_error.getMessage());
             throw new SmsBlendException(error.message);
         }
         return smsResponse;
@@ -125,11 +125,11 @@ public class AlibabaSmsImpl implements SmsBlend {
                 smsResponse.setMessage(sendBatchSmsResponse.body.message);
             }
         } catch (TeaException error) {
+            log.error(error.getMessage());
             throw new SmsBlendException(error.message);
-            // 如有需要，请打印 error
         } catch (Exception _error) {
             TeaException error = new TeaException(_error.getMessage(), _error);
-            // 如有需要，请打印 error
+            log.error(error.getMessage());
             throw new SmsBlendException(error.message);
         }
         return smsResponse;

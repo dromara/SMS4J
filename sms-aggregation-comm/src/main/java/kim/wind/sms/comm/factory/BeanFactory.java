@@ -18,6 +18,7 @@ import java.util.concurrent.TimeUnit;
  * @author :Wind
  * 2023/4/7  15:26
  **/
+
 public class BeanFactory {
 
     /** 定时器*/

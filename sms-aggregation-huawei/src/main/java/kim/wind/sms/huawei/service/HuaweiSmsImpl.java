@@ -72,6 +72,7 @@ public class HuaweiSmsImpl implements SmsBlend {
                     HuaweiResponse huaweiResponse = res.get(HuaweiResponse.class);
                     smsResponse.setErrMessage(huaweiResponse.getDescription());
                     smsResponse.setErrorCode(huaweiResponse.getCode());
+                    log.debug(huaweiResponse.getDescription());
                 })
                 .execute();
         return smsResponse;

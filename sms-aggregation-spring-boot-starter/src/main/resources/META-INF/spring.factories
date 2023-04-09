@@ -1,4 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  kim.wind.sms.starter.config.SmsMainConfig,\
-  kim.wind.sms.autoimmit.config.SmsAutowiredConfig,\
-  kim.wind.sms.autoimmit.config.SupplierConfig
+  org.dromara.sms.starter.config.SmsMainConfig,\
+  org.dromara.sms.autoimmit.config.SmsAutowiredConfig,\
+  org.dromara.sms.autoimmit.config.SupplierConfig

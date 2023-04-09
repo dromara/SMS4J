@@ -1,3 +1,3 @@
 org.dromara.sms.starter.config.SmsMainConfig
-config.org.dromara.sms.autoimmit.SmsAutowiredConfig
-config.org.dromara.sms.autoimmit.SupplierConfig
+org.dromara.sms.autoimmit.config.SmsAutowiredConfig
+org.dromara.sms.autoimmit.config.SupplierConfig

@@ -19,6 +19,4 @@ public class HuaweiConfig {
     private String statusCallBack;
     /** APP接入地址*/
     private String url;
-    /** 是否打印http请求日志*/
-    private Boolean httpLog = false;
 }

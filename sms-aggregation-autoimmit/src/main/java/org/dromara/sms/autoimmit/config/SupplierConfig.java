@@ -52,4 +52,9 @@ public class SupplierConfig {
     protected JdCloudConfig jdCloudConfig(){
         return SupplierFactory.getJdCloudConfig();
     }
+
+    /** 为的是延后执行*/
+    protected void init(){
+
+    }
 }

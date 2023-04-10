@@ -9,6 +9,8 @@ package org.dromara.sms.comm.enumerate;
 public enum ConfigType {
     /** 配置文件*/
     CONFIG_FILE("configFile"),
+    /** setting配置文件*/
+    SETTINGS_FILE("settingsFile"),
 
     /** 数据库配置*/
     SQL_CONFIG("sqlConfig"),

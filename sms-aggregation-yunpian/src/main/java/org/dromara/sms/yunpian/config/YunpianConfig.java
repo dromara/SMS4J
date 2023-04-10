@@ -24,8 +24,4 @@ public class YunpianConfig {
      */
     private String templateName;
 
-    /**
-     * 是否打印http请求日志
-     */
-    private Boolean httpLog = false;
 }

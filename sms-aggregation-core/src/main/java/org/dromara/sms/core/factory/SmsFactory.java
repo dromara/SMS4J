@@ -6,6 +6,7 @@ import org.dromara.sms.comm.enumerate.SupplierType;
 import org.dromara.sms.comm.exception.SmsBlendException;
 import org.dromara.sms.core.config.SupplierFactory;
 import org.dromara.sms.huawei.config.HuaweiSmsConfig;
+import org.dromara.sms.jdcloud.config.JdCloudSmsConfig;
 import org.dromara.sms.tencent.config.TencentSmsConfig;
 import org.dromara.sms.unisms.config.UniSmsConfig;
 
@@ -34,6 +35,8 @@ public class SmsFactory {
                 return UniSmsConfig.createUniSms(SupplierFactory.getUniConfig());
             case TENCENT:
                 return TencentSmsConfig.createTencentSms(SupplierFactory.getTencentConfig());
+            case JD_CLOUD:
+                return JdCloudSmsConfig.createJdCloudSms(SupplierFactory.getJdCloudConfig());
         }
         throw new SmsBlendException("An attempt to construct a SmsBlend object failed. Please check that the enumeration is valid");
     }

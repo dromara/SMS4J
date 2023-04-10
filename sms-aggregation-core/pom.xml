@@ -40,6 +40,11 @@
 			<groupId>kim.wind</groupId>
 			<artifactId>sms-aggregation-huawei</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>kim.wind</groupId>
+			<artifactId>sms-aggregation-jdcloud</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

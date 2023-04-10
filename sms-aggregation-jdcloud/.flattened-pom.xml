@@ -8,10 +8,10 @@
     <version>1.0.5</version>
   </parent>
   <groupId>kim.wind</groupId>
-  <artifactId>sms-aggregation-core</artifactId>
+  <artifactId>sms-aggregation-jdcloud</artifactId>
   <version>1.0.5</version>
-  <name>sms-aggregation-core</name>
-  <description>sms-aggregation-core</description>
+  <name>sms-aggregation-jdcloud</name>
+  <description>sms-aggregation-jdcloud</description>
   <licenses>
     <license>
       <name>Apache 2</name>
@@ -22,29 +22,16 @@
   </licenses>
   <dependencies>
     <dependency>
-      <groupId>kim.wind</groupId>
-      <artifactId>sms-aggregation-aliyun</artifactId>
+      <groupId>com.jdcloud.sdk</groupId>
+      <artifactId>sms</artifactId>
     </dependency>
     <dependency>
       <groupId>kim.wind</groupId>
-      <artifactId>sms-aggregation-tencent</artifactId>
+      <artifactId>sms-aggregation-comm</artifactId>
     </dependency>
     <dependency>
       <groupId>kim.wind</groupId>
-      <artifactId>sms-aggregation-unisms</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>kim.wind</groupId>
-      <artifactId>sms-aggregation-yunpian</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>kim.wind</groupId>
-      <artifactId>sms-aggregation-huawei</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>kim.wind</groupId>
-      <artifactId>sms-aggregation-jdcloud</artifactId>
+      <artifactId>sms-aggregation-api</artifactId>
     </dependency>
   </dependencies>
-  <build />
 </project>

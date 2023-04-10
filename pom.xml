@@ -11,16 +11,17 @@
     <url>https://gitee.com/dromara/sms_aggregation</url>
 
     <modules>
-        <module>sms-aggregation-api</module>
         <module>sms-aggregation-comm</module>
-        <module>sms-aggregation-aliyun</module>
-        <module>sms-aggregation-unisms</module>
-        <module>sms-aggregation-tencent</module>
-        <module>sms-aggregation-yunpian</module>
-        <module>sms-aggregation-spring-boot-starter</module>
-        <module>sms-aggregation-huawei</module>
-        <module>sms-aggregation-autoimmit</module>
+        <module>sms-aggregation-api</module>
         <module>sms-aggregation-core</module>
+        <module>sms-aggregation-autoimmit</module>
+        <module>sms-aggregation-spring-boot-starter</module>
+        <module>sms-aggregation-aliyun</module>
+        <module>sms-aggregation-tencent</module>
+        <module>sms-aggregation-unisms</module>
+        <module>sms-aggregation-yunpian</module>
+        <module>sms-aggregation-huawei</module>
+        <module>sms-aggregation-jdcloud</module>
     </modules>
     <!-- 开源协议 apache 2.0 -->
     <licenses>
@@ -53,10 +54,11 @@
         <spring.boot.version>2.7.10</spring.boot.version>
         <revision>1.0.5</revision>
         <aliyun.version>2.0.23</aliyun.version>
+        <tencent.version>3.1.622</tencent.version>
+        <unisms.version>0.0.4</unisms.version>
+        <jdcloud.version>1.3.3</jdcloud.version>
         <json.version>2.0.15</json.version>
         <okhttp.version>3.14.9</okhttp.version>
-        <unisms.version>0.0.4</unisms.version>
-        <tencent.version>3.1.622</tencent.version>
         <forest.version>1.5.30</forest.version>
         <hutool.version>5.8.16</hutool.version>
         <okhttp.version>3.14.9</okhttp.version>
@@ -77,6 +79,38 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter</artifactId>
                 <version>${spring.boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>kim.wind</groupId>
+                <artifactId>sms-aggregation-spring-boot-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>kim.wind</groupId>
+                <artifactId>sms-aggregation-autoimmit</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>kim.wind</groupId>
+                <artifactId>sms-aggregation-core</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <!--通用模块-->
+            <dependency>
+                <groupId>kim.wind</groupId>
+                <artifactId>sms-aggregation-comm</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <!--api模块-->
+            <dependency>
+                <groupId>kim.wind</groupId>
+                <artifactId>sms-aggregation-api</artifactId>
+                <version>${revision}</version>
             </dependency>
 
             <dependency>
@@ -111,33 +145,7 @@
 
             <dependency>
                 <groupId>kim.wind</groupId>
-                <artifactId>sms-aggregation-spring-boot-starter</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>kim.wind</groupId>
-                <artifactId>sms-aggregation-autoimmit</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>kim.wind</groupId>
-                <artifactId>sms-aggregation-core</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <!--通用模块-->
-            <dependency>
-                <groupId>kim.wind</groupId>
-                <artifactId>sms-aggregation-comm</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <!--api模块-->
-            <dependency>
-                <groupId>kim.wind</groupId>
-                <artifactId>sms-aggregation-api</artifactId>
+                <artifactId>sms-aggregation-jdcloud</artifactId>
                 <version>${revision}</version>
             </dependency>
 
@@ -208,6 +216,14 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+
+            <!-- 京东云短信依赖 -->
+            <dependency>
+                <groupId>com.jdcloud.sdk</groupId>
+                <artifactId>sms</artifactId>
+                <version>${jdcloud.version}</version>
+            </dependency>
+
             <!-- okhttp依赖,防止出现java.lang.NoSuchFieldError: Companion异常-->
             <dependency>
                 <groupId>com.squareup.okhttp3</groupId>

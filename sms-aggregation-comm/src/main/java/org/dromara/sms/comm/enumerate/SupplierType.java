@@ -16,7 +16,9 @@ public enum SupplierType {
     /** 腾讯云*/
     TENCENT("腾讯云短信"),
     /** 合一短信*/
-    UNI_SMS("合一短信")
+    UNI_SMS("合一短信"),
+    /** 京东云 */
+    JD_CLOUD("京东云短信"),
     ;
 
 

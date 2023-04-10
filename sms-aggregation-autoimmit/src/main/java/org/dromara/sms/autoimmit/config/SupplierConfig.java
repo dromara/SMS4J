@@ -3,6 +3,7 @@ package org.dromara.sms.autoimmit.config;
 import org.dromara.sms.aliyun.config.AlibabaConfig;
 import org.dromara.sms.core.config.SupplierFactory;
 import org.dromara.sms.huawei.config.HuaweiConfig;
+import org.dromara.sms.jdcloud.config.JdCloudConfig;
 import org.dromara.sms.tencent.config.TencentConfig;
 import org.dromara.sms.unisms.config.UniConfig;
 import org.dromara.sms.yunpian.config.YunpianConfig;
@@ -43,5 +44,12 @@ public class SupplierConfig {
     @ConfigurationProperties(prefix = "sms.tencent")
     protected TencentConfig tencentConfig(){
         return SupplierFactory.getTencentConfig();
+    }
+
+    /** 京东云短信差异化配置 */
+    @Bean
+    @ConfigurationProperties(prefix = "sms.jdcloud")
+    protected JdCloudConfig jdCloudConfig(){
+        return SupplierFactory.getJdCloudConfig();
     }
 }

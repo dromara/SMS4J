@@ -38,14 +38,14 @@ public class YunPianSmsImpl implements SmsBlend {
     @Override
     @Restricted
     public SmsResponse sendMessage(String phone, String message) {
-        Map<String, String> body = setBody(phone, message, null);
+        Map<String, String> body = setBody(phone, message, null, config.getTemplateId());
         return getSendResponse(body);
     }
 
     @Override
     @Restricted
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
-        Map<String, String> body = setBody(phone, "", messages);
+        Map<String, String> body = setBody(phone, "", messages,templateId);
         return getSendResponse(body);
     }
 
@@ -157,7 +157,7 @@ public class YunPianSmsImpl implements SmsBlend {
         return str.toString();
     }
 
-    private Map<String, String> setBody(String phone, String mes, LinkedHashMap<String, String> messages) {
+    private Map<String, String> setBody(String phone, String mes, LinkedHashMap<String, String> messages,String tplId) {
         LinkedHashMap<String, String> message = new LinkedHashMap<>();
         if (mes.isEmpty()) {
             message = messages;
@@ -167,7 +167,7 @@ public class YunPianSmsImpl implements SmsBlend {
         Map<String, String> body = new HashMap<>();
         body.put("apikey", config.getApikey());
         body.put("mobile", phone);
-        body.put("tpl_id", config.getTemplateId());
+        body.put("tpl_id", tplId);
         body.put("tpl_value", formattingMap(message));
         if (!config.getCallbackUrl().isEmpty()) body.put("callback_url", config.getCallbackUrl());
         return body;

@@ -73,7 +73,7 @@ public class JdCloudSmsImpl implements SmsBlend {
             request.setRegionId(config.getRegion());
             request.setTemplateId(templateId);
             request.setSignId(config.getSignature());
-            List<String> params = messages.entrySet().stream().map(messages::get)
+            List<String> params = messages.keySet().stream().map(messages::get)
                     .collect(Collectors.toList());
             request.setParams(params);
 

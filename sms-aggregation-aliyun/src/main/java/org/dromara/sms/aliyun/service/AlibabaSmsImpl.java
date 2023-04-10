@@ -68,7 +68,7 @@ public class AlibabaSmsImpl implements SmsBlend {
         SendSmsRequest sendSmsRequest = new SendSmsRequest();
         String s = JSONObject.toJSONString(messages);
         sendSmsRequest.setPhoneNumbers(phone)
-                .setTemplateCode(alibabaSmsConfig.getTemplateId())
+                .setTemplateCode(templateId)
                 .setTemplateParam(s)
                 .setSignName(alibabaSmsConfig.getSignature());
         RuntimeOptions runtime = new RuntimeOptions();
@@ -108,7 +108,7 @@ public class AlibabaSmsImpl implements SmsBlend {
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
         SendBatchSmsRequest sendBatchSmsRequest = new SendBatchSmsRequest();
         sendBatchSmsRequest.setPhoneNumberJson(JSONObject.toJSONString(phones))//群发的手机号
-                .setTemplateCode(alibabaSmsConfig.getTemplateId())//模板id
+                .setTemplateCode(templateId)//模板id
                 .setTemplateParamJson(JSONObject.toJSONString(messages))//消息内容
                 .setSignNameJson(alibabaSmsConfig.getSignature());//短信签名
         RuntimeOptions runtime = new RuntimeOptions();

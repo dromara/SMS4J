@@ -27,20 +27,31 @@ public class YunPianSmsImpl implements SmsBlend {
 
     private ForestConfiguration http;
 
+    private static SmsResponse getSmsResponse(JSONObject execute) {
+        SmsResponse smsResponse = new SmsResponse();
+        smsResponse.setCode(execute.getString("code"));
+        smsResponse.setMessage(execute.getString("msg"));
+        smsResponse.setBizId(execute.getString("sid"));
+        if (execute.getInteger("code") != 0) {
+            smsResponse.setErrMessage(execute.getString("msg"));
+        }
+        smsResponse.setData(execute);
+        return smsResponse;
+    }
+
     @Override
     @Restricted
     public SmsResponse sendMessage(String phone, String message) {
-        Map<String, String> body = setBody(phone, message, null);
+        Map<String, String> body = setBody(phone, message, null, config.getTemplateId());
         return getSendResponse(body);
     }
 
     @Override
     @Restricted
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
-        Map<String, String> body = setBody(phone, "", messages);
+        Map<String, String> body = setBody(phone, "", messages,templateId);
         return getSendResponse(body);
     }
-
 
     @Override
     @Restricted
@@ -48,7 +59,7 @@ public class YunPianSmsImpl implements SmsBlend {
         if (phones.size() > 1000) {
             throw new SmsBlendException("单次发送超过最大发送上限，建议每次群发短信人数低于1000");
         }
-       return sendMessage(listToString(phones),message);
+        return sendMessage(listToString(phones), message);
     }
 
     @Override
@@ -149,7 +160,7 @@ public class YunPianSmsImpl implements SmsBlend {
         return str.toString();
     }
 
-    private Map<String, String> setBody(String phone, String mes, LinkedHashMap<String, String> messages) {
+    private Map<String, String> setBody(String phone, String mes, LinkedHashMap<String, String> messages, String tplId) {
         LinkedHashMap<String, String> message = new LinkedHashMap<>();
         if (mes.isEmpty()) {
             message = messages;
@@ -159,7 +170,7 @@ public class YunPianSmsImpl implements SmsBlend {
         Map<String, String> body = new HashMap<>();
         body.put("apikey", config.getApikey());
         body.put("mobile", phone);
-        body.put("tpl_id", config.getTemplateId());
+        body.put("tpl_id", tplId);
         body.put("tpl_value", formattingMap(message));
         if (!config.getCallbackUrl().isEmpty()) body.put("callback_url", config.getCallbackUrl());
         return body;
@@ -172,30 +183,17 @@ public class YunPianSmsImpl implements SmsBlend {
         return headers;
     }
 
-
-    private static SmsResponse getSmsResponse(JSONObject execute) {
-        SmsResponse smsResponse = new SmsResponse();
-        smsResponse.setCode(execute.getString("code"));
-        smsResponse.setMessage(execute.getString("msg"));
-        smsResponse.setBizId(execute.getString("sid"));
-        if (execute.getInteger("code") != 0) {
-            smsResponse.setErrMessage(execute.getString("msg"));
-        }
-        smsResponse.setData(execute);
-        return smsResponse;
-    }
-
     private SmsResponse getSendResponse(Map<String, String> body) {
         Map<String, String> headers = getHeaders();
         AtomicReference<SmsResponse> smsResponse = null;
         http.post(Constant.YUNPIAN_URL + "/sms/tpl_single_send.json")
                 .addHeader(headers)
                 .addBody(body)
-                .onSuccess(((data,req,res)->{
+                .onSuccess(((data, req, res) -> {
                     JSONObject jsonBody = res.get(JSONObject.class);
                     smsResponse.set(getSmsResponse(jsonBody));
                 }))
-                .onError((ex,req,res)->{
+                .onError((ex, req, res) -> {
                     JSONObject jsonBody = res.get(JSONObject.class);
                     smsResponse.set(getSmsResponse(jsonBody));
                 })

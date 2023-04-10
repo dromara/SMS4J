@@ -52,7 +52,7 @@ public class HuaweiSmsImpl implements SmsBlend {
             list.add(entry.getValue());
         }
         String mess = listToString(list);
-        String requestBody = HuaweiBuilder.buildRequestBody(config.getSender(), phone, config.getTemplateId(), mess, config.getStatusCallBack(), config.getSignature());
+        String requestBody = HuaweiBuilder.buildRequestBody(config.getSender(), phone, templateId, mess, config.getStatusCallBack(), config.getSignature());
         Map<String,String> headers = new LinkedHashMap<>();
         headers.put("Authorization",Constant.HUAWEI_AUTH_HEADER_VALUE);
         headers.put("X-WSSE",HuaweiBuilder.buildWsseHeader(config.getAppKey(), config.getAppSecret()));

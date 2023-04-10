@@ -46,17 +46,17 @@
    
    ```yaml
    sms:
-   # 短信服务商 
-   supplier: alibaba
-   # 是否开启短信发送限制 默认false
-   restricted: true
-   # 以下设置仅在开启短信发送限制后生效
-   # 是否使用redis进行缓存 默认false
-   redisCache: true
-   # 单账号每日最大发送量
-   accountMax: 20
-   # 单账号每分钟最大发送
-   minuteMax: 2
+     # 短信服务商 
+     supplier: alibaba
+     # 是否开启短信发送限制 默认false
+     restricted: true
+     # 以下设置仅在开启短信发送限制后生效
+     # 是否使用redis进行缓存 默认false
+     redisCache: true
+     # 单账号每日最大发送量
+     accountMax: 20
+     # 单账号每分钟最大发送
+     minuteMax: 2
    ```
 
 阿里云配置示意

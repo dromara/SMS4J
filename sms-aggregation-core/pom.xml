@@ -45,6 +45,11 @@
 			<groupId>kim.wind</groupId>
 			<artifactId>sms-aggregation-jdcloud</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>kim.wind</groupId>
+			<artifactId>sms-aggregation-cloopen</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

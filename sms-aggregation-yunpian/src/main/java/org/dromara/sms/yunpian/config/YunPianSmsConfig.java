@@ -14,7 +14,7 @@ public class YunPianSmsConfig {
 
 
     public ForestConfiguration forestConfiguration(YunpianConfig yunpianConfig) {
-        return Forest.config().setBackendName("httpclient").setLogEnabled(yunpianConfig.getHttpLog());
+        return Forest.config().setBackendName("httpclient");
     }
 
 

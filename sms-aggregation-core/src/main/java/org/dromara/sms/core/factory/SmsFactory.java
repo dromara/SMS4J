@@ -2,6 +2,7 @@ package org.dromara.sms.core.factory;
 
 import org.dromara.sms.aliyun.config.AlibabaSmsConfig;
 import org.dromara.sms.api.SmsBlend;
+import org.dromara.sms.cloopen.config.CloopenSmsConfig;
 import org.dromara.sms.comm.enumerate.SupplierType;
 import org.dromara.sms.comm.exception.SmsBlendException;
 import org.dromara.sms.core.config.SupplierFactory;
@@ -37,6 +38,8 @@ public class SmsFactory {
                 return TencentSmsConfig.createTencentSms(SupplierFactory.getTencentConfig());
             case JD_CLOUD:
                 return JdCloudSmsConfig.createJdCloudSms(SupplierFactory.getJdCloudConfig());
+            case CLOOPEN:
+                return CloopenSmsConfig.createCloopenSms(SupplierFactory.getCloopenConfig());
         }
         throw new SmsBlendException("An attempt to construct a SmsBlend object failed. Please check that the enumeration is valid");
     }

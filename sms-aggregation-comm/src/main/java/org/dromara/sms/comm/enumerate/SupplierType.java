@@ -19,6 +19,8 @@ public enum SupplierType {
     UNI_SMS("合一短信"),
     /** 京东云 */
     JD_CLOUD("京东云短信"),
+    /** 容联云 */
+    CLOOPEN("容联云短信"),
     ;
 
 

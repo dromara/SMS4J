@@ -74,6 +74,8 @@ export default defineUserConfig({
                     "/doc/supplier/tencent.md",
                     "/doc/supplier/yunpian.md",
                     "/doc/supplier/huawei.md",
+                    "/doc/supplier/jdcloud.md",
+                    "/doc/supplier/cloopen.md",
 
                 ],
             },

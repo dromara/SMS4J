@@ -23,6 +23,7 @@
         <module>sms-aggregation-huawei</module>
         <module>sms-aggregation-jdcloud</module>
         <module>sms-aggregation-cloopen</module>
+        <module>sms-aggregation-emay</module>
     </modules>
     <!-- 开源协议 apache 2.0 -->
     <licenses>
@@ -154,6 +155,12 @@
             <dependency>
                 <groupId>kim.wind</groupId>
                 <artifactId>sms-aggregation-cloopen</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>kim.wind</groupId>
+                <artifactId>sms-aggregation-emay</artifactId>
                 <version>${revision}</version>
             </dependency>
 

@@ -48,6 +48,11 @@
 
 		<dependency>
 			<groupId>kim.wind</groupId>
+			<artifactId>sms-aggregation-emay</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>kim.wind</groupId>
 			<artifactId>sms-aggregation-cloopen</artifactId>
 		</dependency>
 	</dependencies>

@@ -48,7 +48,7 @@ public class BeanFactory {
     /** 获取请求用的对象*/
     public static ForestConfiguration getForestConfiguration() {
         if (forestConfiguration == null){
-            forestConfiguration = Forest.config().setBackendName("httpclient").setLogEnabled(smsConfig.getHttpLog());
+            forestConfiguration = Forest.config().setBackendName("httpclient").setLogEnabled(getSmsConfig().getHttpLog());
         }
         return forestConfiguration;
     }

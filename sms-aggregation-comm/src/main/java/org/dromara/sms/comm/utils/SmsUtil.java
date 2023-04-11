@@ -1,5 +1,10 @@
 package org.dromara.sms.comm.utils;
 
+import cn.hutool.core.bean.BeanUtil;
+import com.alibaba.fastjson.JSONException;
+import com.alibaba.fastjson.JSONObject;
+import org.dromara.sms.comm.exception.SmsSqlException;
+
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.List;
@@ -93,6 +98,32 @@ public class SmsUtil {
             }
         }
         return str.toString();
+    }
+
+    /**
+     *  jsonForObject
+     * <p>将json字符串转化为指定的对象
+     * @author :Wind
+    */
+    public static <T> T jsonForObject(String json, Class<T> t) {
+        try {
+            return json == null||"".equals(json)?null: JSONObject.toJavaObject(JSONObject.parseObject(json), t);
+        } catch (JSONException e) {
+            throw new SmsSqlException("json sequence exception" + e.getMessage());
+        }
+    }
+
+    /**
+     *  copyBean
+     * <p>拷贝bean，只有源对象不为null才会拷贝
+     * @param t 源对象
+     * @param m 目标对象
+     * @author :Wind
+    */
+    public static <T,M>void copyBean(T t,M m){
+        if (t != null){
+            BeanUtil.copyProperties(t, m);
+        }
     }
 
 }

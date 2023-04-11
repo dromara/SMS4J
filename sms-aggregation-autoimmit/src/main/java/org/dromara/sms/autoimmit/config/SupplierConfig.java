@@ -3,6 +3,7 @@ package org.dromara.sms.autoimmit.config;
 import kim.wind.emay.config.EmayConfig;
 import org.dromara.sms.aliyun.config.AlibabaConfig;
 import org.dromara.sms.cloopen.config.CloopenConfig;
+import org.dromara.sms.comm.config.SmsConfig;
 import org.dromara.sms.core.config.SupplierFactory;
 import org.dromara.sms.huawei.config.HuaweiConfig;
 import org.dromara.sms.jdcloud.config.JdCloudConfig;
@@ -13,6 +14,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
 public class SupplierConfig {
+
+
     /** 阿里差异化配置*/
     @Bean
     @ConfigurationProperties(prefix = "sms.alibaba")

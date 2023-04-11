@@ -6,9 +6,12 @@ import org.dromara.sms.autoimmit.utils.RedisUtils;
 import org.dromara.sms.autoimmit.utils.SpringUtil;
 import org.dromara.sms.comm.config.SmsBanner;
 import org.dromara.sms.comm.config.SmsConfig;
+import org.dromara.sms.comm.config.SmsSqlConfig;
 import org.dromara.sms.comm.delayedTime.DelayedTime;
 import org.dromara.sms.comm.factory.BeanFactory;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.sms.core.SupplierSqlConfig;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
@@ -24,6 +27,10 @@ public class SmsAutowiredConfig {
     public SmsAutowiredConfig(SpringUtil springUtil) {
         this.springUtil = springUtil;
     }
+
+    @Bean
+    @ConfigurationProperties(prefix = "sms.sql")
+    protected SmsSqlConfig smsSqlConfig(){return BeanFactory.getSmsSqlConfig();}
 
     @Bean
     @ConfigurationProperties(prefix = "sms")     //指定配置文件注入属性前缀
@@ -50,8 +57,15 @@ public class SmsAutowiredConfig {
     }
 
     @Bean
-    protected SupplierConfig supplierConfig(){
+    @ConditionalOnProperty(prefix = "sms", name = "config-type", havingValue = "config_file")
+    protected SupplierConfig supplierConfig(SmsConfig smsConfig){
         return new SupplierConfig();
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "sms", name = "config-type", havingValue = "sql_config")
+    protected void supplierSqlConfig(){
+         new SupplierSqlConfig();
     }
 
 

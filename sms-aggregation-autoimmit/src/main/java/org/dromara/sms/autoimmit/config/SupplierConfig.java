@@ -1,5 +1,6 @@
 package org.dromara.sms.autoimmit.config;
 
+import kim.wind.emay.config.EmayConfig;
 import org.dromara.sms.aliyun.config.AlibabaConfig;
 import org.dromara.sms.cloopen.config.CloopenConfig;
 import org.dromara.sms.comm.config.SmsConfig;
@@ -62,5 +63,19 @@ public class SupplierConfig {
     @ConfigurationProperties(prefix = "sms.cloopen")
     protected CloopenConfig cloopenConfig(){
         return SupplierFactory.getCloopenConfig();
+    }
+
+    /**
+     * 亿美软通短信差异化配置
+     */
+    @Bean
+    @ConfigurationProperties(prefix = "sms.emay")
+    protected EmayConfig emayConfig(){
+        return SupplierFactory.getEmayConfig();
+    }
+
+    /** 为的是延后执行*/
+    protected void init(){
+
     }
 }

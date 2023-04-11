@@ -1,5 +1,6 @@
 package org.dromara.sms.core.config;
 
+import kim.wind.emay.config.EmayConfig;
 import org.dromara.sms.aliyun.config.AlibabaConfig;
 import org.dromara.sms.cloopen.config.CloopenConfig;
 import org.dromara.sms.huawei.config.HuaweiConfig;
@@ -38,6 +39,11 @@ public class SupplierFactory {
 
     /** 容联云短信差异配置 */
     private static CloopenConfig cloopenConfig;
+
+    /**
+     * 亿美软通短信差异配置
+     */
+    private static EmayConfig emayConfig;
 
     /** 阿里云配置获取*/
     public static AlibabaConfig getAlibabaConfig() {
@@ -93,5 +99,15 @@ public class SupplierFactory {
             cloopenConfig = new CloopenConfig();
         }
         return cloopenConfig;
+    }
+
+    /**
+     * 亿美软通配置获取
+     */
+    public static EmayConfig getEmayConfig() {
+        if (emayConfig == null) {
+            emayConfig = new EmayConfig();
+        }
+        return emayConfig;
     }
 }

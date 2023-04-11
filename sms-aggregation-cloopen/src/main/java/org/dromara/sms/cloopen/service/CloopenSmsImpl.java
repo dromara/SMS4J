@@ -1,43 +1,39 @@
-package org.dromara.sms.jdcloud.service;
+package org.dromara.sms.cloopen.service;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.IdUtil;
-import com.jdcloud.sdk.service.sms.client.SmsClient;
-import com.jdcloud.sdk.service.sms.model.BatchSendRequest;
-import com.jdcloud.sdk.service.sms.model.BatchSendResult;
+import cn.hutool.json.JSONUtil;
+import com.cloopen.rest.sdk.CCPRestSmsSDK;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms.api.SmsBlend;
 import org.dromara.sms.api.callback.CallBack;
 import org.dromara.sms.api.entity.SmsResponse;
+import org.dromara.sms.cloopen.config.CloopenConfig;
 import org.dromara.sms.comm.annotation.Restricted;
 import org.dromara.sms.comm.delayedTime.DelayedTime;
 import org.dromara.sms.comm.exception.SmsBlendException;
-import org.dromara.sms.jdcloud.config.JdCloudConfig;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.Executor;
-import java.util.stream.Collectors;
 
 /**
- * 京东云短信实现
+ * 容联云短信实现
  *
  * @author Charles7c
- * @since 2023/4/10 20:01
+ * @since 2023/4/10 22:10
  */
 @Slf4j
-public class JdCloudSmsImpl implements SmsBlend {
+public class CloopenSmsImpl implements SmsBlend {
 
-    private final SmsClient client;
+    private final CCPRestSmsSDK client;
 
-    private final JdCloudConfig config;
+    private final CloopenConfig config;
 
     private final Executor pool;
 
     private final DelayedTime delayed;
 
-    public JdCloudSmsImpl(SmsClient client, JdCloudConfig config, Executor pool, DelayedTime delayed) {
+    public CloopenSmsImpl(CCPRestSmsSDK client, CloopenConfig config, Executor pool, DelayedTime delayed) {
         this.client = client;
         this.config = config;
         this.pool = pool;
@@ -67,21 +63,34 @@ public class JdCloudSmsImpl implements SmsBlend {
     @Override
     @Restricted
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
+        SmsResponse smsResponse = new SmsResponse();
+        Map<String, Object> result = null;
         try {
-            BatchSendRequest request = new BatchSendRequest();
-            request.setPhoneList(phones);
-            request.setRegionId(config.getRegion());
-            request.setTemplateId(templateId);
-            request.setSignId(config.getSignature());
-            List<String> params = messages.keySet().stream().map(messages::get)
-                    .collect(Collectors.toList());
-            request.setParams(params);
+            String[] datas = messages.keySet().stream().map(messages::get).toArray(String[]::new);
+            result = client.sendTemplateSMS(String.join(",", phones), templateId, datas);
 
-            BatchSendResult result = client.batchSend(request).getResult();
-            return getSmsResponse(result);
+            String statusCode = Convert.toStr(result.get("statusCode"));
+            String statusMsg = Convert.toStr(result.get("statusMsg"));
+            smsResponse.setData(result.get("data"));
+            smsResponse.setCode(statusCode);
+            smsResponse.setMessage(statusMsg);
+            boolean isSuccess = "000000".equals(statusCode);
+            if (!isSuccess) {
+                smsResponse.setErrMessage(statusMsg);
+                smsResponse.setErrorCode(statusCode);
+            } else {
+                Object bizId = JSONUtil.getByPath(JSONUtil.parse(result.get("data")), "templateSMS.smsMessageSid");
+                smsResponse.setBizId(Convert.toStr(bizId));
+            }
         } catch (Exception e) {
-            throw new SmsBlendException(e.getMessage());
+            if (result != null) {
+                smsResponse.setErrMessage(Convert.toStr(result.get("statusMsg")));
+                smsResponse.setErrorCode(Convert.toStr(result.get("statusCode")));
+            } else {
+                throw new SmsBlendException(e.getMessage());
+            }
         }
+        return smsResponse;
     }
 
     @Override
@@ -156,26 +165,5 @@ public class JdCloudSmsImpl implements SmsBlend {
                 massTexting(phones, templateId, messages);
             }
         }, delayedTime);
-    }
-
-    /**
-     * 获取短信返回信息
-     *
-     * @param res 云商原始响应信息
-     * @return 发送短信返回信息
-     */
-    private SmsResponse getSmsResponse(BatchSendResult res) {
-        SmsResponse smsResponse = new SmsResponse();
-        smsResponse.setBizId(res.getData().getSequenceNumber());
-        smsResponse.setData(res.getData());
-        smsResponse.setCode(String.valueOf(res.getCode()));
-        smsResponse.setMessage(res.getMessage());
-        Boolean status = res.getStatus();
-        boolean isSuccess = status != null && status;
-        if (!isSuccess) {
-            smsResponse.setErrMessage(res.getMessage());
-            smsResponse.setErrorCode(String.valueOf(res.getCode()));
-        }
-        return smsResponse;
     }
 }

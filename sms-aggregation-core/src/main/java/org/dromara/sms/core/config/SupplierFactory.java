@@ -1,6 +1,7 @@
 package org.dromara.sms.core.config;
 
 import org.dromara.sms.aliyun.config.AlibabaConfig;
+import org.dromara.sms.cloopen.config.CloopenConfig;
 import org.dromara.sms.huawei.config.HuaweiConfig;
 import org.dromara.sms.jdcloud.config.JdCloudConfig;
 import org.dromara.sms.tencent.config.TencentConfig;
@@ -34,6 +35,9 @@ public class SupplierFactory {
 
     /** 京东云短信差异配置 */
     private static JdCloudConfig jdCloudConfig;
+
+    /** 容联云短信差异配置 */
+    private static CloopenConfig cloopenConfig;
 
     /** 阿里云配置获取*/
     public static AlibabaConfig getAlibabaConfig() {
@@ -81,5 +85,13 @@ public class SupplierFactory {
             jdCloudConfig = new JdCloudConfig();
         }
         return jdCloudConfig;
+    }
+
+    /** 容联云短信配置获取 */
+    public static CloopenConfig getCloopenConfig() {
+        if (cloopenConfig == null){
+            cloopenConfig = new CloopenConfig();
+        }
+        return cloopenConfig;
     }
 }

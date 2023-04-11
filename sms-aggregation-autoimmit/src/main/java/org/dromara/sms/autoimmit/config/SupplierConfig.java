@@ -1,6 +1,7 @@
 package org.dromara.sms.autoimmit.config;
 
 import org.dromara.sms.aliyun.config.AlibabaConfig;
+import org.dromara.sms.cloopen.config.CloopenConfig;
 import org.dromara.sms.core.config.SupplierFactory;
 import org.dromara.sms.huawei.config.HuaweiConfig;
 import org.dromara.sms.jdcloud.config.JdCloudConfig;
@@ -51,6 +52,13 @@ public class SupplierConfig {
     @ConfigurationProperties(prefix = "sms.jdcloud")
     protected JdCloudConfig jdCloudConfig(){
         return SupplierFactory.getJdCloudConfig();
+    }
+
+    /** 容联云短信差异化配置 */
+    @Bean
+    @ConfigurationProperties(prefix = "sms.cloopen")
+    protected CloopenConfig cloopenConfig(){
+        return SupplierFactory.getCloopenConfig();
     }
 
     /** 为的是延后执行*/

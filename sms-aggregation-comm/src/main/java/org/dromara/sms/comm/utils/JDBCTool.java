@@ -3,6 +3,7 @@ package org.dromara.sms.comm.utils;
 import cn.hutool.core.util.StrUtil;
 import org.dromara.sms.comm.config.SmsSqlConfig;
 import org.dromara.sms.comm.exception.SmsSqlException;
+import org.dromara.sms.comm.factory.BeanFactory;
 
 import java.sql.*;
 import java.util.Hashtable;
@@ -17,21 +18,27 @@ import java.util.Map;
  **/
 public class JDBCTool {
 
-    private final SmsSqlConfig config;
-
     public static final String SELECT = "select {},{} from {} where {} = {}";
-
     private static final String ERR_CONFIG = "One configuration was expected, but {} was found. Please check your database configuration";
+    private final SmsSqlConfig config;
 
 
     public JDBCTool(SmsSqlConfig config) {
-        if (config == null){
+        if (config == null) {
             throw new SmsSqlException("The configuration file failed to be loaded. Procedure");
         }
         this.config = config;
         if (StrUtil.isEmpty(this.config.getDatabaseName())) {
             throw new SmsSqlException("You did not specify a database driver");
         }
+    }
+
+    public static Map<String, String> selectConfig() {
+        Map<String, String> select = BeanFactory.getJDBCTool().select();
+        if (select.size() == 0) {
+            throw new SmsSqlException("No valid configuration was scanned. Please check whether the configuration file or database link is normal");
+        }
+        return select;
     }
 
     /**
@@ -49,16 +56,17 @@ public class JDBCTool {
     }
 
     /**
-     *  select
+     * select
      * <p>查询封装
+     *
      * @param sql 要查询的sql语句
      * @author :Wind
-    */
-    public Map<String,String> select(String sql) {
+     */
+    public Map<String, String> select(String sql) {
         Connection conn = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        Map<String,String> map = new Hashtable<>();
+        Map<String, String> map = new Hashtable<>();
         try {
             conn = getConn();
             preparedStatement = conn.prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
@@ -68,10 +76,7 @@ public class JDBCTool {
             while (resultSet.next()) {
                 String data = resultSet.getString(config.getConfigName());
                 String supplier = resultSet.getString(config.getSupplierFieldName());
-                map.put(supplier,data);
-            }
-            if (map.size() != 1){
-                throw new SmsSqlException(StrUtil.format(ERR_CONFIG,String.valueOf(map.size())));
+                map.put(supplier, data);
             }
         } catch (SQLException e) {
             throw new SmsSqlException(e.getMessage());
@@ -114,14 +119,13 @@ public class JDBCTool {
         }
     }
 
-    public Map<String,String> select(){
+    public Map<String, String> select() {
         String format = StrUtil.format(SELECT,
                 config.getConfigName(),
                 config.getSupplierFieldName(),
-                config.getDatabaseName(),
+                config.getTableName(),
                 config.getStartName(),
                 config.getIsStart());
         return select(format);
     }
-
 }

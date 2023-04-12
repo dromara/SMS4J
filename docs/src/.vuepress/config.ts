@@ -39,6 +39,7 @@ export default defineUserConfig({
             {text: "🪀github", link: "https://github.com/dromara/SMSAggregation", icon: "config"},
             {text: "🤝Dromara组织", link: "https://dromara.org/zh/", icon: "config"},
             {text: "🔍常见问题", link: "/doc/start/issue.md", icon: "config"},
+            {text: "🎎贡献者", link: "/doc/start/developer.md", icon: "config"},
             {text: "👪加入交流群", link: "/doc/start/group.md", icon: "config"},
 
         ],

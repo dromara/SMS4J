@@ -3,10 +3,10 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.dromara.sms4j</groupId>
-  <artifactId>sms_aggregation</artifactId>
+  <artifactId>sms4j</artifactId>
   <version>1.0.5</version>
   <packaging>pom</packaging>
-  <name>sms-aggregation</name>
+  <name>sms4j</name>
   <description>sms_aggregation</description>
   <url>https://gitee.com/dromara/sms_aggregation</url>
   <licenses>
@@ -152,8 +152,8 @@
         <version>${aliyun.version}</version>
         <exclusions>
           <exclusion>
-            <artifactId>okhttp</artifactId>
             <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -184,8 +184,8 @@
         <version>${unisms.version}</version>
         <exclusions>
           <exclusion>
-            <artifactId>okhttp</artifactId>
             <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -195,8 +195,8 @@
         <version>${tencent.version}</version>
         <exclusions>
           <exclusion>
-            <artifactId>okhttp</artifactId>
             <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
           </exclusion>
         </exclusions>
       </dependency>

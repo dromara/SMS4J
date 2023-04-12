@@ -13,3 +13,4 @@ _目前版本中支持尚少，后续会集成更多的厂商_
 - [🎡容联云国内短信](cloopen.html)
 - [🚅合一短信](unisms.html)
 - [🚠云片短信](yunpian.html)
+- [🚠亿美软通短信](emay.html)

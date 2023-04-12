@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.dromara.sms4j</groupId>
+		<artifactId>sms_aggregation</artifactId>
+		<version>${revision}</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<artifactId>sms4j-core</artifactId>
+	<version>${revision}</version>
+	<name>sms4j-core</name>
+	<description>sms4j-core</description>
+
+	<properties>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.dromara.sms4j</groupId>
+			<artifactId>sms4j-aliyun</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.dromara.sms4j</groupId>
+			<artifactId>sms4j-tencent</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.dromara.sms4j</groupId>
+			<artifactId>sms4j-unisms</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.dromara.sms4j</groupId>
+			<artifactId>sms4j-yunpian</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.dromara.sms4j</groupId>
+			<artifactId>sms4j-huawei</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.dromara.sms4j</groupId>
+			<artifactId>sms4j-jdcloud</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.dromara.sms4j</groupId>
+			<artifactId>sms4j-emay</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.dromara.sms4j</groupId>
+			<artifactId>sms4j-cloopen</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+		</plugins>
+	</build>
+</project>

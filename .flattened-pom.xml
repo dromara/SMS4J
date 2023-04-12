@@ -24,19 +24,19 @@
     </developer>
   </developers>
   <modules>
-    <module>sms-aggregation-comm</module>
-    <module>sms-aggregation-api</module>
-    <module>sms-aggregation-core</module>
-    <module>sms-aggregation-autoimmit</module>
-    <module>sms-aggregation-spring-boot-starter</module>
-    <module>sms-aggregation-aliyun</module>
-    <module>sms-aggregation-tencent</module>
-    <module>sms-aggregation-unisms</module>
-    <module>sms-aggregation-yunpian</module>
-    <module>sms-aggregation-huawei</module>
-    <module>sms-aggregation-jdcloud</module>
-    <module>sms-aggregation-cloopen</module>
-    <module>sms-aggregation-emay</module>
+    <module>sms4j-comm</module>
+    <module>sms4j-api</module>
+    <module>sms4j-core</module>
+    <module>sms4j-autoimmit</module>
+    <module>sms4j-spring-boot-starter</module>
+    <module>sms4j-aliyun</module>
+    <module>sms4j-tencent</module>
+    <module>sms4j-unisms</module>
+    <module>sms4j-yunpian</module>
+    <module>sms4j-huawei</module>
+    <module>sms4j-jdcloud</module>
+    <module>sms4j-cloopen</module>
+    <module>sms4j-emay</module>
   </modules>
   <scm>
     <connection>scm:git:https://gitee.com/MR-wind/sms_aggregation.git</connection>
@@ -83,67 +83,67 @@
       </dependency>
       <dependency>
         <groupId>org.dromara.sms4j</groupId>
-        <artifactId>sms-aggregation-spring-boot-starter</artifactId>
+        <artifactId>sms4j-spring-boot-starter</artifactId>
         <version>1.0.5</version>
       </dependency>
       <dependency>
         <groupId>org.dromara.sms4j</groupId>
-        <artifactId>sms-aggregation-autoimmit</artifactId>
+        <artifactId>sms4j-autoimmit</artifactId>
         <version>1.0.5</version>
       </dependency>
       <dependency>
         <groupId>org.dromara.sms4j</groupId>
-        <artifactId>sms-aggregation-core</artifactId>
+        <artifactId>sms4j-core</artifactId>
         <version>1.0.5</version>
       </dependency>
       <dependency>
         <groupId>org.dromara.sms4j</groupId>
-        <artifactId>sms-aggregation-comm</artifactId>
+        <artifactId>sms4j-comm</artifactId>
         <version>1.0.5</version>
       </dependency>
       <dependency>
         <groupId>org.dromara.sms4j</groupId>
-        <artifactId>sms-aggregation-api</artifactId>
+        <artifactId>sms4j-api</artifactId>
         <version>1.0.5</version>
       </dependency>
       <dependency>
         <groupId>org.dromara.sms4j</groupId>
-        <artifactId>sms-aggregation-aliyun</artifactId>
+        <artifactId>sms4j-aliyun</artifactId>
         <version>1.0.5</version>
       </dependency>
       <dependency>
         <groupId>org.dromara.sms4j</groupId>
-        <artifactId>sms-aggregation-tencent</artifactId>
+        <artifactId>sms4j-tencent</artifactId>
         <version>1.0.5</version>
       </dependency>
       <dependency>
         <groupId>org.dromara.sms4j</groupId>
-        <artifactId>sms-aggregation-unisms</artifactId>
+        <artifactId>sms4j-unisms</artifactId>
         <version>1.0.5</version>
       </dependency>
       <dependency>
         <groupId>org.dromara.sms4j</groupId>
-        <artifactId>sms-aggregation-yunpian</artifactId>
+        <artifactId>sms4j-yunpian</artifactId>
         <version>1.0.5</version>
       </dependency>
       <dependency>
         <groupId>org.dromara.sms4j</groupId>
-        <artifactId>sms-aggregation-huawei</artifactId>
+        <artifactId>sms4j-huawei</artifactId>
         <version>1.0.5</version>
       </dependency>
       <dependency>
         <groupId>org.dromara.sms4j</groupId>
-        <artifactId>sms-aggregation-jdcloud</artifactId>
+        <artifactId>sms4j-jdcloud</artifactId>
         <version>1.0.5</version>
       </dependency>
       <dependency>
         <groupId>org.dromara.sms4j</groupId>
-        <artifactId>sms-aggregation-cloopen</artifactId>
+        <artifactId>sms4j-cloopen</artifactId>
         <version>1.0.5</version>
       </dependency>
       <dependency>
         <groupId>org.dromara.sms4j</groupId>
-        <artifactId>sms-aggregation-emay</artifactId>
+        <artifactId>sms4j-emay</artifactId>
         <version>1.0.5</version>
       </dependency>
       <dependency>

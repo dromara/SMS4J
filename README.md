@@ -38,7 +38,7 @@
    ```xml
    <dependency>
     <groupId>org.dromara.sms4j</groupId>
-    <artifactId>sms-aggregation-spring-boot-starter</artifactId>
+    <artifactId>sms4j-spring-boot-starter</artifactId>
     <version> version </version>
    </dependency>
    ```

@@ -77,6 +77,7 @@ export default defineUserConfig({
                     "/doc/supplier/huawei.md",
                     "/doc/supplier/jdcloud.md",
                     "/doc/supplier/cloopen.md",
+                    "/doc/supplier/emay.md",
 
                 ],
             },

@@ -19,7 +19,7 @@ footer: © 2022 wind <a href="https://beian.miit.gov.cn/#/Integrated/index" targ
 # copyright: 无版权
 ---
 <div class="developer">
-<img src="">
+<img class="heardImg" src="/developer/me.jpg">
 <p>
 昵称：wind
 

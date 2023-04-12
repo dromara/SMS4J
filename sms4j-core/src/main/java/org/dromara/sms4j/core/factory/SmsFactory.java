@@ -14,8 +14,9 @@ import org.dromara.sms4j.unisms.config.UniSmsConfig;
 
 /**
  * SmsFactory
- * <p>
- *
+ * <p>构造工厂，用于获取一个厂商的短信实现对象
+ * 在调用对应厂商的短信发送方法前，请先确保你的配置已经实现，否则无法发送该厂商对应的短信，一般情况下厂商会回执因缺少的配置所造成的的异常，但不会
+ * 以java异常的形式抛出
  * @author :Wind
  * 2023/4/8  15:55
  **/
@@ -28,7 +29,6 @@ public class SmsFactory {
     /**
      * createSmsBlend
      * <p>获取各个厂商的实现类
-     *
      * @param supplierType 厂商枚举
      * @author :Wind
      */
@@ -48,6 +48,48 @@ public class SmsFactory {
                 return CloopenSmsConfig.createCloopenSms(SupplierFactory.getCloopenConfig());
             case EMAY:
                 return EmaySmsConfig.createEmaySms(SupplierFactory.getEmayConfig());
+        }
+        throw new SmsBlendException("An attempt to construct a SmsBlend object failed. Please check that the enumeration is valid");
+    }
+
+    /**
+     *  refresh
+     * <p>刷新配置，用于切换配置后的刷新，防止因厂商sdk内部的保存导致配置更新不及时
+     * 此方法会造成一定的性能损失，不建议经常性调用
+     * @author :Wind
+    */
+    public static void refresh(){
+        AlibabaSmsConfig.refresh(SupplierFactory.getAlibabaConfig());
+        HuaweiSmsConfig.refresh(SupplierFactory.getHuaweiConfig());
+        UniSmsConfig.refresh(SupplierFactory.getUniConfig());
+        TencentSmsConfig.refresh(SupplierFactory.getTencentConfig());
+        JdCloudSmsConfig.refresh(SupplierFactory.getJdCloudConfig());
+        CloopenSmsConfig.refresh(SupplierFactory.getCloopenConfig());
+        EmaySmsConfig.refresh(SupplierFactory.getEmayConfig());
+    }
+
+    /**
+     *  refresh
+     * <p>根据厂商类型枚举刷新对应厂商的配置，此方法不会刷新全部厂商的配置对象，只会重构所选厂商的对象，性能损失相对较小
+     * @param supplierType 厂商类型枚举
+     * @author :Wind
+    */
+    public static void refresh(SupplierType supplierType){
+        switch (supplierType) {
+            case ALIBABA:
+                 AlibabaSmsConfig.refresh(SupplierFactory.getAlibabaConfig());
+            case HUAWEI:
+                 HuaweiSmsConfig.refresh(SupplierFactory.getHuaweiConfig());
+            case UNI_SMS:
+                 UniSmsConfig.refresh(SupplierFactory.getUniConfig());
+            case TENCENT:
+                 TencentSmsConfig.refresh(SupplierFactory.getTencentConfig());
+            case JD_CLOUD:
+                 JdCloudSmsConfig.refresh(SupplierFactory.getJdCloudConfig());
+            case CLOOPEN:
+                 CloopenSmsConfig.refresh(SupplierFactory.getCloopenConfig());
+            case EMAY:
+                 EmaySmsConfig.refresh(SupplierFactory.getEmayConfig());
         }
         throw new SmsBlendException("An attempt to construct a SmsBlend object failed. Please check that the enumeration is valid");
     }

@@ -2,28 +2,29 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>kim.wind</groupId>
+    <groupId>org.dromara.sms4j</groupId>
     <artifactId>sms_aggregation</artifactId>
     <version>${revision}</version>
+
     <name>sms-aggregation</name>
     <packaging>pom</packaging>
     <description>sms_aggregation</description>
     <url>https://gitee.com/dromara/sms_aggregation</url>
 
     <modules>
-        <module>sms-aggregation-comm</module>
-        <module>sms-aggregation-api</module>
-        <module>sms-aggregation-core</module>
-        <module>sms-aggregation-autoimmit</module>
-        <module>sms-aggregation-spring-boot-starter</module>
-        <module>sms-aggregation-aliyun</module>
-        <module>sms-aggregation-tencent</module>
-        <module>sms-aggregation-unisms</module>
-        <module>sms-aggregation-yunpian</module>
-        <module>sms-aggregation-huawei</module>
-        <module>sms-aggregation-jdcloud</module>
-        <module>sms-aggregation-cloopen</module>
-        <module>sms-aggregation-emay</module>
+        <module>sms4j-comm</module>
+        <module>sms4j-api</module>
+        <module>sms4j-core</module>
+        <module>sms4j-autoimmit</module>
+        <module>sms4j-spring-boot-starter</module>
+        <module>sms4j-aliyun</module>
+        <module>sms4j-tencent</module>
+        <module>sms4j-unisms</module>
+        <module>sms4j-yunpian</module>
+        <module>sms4j-huawei</module>
+        <module>sms4j-jdcloud</module>
+        <module>sms4j-cloopen</module>
+        <module>sms4j-emay</module>
     </modules>
     <!-- 开源协议 apache 2.0 -->
     <licenses>
@@ -85,82 +86,82 @@
             </dependency>
 
             <dependency>
-                <groupId>kim.wind</groupId>
-                <artifactId>sms-aggregation-spring-boot-starter</artifactId>
+                <groupId>org.dromara.sms4j</groupId>
+                <artifactId>sms4j-spring-boot-starter</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <dependency>
-                <groupId>kim.wind</groupId>
-                <artifactId>sms-aggregation-autoimmit</artifactId>
+                <groupId>org.dromara.sms4j</groupId>
+                <artifactId>sms4j-autoimmit</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <dependency>
-                <groupId>kim.wind</groupId>
-                <artifactId>sms-aggregation-core</artifactId>
+                <groupId>org.dromara.sms4j</groupId>
+                <artifactId>sms4j-core</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <!--通用模块-->
             <dependency>
-                <groupId>kim.wind</groupId>
-                <artifactId>sms-aggregation-comm</artifactId>
+                <groupId>org.dromara.sms4j</groupId>
+                <artifactId>sms4j-comm</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <!--api模块-->
             <dependency>
-                <groupId>kim.wind</groupId>
-                <artifactId>sms-aggregation-api</artifactId>
+                <groupId>org.dromara.sms4j</groupId>
+                <artifactId>sms4j-api</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <dependency>
-                <groupId>kim.wind</groupId>
-                <artifactId>sms-aggregation-aliyun</artifactId>
+                <groupId>org.dromara.sms4j</groupId>
+                <artifactId>sms4j-aliyun</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <dependency>
-                <groupId>kim.wind</groupId>
-                <artifactId>sms-aggregation-tencent</artifactId>
+                <groupId>org.dromara.sms4j</groupId>
+                <artifactId>sms4j-tencent</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <dependency>
-                <groupId>kim.wind</groupId>
-                <artifactId>sms-aggregation-unisms</artifactId>
+                <groupId>org.dromara.sms4j</groupId>
+                <artifactId>sms4j-unisms</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <dependency>
-                <groupId>kim.wind</groupId>
-                <artifactId>sms-aggregation-yunpian</artifactId>
+                <groupId>org.dromara.sms4j</groupId>
+                <artifactId>sms4j-yunpian</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <dependency>
-                <groupId>kim.wind</groupId>
-                <artifactId>sms-aggregation-huawei</artifactId>
+                <groupId>org.dromara.sms4j</groupId>
+                <artifactId>sms4j-huawei</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <dependency>
-                <groupId>kim.wind</groupId>
-                <artifactId>sms-aggregation-jdcloud</artifactId>
+                <groupId>org.dromara.sms4j</groupId>
+                <artifactId>sms4j-jdcloud</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <dependency>
-                <groupId>kim.wind</groupId>
-                <artifactId>sms-aggregation-cloopen</artifactId>
+                <groupId>org.dromara.sms4j</groupId>
+                <artifactId>sms4j-cloopen</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <dependency>
-                <groupId>kim.wind</groupId>
-                <artifactId>sms-aggregation-emay</artifactId>
+                <groupId>org.dromara.sms4j</groupId>
+                <artifactId>sms4j-emay</artifactId>
                 <version>${revision}</version>
             </dependency>
 

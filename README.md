@@ -37,8 +37,8 @@
    
    ```xml
    <dependency>
-    <groupId>kim.wind</groupId>
-    <artifactId>sms-aggregation-spring-boot-starter</artifactId>
+    <groupId>org.dromara.sms4j</groupId>
+    <artifactId>sms4j-spring-boot-starter</artifactId>
     <version> version </version>
    </dependency>
    ```

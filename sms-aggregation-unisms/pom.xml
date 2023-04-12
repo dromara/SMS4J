@@ -3,22 +3,21 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>kim.wind</groupId>
+        <groupId>org.dromara.sms4j</groupId>
         <artifactId>sms_aggregation</artifactId>
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+
     <artifactId>sms-aggregation-unisms</artifactId>
     <name>sms-aggregation-unisms</name>
     <description>sms-aggregation-unisms</description>
     <version>${revision}</version>
+
     <properties>
-        <java.version>1.8</java.version>
     </properties>
 
-
     <dependencies>
-
         <dependency>
             <groupId>com.apistd.uni</groupId>
             <artifactId>uni-sdk</artifactId>
@@ -30,14 +29,13 @@
         </dependency>
 
         <dependency>
-            <groupId>kim.wind</groupId>
+            <groupId>org.dromara.sms4j</groupId>
             <artifactId>sms-aggregation-comm</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>kim.wind</groupId>
+            <groupId>org.dromara.sms4j</groupId>
             <artifactId>sms-aggregation-api</artifactId>
         </dependency>
     </dependencies>
-
 </project>

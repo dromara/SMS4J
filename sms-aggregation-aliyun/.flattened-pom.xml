@@ -3,11 +3,11 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>kim.wind</groupId>
+    <groupId>org.dromara.sms4j</groupId>
     <artifactId>sms_aggregation</artifactId>
     <version>1.0.5</version>
   </parent>
-  <groupId>kim.wind</groupId>
+  <groupId>org.dromara.sms4j</groupId>
   <artifactId>sms-aggregation-aliyun</artifactId>
   <version>1.0.5</version>
   <name>sms-aggregation-aliyun</name>
@@ -26,8 +26,8 @@
       <artifactId>dysmsapi20170525</artifactId>
       <exclusions>
         <exclusion>
-          <groupId>com.squareup.okhttp3</groupId>
           <artifactId>okhttp</artifactId>
+          <groupId>com.squareup.okhttp3</groupId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -36,11 +36,11 @@
       <artifactId>okhttp</artifactId>
     </dependency>
     <dependency>
-      <groupId>kim.wind</groupId>
+      <groupId>org.dromara.sms4j</groupId>
       <artifactId>sms-aggregation-comm</artifactId>
     </dependency>
     <dependency>
-      <groupId>kim.wind</groupId>
+      <groupId>org.dromara.sms4j</groupId>
       <artifactId>sms-aggregation-api</artifactId>
     </dependency>
     <dependency>

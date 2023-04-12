@@ -3,11 +3,11 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>kim.wind</groupId>
+    <groupId>org.dromara.sms4j</groupId>
     <artifactId>sms_aggregation</artifactId>
     <version>1.0.5</version>
   </parent>
-  <groupId>kim.wind</groupId>
+  <groupId>org.dromara.sms4j</groupId>
   <artifactId>sms-aggregation-tencent</artifactId>
   <version>1.0.5</version>
   <name>sms-aggregation-tencent</name>
@@ -20,16 +20,13 @@
       <comments>A business-friendly OSS license</comments>
     </license>
   </licenses>
-  <properties>
-    <java.version>1.8</java.version>
-  </properties>
   <dependencies>
     <dependency>
-      <groupId>kim.wind</groupId>
+      <groupId>org.dromara.sms4j</groupId>
       <artifactId>sms-aggregation-comm</artifactId>
     </dependency>
     <dependency>
-      <groupId>kim.wind</groupId>
+      <groupId>org.dromara.sms4j</groupId>
       <artifactId>sms-aggregation-api</artifactId>
     </dependency>
     <dependency>

@@ -3,17 +3,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>kim.wind</groupId>
+        <groupId>org.dromara.sms4j</groupId>
         <artifactId>sms_aggregation</artifactId>
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+
     <artifactId>sms-aggregation-comm</artifactId>
     <name>sms-aggregation-comm</name>
     <description>sms-aggregation-comm</description>
     <version>${revision}</version>
-    <properties>
 
+    <properties>
     </properties>
 
     <dependencies>
@@ -28,5 +29,4 @@
             <artifactId>forest-core</artifactId>
         </dependency>
     </dependencies>
-
 </project>

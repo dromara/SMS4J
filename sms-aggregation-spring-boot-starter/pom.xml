@@ -3,11 +3,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>kim.wind</groupId>
+        <groupId>org.dromara.sms4j</groupId>
         <artifactId>sms_aggregation</artifactId>
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+
     <artifactId>sms-aggregation-spring-boot-starter</artifactId>
     <name>sms-aggregation-spring-boot-starter</name>
     <description>sms-aggregation-spring-boot-starter</description>
@@ -15,8 +16,8 @@
     <packaging>jar</packaging>
 
     <properties>
-
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -27,7 +28,7 @@
         </dependency>
 
         <dependency>
-            <groupId>kim.wind</groupId>
+            <groupId>org.dromara.sms4j</groupId>
             <artifactId>sms-aggregation-autoimmit</artifactId>
         </dependency>
 
@@ -35,11 +36,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
-
     </dependencies>
+
     <build>
         <plugins>
-
         </plugins>
     </build>
 </project>

@@ -3,26 +3,27 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>kim.wind</groupId>
+        <groupId>org.dromara.sms4j</groupId>
         <artifactId>sms_aggregation</artifactId>
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+
     <artifactId>sms-aggregation-tencent</artifactId>
     <name>sms-aggregation-tencent</name>
     <description>sms-aggregation-tencent</description>
     <version>${revision}</version>
+
     <properties>
-        <java.version>1.8</java.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>kim.wind</groupId>
+            <groupId>org.dromara.sms4j</groupId>
             <artifactId>sms-aggregation-comm</artifactId>
         </dependency>
         <dependency>
-            <groupId>kim.wind</groupId>
+            <groupId>org.dromara.sms4j</groupId>
             <artifactId>sms-aggregation-api</artifactId>
         </dependency>
         <dependency>
@@ -34,6 +35,4 @@
             <artifactId>okhttp</artifactId>
         </dependency>
     </dependencies>
-
-
 </project>

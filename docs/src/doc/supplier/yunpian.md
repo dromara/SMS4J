@@ -56,6 +56,6 @@ public class AliConfiguration{
 }
 ```
 ### 其他方式
-如果你想在某个环节动态的改变配置中的值，可以随时通过`SupplierFactory.getHuaweiConfig()`
+如果你想在某个环节动态的改变配置中的值，可以随时通过`SupplierFactory.getYunpianConfig()`
 获取云片的单例配置对象，并且修改他的值，云片短信可以不调用刷新方法的情况下随时拿到配置的值，但是我们还是建议使用
 `SmsFactory.refresh(SupplierType.YUNPIAN);`方法进行配置刷新

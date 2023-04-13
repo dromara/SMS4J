@@ -66,6 +66,6 @@ public class AliConfiguration{
 ```
 ### 其他方式
 如果你想在某个环节动态的改变配置中的值，可以随时通过
-`SupplierFactory.getHuaweiConfig()` 获取合一短信的单例配置对象，并且修改他的值，
+`SupplierFactory.getUniConfig()` 获取合一短信的单例配置对象，并且修改他的值，
 如果你修改了合一短信配置的值在发送短信前必须至少调用一次
 `SmsFactory.refresh(SupplierType.UNI_SMS)`;方法进行配置刷新

@@ -1,8 +1,10 @@
 package org.dromara.sms4j.unisms.config;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 @Data
+@Accessors(chain = true)
 public class UniConfig {
     /** 访问键标识*/
     private String accessKeyId;

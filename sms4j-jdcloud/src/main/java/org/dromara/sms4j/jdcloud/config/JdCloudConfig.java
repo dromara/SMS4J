@@ -1,6 +1,7 @@
 package org.dromara.sms4j.jdcloud.config;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * 京东云短信配置属性
@@ -9,6 +10,7 @@ import lombok.Data;
  * @since 2023/4/10 20:01
  */
 @Data
+@Accessors(chain = true)
 public class JdCloudConfig {
 
     /** Access Key */

@@ -1,8 +1,10 @@
 package org.dromara.sms4j.tencent.config;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 @Data
+@Accessors(chain = true)
 public class TencentConfig {
     /** 应用accessKey*/
     private String accessKeyId;

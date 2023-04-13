@@ -4,10 +4,10 @@ icon: home
 title: SMS4J
 heroImage: /logo.png
 heroText: 短信聚合
-tagline: 短信聚合    -- 让发送短信变的更简单。
+tagline: SMS4J    -- 让发送短信变的更简单。
 details: V2.0.0
 actions:
-  - text: 开始 🏡
+  - text: 🏡 开始 
     link: /doc/start/
     type: primary
   - text: 🥭 V2.0.0

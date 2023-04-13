@@ -76,20 +76,14 @@ footer: © 2022 wind <a href="https://beian.miit.gov.cn/#/Integrated/index" targ
 @RestController
 @RequestMapping("/test/")
 public class DemoController {
-    
-    /** 阿里云短信实现*/
-    private final SmsBlend alibabaSms = SmsFactory.createSmsBlend(SupplierType.ALIBABA);
-    
-    /** 华为短信实现*/
-    private final SmsBlend huaweiSms = SmsFactory.createSmsBlend(SupplierType.HUAWEI);
 
     // 测试发送固定模板短信
     @RequestMapping("/")
     public void doLogin(String username, String password) {
          //阿里云向此手机号发送短信
-        alibabaSms.sendMessage("18888888888","123456");
+        SmsFactory.createSmsBlend(SupplierType.ALIBABA).sendMessage("18888888888","123456");
         //华为短信向此手机号发送短信
-        huaweiSms.sendMessage("16666666666","000000");
+        SmsFactory.createSmsBlend(SupplierType.HUAWEI).sendMessage("16666666666","000000");
     }
 }
 ```

@@ -18,7 +18,7 @@ footer: © 2022 wind <a href="https://beian.miit.gov.cn/#/Integrated/index" targ
 # 你可以自定义版权信息
 # copyright: 无版权
 ---
-<div id="devs">
+## 作者
 <div class="developer">
 <img class="heardImg" src="/developer/me.jpg">
 <p class="nameP">
@@ -26,10 +26,28 @@ footer: © 2022 wind <a href="https://beian.miit.gov.cn/#/Integrated/index" targ
 </p>
 </div>
 
+## 贡献者
+*在此鸣谢所有的贡献者对于本项目和开源做出的伟大贡献*
+<div id="devs">
+
 <div class="developer">
-<img class="heardImg" src="/developer/me.jpg">
+<img class="heardImg" src="/developer/charles.png">
 <p class="nameP">
-昵称：wind
+昵称：Charles7c
+</p>
+</div>
+
+<div class="developer">
+<img class="heardImg" src="/developer/heng.jpg">
+<p class="nameP">
+昵称：heng
+</p>
+</div>
+
+<div class="developer">
+<img class="heardImg" src="/developer/richard.jpg">
+<p class="nameP">
+昵称：Richard
 </p>
 </div>
 </div> 

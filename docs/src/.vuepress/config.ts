@@ -17,7 +17,7 @@ export default defineUserConfig({
     locales: {
         "/": {
             lang: "zh-CN",
-            title: "短信聚合💖",
+            title: "SMS4J",
             description: "短信聚合文档",
         },
     },
@@ -41,14 +41,14 @@ export default defineUserConfig({
             {text: "📖文档", link: "/doc/start/README.md", icon: "config"},
             {
                 text: "📒javaDoc",
-                link: "https://apidoc.gitee.com/the-wind-is-like-a-song/sms_aggregation",
+                link: "https://apidoc.gitee.com/dromara/sms4j",
                 icon: "config"
             },
-            {text: "🏮gitee", link: "https://gitee.com/dromara/sms_aggregation", icon: "config"},
+            {text: "🏮gitee", link: "https://gitee.com/dromara/sms4j", icon: "config"},
             {text: "🪀github", link: "https://github.com/dromara/SMSAggregation", icon: "config"},
             {text: "🤝Dromara组织", link: "https://dromara.org/zh/", icon: "config"},
             {text: "🔍常见问题", link: "/doc/start/issue.md", icon: "config"},
-            {text: "🎎贡献者", link: "/doc/start/developer.md", icon: "config"},
+            {text: "🎎贡献者", link: "/doc/developer.md", icon: "config"},
             {text: "👪加入交流群", link: "/doc/start/group.md", icon: "config"},
 
         ],
@@ -113,11 +113,11 @@ export default defineUserConfig({
                         {
                             path:"/",
                             title:"📢公告",
-                            content:"🎉SMS-Aggregator正式加入dromara开源组织🎉\n\t为往圣继绝学，一个人或许能走的更快，但一群人会走的更远。",
+                            content:"🎉SMS-Aggregator全新起航，正式更名为sms4j",
                             actions:[
                                 {
                                     text:"gitee",
-                                    link:"https://gitee.com/the-wind-is-like-a-song/sms_aggregation",
+                                    link:"https://gitee.com/dromara/sms4j",
                                     type:"primary"
                                 },
                                 {

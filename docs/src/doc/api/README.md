@@ -5,17 +5,19 @@ icon: play
 ---
 
 ## 🪚工厂获取
+以下仅为示例
 ```java
 @RestController
 public class Demo{
-    /** 阿里云短信实现*/
-    private final SmsBlend alibabaSms = SmsFactory.createSmsBlend(SupplierType.ALIBABA);
-    
     /** 华为短信实现*/
     private final SmsBlend huaweiSms = SmsFactory.createSmsBlend(SupplierType.HUAWEI);
 }
 ```
-
+:::tip
+在实际使用中并不建议提前在属性中声明，因为spring的注入可能会先注入项目中的内容再注入其他的，
+有些厂商的SDK（比如阿里）内部的变量并不会随外部改变，所以可能会导致配置未获取到，如果出现这样的情况，请调用一次刷新方法即可
+或在方法内部使用工厂获取短信实现对象
+:::
 ## 工厂枚举
 
 ```java

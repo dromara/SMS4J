@@ -3,6 +3,15 @@ import {hopeTheme} from "vuepress-theme-hope";
 
 // @ts-ignore
 export default defineUserConfig({
+    head:[['script',{},
+    'var _hmt = _hmt || [];\n' +
+    '(function() {\n' +
+    '  var hm = document.createElement("script");\n' +
+    '  hm.src = "https://hm.baidu.com/hm.js?804a18ac6ef19f32a21420e83e5886cc";\n' +
+    '  var s = document.getElementsByTagName("script")[0]; \n' +
+    '  s.parentNode.insertBefore(hm, s);\n' +
+    '})();\n'
+    ]],
     base: "/",
     lang: "zh-CN",
     locales: {
@@ -57,10 +66,11 @@ export default defineUserConfig({
                     "/doc/start/README.md" /* /foo/index.html */,
                     "/doc/start/springboot.md" /* /foo/geo.html */,
                     "/doc/start/jinjiepeizhi.md",
+                    "/doc/sql/sql.md",
                 ],
             },
             {
-                text: "支持厂商",
+                text: "厂商差异化配置",
                 // 可选的, 分组标题对应的图标
                 icon: "tip",
                 // 可选的, 分组标题对应的链接

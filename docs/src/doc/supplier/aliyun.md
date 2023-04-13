@@ -36,3 +36,33 @@ sms:
     #请求地址 默认为dysmsapi.aliyuncs.com 如无特殊改变可以不用设置
     requestUrl: dysmsapi.aliyuncs.com
 ```
+### 数据库风格配置
+```json
+{
+  "accessKeyId": "您的accessKey",
+  "accessKeySecret": "您的accessKeySecret",
+  "signature": "测试签名",
+  "templateId":"SMS_215125134",
+  "templateName": "code",
+  "requestUrl": "dysmsapi.aliyuncs.com"
+}
+```
+### 手动写入配置文件风格
+```java
+@Configuration
+public class AliConfiguration{
+    
+    @Bean
+    public void setConfiguration(){
+        AlibabaConfig alibabaConfig = SupplierFactory.getAlibabaConfig();
+        alibabaConfig.setAccessKeyId("您的accessKey");
+        alibabaConfig.setAccessKeySecret("您的accessKeySecret");
+        alibabaConfig.setSignature("测试签名");
+        alibabaConfig.setTemplateId("SM123581321");
+        alibabaConfig.setTemplateName("cedo");
+    }
+}
+```
+### 其他方式
+如果你想在某个环节动态的改变配置中的值，可以随时通过`SupplierFactory.getAlibabaConfig()`获取阿里云的单例配置对象，并且修改他的值，但是要注意的是，
+如果你修改了阿里云配置的值在发送短信前必须至少调用一次`SmsFactory.refresh(SupplierType.ALIBABA);`方法进行配置刷新

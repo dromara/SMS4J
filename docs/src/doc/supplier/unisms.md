@@ -36,3 +36,36 @@ sms:
     # 模板变量名称 上述模板的变量名称
     templateName: your templateName
 ```
+### 数据库风格配置
+```json
+{
+  "accessKeyId": "your accessKeyId",
+  "accessKeySecret": "your accessKeySecret",
+  "isSimple": true,
+  "signature": "短信签名",
+  "templateId": "your TemplateId",
+  "templateName": "code"
+}
+```
+### 手动写入配置文件风格
+```java
+@Configuration
+public class AliConfiguration{
+    
+    @Bean
+    public void setConfiguration(){
+        UniConfig uniConfig = SupplierFactory.getUniConfig();
+        uniConfig.setAccessKeyId("your accessKeyId");
+        uniConfig.setAccessKeySecret("your accessKeySecret");
+        uniConfig.setIsSimple(true);
+        uniConfig.setSignature("短信签名");
+        uniConfig.setTemplateId("your TemplateId");
+        uniConfig.setTemplateName("code");
+    }
+}
+```
+### 其他方式
+如果你想在某个环节动态的改变配置中的值，可以随时通过
+`SupplierFactory.getHuaweiConfig()` 获取合一短信的单例配置对象，并且修改他的值，
+如果你修改了合一短信配置的值在发送短信前必须至少调用一次
+`SmsFactory.refresh(SupplierType.UNI_SMS)`;方法进行配置刷新

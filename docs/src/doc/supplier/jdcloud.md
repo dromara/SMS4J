@@ -4,7 +4,7 @@ title: 🐶京东云国内短信
 # 这是页面的图标
 icon: 
 # 这是侧边栏的顺序
-order: 8
+order: 4
 # 设置作者
 author: Charles7c
 # 设置写作时间
@@ -34,3 +34,37 @@ sms:
     # 地域信息
     region: cn-north-1
 ```
+### 数据库风格配置
+```json
+{
+  "accessKeyId": "your AppKey",
+  "accessKeySecret": "your AppSecret",
+  "signature": "短信签名",
+  "templateId": "your TemplateId",
+  "region": "地域信息"
+}
+
+```
+### 手动写入配置文件风格
+```java
+@Configuration
+public class AliConfiguration{
+    
+    @Bean
+    public void setConfiguration(){
+        JdCloudConfig jdCloudConfig = SupplierFactory.getJdCloudConfig();
+        jdCloudConfig.setAccessKeyId("your accessKey");
+        jdCloudConfig.setAccessKeySecret("your AppSecret");
+        jdCloudConfig.setSignature("短信签名");
+        jdCloudConfig.setTemplateId("your TemplateId");
+        jdCloudConfig.setRegion("地域信息");
+    }
+}
+
+
+```
+### 其他方式
+如果你想在某个环节动态的改变配置中的值，可以随时通过
+`SupplierFactory.getCloopenConfig()` 
+获取京东云的单例配置对象，并且修改他的值，但是要注意的是，如果你修改了京东云配置的值在发送短信前必须至少调用一次 
+`SmsFactory.refresh(SupplierType.JD_CLOUD);`方法进行配置刷新

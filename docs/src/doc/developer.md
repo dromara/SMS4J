@@ -21,33 +21,40 @@ footer: © 2022 wind <a href="https://beian.miit.gov.cn/#/Integrated/index" targ
 ## 作者
 <div class="developer">
 <img class="heardImg" src="/developer/me.jpg">
+<a href="https://gitee.com/MR-wind">
 <p class="nameP">
 昵称：wind
 </p>
+</a>
 </div>
 
 ## 贡献者
-*在此鸣谢所有的贡献者对于本项目和开源做出的伟大贡献*
+*在此鸣谢所有的贡献者对于本项目和开源事业做出的伟大贡献*
 <div id="devs">
-
 <div class="developer">
 <img class="heardImg" src="/developer/charles.png">
+<a href="https://blog.charles7c.top/about/me">
 <p class="nameP">
 昵称：Charles7c
 </p>
+</a>
 </div>
 
 <div class="developer">
 <img class="heardImg" src="/developer/heng.jpg">
+<a href="https://gitee.com/m_yan">
 <p class="nameP">
 昵称：heng
 </p>
+</a>
 </div>
 
 <div class="developer">
 <img class="heardImg" src="/developer/richard.jpg">
+<a href="https://gitee.com/litairan666">
 <p class="nameP">
 昵称：Richard
 </p>
+</a>
 </div>
 </div> 

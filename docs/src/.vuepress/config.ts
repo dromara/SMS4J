@@ -22,7 +22,7 @@ export default defineUserConfig({
         },
     },
     theme: hopeTheme({
-        logo:"/dlogo.png",
+        logo:"/logo.png",
         iconAssets: "//at.alicdn.com/t/c/font_3977841_tfbu1j5yn.js",
         themeColor: {
             blue: "#2196f3",

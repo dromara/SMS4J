@@ -2,7 +2,7 @@
 home: true
 icon: home
 title: SMS4J
-heroImage: /logo.png
+heroImage: /logo_1.png
 heroText: 短信聚合
 tagline: SMS4J    -- 让发送短信变的更简单。
 details: V2.0.0

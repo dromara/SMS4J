@@ -7,7 +7,7 @@
   <version>2.0.0</version>
   <packaging>pom</packaging>
   <name>sms4j</name>
-  <description>sms_aggregation</description>
+  <description>简约而强大的短信集成</description>
   <url>https://gitee.com/dromara/sms_aggregation</url>
   <licenses>
     <license>
@@ -47,11 +47,11 @@
   <distributionManagement>
     <repository>
       <id>ossrh</id>
-      <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
     <snapshotRepository>
       <id>ossrh</id>
-      <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </snapshotRepository>
   </distributionManagement>
   <properties>
@@ -152,8 +152,8 @@
         <version>${aliyun.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
+            <groupId>com.squareup.okhttp3</groupId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -184,8 +184,8 @@
         <version>${unisms.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
+            <groupId>com.squareup.okhttp3</groupId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -195,8 +195,8 @@
         <version>${tencent.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
+            <groupId>com.squareup.okhttp3</groupId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -262,6 +262,18 @@
           <docencoding>UTF-8</docencoding>
           <additionalparam>-Xdoclint:none</additionalparam>
         </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.6</version>
+        <executions>
+          <execution>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>

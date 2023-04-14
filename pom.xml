@@ -8,7 +8,7 @@
 
     <name>sms4j</name>
     <packaging>pom</packaging>
-    <description>sms_aggregation</description>
+    <description>简约而强大的短信集成</description>
     <url>https://gitee.com/dromara/sms_aggregation</url>
 
     <modules>
@@ -274,11 +274,11 @@
     <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
         <repository>
             <id>ossrh</id>
-            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
 

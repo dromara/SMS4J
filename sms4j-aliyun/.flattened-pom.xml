@@ -26,8 +26,8 @@
       <artifactId>dysmsapi20170525</artifactId>
       <exclusions>
         <exclusion>
-          <groupId>com.squareup.okhttp3</groupId>
           <artifactId>okhttp</artifactId>
+          <groupId>com.squareup.okhttp3</groupId>
         </exclusion>
       </exclusions>
     </dependency>

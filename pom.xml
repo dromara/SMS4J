@@ -2,24 +2,29 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>kim.wind</groupId>
-    <artifactId>sms_aggregation</artifactId>
-    <version>1.0.4</version>
-    <name>sms-aggregation</name>
+    <groupId>org.dromara.sms4j</groupId>
+    <artifactId>sms4j</artifactId>
+    <version>${revision}</version>
+
+    <name>sms4j</name>
     <packaging>pom</packaging>
     <description>sms_aggregation</description>
-    <url>https://gitee.com/the-wind-is-like-a-song/sms_aggregation</url>
+    <url>https://gitee.com/dromara/sms_aggregation</url>
 
     <modules>
-        <module>sms-aggregation-api</module>
-        <module>sms-aggregation-comm</module>
-        <module>sms-aggregation-aliyun</module>
-        <module>sms-aggregation-unisms</module>
-        <module>sms-aggregation-tencent</module>
-        <module>sms-aggregation-yunpian</module>
-        <module>sms-aggregation-spring-boot-starter</module>
-        <module>sms-aggregation-huawei</module>
-        <module>sms-aggregation-autoimmit</module>
+        <module>sms4j-comm</module>
+        <module>sms4j-api</module>
+        <module>sms4j-core</module>
+        <module>sms4j-autoimmit</module>
+        <module>sms4j-spring-boot-starter</module>
+        <module>sms4j-aliyun</module>
+        <module>sms4j-tencent</module>
+        <module>sms4j-unisms</module>
+        <module>sms4j-yunpian</module>
+        <module>sms4j-huawei</module>
+        <module>sms4j-jdcloud</module>
+        <module>sms4j-cloopen</module>
+        <module>sms4j-emay</module>
     </modules>
     <!-- 开源协议 apache 2.0 -->
     <licenses>
@@ -42,21 +47,25 @@
     <!-- 仓库信息 -->
     <scm>
         <tag>master</tag>
-        <url>https://gitee.com/the-wind-is-like-a-song/sms_aggregation.git</url>
-        <connection>scm:git:https://gitee.com/the-wind-is-like-a-song/sms_aggregation.git</connection>
-        <developerConnection>scm:git:https://gitee.com/the-wind-is-like-a-song/sms_aggregation.git</developerConnection>
+        <url>https://gitee.com/MR-wind/sms_aggregation.git</url>
+        <connection>scm:git:https://gitee.com/MR-wind/sms_aggregation.git</connection>
+        <developerConnection>scm:git:https://gitee.com/MR-wind/sms_aggregation.git</developerConnection>
     </scm>
 
     <properties>
-        <java.version>1.8</java.version>
+
         <spring.boot.version>2.7.10</spring.boot.version>
-        <modules.version>1.0.4</modules.version>
+        <revision>1.0.5</revision>
         <aliyun.version>2.0.23</aliyun.version>
+        <tencent.version>3.1.622</tencent.version>
+        <unisms.version>0.0.4</unisms.version>
+        <jdcloud.version>1.3.3</jdcloud.version>
+        <cloopen.version>1.0.4</cloopen.version>
         <json.version>2.0.15</json.version>
         <okhttp.version>3.14.9</okhttp.version>
-        <unisms.version>0.0.4</unisms.version>
-        <tencent.version>3.1.622</tencent.version>
         <forest.version>1.5.30</forest.version>
+        <hutool.version>5.8.16</hutool.version>
+        <okhttp.version>3.14.9</okhttp.version>
     </properties>
 
     <dependencyManagement>
@@ -77,59 +86,83 @@
             </dependency>
 
             <dependency>
-                <groupId>kim.wind</groupId>
-                <artifactId>sms-aggregation-aliyun</artifactId>
-                <version>${modules.version}</version>
+                <groupId>org.dromara.sms4j</groupId>
+                <artifactId>sms4j-spring-boot-starter</artifactId>
+                <version>${revision}</version>
             </dependency>
 
             <dependency>
-                <groupId>kim.wind</groupId>
-                <artifactId>sms-aggregation-tencent</artifactId>
-                <version>${modules.version}</version>
+                <groupId>org.dromara.sms4j</groupId>
+                <artifactId>sms4j-autoimmit</artifactId>
+                <version>${revision}</version>
             </dependency>
 
             <dependency>
-                <groupId>kim.wind</groupId>
-                <artifactId>sms-aggregation-unisms</artifactId>
-                <version>${modules.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>kim.wind</groupId>
-                <artifactId>sms-aggregation-yunpian</artifactId>
-                <version>${modules.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>kim.wind</groupId>
-                <artifactId>sms-aggregation-huawei</artifactId>
-                <version>${modules.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>kim.wind</groupId>
-                <artifactId>sms-aggregation-spring-boot-starter</artifactId>
-                <version>${modules.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>kim.wind</groupId>
-                <artifactId>sms-aggregation-autoimmit</artifactId>
-                <version>${modules.version}</version>
+                <groupId>org.dromara.sms4j</groupId>
+                <artifactId>sms4j-core</artifactId>
+                <version>${revision}</version>
             </dependency>
 
             <!--通用模块-->
             <dependency>
-                <groupId>kim.wind</groupId>
-                <artifactId>sms-aggregation-comm</artifactId>
-                <version>${modules.version}</version>
+                <groupId>org.dromara.sms4j</groupId>
+                <artifactId>sms4j-comm</artifactId>
+                <version>${revision}</version>
             </dependency>
 
             <!--api模块-->
             <dependency>
-                <groupId>kim.wind</groupId>
-                <artifactId>sms-aggregation-api</artifactId>
-                <version>${modules.version}</version>
+                <groupId>org.dromara.sms4j</groupId>
+                <artifactId>sms4j-api</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.dromara.sms4j</groupId>
+                <artifactId>sms4j-aliyun</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.dromara.sms4j</groupId>
+                <artifactId>sms4j-tencent</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.dromara.sms4j</groupId>
+                <artifactId>sms4j-unisms</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.dromara.sms4j</groupId>
+                <artifactId>sms4j-yunpian</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.dromara.sms4j</groupId>
+                <artifactId>sms4j-huawei</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.dromara.sms4j</groupId>
+                <artifactId>sms4j-jdcloud</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.dromara.sms4j</groupId>
+                <artifactId>sms4j-cloopen</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.dromara.sms4j</groupId>
+                <artifactId>sms4j-emay</artifactId>
+                <version>${revision}</version>
             </dependency>
 
             <!-- 阿里云短信依赖-->
@@ -137,6 +170,12 @@
                 <groupId>com.aliyun</groupId>
                 <artifactId>dysmsapi20170525</artifactId>
                 <version>${aliyun.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.squareup.okhttp3</groupId>
+                        <artifactId>okhttp</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <!-- 阿里JSON解析器 -->
@@ -173,6 +212,12 @@
                 <groupId>com.apistd.uni</groupId>
                 <artifactId>uni-sdk</artifactId>
                 <version>${unisms.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.squareup.okhttp3</groupId>
+                        <artifactId>okhttp</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <!-- 腾讯云短信-->
@@ -180,22 +225,47 @@
                 <groupId>com.tencentcloudapi</groupId>
                 <artifactId>tencentcloud-sdk-java</artifactId>
                 <version>${tencent.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.squareup.okhttp3</groupId>
+                        <artifactId>okhttp</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
+            <!-- 京东云短信依赖 -->
+            <dependency>
+                <groupId>com.jdcloud.sdk</groupId>
+                <artifactId>sms</artifactId>
+                <version>${jdcloud.version}</version>
+            </dependency>
+
+            <!-- 容联云短信依赖 -->
+            <dependency>
+                <groupId>com.cloopen</groupId>
+                <artifactId>java-sms-sdk</artifactId>
+                <version>${cloopen.version}</version>
+            </dependency>
+
+            <!-- okhttp依赖,防止出现java.lang.NoSuchFieldError: Companion异常-->
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttp.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <dependencies>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>${hutool.version}</version>
         </dependency>
 
-        <!--配置文件提示-->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
 
@@ -252,20 +322,20 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- GPG -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.6</version>
-                <executions>
-                    <execution>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            &lt;!&ndash; GPG &ndash;&gt;-->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-gpg-plugin</artifactId>-->
+<!--                <version>1.6</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <phase>verify</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>sign</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
             <!--Compiler -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -296,6 +366,32 @@
                         </manifest>
                     </archive>
                 </configuration>
+            </plugin>
+            <!-- version number -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.2.7</version>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
         </plugins>

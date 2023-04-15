@@ -121,7 +121,7 @@ public class DemoController {
 
     // 测试发送固定模板短信
     @RequestMapping("/")
-    public void doLogin(String username, String password) {
+    public void test() {
          //阿里云向此手机号发送短信
         SmsFactory.createSmsBlend(SupplierType.ALIBABA).sendMessage("18888888888","123456");
         //华为短信向此手机号发送短信

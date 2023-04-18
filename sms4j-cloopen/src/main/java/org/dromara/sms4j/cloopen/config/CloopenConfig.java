@@ -13,21 +13,46 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class CloopenConfig {
 
-    /** Access Key */
+    /**
+     * Access Key
+     */
     private String accessKeyId;
 
-    /** Access Key Secret */
+    /**
+     * Access Key Secret
+     */
     private String accessKeySecret;
 
-    /** 模板 ID */
+    /**
+     * 模板 ID
+     */
     private String templateId;
 
-    /** 应用 ID */
+    /**
+     * 应用 ID
+     */
     private String appId;
 
-    /** Rest URL 域名 */
+    /**
+     * REST API Base URL
+     */
+    private String baseUrl = "https://app.cloopen.com:8883/2013-12-26";
+
+    /**
+     * Rest URL 域名
+     *
+     * @deprecated v2.0.1
+     * @see baseUrl
+     */
+    @Deprecated
     private String serverIp;
 
-    /** Rest URL 端口 */
+    /**
+     * Rest URL 端口
+     *
+     * @deprecated v2.0.1
+     * @see baseUrl
+     */
+    @Deprecated
     private String serverPort;
 }

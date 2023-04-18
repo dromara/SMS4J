@@ -60,7 +60,6 @@
         <tencent.version>3.1.622</tencent.version>
         <unisms.version>0.0.4</unisms.version>
         <jdcloud.version>1.3.3</jdcloud.version>
-        <cloopen.version>1.0.4</cloopen.version>
         <json.version>2.0.15</json.version>
         <okhttp.version>3.14.9</okhttp.version>
         <forest.version>1.5.30</forest.version>
@@ -238,13 +237,6 @@
                 <groupId>com.jdcloud.sdk</groupId>
                 <artifactId>sms</artifactId>
                 <version>${jdcloud.version}</version>
-            </dependency>
-
-            <!-- 容联云短信依赖 -->
-            <dependency>
-                <groupId>com.cloopen</groupId>
-                <artifactId>java-sms-sdk</artifactId>
-                <version>${cloopen.version}</version>
             </dependency>
 
             <!-- okhttp依赖,防止出现java.lang.NoSuchFieldError: Companion异常-->

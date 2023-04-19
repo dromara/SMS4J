@@ -33,7 +33,7 @@ public class SupplierSqlConfig {
      * <p>在类初始化是完成方法调用
      * @author :Wind
     */
-    public SupplierSqlConfig() {
+    private SupplierSqlConfig() {
         alibaba();
         huawei();
         jingdong();
@@ -42,6 +42,10 @@ public class SupplierSqlConfig {
         yunPian();
         cloopen();
         emay();
+    }
+
+    public static SupplierSqlConfig newSupplierSqlConfig(){
+        return new SupplierSqlConfig();
     }
 
     /**

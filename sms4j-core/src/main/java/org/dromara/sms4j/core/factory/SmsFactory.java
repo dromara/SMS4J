@@ -1,5 +1,6 @@
 package org.dromara.sms4j.core.factory;
 
+import org.dromara.sms4j.core.SupplierSqlConfig;
 import org.dromara.sms4j.emay.config.EmaySmsConfig;
 import org.dromara.sms4j.aliyun.config.AlibabaSmsConfig;
 import org.dromara.sms4j.api.SmsBlend;
@@ -92,5 +93,14 @@ public class SmsFactory {
                  EmaySmsConfig.refresh(SupplierFactory.getEmayConfig());
         }
         throw new SmsBlendException("An attempt to construct a SmsBlend object failed. Please check that the enumeration is valid");
+    }
+
+    /**
+     *  refreshSqlConfig
+     * <p>重新读取sql配置
+     * @author :Wind
+    */
+    public static void refreshSqlConfig() {
+        SupplierSqlConfig.newSupplierSqlConfig();
     }
 }

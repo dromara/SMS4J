@@ -65,7 +65,7 @@ public class SmsAutowiredConfig {
     @Bean
     @ConditionalOnProperty(prefix = "sms", name = "config-type", havingValue = "sql_config")
     protected void supplierSqlConfig(){
-         new SupplierSqlConfig();
+        SupplierSqlConfig.newSupplierSqlConfig();
     }
 
 
@@ -81,7 +81,7 @@ public class SmsAutowiredConfig {
             log.debug("SMS restriction is enabled");
         }
         if (BeanFactory.getSmsConfig().getIsPrint()){
-            SmsBanner.PrintBanner("V 1.0.5");
+            SmsBanner.PrintBanner("V 2.0.1");
         }
     }
 }

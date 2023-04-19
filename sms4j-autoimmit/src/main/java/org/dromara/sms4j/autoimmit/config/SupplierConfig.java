@@ -72,9 +72,4 @@ public class SupplierConfig {
     protected EmayConfig emayConfig(){
         return SupplierFactory.getEmayConfig();
     }
-
-    /** 为的是延后执行*/
-    protected void init(){
-
-    }
 }

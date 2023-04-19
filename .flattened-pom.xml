@@ -57,7 +57,6 @@
   <properties>
     <unisms.version>0.0.4</unisms.version>
     <okhttp.version>3.14.9</okhttp.version>
-    <cloopen.version>1.0.4</cloopen.version>
     <aliyun.version>2.0.23</aliyun.version>
     <json.version>2.0.15</json.version>
     <forest.version>1.5.30</forest.version>
@@ -152,8 +151,8 @@
         <version>${aliyun.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
+            <groupId>com.squareup.okhttp3</groupId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -184,8 +183,8 @@
         <version>${unisms.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
+            <groupId>com.squareup.okhttp3</groupId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -195,8 +194,8 @@
         <version>${tencent.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
+            <groupId>com.squareup.okhttp3</groupId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -204,11 +203,6 @@
         <groupId>com.jdcloud.sdk</groupId>
         <artifactId>sms</artifactId>
         <version>${jdcloud.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.cloopen</groupId>
-        <artifactId>java-sms-sdk</artifactId>
-        <version>${cloopen.version}</version>
       </dependency>
       <dependency>
         <groupId>com.squareup.okhttp3</groupId>

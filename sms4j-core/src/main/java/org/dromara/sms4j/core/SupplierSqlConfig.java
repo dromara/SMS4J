@@ -6,6 +6,7 @@ import org.dromara.sms4j.comm.enumerate.SupplierType;
 import org.dromara.sms4j.comm.utils.JDBCTool;
 import org.dromara.sms4j.comm.utils.SmsUtil;
 import org.dromara.sms4j.core.config.SupplierFactory;
+import org.dromara.sms4j.emay.config.EmayConfig;
 import org.dromara.sms4j.huawei.config.HuaweiConfig;
 import org.dromara.sms4j.jdcloud.config.JdCloudConfig;
 import org.dromara.sms4j.tencent.config.TencentConfig;
@@ -40,6 +41,7 @@ public class SupplierSqlConfig {
         uniSms();
         yunPian();
         cloopen();
+        emay();
     }
 
     /**
@@ -104,7 +106,7 @@ public class SupplierSqlConfig {
 
     /**
      *  cloopen
-     * <p>数据库读取并设置荣联云短信
+     * <p>数据库读取并设置容联云短信
      * @author :Wind
     */
     public static void cloopen(){
@@ -112,4 +114,12 @@ public class SupplierSqlConfig {
         SmsUtil.copyBean(cloopenConfig,SupplierFactory.getCloopenConfig());
     }
 
+    /**
+     * emay
+     * <p>数据库读取并设置亿美软通短信
+     */
+    public static void emay() {
+        EmayConfig emayConfig = SmsUtil.jsonForObject(select.get(SupplierType.EMAY.getName()), EmayConfig.class);
+        SmsUtil.copyBean(emayConfig, SupplierFactory.getEmayConfig());
+    }
 }

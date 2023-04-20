@@ -9,7 +9,7 @@ public class YunPianSmsConfig {
 
 
     public YunpianConfig yunpianConfig(){
-        return new YunpianConfig();
+        return YunpianConfig.builder().build();
     }
 
 

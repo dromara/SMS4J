@@ -28,8 +28,6 @@ public class SmsFactory {
     private SmsFactory() {
     }
 
-    ;
-
     /**
      * createSmsBlend
      * <p>获取各个厂商的实现类

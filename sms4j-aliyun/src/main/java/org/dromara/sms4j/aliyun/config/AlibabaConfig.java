@@ -1,10 +1,10 @@
 package org.dromara.sms4j.aliyun.config;
 
+import lombok.Builder;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 @Data
-@Accessors(chain = true)
+@Builder
 public class AlibabaConfig {
 
     /** accessKey*/

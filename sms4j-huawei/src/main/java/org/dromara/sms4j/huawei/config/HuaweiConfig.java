@@ -1,10 +1,10 @@
 package org.dromara.sms4j.huawei.config;
 
+import lombok.Builder;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 @Data
-@Accessors(chain = true)
+@Builder
 public class HuaweiConfig {
 
     /** appKey*/

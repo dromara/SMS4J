@@ -1,7 +1,7 @@
 package org.dromara.sms4j.cloopen.config;
 
+import lombok.Builder;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 /**
  * 容联云短信配置属性
@@ -10,7 +10,7 @@ import lombok.experimental.Accessors;
  * @since 2023/4/10 22:10
  */
 @Data
-@Accessors(chain = true)
+@Builder
 public class CloopenConfig {
 
     /**

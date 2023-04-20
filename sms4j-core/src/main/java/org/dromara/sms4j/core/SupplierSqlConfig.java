@@ -24,16 +24,22 @@ import java.util.Map;
 public class SupplierSqlConfig {
     private static Map<String, String> select;
 
-    static {
+    /**
+     *  readSqlConfig
+     * <p>读取数据库配置信息
+     * @author :Wind
+    */
+    public static void readSqlConfig(){
         select = JDBCTool.selectConfig();
     }
 
     /**
-     *  SupplierSqlConfig
-     * <p>在类初始化是完成方法调用
+     *  refreshSqlConfig
+     * <p>读取并刷新数据库配置
      * @author :Wind
     */
-    private SupplierSqlConfig() {
+    public static void refreshSqlConfig(){
+        readSqlConfig();
         alibaba();
         huawei();
         jingdong();

@@ -48,7 +48,7 @@ public class SupplierFactory {
     /** 阿里云配置获取*/
     public static AlibabaConfig getAlibabaConfig() {
         if (alibabaConfig == null){
-            alibabaConfig = new AlibabaConfig();
+            alibabaConfig = AlibabaConfig.builder().build();
         }
         return alibabaConfig;
     }
@@ -56,7 +56,7 @@ public class SupplierFactory {
     /** 华为云配置获取*/
     public static HuaweiConfig getHuaweiConfig() {
         if (huaweiConfig == null){
-            huaweiConfig = new HuaweiConfig();
+            huaweiConfig = HuaweiConfig.builder().build();
         }
         return huaweiConfig;
     }
@@ -64,7 +64,7 @@ public class SupplierFactory {
     /** 合一短信配置获取*/
     public static UniConfig getUniConfig() {
         if (uniConfig == null){
-            uniConfig = new UniConfig();
+            uniConfig = UniConfig.builder().build();
         }
         return uniConfig;
     }
@@ -72,7 +72,7 @@ public class SupplierFactory {
     /** 腾讯短信配置获取*/
     public static TencentConfig getTencentConfig() {
         if (tencentConfig == null){
-            tencentConfig = new TencentConfig();
+            tencentConfig = TencentConfig.builder().build();
         }
         return tencentConfig;
     }
@@ -80,7 +80,7 @@ public class SupplierFactory {
     /** 云片短信配置获取*/
     public static YunpianConfig getYunpianConfig() {
         if (yunpianConfig == null){
-            yunpianConfig = new YunpianConfig();
+            yunpianConfig = YunpianConfig.builder().build();
         }
         return yunpianConfig;
     }
@@ -88,7 +88,7 @@ public class SupplierFactory {
     /** 京东云短信配置获取 */
     public static JdCloudConfig getJdCloudConfig() {
         if (jdCloudConfig == null){
-            jdCloudConfig = new JdCloudConfig();
+            jdCloudConfig = JdCloudConfig.builder().build();
         }
         return jdCloudConfig;
     }
@@ -96,7 +96,7 @@ public class SupplierFactory {
     /** 容联云短信配置获取 */
     public static CloopenConfig getCloopenConfig() {
         if (cloopenConfig == null){
-            cloopenConfig = new CloopenConfig();
+            cloopenConfig = CloopenConfig.builder().build();
         }
         return cloopenConfig;
     }
@@ -106,8 +106,64 @@ public class SupplierFactory {
      */
     public static EmayConfig getEmayConfig() {
         if (emayConfig == null) {
-            emayConfig = new EmayConfig();
+            emayConfig = EmayConfig.builder().build();
         }
         return emayConfig;
+    }
+
+    /**
+     * 设置 alibabaConfig
+     */
+    public static void setAlibabaConfig(AlibabaConfig alibabaConfig) {
+        SupplierFactory.alibabaConfig = alibabaConfig;
+    }
+
+    /**
+     * 设置 huaweiConfig
+     */
+    public static void setHuaweiConfig(HuaweiConfig huaweiConfig) {
+        SupplierFactory.huaweiConfig = huaweiConfig;
+    }
+
+    /**
+     * 设置 uniConfig
+     */
+    public static void setUniConfig(UniConfig uniConfig) {
+        SupplierFactory.uniConfig = uniConfig;
+    }
+
+    /**
+     * 设置 tencentConfig
+     */
+    public static void setTencentConfig(TencentConfig tencentConfig) {
+        SupplierFactory.tencentConfig = tencentConfig;
+    }
+
+    /**
+     * 设置 yunpianConfig
+     */
+    public static void setYunpianConfig(YunpianConfig yunpianConfig) {
+        SupplierFactory.yunpianConfig = yunpianConfig;
+    }
+
+    /**
+     * 设置 jdCloudConfig
+     */
+    public static void setJdCloudConfig(JdCloudConfig jdCloudConfig) {
+        SupplierFactory.jdCloudConfig = jdCloudConfig;
+    }
+
+    /**
+     * 设置 cloopenConfig
+     */
+    public static void setCloopenConfig(CloopenConfig cloopenConfig) {
+        SupplierFactory.cloopenConfig = cloopenConfig;
+    }
+
+    /**
+     * 设置 emayConfig
+     */
+    public static void setEmayConfig(EmayConfig emayConfig) {
+        SupplierFactory.emayConfig = emayConfig;
     }
 }

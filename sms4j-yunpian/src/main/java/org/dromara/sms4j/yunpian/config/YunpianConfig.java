@@ -1,10 +1,10 @@
 package org.dromara.sms4j.yunpian.config;
 
+import lombok.Builder;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 @Data
-@Accessors(chain = true)
+@Builder
 public class YunpianConfig {
     /**
      * 账号唯一标识

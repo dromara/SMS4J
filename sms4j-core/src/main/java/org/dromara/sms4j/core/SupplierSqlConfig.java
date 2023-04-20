@@ -50,6 +50,10 @@ public class SupplierSqlConfig {
         emay();
     }
 
+    public SupplierSqlConfig() {
+        refreshSqlConfig();
+    }
+
     public static SupplierSqlConfig newSupplierSqlConfig(){
         return new SupplierSqlConfig();
     }

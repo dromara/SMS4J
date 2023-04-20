@@ -1,7 +1,10 @@
 package org.dromara.sms4j.cloopen.config;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
+import org.dromara.sms4j.comm.config.BaseConfig;
 
 /**
  * 容联云短信配置属性
@@ -10,23 +13,10 @@ import lombok.Data;
  * @since 2023/4/10 22:10
  */
 @Data
-@Builder
-public class CloopenConfig {
-
-    /**
-     * Access Key
-     */
-    private String accessKeyId;
-
-    /**
-     * Access Key Secret
-     */
-    private String accessKeySecret;
-
-    /**
-     * 模板 ID
-     */
-    private String templateId;
+@SuperBuilder
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+public class CloopenConfig extends BaseConfig {
 
     /**
      * 应用 ID

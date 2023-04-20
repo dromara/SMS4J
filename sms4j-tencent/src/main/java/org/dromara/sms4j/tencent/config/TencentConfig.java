@@ -1,29 +1,29 @@
 package org.dromara.sms4j.tencent.config;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
+import org.dromara.sms4j.comm.config.BaseConfig;
 
 @Data
-@Builder
-public class TencentConfig {
-    /** 应用accessKey*/
-    private String accessKeyId;
+@SuperBuilder
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+public class TencentConfig extends BaseConfig {
+
     /**
-     * 访问键秘钥
+     * 短信sdkAppId
      */
-    private String accessKeySecret;
-    /**
-     * 短信签名
-     */
-    private String signature;
-    /**
-     * 模板Id
-     */
-    private String templateId;
-    /** 短信sdkAppId*/
     private String sdkAppId;
-    /** 地域信息默认为 ap-guangzhou*/
-    private String territory ="ap-guangzhou";
-    /**请求超时时间 */
+
+    /**
+     * 地域信息默认为 ap-guangzhou
+     */
+    private String territory = "ap-guangzhou";
+
+    /**
+     * 请求超时时间
+     */
     private Integer connTimeout = 60;
 }

@@ -1,7 +1,10 @@
 package org.dromara.sms4j.jdcloud.config;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
+import org.dromara.sms4j.comm.config.BaseConfig;
 
 /**
  * 京东云短信配置属性
@@ -10,21 +13,13 @@ import lombok.Data;
  * @since 2023/4/10 20:01
  */
 @Data
-@Builder
-public class JdCloudConfig {
+@SuperBuilder
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+public class JdCloudConfig extends BaseConfig {
 
-    /** Access Key */
-    private String accessKeyId;
-
-    /** Access Key Secret */
-    private String accessKeySecret;
-
-    /** 短信签名 */
-    private String signature;
-
-    /** 模板 ID */
-    private String templateId;
-
-    /** 地域信息 */
+    /**
+     * 地域信息
+     */
     private String region = "cn-north-1";
 }

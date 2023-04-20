@@ -1,23 +1,24 @@
 package org.dromara.sms4j.aliyun.config;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
+import org.dromara.sms4j.comm.config.BaseConfig;
 
 @Data
-@Builder
-public class AlibabaConfig {
+@SuperBuilder
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+public class AlibabaConfig extends BaseConfig {
 
-    /** accessKey*/
-    private String accessKeyId;
-    /** 访问键秘钥 */
-    private String accessKeySecret;
-    /** 短信签名*/
-    private String signature;
-    /** 模板Id*/
-    private String templateId;
-    /** 模板变量名称*/
+    /**
+     * 模板变量名称
+     */
     private String templateName;
-    /** 请求地址*/
-    private String requestUrl = "dysmsapi.aliyuncs.com";
 
+    /**
+     * 请求地址
+     */
+    private String requestUrl = "dysmsapi.aliyuncs.com";
 }

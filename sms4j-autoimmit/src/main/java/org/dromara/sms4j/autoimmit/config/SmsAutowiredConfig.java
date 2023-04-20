@@ -65,7 +65,7 @@ public class SmsAutowiredConfig {
     @Bean
     @ConditionalOnProperty(prefix = "sms", name = "config-type", havingValue = "sql_config")
     protected void supplierSqlConfig(){
-        SupplierSqlConfig.newSupplierSqlConfig();
+        SupplierSqlConfig.refreshSqlConfig();
     }
 
 

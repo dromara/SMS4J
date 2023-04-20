@@ -11,6 +11,7 @@ import com.dtflys.forest.config.ForestConfiguration;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.cloopen.config.CloopenConfig;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
+import org.dromara.sms4j.comm.utils.RestApiFunction;
 
 import java.util.Collections;
 import java.util.Date;
@@ -25,10 +26,10 @@ import java.util.Optional;
  */
 public class CloopenHelper {
 
-    private final CloopenConfig cloopenConfig;
+    private final CloopenConfig config;
 
-    public CloopenHelper(CloopenConfig cloopenConfig) {
-        this.cloopenConfig = cloopenConfig;
+    public CloopenHelper(CloopenConfig config) {
+        this.config = config;
     }
 
     /**
@@ -39,16 +40,16 @@ public class CloopenHelper {
      * @param <R>             响应类型
      * @return 响应信息
      */
-    public <R> SmsResponse request(CloopenRestApiFunction<Map<String, Object>, R> restApiFunction, Map<String, Object> paramMap) {
+    public <R> SmsResponse request(RestApiFunction<Map<String, Object>, R> restApiFunction, Map<String, Object> paramMap) {
         SmsResponse smsResponse = new SmsResponse();
         try {
             String timestamp = DateUtil.format(new Date(), DatePattern.PURE_DATETIME_PATTERN);
             // 设置全局变量
             ForestConfiguration forestConfiguration = Forest.config();
-            forestConfiguration.setVariableValue("baseUrl", (method) -> cloopenConfig.getBaseUrl());
-            forestConfiguration.setVariableValue("accessKeyId", (method) -> cloopenConfig.getAccessKeyId());
-            forestConfiguration.setVariableValue("sign", this.generateSign(cloopenConfig.getAccessKeyId(), cloopenConfig.getAccessKeySecret(), timestamp));
-            forestConfiguration.setVariableValue("authorization", this.generateAuthorization(cloopenConfig.getAccessKeyId(), timestamp));
+            forestConfiguration.setVariableValue("baseUrl", (method) -> config.getBaseUrl());
+            forestConfiguration.setVariableValue("accessKeyId", (method) -> config.getAccessKeyId());
+            forestConfiguration.setVariableValue("sign", this.generateSign(config.getAccessKeyId(), config.getAccessKeySecret(), timestamp));
+            forestConfiguration.setVariableValue("authorization", this.generateAuthorization(config.getAccessKeyId(), timestamp));
 
             // 调用请求
             R response = restApiFunction.apply(paramMap);

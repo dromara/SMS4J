@@ -1,9 +1,9 @@
-package org.dromara.sms4j.cloopen.util;
+package org.dromara.sms4j.comm.utils;
 
 import java.io.Serializable;
 
 /**
- * 容联云 REST API 函数式接口
+ * REST API 函数式接口
  *
  * @param <P> 请求参数
  * @param <R> 响应
@@ -11,6 +11,6 @@ import java.io.Serializable;
  * @since 2023/4/17 20:57
  */
 @FunctionalInterface
-public interface CloopenRestApiFunction<P, R> extends Serializable {
+public interface RestApiFunction<P, R> extends Serializable {
     R apply(P param);
 }

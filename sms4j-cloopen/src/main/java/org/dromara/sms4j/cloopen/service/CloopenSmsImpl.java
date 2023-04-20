@@ -25,7 +25,7 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class CloopenSmsImpl implements SmsBlend {
 
-    private final CloopenRestApi cloopenRestApi;
+    private final CloopenRestApi restApi;
 
     private final CloopenConfig config;
 
@@ -37,7 +37,7 @@ public class CloopenSmsImpl implements SmsBlend {
         this.config = config;
         this.pool = pool;
         this.delayed = delayed;
-        cloopenRestApi = Forest.client(CloopenRestApi.class);
+        restApi = Forest.client(CloopenRestApi.class);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class CloopenSmsImpl implements SmsBlend {
         paramMap.put("appId", config.getAppId());
         paramMap.put("templateId", templateId);
         paramMap.put("datas", messages.keySet().stream().map(messages::get).toArray(String[]::new));
-        return helper.request(cloopenRestApi::sendSms, paramMap);
+        return helper.request(restApi::sendSms, paramMap);
     }
 
     @Override

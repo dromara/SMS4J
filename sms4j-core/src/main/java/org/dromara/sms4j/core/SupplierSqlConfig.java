@@ -65,7 +65,7 @@ public class SupplierSqlConfig {
     */
     public static void alibaba(){
         AlibabaConfig alibabaConfig = SmsUtil.jsonForObject(select.get(SupplierType.ALIBABA.getName()), AlibabaConfig.class);
-        SmsUtil.copyBean(alibabaConfig, SupplierFactory.getAlibabaConfig());
+       SupplierFactory.setAlibabaConfig(alibabaConfig);
     }
 
     /**
@@ -75,7 +75,7 @@ public class SupplierSqlConfig {
     */
     public static void huawei(){
         HuaweiConfig huaweiConfig = SmsUtil.jsonForObject(select.get(SupplierType.HUAWEI.getName()), HuaweiConfig.class);
-        SmsUtil.copyBean(huaweiConfig, SupplierFactory.getHuaweiConfig());
+        SupplierFactory.setHuaweiConfig(huaweiConfig);
     }
 
     /**
@@ -85,7 +85,7 @@ public class SupplierSqlConfig {
     */
     public static void jingdong(){
         JdCloudConfig jdCloudConfig = SmsUtil.jsonForObject(select.get(SupplierType.JD_CLOUD.getName()), JdCloudConfig.class);
-        SmsUtil.copyBean(jdCloudConfig,SupplierFactory.getJdCloudConfig());
+        SupplierFactory.setJdCloudConfig(jdCloudConfig);
     }
 
     /**
@@ -95,7 +95,7 @@ public class SupplierSqlConfig {
     */
     public static void tencent(){
         TencentConfig tencentConfig = SmsUtil.jsonForObject(select.get(SupplierType.TENCENT.getName()), TencentConfig.class);
-        SmsUtil.copyBean(tencentConfig, SupplierFactory.getTencentConfig());
+        SupplierFactory.setTencentConfig(tencentConfig);
     }
 
     /**
@@ -105,7 +105,7 @@ public class SupplierSqlConfig {
     */
     public static void uniSms(){
         UniConfig uniConfig = SmsUtil.jsonForObject(select.get(SupplierType.UNI_SMS.getName()), UniConfig.class);
-        SmsUtil.copyBean(uniConfig,SupplierFactory.getUniConfig());
+        SupplierFactory.setUniConfig(uniConfig);
     }
 
     /**
@@ -115,7 +115,7 @@ public class SupplierSqlConfig {
     */
     public static void yunPian(){
         YunpianConfig yunpianConfig = SmsUtil.jsonForObject(select.get(SupplierType.YUNPIAN.getName()), YunpianConfig.class);
-        SmsUtil.copyBean(yunpianConfig,SupplierFactory.getYunpianConfig());
+        SupplierFactory.setYunpianConfig(yunpianConfig);
     }
 
     /**
@@ -125,7 +125,7 @@ public class SupplierSqlConfig {
     */
     public static void cloopen(){
         CloopenConfig cloopenConfig = SmsUtil.jsonForObject(select.get(SupplierType.CLOOPEN.getName()), CloopenConfig.class);
-        SmsUtil.copyBean(cloopenConfig,SupplierFactory.getCloopenConfig());
+        SupplierFactory.setCloopenConfig(cloopenConfig);
     }
 
     /**
@@ -134,6 +134,6 @@ public class SupplierSqlConfig {
      */
     public static void emay() {
         EmayConfig emayConfig = SmsUtil.jsonForObject(select.get(SupplierType.EMAY.getName()), EmayConfig.class);
-        SmsUtil.copyBean(emayConfig, SupplierFactory.getEmayConfig());
+        SupplierFactory.setEmayConfig(emayConfig);
     }
 }

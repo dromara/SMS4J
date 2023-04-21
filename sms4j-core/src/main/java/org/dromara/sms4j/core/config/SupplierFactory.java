@@ -1,5 +1,7 @@
 package org.dromara.sms4j.core.config;
 
+import org.dromara.sms4j.comm.enumerate.SupplierType;
+import org.dromara.sms4j.core.factory.SmsFactory;
 import org.dromara.sms4j.emay.config.EmayConfig;
 import org.dromara.sms4j.aliyun.config.AlibabaConfig;
 import org.dromara.sms4j.cloopen.config.CloopenConfig;
@@ -116,6 +118,7 @@ public class SupplierFactory {
      */
     public static void setAlibabaConfig(AlibabaConfig alibabaConfig) {
         SupplierFactory.alibabaConfig = alibabaConfig;
+        SmsFactory.refresh(SupplierType.ALIBABA);
     }
 
     /**
@@ -123,6 +126,7 @@ public class SupplierFactory {
      */
     public static void setHuaweiConfig(HuaweiConfig huaweiConfig) {
         SupplierFactory.huaweiConfig = huaweiConfig;
+        SmsFactory.refresh(SupplierType.HUAWEI);
     }
 
     /**
@@ -130,6 +134,7 @@ public class SupplierFactory {
      */
     public static void setUniConfig(UniConfig uniConfig) {
         SupplierFactory.uniConfig = uniConfig;
+        SmsFactory.refresh(SupplierType.UNI_SMS);
     }
 
     /**
@@ -137,6 +142,7 @@ public class SupplierFactory {
      */
     public static void setTencentConfig(TencentConfig tencentConfig) {
         SupplierFactory.tencentConfig = tencentConfig;
+        SmsFactory.refresh(SupplierType.TENCENT);
     }
 
     /**
@@ -144,6 +150,7 @@ public class SupplierFactory {
      */
     public static void setYunpianConfig(YunpianConfig yunpianConfig) {
         SupplierFactory.yunpianConfig = yunpianConfig;
+        SmsFactory.refresh(SupplierType.YUNPIAN);
     }
 
     /**
@@ -151,6 +158,7 @@ public class SupplierFactory {
      */
     public static void setJdCloudConfig(JdCloudConfig jdCloudConfig) {
         SupplierFactory.jdCloudConfig = jdCloudConfig;
+        SmsFactory.refresh(SupplierType.JD_CLOUD);
     }
 
     /**
@@ -158,6 +166,7 @@ public class SupplierFactory {
      */
     public static void setCloopenConfig(CloopenConfig cloopenConfig) {
         SupplierFactory.cloopenConfig = cloopenConfig;
+        SmsFactory.refresh(SupplierType.CLOOPEN);
     }
 
     /**
@@ -165,5 +174,6 @@ public class SupplierFactory {
      */
     public static void setEmayConfig(EmayConfig emayConfig) {
         SupplierFactory.emayConfig = emayConfig;
+        SmsFactory.refresh(SupplierType.EMAY);
     }
 }

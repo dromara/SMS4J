@@ -24,7 +24,7 @@ import org.dromara.sms4j.unisms.config.UniSmsConfig;
  * @author :Wind
  * 2023/4/8  15:55
  **/
-public class SmsFactory {
+public abstract class SmsFactory {
     private SmsFactory() {
     }
 
@@ -104,4 +104,5 @@ public class SmsFactory {
     public static void refreshSqlConfig() {
         SupplierSqlConfig.refreshSqlConfig();
     }
+
 }

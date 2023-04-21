@@ -1,5 +1,6 @@
 package org.dromara.sms4j.jdcloud.config;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -21,5 +22,6 @@ public class JdCloudConfig extends BaseConfig {
     /**
      * 地域信息
      */
+    @Builder.Default
     private String region = "cn-north-1";
 }

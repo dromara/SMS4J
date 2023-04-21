@@ -1,5 +1,6 @@
 package org.dromara.sms4j.aliyun.config;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -20,5 +21,6 @@ public class AlibabaConfig extends BaseConfig {
     /**
      * 请求地址
      */
+    @Builder.Default
     private String requestUrl = "dysmsapi.aliyuncs.com";
 }

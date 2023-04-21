@@ -1,5 +1,6 @@
 package org.dromara.sms4j.unisms.config;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -15,6 +16,7 @@ public class UniConfig extends BaseConfig {
     /**
      * 是否为简易模式
      */
+    @Builder.Default
     private Boolean isSimple = true;
 
     /**

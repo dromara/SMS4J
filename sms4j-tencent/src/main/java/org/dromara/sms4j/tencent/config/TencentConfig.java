@@ -1,5 +1,6 @@
 package org.dromara.sms4j.tencent.config;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -20,10 +21,12 @@ public class TencentConfig extends BaseConfig {
     /**
      * 地域信息默认为 ap-guangzhou
      */
+    @Builder.Default
     private String territory = "ap-guangzhou";
 
     /**
      * 请求超时时间
      */
+    @Builder.Default
     private Integer connTimeout = 60;
 }

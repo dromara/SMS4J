@@ -1,5 +1,6 @@
 package org.dromara.sms4j.cloopen.config;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -26,6 +27,7 @@ public class CloopenConfig extends BaseConfig {
     /**
      * REST API Base URL
      */
+    @Builder.Default
     private String baseUrl = "https://app.cloopen.com:8883/2013-12-26";
 
     /**

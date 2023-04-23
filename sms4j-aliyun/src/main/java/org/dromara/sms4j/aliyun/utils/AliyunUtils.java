@@ -1,8 +1,8 @@
 package org.dromara.sms4j.aliyun.utils;
 
+import cn.hutool.core.codec.Base64;
 import org.dromara.sms4j.aliyun.config.AlibabaConfig;
 import org.dromara.sms4j.comm.constant.Constant;
-import sun.misc.BASE64Encoder;
 
 import javax.crypto.Mac;
 import java.net.URLEncoder;
@@ -83,7 +83,7 @@ public class AliyunUtils {
         Mac mac = Mac.getInstance("HmacSHA1");
         mac.init(new javax.crypto.spec.SecretKeySpec(accessSecret.getBytes(StandardCharsets.UTF_8), "HmacSHA1"));
         byte[] signData = mac.doFinal(stringToSign.getBytes(StandardCharsets.UTF_8));
-        return new BASE64Encoder().encode(signData);
+        return Base64.encode(signData);
     }
 
     /**

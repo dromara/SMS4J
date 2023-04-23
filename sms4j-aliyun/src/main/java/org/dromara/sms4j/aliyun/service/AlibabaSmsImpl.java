@@ -1,22 +1,18 @@
 package org.dromara.sms4j.aliyun.service;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.aliyun.dysmsapi20170525.Client;
-import com.aliyun.dysmsapi20170525.models.SendBatchSmsRequest;
-import com.aliyun.dysmsapi20170525.models.SendBatchSmsResponse;
-import com.aliyun.dysmsapi20170525.models.SendSmsRequest;
-import com.aliyun.dysmsapi20170525.models.SendSmsResponse;
-import com.aliyun.tea.TeaException;
-import com.aliyun.teautil.models.RuntimeOptions;
+import com.dtflys.forest.config.ForestConfiguration;
+import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.aliyun.config.AlibabaConfig;
+import org.dromara.sms4j.aliyun.utils.AliyunUtils;
 import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.callback.CallBack;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
-import org.dromara.sms4j.comm.utils.http.HttpJsonTool;
-import lombok.extern.slf4j.Slf4j;
+import org.dromara.sms4j.comm.factory.BeanFactory;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -26,6 +22,7 @@ import java.util.concurrent.Executor;
 /**
  * <p>类名: AlibabaSmsImpl
  * <p>说明：  阿里云短信实现
+ *
  * @author :Wind
  * 2023/3/26  17:16
  **/
@@ -33,22 +30,22 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class AlibabaSmsImpl implements SmsBlend {
 
-    private final Client client;
-
     private final AlibabaConfig alibabaSmsConfig;
 
     private final Executor pool;
 
     private final DelayedTime delayed;
 
-    /**
-     *  AlibabaSmsImpl
-     * <p>构造器，用于构造短信实现模块
-     * @author :Wind
-    */
+    private final ForestConfiguration http = BeanFactory.getForestConfiguration();
 
-    public AlibabaSmsImpl(Client client, AlibabaConfig alibabaSmsConfig,Executor pool,DelayedTime delayedTime){
-        this.client = client;
+    /**
+     * AlibabaSmsImpl
+     * <p>构造器，用于构造短信实现模块
+     *
+     * @author :Wind
+     */
+
+    public AlibabaSmsImpl(AlibabaConfig alibabaSmsConfig, Executor pool, DelayedTime delayedTime) {
         this.alibabaSmsConfig = alibabaSmsConfig;
         this.pool = pool;
         this.delayed = delayedTime;
@@ -65,34 +62,8 @@ public class AlibabaSmsImpl implements SmsBlend {
     @Override
     @Restricted
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
-        SendSmsRequest sendSmsRequest = new SendSmsRequest();
-        String s = JSONObject.toJSONString(messages);
-        sendSmsRequest.setPhoneNumbers(phone)
-                .setTemplateCode(templateId)
-                .setTemplateParam(s)
-                .setSignName(alibabaSmsConfig.getSignature());
-        RuntimeOptions runtime = new RuntimeOptions();
-        SmsResponse smsResponse = new SmsResponse();
-        try {
-            SendSmsResponse sendSmsResponse = client.sendSmsWithOptions(sendSmsRequest, runtime);
-            smsResponse.setBizId(sendSmsResponse.body.getBizId());
-            smsResponse.setData(sendSmsResponse.body);
-            smsResponse.setCode(String.valueOf(sendSmsResponse.statusCode));
-            if (!"OK".equals(sendSmsResponse.body.code)) {
-                smsResponse.setErrMessage((sendSmsResponse.body.message));
-                smsResponse.setErrorCode(sendSmsResponse.body.code);
-            } else {
-                smsResponse.setMessage(sendSmsResponse.body.message);
-            }
-        } catch (TeaException error) {
-            log.error(error.getMessage());
-            throw new SmsBlendException(error.message);
-        } catch (Exception _error) {
-            TeaException error = new TeaException(_error.getMessage(), _error);
-            log.error(_error.getMessage());
-            throw new SmsBlendException(error.message);
-        }
-        return smsResponse;
+        String messageStr = JSON.toJSONString(messages);
+        return getSmsResponse(phone, messageStr, templateId);
     }
 
     @Override
@@ -106,32 +77,34 @@ public class AlibabaSmsImpl implements SmsBlend {
     @Override
     @Restricted
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
-        SendBatchSmsRequest sendBatchSmsRequest = new SendBatchSmsRequest();
-        sendBatchSmsRequest.setPhoneNumberJson(JSONObject.toJSONString(phones))//群发的手机号
-                .setTemplateCode(templateId)//模板id
-                .setTemplateParamJson(JSONObject.toJSONString(messages))//消息内容
-                .setSignNameJson(alibabaSmsConfig.getSignature());//短信签名
-        RuntimeOptions runtime = new RuntimeOptions();
+        String messageStr = JSON.toJSONString(messages);
+        return getSmsResponse(arrayToString(phones), messageStr, templateId);
+    }
+
+    private SmsResponse getSmsResponse(String phone, String message, String templateId) {
         SmsResponse smsResponse = new SmsResponse();
+        String requestUrl;
+        String paramStr;
         try {
-            SendBatchSmsResponse sendBatchSmsResponse = client.sendBatchSmsWithOptions(sendBatchSmsRequest, runtime);
-            smsResponse.setBizId(sendBatchSmsResponse.body.getBizId());
-            smsResponse.setData(HttpJsonTool.getJSONObject(sendBatchSmsResponse.body));
-            smsResponse.setCode(String.valueOf(sendBatchSmsResponse.statusCode));
-            if (!"OK".equals(sendBatchSmsResponse.body.code)) {
-                smsResponse.setErrMessage((sendBatchSmsResponse.body.message));
-                smsResponse.setErrorCode(sendBatchSmsResponse.body.code);
-            } else {
-                smsResponse.setMessage(sendBatchSmsResponse.body.message);
-            }
-        } catch (TeaException error) {
-            log.error(error.getMessage());
-            throw new SmsBlendException(error.message);
-        } catch (Exception _error) {
-            TeaException error = new TeaException(_error.getMessage(), _error);
-            log.error(error.getMessage());
-            throw new SmsBlendException(error.message);
+            requestUrl = AliyunUtils.generateSendSmsRequestUrl(this.alibabaSmsConfig, message, phone, templateId);
+            paramStr = AliyunUtils.generateParamBody(alibabaSmsConfig, phone, message, templateId);
+        } catch (Exception e) {
+            log.error("aliyun send message error", e);
+            throw new SmsBlendException(e.getMessage());
         }
+        log.info("requestUrl {}", requestUrl);
+        http.post(requestUrl)
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .addBody(paramStr)
+                .onSuccess(((data, req, res) -> {
+                    JSONObject jsonBody = res.get(JSONObject.class);
+                    log.info(jsonBody.toJSONString());
+                }))
+                .onError((ex, req, res) -> {
+                    JSONObject jsonBody = res.get(JSONObject.class);
+                    log.info(jsonBody.toJSONString());
+                })
+                .execute();
         return smsResponse;
     }
 
@@ -148,15 +121,15 @@ public class AlibabaSmsImpl implements SmsBlend {
     @Restricted
     public void sendMessageAsync(String phone, String message) {
         pool.execute(() -> {
-           sendMessage(phone, message);
+            sendMessage(phone, message);
         });
     }
 
     @Override
     @Restricted
     public void sendMessageAsync(String phone, String templateId, LinkedHashMap<String, String> messages, CallBack callBack) {
-        pool.execute(()->{
-            SmsResponse smsResponse = sendMessage(phone,templateId,messages);
+        pool.execute(() -> {
+            SmsResponse smsResponse = sendMessage(phone, templateId, messages);
             callBack.callBack(smsResponse);
         });
     }
@@ -164,8 +137,8 @@ public class AlibabaSmsImpl implements SmsBlend {
     @Override
     @Restricted
     public void sendMessageAsync(String phone, String templateId, LinkedHashMap<String, String> messages) {
-        pool.execute(()->{
-            sendMessage(phone,templateId,messages);
+        pool.execute(() -> {
+            sendMessage(phone, templateId, messages);
         });
     }
 
@@ -175,9 +148,9 @@ public class AlibabaSmsImpl implements SmsBlend {
         this.delayed.schedule(new TimerTask() {
             @Override
             public void run() {
-                sendMessage(phone,message);
+                sendMessage(phone, message);
             }
-        },delayedTime);
+        }, delayedTime);
     }
 
     @Override
@@ -186,9 +159,9 @@ public class AlibabaSmsImpl implements SmsBlend {
         this.delayed.schedule(new TimerTask() {
             @Override
             public void run() {
-                sendMessage(phone,templateId,messages);
+                sendMessage(phone, templateId, messages);
             }
-        },delayedTime);
+        }, delayedTime);
     }
 
     @Override
@@ -197,9 +170,9 @@ public class AlibabaSmsImpl implements SmsBlend {
         this.delayed.schedule(new TimerTask() {
             @Override
             public void run() {
-                massTexting(phones,message);
+                massTexting(phones, message);
             }
-        },delayedTime);
+        }, delayedTime);
     }
 
     @Override
@@ -208,8 +181,16 @@ public class AlibabaSmsImpl implements SmsBlend {
         this.delayed.schedule(new TimerTask() {
             @Override
             public void run() {
-                massTexting(phones,templateId,messages);
+                massTexting(phones, templateId, messages);
             }
-        },delayedTime);
+        }, delayedTime);
+    }
+
+    private String arrayToString(List<String> list) {
+        StringBuilder sb = new StringBuilder();
+        for (String s : list) {
+            sb.append(",").append("+86").append(s);
+        }
+        return sb.substring(1);
     }
 }

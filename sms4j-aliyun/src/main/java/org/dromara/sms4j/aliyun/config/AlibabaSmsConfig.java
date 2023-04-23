@@ -1,16 +1,14 @@
 package org.dromara.sms4j.aliyun.config;
 
-import com.aliyun.dysmsapi20170525.Client;
-import com.aliyun.teaopenapi.models.Config;
-import org.dromara.sms4j.aliyun.service.AlibabaSmsImpl;
-import org.dromara.sms4j.comm.exception.SmsBlendException;
-import org.dromara.sms4j.comm.factory.BeanFactory;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.sms4j.aliyun.service.AlibabaSmsImpl;
+import org.dromara.sms4j.comm.factory.BeanFactory;
 
 
 /**
  * AlibabaSmsConfig
  * <p> 阿里巴巴对象建造者
+ *
  * @author :Wind
  * 2023/4/8  14:54
  **/
@@ -21,33 +19,18 @@ public class AlibabaSmsConfig {
 
     private static AlibabaSmsConfig alibabaSmsConfig;
 
-    private  Client client(AlibabaConfig alibabaConfig){
-        try {
-            Config config = new Config()
-                    //  AccessKey ID
-                    .setAccessKeyId(alibabaConfig.getAccessKeyId())
-                    //  AccessKey Secret
-                    .setAccessKeySecret(alibabaConfig.getAccessKeySecret());
-            // 访问的域名
-            config.endpoint = alibabaConfig.getRequestUrl();
-            return new Client(config);
-        }catch  (Exception e){
-            log.error(e.getMessage());
-            throw new SmsBlendException(e.getMessage());
-        }
-    }
-
     /**
-     *  getAlibabaSms
+     * getAlibabaSms
      * <p> 建造一个短信实现对像
+     *
      * @author :Wind
-    */
+     */
     public static AlibabaSmsImpl createAlibabaSms(AlibabaConfig alibabaConfig) {
-        if (alibabaSmsConfig == null){
+        if (alibabaSmsConfig == null) {
             alibabaSmsConfig = new AlibabaSmsConfig();
         }
-        if (alibabaSms == null){
-            alibabaSms = new AlibabaSmsImpl(alibabaSmsConfig.client(alibabaConfig),
+        if (alibabaSms == null) {
+            alibabaSms = new AlibabaSmsImpl(
                     alibabaConfig,
                     BeanFactory.getExecutor(),
                     BeanFactory.getDelayedTime());
@@ -56,17 +39,18 @@ public class AlibabaSmsConfig {
     }
 
     /**
-     *  refresh
+     * refresh
      * <p> 刷新对象
+     *
      * @author :Wind
-    */
-    public static AlibabaSmsImpl refresh(AlibabaConfig alibabaConfig){
+     */
+    public static AlibabaSmsImpl refresh(AlibabaConfig alibabaConfig) {
         // 如果配置对象为空则创建一个
-        if (alibabaSmsConfig == null){
+        if (alibabaSmsConfig == null) {
             alibabaSmsConfig = new AlibabaSmsConfig();
         }
         //重新构造一个实现对象
-        alibabaSms= new AlibabaSmsImpl(alibabaSmsConfig.client(alibabaConfig),
+        alibabaSms = new AlibabaSmsImpl(
                 alibabaConfig,
                 BeanFactory.getExecutor(),
                 BeanFactory.getDelayedTime());

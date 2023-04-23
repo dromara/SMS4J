@@ -46,8 +46,13 @@ public class JDBCTool {
      */
     public Connection getConn() {
         Connection connection;
+        String url;
         try {
-            String url = config.getUrl() + "/" + config.getDatabaseName();
+            if (config.getDatabaseName().isEmpty()){
+                url = config.getUrl();
+            }else{
+                url = config.getUrl() + "/" + config.getDatabaseName();
+            }
             connection = DriverManager.getConnection(url, config.getUsername(), config.getPassword());
         } catch (SQLException e) {
             throw new SmsSqlException(e.getMessage());

@@ -23,9 +23,9 @@ footer: © 2022 wind <a href="https://beian.miit.gov.cn/#/Integrated/index" targ
 ```yaml
 sms:
   tencent:
-    #阿里云的accessKey
+    #腾讯云的accessKey
     accessKeyId: 您的accessKey
-    #阿里云的accessKeySecret
+    #腾讯云的accessKeySecret
     accessKeySecret: 您的accessKeySecret
     #短信签名
     signature: 测试签名
@@ -39,6 +39,12 @@ sms:
     sdkAppId: 短信sdkAppId
     #地域信息默认为 ap-guangzhou 如无特殊改变可不用设置
     territory: ap-guangzhou
+    #请求地址默认为 sms.tencentcloudapi.com 如无特殊改变可不用设置
+    requestUrl: sms.tencentcloudapi.com
+    #接口名称默认为 SendSms 如无特殊改变可不用设置
+    action: SendSms
+    #接口版本默认为 2021-01-11 如无特殊改变可不用设置
+    version: 2021-01-11
 ```
 ### 数据库风格配置
 ```json
@@ -49,7 +55,10 @@ sms:
   "signature": "短信签名",
   "templateId": "your TemplateId",
   "territory": "地域信息",
-  "connTimeout": 60
+  "connTimeout": 60,
+  "requestUrl": "sms.tencentcloudapi.com",
+  "action": "SendSms",
+  "version": "2021-01-11"
 }
 ```
 ### 手动写入配置文件风格
@@ -67,6 +76,10 @@ public class AliConfiguration{
         tencentConfig.setTemplateId("your TemplateId");
         tencentConfig.setTerritory("地域信息");
         tencentConfig.setConnTimeout(60);
+        tencentConfig.setRequestUrl("sms.tencentcloudapi.com");
+        tencentConfig.setAction("SendSms");
+        tencentConfig.setVersion("2021-01-11");
+        
     }
 }
 ```

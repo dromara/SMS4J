@@ -33,8 +33,14 @@ sms:
     templateId: SMS_215125134
     #模板变量 上述模板的变量
     templateName: code
-    #请求地址 默认为dysmsapi.aliyuncs.com 如无特殊改变可以不用设置
+    #请求地址默认为 dysmsapi.aliyuncs.com 如无特殊改变可以不用设置
     requestUrl: dysmsapi.aliyuncs.com
+    #接口方法默认为 SendSms 如无特殊改变可以不用设置
+    action: SendSms
+    #接口版本号默认为 2017-05-25 如无特殊改变可以不用设置
+    version: 2017-05-25
+    #地域信息默认为 cn-hangzhou 如无特殊改变可以不用设置
+    regionId: cn-hangzhou
 ```
 ### 数据库风格配置
 ```json
@@ -44,7 +50,10 @@ sms:
   "signature": "测试签名",
   "templateId":"SMS_215125134",
   "templateName": "code",
-  "requestUrl": "dysmsapi.aliyuncs.com"
+  "requestUrl": "dysmsapi.aliyuncs.com",
+  "action": "SendSms",
+  "version": "2017-05-25",
+  "regionId": "cn-hangzhou"
 }
 ```
 ### 手动写入配置文件风格
@@ -59,7 +68,11 @@ public class AliConfiguration{
         alibabaConfig.setAccessKeySecret("您的accessKeySecret");
         alibabaConfig.setSignature("测试签名");
         alibabaConfig.setTemplateId("SM123581321");
-        alibabaConfig.setTemplateName("cedo");
+        alibabaConfig.setTemplateName("code");
+        alibabaConfig.setAction("SendSms");
+        alibabaConfig.setVersion("2017-05-25");
+        alibabaConfig.setRegionId("cn-hangzhou");
+        
     }
 }
 ```

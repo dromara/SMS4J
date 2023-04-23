@@ -18,18 +18,6 @@
     </properties>
 
     <dependencies>
-        <!-- 阿里云短信依赖-->
-        <dependency>
-            <groupId>com.aliyun</groupId>
-            <artifactId>dysmsapi20170525</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.squareup.okhttp3</groupId>
-                    <artifactId>okhttp</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
         <dependency>
             <groupId>org.dromara.sms4j</groupId>
             <artifactId>sms4j-comm</artifactId>

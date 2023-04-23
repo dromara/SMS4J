@@ -1,6 +1,9 @@
 package org.dromara.sms4j.comm.constant;
 
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+
 /**
  * Constant
  * <p> 短信应用常量
@@ -27,6 +30,8 @@ public abstract class Constant {
      */
     public static final String FROM_URLENCODED = "application/x-www-form-urlencoded";
 
+    public static final String APPLICATION_JSON_UTF8 = "application/json; charset=utf-8";
+
     /**
      * 华为云规定 java时间格式
      */
@@ -35,6 +40,10 @@ public abstract class Constant {
     /** 云片短信国内短信请求地址*/
     public static final String YUNPIAN_URL = "https://sms.yunpian.com/v2";
 
+    /**
+     * https请求前缀
+     */
+    public static final String HTTPS_PREFIX = "https://";
 
     private Constant() {
     }

@@ -29,4 +29,24 @@ public class TencentConfig extends BaseConfig {
      */
     @Builder.Default
     private Integer connTimeout = 60;
+    /** 请求地址*/
+    @Builder.Default
+    private String requestUrl = "sms.tencentcloudapi.com";
+    /**
+     * 接口名称
+     */
+    @Builder.Default
+    private String action = "SendSms";
+
+    /**
+     * 接口版本
+     */
+    @Builder.Default
+    private String version = "2021-01-11";
+
+    /**
+     * 服务名
+     */
+    @Builder.Default
+    private String service = "sms";
 }

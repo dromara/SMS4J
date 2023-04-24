@@ -56,6 +56,7 @@ public class SmsAutowiredConfig {
         return new ConfigUtil(environment);
     }
 
+    /** smsConfig参数意义为确保注入时smsConfig已经存在*/
     @Bean
     @ConditionalOnProperty(prefix = "sms", name = "config-type", havingValue = "config_file")
     protected SupplierConfig supplierConfig(SmsConfig smsConfig){
@@ -64,8 +65,8 @@ public class SmsAutowiredConfig {
 
     @Bean
     @ConditionalOnProperty(prefix = "sms", name = "config-type", havingValue = "sql_config")
-    protected void supplierSqlConfig(){
-         new SupplierSqlConfig();
+    protected void supplierSqlConfig(SmsSqlConfig smsSqlConfig){
+        SupplierSqlConfig.refreshSqlConfig();
     }
 
 
@@ -80,8 +81,9 @@ public class SmsAutowiredConfig {
             springUtil.createBean(AopAdvice.class);
             log.debug("SMS restriction is enabled");
         }
+        //打印banner
         if (BeanFactory.getSmsConfig().getIsPrint()){
-            SmsBanner.PrintBanner("V 1.0.5");
+            SmsBanner.PrintBanner("V 2.0.1");
         }
     }
 }

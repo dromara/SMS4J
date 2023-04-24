@@ -1,7 +1,11 @@
 package org.dromara.sms4j.cloopen.config;
 
+import lombok.Builder;
 import lombok.Data;
-import lombok.experimental.Accessors;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
+import org.dromara.sms4j.comm.config.BaseConfig;
 
 /**
  * 容联云短信配置属性
@@ -10,24 +14,37 @@ import lombok.experimental.Accessors;
  * @since 2023/4/10 22:10
  */
 @Data
-@Accessors(chain = true)
-public class CloopenConfig {
+@SuperBuilder
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+public class CloopenConfig extends BaseConfig {
 
-    /** Access Key */
-    private String accessKeyId;
-
-    /** Access Key Secret */
-    private String accessKeySecret;
-
-    /** 模板 ID */
-    private String templateId;
-
-    /** 应用 ID */
+    /**
+     * 应用 ID
+     */
     private String appId;
 
-    /** Rest URL 域名 */
+    /**
+     * REST API Base URL
+     */
+    @Builder.Default
+    private String baseUrl = "https://app.cloopen.com:8883/2013-12-26";
+
+    /**
+     * Rest URL 域名
+     *
+     * @deprecated v2.0.1
+     * @see baseUrl
+     */
+    @Deprecated
     private String serverIp;
 
-    /** Rest URL 端口 */
+    /**
+     * Rest URL 端口
+     *
+     * @deprecated v2.0.1
+     * @see baseUrl
+     */
+    @Deprecated
     private String serverPort;
 }

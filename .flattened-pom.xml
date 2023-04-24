@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.dromara.sms4j</groupId>
   <artifactId>sms4j</artifactId>
-  <version>2.0.0</version>
+  <version>2.0.1</version>
   <packaging>pom</packaging>
   <name>sms4j</name>
-  <description>简约而强大的短信集成</description>
+  <description>sms_aggregation</description>
   <url>https://gitee.com/dromara/sms_aggregation</url>
   <licenses>
     <license>
@@ -47,25 +47,24 @@
   <distributionManagement>
     <repository>
       <id>ossrh</id>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+      <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
     <snapshotRepository>
       <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
     </snapshotRepository>
   </distributionManagement>
   <properties>
-    <unisms.version>0.0.4</unisms.version>
-    <okhttp.version>3.14.9</okhttp.version>
-    <cloopen.version>1.0.4</cloopen.version>
-    <aliyun.version>2.0.23</aliyun.version>
     <json.version>2.0.15</json.version>
-    <forest.version>1.5.30</forest.version>
-    <spring.boot.version>2.7.10</spring.boot.version>
     <hutool.version>5.8.16</hutool.version>
+    <okhttp.version>3.14.9</okhttp.version>
     <tencent.version>3.1.622</tencent.version>
-    <revision>2.0.0</revision>
+    <revision>2.0.1</revision>
+    <unisms.version>0.0.4</unisms.version>
+    <spring.boot.version>2.7.10</spring.boot.version>
+    <forest.version>1.5.30</forest.version>
     <jdcloud.version>1.3.3</jdcloud.version>
+    <aliyun.version>2.0.23</aliyun.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -84,67 +83,67 @@
       <dependency>
         <groupId>org.dromara.sms4j</groupId>
         <artifactId>sms4j-spring-boot-starter</artifactId>
-        <version>2.0.0</version>
+        <version>2.0.1</version>
       </dependency>
       <dependency>
         <groupId>org.dromara.sms4j</groupId>
         <artifactId>sms4j-autoimmit</artifactId>
-        <version>2.0.0</version>
+        <version>2.0.1</version>
       </dependency>
       <dependency>
         <groupId>org.dromara.sms4j</groupId>
         <artifactId>sms4j-core</artifactId>
-        <version>2.0.0</version>
+        <version>2.0.1</version>
       </dependency>
       <dependency>
         <groupId>org.dromara.sms4j</groupId>
         <artifactId>sms4j-comm</artifactId>
-        <version>2.0.0</version>
+        <version>2.0.1</version>
       </dependency>
       <dependency>
         <groupId>org.dromara.sms4j</groupId>
         <artifactId>sms4j-api</artifactId>
-        <version>2.0.0</version>
+        <version>2.0.1</version>
       </dependency>
       <dependency>
         <groupId>org.dromara.sms4j</groupId>
         <artifactId>sms4j-aliyun</artifactId>
-        <version>2.0.0</version>
+        <version>2.0.1</version>
       </dependency>
       <dependency>
         <groupId>org.dromara.sms4j</groupId>
         <artifactId>sms4j-tencent</artifactId>
-        <version>2.0.0</version>
+        <version>2.0.1</version>
       </dependency>
       <dependency>
         <groupId>org.dromara.sms4j</groupId>
         <artifactId>sms4j-unisms</artifactId>
-        <version>2.0.0</version>
+        <version>2.0.1</version>
       </dependency>
       <dependency>
         <groupId>org.dromara.sms4j</groupId>
         <artifactId>sms4j-yunpian</artifactId>
-        <version>2.0.0</version>
+        <version>2.0.1</version>
       </dependency>
       <dependency>
         <groupId>org.dromara.sms4j</groupId>
         <artifactId>sms4j-huawei</artifactId>
-        <version>2.0.0</version>
+        <version>2.0.1</version>
       </dependency>
       <dependency>
         <groupId>org.dromara.sms4j</groupId>
         <artifactId>sms4j-jdcloud</artifactId>
-        <version>2.0.0</version>
+        <version>2.0.1</version>
       </dependency>
       <dependency>
         <groupId>org.dromara.sms4j</groupId>
         <artifactId>sms4j-cloopen</artifactId>
-        <version>2.0.0</version>
+        <version>2.0.1</version>
       </dependency>
       <dependency>
         <groupId>org.dromara.sms4j</groupId>
         <artifactId>sms4j-emay</artifactId>
-        <version>2.0.0</version>
+        <version>2.0.1</version>
       </dependency>
       <dependency>
         <groupId>com.aliyun</groupId>
@@ -206,11 +205,6 @@
         <version>${jdcloud.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.cloopen</groupId>
-        <artifactId>java-sms-sdk</artifactId>
-        <version>${cloopen.version}</version>
-      </dependency>
-      <dependency>
         <groupId>com.squareup.okhttp3</groupId>
         <artifactId>okhttp</artifactId>
         <version>${okhttp.version}</version>
@@ -264,18 +258,6 @@
         </configuration>
       </plugin>
       <plugin>
-        <artifactId>maven-gpg-plugin</artifactId>
-        <version>1.6</version>
-        <executions>
-          <execution>
-            <phase>verify</phase>
-            <goals>
-              <goal>sign</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.0</version>
         <configuration>
@@ -285,10 +267,6 @@
           <verbose>true</verbose>
           <encoding>UTF-8</encoding>
         </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-release-plugin</artifactId>
-        <version>2.5.1</version>
       </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>

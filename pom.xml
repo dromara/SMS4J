@@ -8,7 +8,7 @@
 
     <name>sms4j</name>
     <packaging>pom</packaging>
-    <description>简约而强大的短信集成</description>
+    <description>sms_aggregation</description>
     <url>https://gitee.com/dromara/sms_aggregation</url>
 
     <modules>
@@ -55,12 +55,11 @@
     <properties>
 
         <spring.boot.version>2.7.10</spring.boot.version>
-        <revision>2.0.0</revision>
+        <revision>2.0.1</revision>
         <aliyun.version>2.0.23</aliyun.version>
         <tencent.version>3.1.622</tencent.version>
         <unisms.version>0.0.4</unisms.version>
         <jdcloud.version>1.3.3</jdcloud.version>
-        <cloopen.version>1.0.4</cloopen.version>
         <json.version>2.0.15</json.version>
         <okhttp.version>3.14.9</okhttp.version>
         <forest.version>1.5.30</forest.version>
@@ -240,13 +239,6 @@
                 <version>${jdcloud.version}</version>
             </dependency>
 
-            <!-- 容联云短信依赖 -->
-            <dependency>
-                <groupId>com.cloopen</groupId>
-                <artifactId>java-sms-sdk</artifactId>
-                <version>${cloopen.version}</version>
-            </dependency>
-
             <!-- okhttp依赖,防止出现java.lang.NoSuchFieldError: Companion异常-->
             <dependency>
                 <groupId>com.squareup.okhttp3</groupId>
@@ -274,11 +266,11 @@
     <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
         <repository>
             <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
 

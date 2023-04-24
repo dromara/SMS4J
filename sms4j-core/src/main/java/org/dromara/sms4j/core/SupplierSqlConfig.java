@@ -6,6 +6,7 @@ import org.dromara.sms4j.comm.enumerate.SupplierType;
 import org.dromara.sms4j.comm.utils.JDBCTool;
 import org.dromara.sms4j.comm.utils.SmsUtil;
 import org.dromara.sms4j.core.config.SupplierFactory;
+import org.dromara.sms4j.emay.config.EmayConfig;
 import org.dromara.sms4j.huawei.config.HuaweiConfig;
 import org.dromara.sms4j.jdcloud.config.JdCloudConfig;
 import org.dromara.sms4j.tencent.config.TencentConfig;
@@ -23,16 +24,22 @@ import java.util.Map;
 public class SupplierSqlConfig {
     private static Map<String, String> select;
 
-    static {
+    /**
+     *  readSqlConfig
+     * <p>读取数据库配置信息
+     * @author :Wind
+    */
+    public static void readSqlConfig(){
         select = JDBCTool.selectConfig();
     }
 
     /**
-     *  SupplierSqlConfig
-     * <p>在类初始化是完成方法调用
+     *  refreshSqlConfig
+     * <p>读取并刷新数据库配置
      * @author :Wind
     */
-    public SupplierSqlConfig() {
+    public static void refreshSqlConfig(){
+        readSqlConfig();
         alibaba();
         huawei();
         jingdong();
@@ -40,6 +47,15 @@ public class SupplierSqlConfig {
         uniSms();
         yunPian();
         cloopen();
+        emay();
+    }
+
+    public SupplierSqlConfig() {
+        refreshSqlConfig();
+    }
+
+    public static SupplierSqlConfig newSupplierSqlConfig(){
+        return new SupplierSqlConfig();
     }
 
     /**
@@ -49,7 +65,7 @@ public class SupplierSqlConfig {
     */
     public static void alibaba(){
         AlibabaConfig alibabaConfig = SmsUtil.jsonForObject(select.get(SupplierType.ALIBABA.getName()), AlibabaConfig.class);
-        SmsUtil.copyBean(alibabaConfig, SupplierFactory.getAlibabaConfig());
+       SupplierFactory.setAlibabaConfig(alibabaConfig);
     }
 
     /**
@@ -59,7 +75,7 @@ public class SupplierSqlConfig {
     */
     public static void huawei(){
         HuaweiConfig huaweiConfig = SmsUtil.jsonForObject(select.get(SupplierType.HUAWEI.getName()), HuaweiConfig.class);
-        SmsUtil.copyBean(huaweiConfig, SupplierFactory.getHuaweiConfig());
+        SupplierFactory.setHuaweiConfig(huaweiConfig);
     }
 
     /**
@@ -69,7 +85,7 @@ public class SupplierSqlConfig {
     */
     public static void jingdong(){
         JdCloudConfig jdCloudConfig = SmsUtil.jsonForObject(select.get(SupplierType.JD_CLOUD.getName()), JdCloudConfig.class);
-        SmsUtil.copyBean(jdCloudConfig,SupplierFactory.getJdCloudConfig());
+        SupplierFactory.setJdCloudConfig(jdCloudConfig);
     }
 
     /**
@@ -79,7 +95,7 @@ public class SupplierSqlConfig {
     */
     public static void tencent(){
         TencentConfig tencentConfig = SmsUtil.jsonForObject(select.get(SupplierType.TENCENT.getName()), TencentConfig.class);
-        SmsUtil.copyBean(tencentConfig, SupplierFactory.getTencentConfig());
+        SupplierFactory.setTencentConfig(tencentConfig);
     }
 
     /**
@@ -89,7 +105,7 @@ public class SupplierSqlConfig {
     */
     public static void uniSms(){
         UniConfig uniConfig = SmsUtil.jsonForObject(select.get(SupplierType.UNI_SMS.getName()), UniConfig.class);
-        SmsUtil.copyBean(uniConfig,SupplierFactory.getUniConfig());
+        SupplierFactory.setUniConfig(uniConfig);
     }
 
     /**
@@ -99,17 +115,25 @@ public class SupplierSqlConfig {
     */
     public static void yunPian(){
         YunpianConfig yunpianConfig = SmsUtil.jsonForObject(select.get(SupplierType.YUNPIAN.getName()), YunpianConfig.class);
-        SmsUtil.copyBean(yunpianConfig,SupplierFactory.getYunpianConfig());
+        SupplierFactory.setYunpianConfig(yunpianConfig);
     }
 
     /**
      *  cloopen
-     * <p>数据库读取并设置荣联云短信
+     * <p>数据库读取并设置容联云短信
      * @author :Wind
     */
     public static void cloopen(){
         CloopenConfig cloopenConfig = SmsUtil.jsonForObject(select.get(SupplierType.CLOOPEN.getName()), CloopenConfig.class);
-        SmsUtil.copyBean(cloopenConfig,SupplierFactory.getCloopenConfig());
+        SupplierFactory.setCloopenConfig(cloopenConfig);
     }
 
+    /**
+     * emay
+     * <p>数据库读取并设置亿美软通短信
+     */
+    public static void emay() {
+        EmayConfig emayConfig = SmsUtil.jsonForObject(select.get(SupplierType.EMAY.getName()), EmayConfig.class);
+        SupplierFactory.setEmayConfig(emayConfig);
+    }
 }

@@ -33,5 +33,9 @@
             <artifactId>okhttp</artifactId>
             <version>3.14.9</version>
         </dependency>
+        <dependency>
+            <groupId>org.dromara.sms4j</groupId>
+            <artifactId>sms4j-core</artifactId>
+        </dependency>
     </dependencies>
 </project>

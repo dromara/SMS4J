@@ -7,16 +7,5 @@
         <version>2.0.1</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
-    <artifactId>sms4j-spring-boot-starter-adapter-aliyun</artifactId>
-    <dependencies>
-        <dependency>
-            <groupId>org.dromara.sms4j</groupId>
-            <artifactId>sms4j-provider</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.dromara.sms4j</groupId>
-            <artifactId>sms4j-spring-boot-starter-adapter-common</artifactId>
-            <version>2.0.1</version>
-        </dependency>
-    </dependencies>
+    <artifactId>sms4j-spring-boot-starter-adapter-common</artifactId>
 </project>

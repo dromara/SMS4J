@@ -1,4 +1,4 @@
-package org.dromara.sms4j.starter.config;
+package org.dromara.sms4j.starter.adapter.common.autoconfigure;
 
 import lombok.Data;
 import org.dromara.sms4j.autoimmit.config.SmsAutowiredConfig;
@@ -8,10 +8,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-@Configuration
-@EnableAsync
 @Data
-public class SmsMainConfig {
+@EnableAsync
+@Configuration
+public class CommonAutoConfiguration {
 
     @Bean
     public SpringUtil springUtil(DefaultListableBeanFactory defaultListableBeanFactory){

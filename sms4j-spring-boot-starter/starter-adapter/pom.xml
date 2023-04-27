@@ -12,6 +12,7 @@
 
     <modules>
         <module>starter-adapter-aliyun</module>
+        <module>starter-adapter-common</module>
     </modules>
 
     <dependencies>

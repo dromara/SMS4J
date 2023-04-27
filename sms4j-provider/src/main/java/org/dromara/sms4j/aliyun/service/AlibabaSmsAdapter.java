@@ -2,24 +2,20 @@ package org.dromara.sms4j.aliyun.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.dtflys.forest.config.ForestConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.aliyun.config.AlibabaConfig;
 import org.dromara.sms4j.aliyun.utils.AliyunUtils;
 import org.dromara.sms4j.api.SmsBlend;
-import org.dromara.sms4j.api.callback.CallBack;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
-import org.dromara.sms4j.comm.config.BaseConfig;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.enumerate.SupplierType;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.factory.BeanFactory;
-import org.dromara.sms4j.core.AbstractSms;
+import org.dromara.sms4j.core.AbstractSmsAdapter;
 
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.TimerTask;
 import java.util.concurrent.Executor;
 
 /**
@@ -31,7 +27,7 @@ import java.util.concurrent.Executor;
  **/
 
 @Slf4j
-public class AlibabaSmsImpl extends AbstractSms<AlibabaConfig> {
+public class AlibabaSmsAdapter extends AbstractSmsAdapter<AlibabaConfig> {
 
     /**
      * AlibabaSmsImpl
@@ -39,11 +35,11 @@ public class AlibabaSmsImpl extends AbstractSms<AlibabaConfig> {
      *
      * @author :Wind
      */
-    public AlibabaSmsImpl(AlibabaConfig config, Executor pool, DelayedTime delayed) {
-        super(config, pool, delayed);
+    private AlibabaSmsAdapter(AlibabaConfig config) {
+        super(config);
     }
 
-
+    // TODO 这些看能否统一抽出来，最好达到的效果是大家只要实现getSmsResponse方法就可以了
     @Override
     @Restricted
     public SmsResponse sendMessage(String phone, String message) {
@@ -111,18 +107,12 @@ public class AlibabaSmsImpl extends AbstractSms<AlibabaConfig> {
 
     @Override
     public SmsBlend refresh(AlibabaConfig config) {
-        return new AlibabaSmsImpl(
-                config,
-                BeanFactory.getExecutor(),
-                BeanFactory.getDelayedTime());
+        return new AlibabaSmsAdapter(config);
     }
 
     @Override
     protected SmsBlend init(AlibabaConfig config) {
-        return new AlibabaSmsImpl(
-                config,
-                BeanFactory.getExecutor(),
-                BeanFactory.getDelayedTime());
+        return new AlibabaSmsAdapter(config);
     }
 
     @Override

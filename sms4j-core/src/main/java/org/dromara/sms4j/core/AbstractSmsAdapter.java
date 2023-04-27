@@ -20,20 +20,32 @@ import java.util.concurrent.Executor;
 /**
  * @author <a href = "mailto:kamtohung@gmail.com">KamTo Hung</a>
  */
-public abstract class AbstractSms<C extends BaseConfig> implements SmsBlend, Sms<C> {
+public abstract class AbstractSmsAdapter<C extends BaseConfig> implements SmsBlend, Sms<C> {
 
+    /**
+     * config
+     */
     protected final C config;
 
+    /**
+     * thread pool executor
+     */
     protected final Executor pool;
 
+    /**
+     * delayed time
+     */
     protected final DelayedTime delayed;
 
+    /**
+     * http config
+     */
     protected final ForestConfiguration http;
 
-    public AbstractSms(C config, Executor pool, DelayedTime delayed) {
+    public AbstractSmsAdapter(C config) {
         this.config = config;
-        this.pool = pool;
-        this.delayed = delayed;
+        this.pool = BeanFactory.getExecutor();
+        this.delayed = BeanFactory.getDelayedTime();
         this.http = BeanFactory.getForestConfiguration();
     }
 

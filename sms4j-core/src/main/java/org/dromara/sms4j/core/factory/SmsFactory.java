@@ -22,6 +22,7 @@ import org.dromara.sms4j.comm.enumerate.SupplierType;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * SmsFactory
@@ -36,14 +37,14 @@ public abstract class SmsFactory {
     private SmsFactory() {
     }
 
-    private static Map<SupplierType, SmsBlend> smsBlendMap;
+    private static final Map<SupplierType, SmsBlend> SMS = new ConcurrentHashMap<>();
 
     public static void register(SupplierType supplierType, SmsBlend smsBlend) {
-        smsBlendMap.putIfAbsent(supplierType, smsBlend);
+        SMS.putIfAbsent(supplierType, smsBlend);
     }
 
     public static SmsBlend getSmsBlend(SupplierType supplierType) {
-        SmsBlend smsBlend = smsBlendMap.get(supplierType);
+        SmsBlend smsBlend = SMS.get(supplierType);
         if (smsBlend != null) {
             return smsBlend;
         }
@@ -112,8 +113,8 @@ public abstract class SmsFactory {
      *
      * @author :Wind
      */
-    public static void refreshSqlConfig() {
-        SupplierSqlConfig.refreshSqlConfig();
-    }
+//    public static void refreshSqlConfig() {
+//        SupplierSqlConfig.refreshSqlConfig();
+//    }
 
 }

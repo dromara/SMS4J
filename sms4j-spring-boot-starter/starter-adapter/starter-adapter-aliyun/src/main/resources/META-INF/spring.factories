@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  org.dromara.dynamictp.starter.adapter.webserver.autocconfigure.WebServerTpAutoConfiguration
+  org.dromara.sms4j.starter.adapter.aliyun.autoconfigure.AliyunAutoConfiguration

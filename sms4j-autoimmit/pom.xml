@@ -10,12 +10,9 @@
 	</parent>
 
 	<artifactId>sms4j-autoimmit</artifactId>
-	<version>${revision}</version>
+
 	<name>sms4j-autoimmit</name>
 	<description>sms4j-autoimmit</description>
-
-	<properties>
-	</properties>
 
 	<dependencies>
 		<!--aop依赖-->

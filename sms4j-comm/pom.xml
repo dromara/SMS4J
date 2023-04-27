@@ -10,15 +10,11 @@
     </parent>
 
     <artifactId>sms4j-comm</artifactId>
+
     <name>sms4j-comm</name>
     <description>sms4j-comm</description>
-    <version>${revision}</version>
-
-    <properties>
-    </properties>
 
     <dependencies>
-
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>

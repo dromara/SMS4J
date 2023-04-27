@@ -10,10 +10,13 @@
     </parent>
 
     <artifactId>sms4j-spring-boot-starter</artifactId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <name>sms4j-spring-boot-starter</name>
     <description>sms4j-spring-boot-starter</description>
+    <modules>
+        <module>starter-adapter</module>
+    </modules>
 
     <dependencies>
         <dependency>

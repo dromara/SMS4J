@@ -1,5 +1,6 @@
 package org.dromara.sms4j.core;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.dtflys.forest.config.ForestConfiguration;
 import org.dromara.sms4j.api.Sms;
 import org.dromara.sms4j.api.SmsBlend;
@@ -47,6 +48,7 @@ public abstract class AbstractSmsAdapter<C extends BaseConfig> implements SmsBle
         this.pool = BeanFactory.getExecutor();
         this.delayed = BeanFactory.getDelayedTime();
         this.http = BeanFactory.getForestConfiguration();
+        init(config);
     }
 
     @Override
@@ -123,15 +125,17 @@ public abstract class AbstractSmsAdapter<C extends BaseConfig> implements SmsBle
         }, delayedTime);
     }
 
-
-    protected abstract SupplierType type();
-
     @Override
-    public void create(C config) {
-        SmsBlend smsBlend = init(config);
-        SmsFactory.register(type(), smsBlend);
+    public void init(C config) {
+        SmsFactory.register(type(), this);
     }
 
-    protected abstract SmsBlend init(C config);
+    @Override
+    public void refresh(C config) {
+        // need to print what has been changed?
+        BeanUtil.copyProperties(config, this.config);
+    }
+
+    protected abstract SupplierType type();
 
 }

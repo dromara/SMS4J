@@ -7,8 +7,19 @@ import org.dromara.sms4j.comm.config.BaseConfig;
  */
 public interface Sms<C extends BaseConfig> {
 
-    void create(C config);
+    /**
+     * init sms
+     *
+     * @param config config
+     */
+    void init(C config);
 
-    SmsBlend refresh(C config);
+    /**
+     * refresh sms
+     *
+     * @param config config
+     * @return sms
+     */
+    void refresh(C config);
 
 }

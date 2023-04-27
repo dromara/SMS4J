@@ -5,18 +5,14 @@ import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.aliyun.config.AlibabaConfig;
 import org.dromara.sms4j.aliyun.utils.AliyunUtils;
-import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
-import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.enumerate.SupplierType;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
-import org.dromara.sms4j.comm.factory.BeanFactory;
 import org.dromara.sms4j.core.AbstractSmsAdapter;
 
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.concurrent.Executor;
 
 /**
  * <p>类名: AlibabaSmsImpl
@@ -27,7 +23,7 @@ import java.util.concurrent.Executor;
  **/
 
 @Slf4j
-public class AlibabaSmsAdapter extends AbstractSmsAdapter<AlibabaConfig> {
+public class AliyunSmsAdapter extends AbstractSmsAdapter<AlibabaConfig> {
 
     /**
      * AlibabaSmsImpl
@@ -35,7 +31,7 @@ public class AlibabaSmsAdapter extends AbstractSmsAdapter<AlibabaConfig> {
      *
      * @author :Wind
      */
-    private AlibabaSmsAdapter(AlibabaConfig config) {
+    public AliyunSmsAdapter(AlibabaConfig config) {
         super(config);
     }
 
@@ -103,16 +99,6 @@ public class AlibabaSmsAdapter extends AbstractSmsAdapter<AlibabaConfig> {
             sb.append(",").append("+86").append(s);
         }
         return sb.substring(1);
-    }
-
-    @Override
-    public SmsBlend refresh(AlibabaConfig config) {
-        return new AlibabaSmsAdapter(config);
-    }
-
-    @Override
-    protected SmsBlend init(AlibabaConfig config) {
-        return new AlibabaSmsAdapter(config);
     }
 
     @Override

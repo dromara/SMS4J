@@ -10,9 +10,12 @@ import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.callback.CallBack;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
+import org.dromara.sms4j.comm.config.BaseConfig;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
+import org.dromara.sms4j.comm.enumerate.SupplierType;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.factory.BeanFactory;
+import org.dromara.sms4j.core.AbstractSms;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -28,15 +31,7 @@ import java.util.concurrent.Executor;
  **/
 
 @Slf4j
-public class AlibabaSmsImpl implements SmsBlend {
-
-    private final AlibabaConfig alibabaSmsConfig;
-
-    private final Executor pool;
-
-    private final DelayedTime delayed;
-
-    private final ForestConfiguration http = BeanFactory.getForestConfiguration();
+public class AlibabaSmsImpl extends AbstractSms<AlibabaConfig> {
 
     /**
      * AlibabaSmsImpl
@@ -44,19 +39,17 @@ public class AlibabaSmsImpl implements SmsBlend {
      *
      * @author :Wind
      */
-
-    public AlibabaSmsImpl(AlibabaConfig alibabaSmsConfig, Executor pool, DelayedTime delayedTime) {
-        this.alibabaSmsConfig = alibabaSmsConfig;
-        this.pool = pool;
-        this.delayed = delayedTime;
+    public AlibabaSmsImpl(AlibabaConfig config, Executor pool, DelayedTime delayed) {
+        super(config, pool, delayed);
     }
+
 
     @Override
     @Restricted
     public SmsResponse sendMessage(String phone, String message) {
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
-        map.put(alibabaSmsConfig.getTemplateName(), message);
-        return sendMessage(phone, alibabaSmsConfig.getTemplateId(), map);
+        map.put(config.getTemplateName(), message);
+        return sendMessage(phone, config.getTemplateId(), map);
     }
 
     @Override
@@ -70,8 +63,8 @@ public class AlibabaSmsImpl implements SmsBlend {
     @Restricted
     public SmsResponse massTexting(List<String> phones, String message) {
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
-        map.put(alibabaSmsConfig.getTemplateName(), message);
-        return massTexting(phones, alibabaSmsConfig.getTemplateId(), map);
+        map.put(config.getTemplateName(), message);
+        return massTexting(phones, config.getTemplateId(), map);
     }
 
     @Override
@@ -86,8 +79,8 @@ public class AlibabaSmsImpl implements SmsBlend {
         String requestUrl;
         String paramStr;
         try {
-            requestUrl = AliyunUtils.generateSendSmsRequestUrl(this.alibabaSmsConfig, message, phone, templateId);
-            paramStr = AliyunUtils.generateParamBody(alibabaSmsConfig, phone, message, templateId);
+            requestUrl = AliyunUtils.generateSendSmsRequestUrl(this.config, message, phone, templateId);
+            paramStr = AliyunUtils.generateParamBody(config, phone, message, templateId);
         } catch (Exception e) {
             log.error("aliyun send message error", e);
             throw new SmsBlendException(e.getMessage());
@@ -108,84 +101,6 @@ public class AlibabaSmsImpl implements SmsBlend {
         return smsResponse;
     }
 
-    @Override
-    @Restricted
-    public void sendMessageAsync(String phone, String message, CallBack callBack) {
-        pool.execute(() -> {
-            SmsResponse smsResponse = sendMessage(phone, message);
-            callBack.callBack(smsResponse);
-        });
-    }
-
-    @Override
-    @Restricted
-    public void sendMessageAsync(String phone, String message) {
-        pool.execute(() -> {
-            sendMessage(phone, message);
-        });
-    }
-
-    @Override
-    @Restricted
-    public void sendMessageAsync(String phone, String templateId, LinkedHashMap<String, String> messages, CallBack callBack) {
-        pool.execute(() -> {
-            SmsResponse smsResponse = sendMessage(phone, templateId, messages);
-            callBack.callBack(smsResponse);
-        });
-    }
-
-    @Override
-    @Restricted
-    public void sendMessageAsync(String phone, String templateId, LinkedHashMap<String, String> messages) {
-        pool.execute(() -> {
-            sendMessage(phone, templateId, messages);
-        });
-    }
-
-    @Override
-    @Restricted
-    public void delayedMessage(String phone, String message, Long delayedTime) {
-        this.delayed.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                sendMessage(phone, message);
-            }
-        }, delayedTime);
-    }
-
-    @Override
-    @Restricted
-    public void delayedMessage(String phone, String templateId, LinkedHashMap<String, String> messages, Long delayedTime) {
-        this.delayed.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                sendMessage(phone, templateId, messages);
-            }
-        }, delayedTime);
-    }
-
-    @Override
-    @Restricted
-    public void delayMassTexting(List<String> phones, String message, Long delayedTime) {
-        this.delayed.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                massTexting(phones, message);
-            }
-        }, delayedTime);
-    }
-
-    @Override
-    @Restricted
-    public void delayMassTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages, Long delayedTime) {
-        this.delayed.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                massTexting(phones, templateId, messages);
-            }
-        }, delayedTime);
-    }
-
     private String arrayToString(List<String> list) {
         StringBuilder sb = new StringBuilder();
         for (String s : list) {
@@ -193,4 +108,26 @@ public class AlibabaSmsImpl implements SmsBlend {
         }
         return sb.substring(1);
     }
+
+    @Override
+    public SmsBlend refresh(AlibabaConfig config) {
+        return new AlibabaSmsImpl(
+                config,
+                BeanFactory.getExecutor(),
+                BeanFactory.getDelayedTime());
+    }
+
+    @Override
+    protected SmsBlend init(AlibabaConfig config) {
+        return new AlibabaSmsImpl(
+                config,
+                BeanFactory.getExecutor(),
+                BeanFactory.getDelayedTime());
+    }
+
+    @Override
+    protected SupplierType type() {
+        return SupplierType.ALIBABA;
+    }
+
 }

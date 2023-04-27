@@ -2,10 +2,11 @@ package org.dromara.sms4j.huawei.config;
 
 import lombok.Builder;
 import lombok.Data;
+import org.dromara.sms4j.comm.config.BaseConfig;
 
 @Data
 @Builder
-public class HuaweiConfig {
+public class HuaweiConfig extends BaseConfig {
 
     /** appKey*/
     private String appKey ;

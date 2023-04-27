@@ -17,8 +17,13 @@
     <dependencies>
         <dependency>
             <groupId>org.dromara.sms4j</groupId>
-            <artifactId>sms4j-api</artifactId>
+            <artifactId>sms4j-core</artifactId>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.dromara.sms4j</groupId>-->
+<!--            <artifactId>sms4j-api</artifactId>-->
+<!--        </dependency>-->
+
 
         <!-- 合一短信依赖 -->
         <dependency>

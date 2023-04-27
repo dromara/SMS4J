@@ -10,14 +10,61 @@
 	</parent>
 
 	<artifactId>sms4j-core</artifactId>
-
+	<version>${revision}</version>
 	<name>sms4j-core</name>
 	<description>sms4j-core</description>
+
+	<properties>
+	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.dromara.sms4j</groupId>
-			<artifactId>sms4j-provider</artifactId>
+			<artifactId>sms4j-api</artifactId>
 		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.dromara.sms4j</groupId>-->
+<!--			<artifactId>sms4j-aliyun</artifactId>-->
+<!--		</dependency>-->
+
+<!--		<dependency>-->
+<!--			<groupId>org.dromara.sms4j</groupId>-->
+<!--			<artifactId>sms4j-tencent</artifactId>-->
+<!--		</dependency>-->
+
+<!--		<dependency>-->
+<!--			<groupId>org.dromara.sms4j</groupId>-->
+<!--			<artifactId>sms4j-unisms</artifactId>-->
+<!--		</dependency>-->
+
+<!--		<dependency>-->
+<!--			<groupId>org.dromara.sms4j</groupId>-->
+<!--			<artifactId>sms4j-yunpian</artifactId>-->
+<!--		</dependency>-->
+
+<!--		<dependency>-->
+<!--			<groupId>org.dromara.sms4j</groupId>-->
+<!--			<artifactId>sms4j-huawei</artifactId>-->
+<!--		</dependency>-->
+
+<!--		<dependency>-->
+<!--			<groupId>org.dromara.sms4j</groupId>-->
+<!--			<artifactId>sms4j-jdcloud</artifactId>-->
+<!--		</dependency>-->
+
+<!--		<dependency>-->
+<!--			<groupId>org.dromara.sms4j</groupId>-->
+<!--			<artifactId>sms4j-emay</artifactId>-->
+<!--		</dependency>-->
+
+<!--		<dependency>-->
+<!--			<groupId>org.dromara.sms4j</groupId>-->
+<!--			<artifactId>sms4j-cloopen</artifactId>-->
+<!--		</dependency>-->
 	</dependencies>
+
+	<build>
+		<plugins>
+		</plugins>
+	</build>
 </project>

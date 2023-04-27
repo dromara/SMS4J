@@ -1,5 +1,6 @@
 package org.dromara.sms4j.core.config;
 
+import org.dromara.sms4j.comm.config.BaseConfig;
 import org.dromara.sms4j.comm.enumerate.SupplierType;
 import org.dromara.sms4j.core.factory.SmsFactory;
 import org.dromara.sms4j.emay.config.EmayConfig;
@@ -11,6 +12,8 @@ import org.dromara.sms4j.tencent.config.TencentConfig;
 import org.dromara.sms4j.unisms.config.UniConfig;
 import org.dromara.sms4j.yunpian.config.YunpianConfig;
 
+import java.util.Map;
+
 /**
  * SupplierFactory
  * <p> 差异化配置工厂
@@ -20,6 +23,8 @@ import org.dromara.sms4j.yunpian.config.YunpianConfig;
 public class SupplierFactory {
     private SupplierFactory() {
     }
+
+    private Map<SupplierType, BaseConfig> supplierConfigMap;
 
     /** 阿里云差异化配置*/
     private static AlibabaConfig alibabaConfig;
@@ -153,27 +158,67 @@ public class SupplierFactory {
         SmsFactory.refresh(SupplierType.YUNPIAN);
     }
 
-    /**
-     * 设置 jdCloudConfig
-     */
-    public static void setJdCloudConfig(JdCloudConfig jdCloudConfig) {
-        SupplierFactory.jdCloudConfig = jdCloudConfig;
-        SmsFactory.refresh(SupplierType.JD_CLOUD);
-    }
-
-    /**
-     * 设置 cloopenConfig
-     */
-    public static void setCloopenConfig(CloopenConfig cloopenConfig) {
-        SupplierFactory.cloopenConfig = cloopenConfig;
-        SmsFactory.refresh(SupplierType.CLOOPEN);
-    }
-
-    /**
-     * 设置 emayConfig
-     */
-    public static void setEmayConfig(EmayConfig emayConfig) {
-        SupplierFactory.emayConfig = emayConfig;
-        SmsFactory.refresh(SupplierType.EMAY);
-    }
+//    /**
+//     * 设置 alibabaConfig
+//     */
+//    public static void setAlibabaConfig(AlibabaConfig alibabaConfig) {
+//        SupplierFactory.alibabaConfig = alibabaConfig;
+//        SmsFactory.refresh(SupplierType.ALIBABA);
+//    }
+//
+//    /**
+//     * 设置 huaweiConfig
+//     */
+//    public static void setHuaweiConfig(HuaweiConfig huaweiConfig) {
+//        SupplierFactory.huaweiConfig = huaweiConfig;
+//        SmsFactory.refresh(SupplierType.HUAWEI);
+//    }
+//
+//    /**
+//     * 设置 uniConfig
+//     */
+//    public static void setUniConfig(UniConfig uniConfig) {
+//        SupplierFactory.uniConfig = uniConfig;
+//        SmsFactory.refresh(SupplierType.UNI_SMS);
+//    }
+//
+//    /**
+//     * 设置 tencentConfig
+//     */
+//    public static void setTencentConfig(TencentConfig tencentConfig) {
+//        SupplierFactory.tencentConfig = tencentConfig;
+//        SmsFactory.refresh(SupplierType.TENCENT);
+//    }
+//
+//    /**
+//     * 设置 yunpianConfig
+//     */
+//    public static void setYunpianConfig(YunpianConfig yunpianConfig) {
+//        SupplierFactory.yunpianConfig = yunpianConfig;
+//        SmsFactory.refresh(SupplierType.YUNPIAN);
+//    }
+//
+//    /**
+//     * 设置 jdCloudConfig
+//     */
+//    public static void setJdCloudConfig(JdCloudConfig jdCloudConfig) {
+//        SupplierFactory.jdCloudConfig = jdCloudConfig;
+//        SmsFactory.refresh(SupplierType.JD_CLOUD);
+//    }
+//
+//    /**
+//     * 设置 cloopenConfig
+//     */
+//    public static void setCloopenConfig(CloopenConfig cloopenConfig) {
+//        SupplierFactory.cloopenConfig = cloopenConfig;
+//        SmsFactory.refresh(SupplierType.CLOOPEN);
+//    }
+//
+//    /**
+//     * 设置 emayConfig
+//     */
+//    public static void setEmayConfig(EmayConfig emayConfig) {
+//        SupplierFactory.emayConfig = emayConfig;
+//        SmsFactory.refresh(SupplierType.EMAY);
+//    }
 }

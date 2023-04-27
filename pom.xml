@@ -2,14 +2,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>org.dromara.sms4j</groupId>
     <artifactId>sms4j</artifactId>
     <version>${revision}</version>
+    <packaging>pom</packaging>
 
     <name>sms4j</name>
-    <packaging>pom</packaging>
-    <description>sms_aggregation</description>
-    <url>https://gitee.com/dromara/sms_aggregation</url>
+    <description>让发送短信变的更简单</description>
+    <url>https://gitee.com/dromara/sms4j</url>
 
     <modules>
         <module>sms4j-comm</module>
@@ -26,7 +27,8 @@
         <module>sms4j-cloopen</module>
         <module>sms4j-emay</module>
     </modules>
-    <!-- 开源协议 apache 2.0 -->
+
+    <!-- 开源协议 Apache 2.0 -->
     <licenses>
         <license>
             <name>Apache 2</name>
@@ -47,13 +49,12 @@
     <!-- 仓库信息 -->
     <scm>
         <tag>master</tag>
-        <url>https://gitee.com/MR-wind/sms_aggregation.git</url>
-        <connection>scm:git:https://gitee.com/MR-wind/sms_aggregation.git</connection>
-        <developerConnection>scm:git:https://gitee.com/MR-wind/sms_aggregation.git</developerConnection>
+        <url>https://gitee.com/dromara/sms4j.git</url>
+        <connection>scm:git:https://gitee.com/dromara/sms4j.git</connection>
+        <developerConnection>scm:git:https://gitee.com/dromara/sms4j.git</developerConnection>
     </scm>
 
     <properties>
-
         <spring.boot.version>2.7.10</spring.boot.version>
         <revision>2.0.1</revision>
         <aliyun.version>2.0.23</aliyun.version>
@@ -385,7 +386,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 </project>

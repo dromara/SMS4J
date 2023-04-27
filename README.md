@@ -1,9 +1,9 @@
 <h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">sms4j v2.0.1</h1>
 <h4 align="center" style="margin: 30px 0 30px; font-weight: bold;">sms4j -- 让发送短信变的更简单</h4>
 <p align="center">
-<a href="https://gitee.com/the-wind-is-like-a-song/sms_aggregation/stargazers"><img src="https://gitee.com/the-wind-is-like-a-song/sms_aggregation/badge/star.svg?theme=gvp"></a>
-<a href="https://gitee.com/the-wind-is-like-a-song/sms_aggregation/master/LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-green"></a>
-<a href="https://gitee.com/the-wind-is-like-a-song/sms_aggregation"><img src="https://img.shields.io/badge/version-v2.0.1-blue"></a>
+<a href="https://gitee.com/dromara/sms4j/stargazers"><img src="https://gitee.com/dromara/sms4j/badge/star.svg?theme=gvp"></a>
+<a href="https://gitee.com/dromara/sms4j/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-green"></a>
+<a href="https://gitee.com/dromara/sms4j"><img src="https://img.shields.io/badge/version-v2.0.1-blue"></a>
 </p>
 <img src="/public/logo.png">
 
@@ -15,7 +15,7 @@
 这个工具的目的就是为了统一下各个厂商的短信发送工具的标准，甚至于更换短信厂商只需要更改yml配置文件即可。  
 如果我们的项目对你产生了帮助，或者你觉得还算值得鼓励，请用你发财的小手帮助点上一个start  
 [gitee](https://gitee.com/dromara/sms4j)
-[github](https://github.com/dromara/sms_aggregation)
+[github](https://github.com/dromara/sms4j)
 
 #### [官方文档](http://wind.kim)
 #### [JavaDoc文档](https://apidoc.gitee.com/dromara/sms4j/)
@@ -39,7 +39,7 @@
    <dependency>
     <groupId>org.dromara.sms4j</groupId>
     <artifactId>sms4j-spring-boot-starter</artifactId>
-    <version> version </version>
+    <version>最新版本</version>
    </dependency>
    ```
 2. 设置配置文件
@@ -125,7 +125,7 @@ sms:
 1.  Fork 本仓库
 2.  新建 Feat_xxx 分支
 3.  提交代码
-4.  新建 Pull Request 到 dev-test分支
+4.  新建 Pull Request 到 dev-2.x 分支
 ```
 ## 贡献原则
 - 我们原则上欢迎任何人为sms4j添加加瓦贡献代码

@@ -2,7 +2,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>org.dromara.sms4j</groupId>
     <artifactId>sms4j</artifactId>
     <version>${revision}</version>
@@ -15,17 +14,10 @@
     <modules>
         <module>sms4j-comm</module>
         <module>sms4j-api</module>
+        <module>sms4j-provider</module>
         <module>sms4j-core</module>
         <module>sms4j-autoimmit</module>
         <module>sms4j-spring-boot-starter</module>
-        <module>sms4j-aliyun</module>
-        <module>sms4j-tencent</module>
-        <module>sms4j-unisms</module>
-        <module>sms4j-yunpian</module>
-        <module>sms4j-huawei</module>
-        <module>sms4j-jdcloud</module>
-        <module>sms4j-cloopen</module>
-        <module>sms4j-emay</module>
     </modules>
 
     <!-- 开源协议 Apache 2.0 -->
@@ -117,51 +109,10 @@
                 <version>${revision}</version>
             </dependency>
 
+            <!-- 短信厂商对接模块（国内短信） -->
             <dependency>
                 <groupId>org.dromara.sms4j</groupId>
-                <artifactId>sms4j-aliyun</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.dromara.sms4j</groupId>
-                <artifactId>sms4j-tencent</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.dromara.sms4j</groupId>
-                <artifactId>sms4j-unisms</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.dromara.sms4j</groupId>
-                <artifactId>sms4j-yunpian</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.dromara.sms4j</groupId>
-                <artifactId>sms4j-huawei</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.dromara.sms4j</groupId>
-                <artifactId>sms4j-jdcloud</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.dromara.sms4j</groupId>
-                <artifactId>sms4j-cloopen</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.dromara.sms4j</groupId>
-                <artifactId>sms4j-emay</artifactId>
+                <artifactId>sms4j-provider</artifactId>
                 <version>${revision}</version>
             </dependency>
 

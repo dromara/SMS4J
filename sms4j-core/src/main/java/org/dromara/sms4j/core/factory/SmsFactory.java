@@ -1,8 +1,5 @@
 package org.dromara.sms4j.core.factory;
 
-import org.dromara.sms4j.comm.config.SmsConfig;
-import org.dromara.sms4j.comm.enumerate.ConfigType;
-import org.dromara.sms4j.comm.factory.BeanFactory;
 import org.dromara.sms4j.core.SupplierSqlConfig;
 import org.dromara.sms4j.emay.config.EmaySmsConfig;
 import org.dromara.sms4j.aliyun.config.AlibabaSmsConfig;

@@ -10,7 +10,6 @@ import lombok.experimental.SuperBuilder;
  * @since 2023/4/20 23:03
  */
 @Data
-@SuperBuilder
 public class BaseConfig {
 
     /**

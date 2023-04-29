@@ -1,16 +1,17 @@
 package org.dromara.sms4j.starter.adapter.common.autoconfigure;
 
-import lombok.Data;
 import org.dromara.sms4j.autoimmit.config.SmsAutowiredConfig;
+import org.dromara.sms4j.autoimmit.config.SmsProperties;
 import org.dromara.sms4j.autoimmit.utils.SpringUtil;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-@Data
 @EnableAsync
 @Configuration
+@EnableConfigurationProperties(SmsProperties.class)
 public class CommonAutoConfiguration {
 
     @Bean

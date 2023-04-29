@@ -28,15 +28,15 @@ public class SmsAutowiredConfig {
         this.springUtil = springUtil;
     }
 
-    @Bean
-    @ConfigurationProperties(prefix = "sms.sql")
-    protected SmsSqlConfig smsSqlConfig(){return BeanFactory.getSmsSqlConfig();}
+//    @Bean
+//    @ConfigurationProperties(prefix = "sms.sql")
+//    protected SmsSqlConfig smsSqlConfig(){return BeanFactory.getSmsSqlConfig();}
 
-    @Bean
-    @ConfigurationProperties(prefix = "sms")     //指定配置文件注入属性前缀
-    protected SmsConfig smsConfig(){
-        return BeanFactory.getSmsConfig();
-    }
+//    @Bean
+//    @ConfigurationProperties(prefix = "sms")     //指定配置文件注入属性前缀
+//    protected SmsConfig smsConfig(){
+//        return BeanFactory.getSmsConfig();
+//    }
 
     /** 注入一个定时器*/
     @Bean
@@ -46,8 +46,9 @@ public class SmsAutowiredConfig {
 
     /** 注入线程池*/
     @Bean("smsExecutor")
-    protected Executor taskExecutor(SmsConfig config){
-       return BeanFactory.setExecutor(config);
+    protected Executor taskExecutor(SmsProperties smsProperties){
+        // TODO
+       return BeanFactory.setExecutor(smsProperties);
     }
 
     /** 注入一个配置文件读取工具*/

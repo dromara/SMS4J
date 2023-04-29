@@ -44,7 +44,12 @@ public class SmsLoad {
         }
     }
 
-    // 获取一个服务
+    /**
+     *  getLoadServer
+     * <p>根据负载算法获取一个可获取到的短信服务，这里获取到的服务必然是addLoadServer方法中添加过的服务，不会凭空出现
+     * @return SmsBlend 短信实现
+     * @author :Wind
+    */
     public static SmsBlend getLoadServer() {
         int totalWeight = 0;
         LoadServer selectedLoadServer = null;

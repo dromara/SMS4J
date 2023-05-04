@@ -8,6 +8,8 @@ import org.dromara.sms4j.comm.config.SmsBanner;
 import org.dromara.sms4j.comm.config.SmsConfig;
 import org.dromara.sms4j.comm.config.SmsSqlConfig;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
+import org.dromara.sms4j.comm.enumerate.ConfigType;
+import org.dromara.sms4j.comm.enumerate.SupplierType;
 import org.dromara.sms4j.comm.factory.BeanFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.core.SupplierSqlConfig;
@@ -65,8 +67,8 @@ public class SmsAutowiredConfig {
 
     @Bean
     @ConditionalOnProperty(prefix = "sms", name = "config-type", havingValue = "sql_config")
-    protected void supplierSqlConfig(SmsSqlConfig smsSqlConfig){
-        SupplierSqlConfig.refreshSqlConfig();
+    protected SupplierSqlConfig supplierSqlConfig(SmsSqlConfig smsSqlConfig){
+        return new SupplierSqlConfig();
     }
 
 

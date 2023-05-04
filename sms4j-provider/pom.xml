@@ -16,6 +16,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.dromara.sms4j</groupId>
             <artifactId>sms4j-core</artifactId>
         </dependency>

@@ -1,22 +1,22 @@
-package org.dromara.sms4j.core.config;
-
-import org.dromara.sms4j.comm.config.BaseConfig;
-import org.dromara.sms4j.comm.enumerate.SupplierType;
-
-import java.util.Map;
-
-/**
- * SupplierFactory
- * <p> 差异化配置工厂
- * @author :Wind
- * 2023/4/8  15:02
- **/
-public class SupplierFactory {
-    private SupplierFactory() {
-    }
-
-    private Map<SupplierType, BaseConfig> supplierConfigMap;
-
+//package org.dromara.sms4j.core.config;
+//
+//import org.dromara.sms4j.comm.config.BaseConfig;
+//import org.dromara.sms4j.comm.enumerate.SupplierType;
+//
+//import java.util.Map;
+//
+///**
+// * SupplierFactory
+// * <p> 差异化配置工厂
+// * @author :Wind
+// * 2023/4/8  15:02
+// **/
+//public class SupplierFactory {
+//    private SupplierFactory() {
+//    }
+//
+//    private Map<SupplierType, BaseConfig> supplierConfigMap;
+//
 //    /** 阿里云差异化配置*/
 //    private static AlibabaConfig alibabaConfig;
 //
@@ -148,7 +148,7 @@ public class SupplierFactory {
 //        SupplierFactory.yunpianConfig = yunpianConfig;
 //        SmsFactory.refresh(SupplierType.YUNPIAN);
 //    }
-
+//
 //    /**
 //     * 设置 alibabaConfig
 //     */
@@ -212,4 +212,4 @@ public class SupplierFactory {
 //        SupplierFactory.emayConfig = emayConfig;
 //        SmsFactory.refresh(SupplierType.EMAY);
 //    }
-}
+//}

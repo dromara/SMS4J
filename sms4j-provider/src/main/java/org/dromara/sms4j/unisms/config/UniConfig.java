@@ -8,7 +8,6 @@ import lombok.experimental.SuperBuilder;
 import org.dromara.sms4j.comm.config.BaseConfig;
 
 @Data
-@SuperBuilder
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class UniConfig extends BaseConfig {
@@ -16,7 +15,7 @@ public class UniConfig extends BaseConfig {
     /**
      * 是否为简易模式
      */
-    @Builder.Default
+    
     private Boolean isSimple = true;
 
     /**

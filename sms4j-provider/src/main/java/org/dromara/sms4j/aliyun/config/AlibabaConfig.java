@@ -8,7 +8,6 @@ import lombok.experimental.SuperBuilder;
 import org.dromara.sms4j.comm.config.BaseConfig;
 
 @Data
-@SuperBuilder
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class AlibabaConfig extends BaseConfig {
@@ -21,24 +20,24 @@ public class AlibabaConfig extends BaseConfig {
     /**
      * 请求地址
      */
-    @Builder.Default
+    
     private String requestUrl = "dysmsapi.aliyuncs.com";
 
     /**
      * 接口名称
      */
-    @Builder.Default
+    
     private String action = "SendSms";
 
     /**
      * 接口版本号
      */
-    @Builder.Default
+    
     private String version = "2017-05-25";
 
     /**
      * 地域信息默认为 cn-hangzhou
      */
-    @Builder.Default
+    
     private String regionId = "cn-hangzhou";
 }

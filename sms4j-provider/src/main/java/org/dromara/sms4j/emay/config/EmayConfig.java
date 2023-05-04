@@ -8,7 +8,6 @@ import lombok.Data;
  * @date 2023-04-11 12:00
  */
 @Data
-@Builder
 public class EmayConfig {
     /** appKey*/
     private String appId ;

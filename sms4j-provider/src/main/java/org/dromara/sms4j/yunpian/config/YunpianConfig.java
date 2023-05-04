@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-@Builder
 public class YunpianConfig {
     /**
      * 账号唯一标识

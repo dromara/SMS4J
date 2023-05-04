@@ -8,7 +8,6 @@ import lombok.experimental.SuperBuilder;
 import org.dromara.sms4j.comm.config.BaseConfig;
 
 @Data
-@SuperBuilder
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class TencentConfig extends BaseConfig {
@@ -21,32 +20,34 @@ public class TencentConfig extends BaseConfig {
     /**
      * 地域信息默认为 ap-guangzhou
      */
-    @Builder.Default
+
     private String territory = "ap-guangzhou";
 
     /**
      * 请求超时时间
      */
-    @Builder.Default
+
     private Integer connTimeout = 60;
-    /** 请求地址*/
-    @Builder.Default
+    /**
+     * 请求地址
+     */
+
     private String requestUrl = "sms.tencentcloudapi.com";
     /**
      * 接口名称
      */
-    @Builder.Default
+
     private String action = "SendSms";
 
     /**
      * 接口版本
      */
-    @Builder.Default
+
     private String version = "2021-01-11";
 
     /**
      * 服务名
      */
-    @Builder.Default
+
     private String service = "sms";
 }

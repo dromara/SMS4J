@@ -2,10 +2,11 @@ package org.dromara.sms4j.huawei.config;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.dromara.sms4j.comm.config.BaseConfig;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
 public class HuaweiConfig extends BaseConfig {
 
     /** appKey*/

@@ -1,7 +1,7 @@
 package org.dromara.sms4j.unisms.config;
 
-import com.apistd.uni.Uni;
 import org.dromara.sms4j.comm.factory.BeanFactory;
+import org.dromara.sms4j.unisms.core.Uni;
 import org.dromara.sms4j.unisms.service.UniSmsImpl;
 
 /**

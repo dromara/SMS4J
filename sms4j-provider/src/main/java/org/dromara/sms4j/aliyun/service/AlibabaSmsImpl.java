@@ -17,6 +17,7 @@ import org.dromara.sms4j.comm.factory.BeanFactory;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.TimerTask;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 /**
@@ -111,10 +112,8 @@ public class AlibabaSmsImpl implements SmsBlend {
     @Override
     @Restricted
     public void sendMessageAsync(String phone, String message, CallBack callBack) {
-        pool.execute(() -> {
-            SmsResponse smsResponse = sendMessage(phone, message);
-            callBack.callBack(smsResponse);
-        });
+        CompletableFuture<SmsResponse> smsResponseCompletableFuture = CompletableFuture.supplyAsync(() -> sendMessage(phone, message), pool);
+        smsResponseCompletableFuture.thenAcceptAsync(callBack::callBack);
     }
 
     @Override
@@ -128,10 +127,8 @@ public class AlibabaSmsImpl implements SmsBlend {
     @Override
     @Restricted
     public void sendMessageAsync(String phone, String templateId, LinkedHashMap<String, String> messages, CallBack callBack) {
-        pool.execute(() -> {
-            SmsResponse smsResponse = sendMessage(phone, templateId, messages);
-            callBack.callBack(smsResponse);
-        });
+        CompletableFuture<SmsResponse> smsResponseCompletableFuture = CompletableFuture.supplyAsync(() -> sendMessage(phone,templateId, messages), pool);
+        smsResponseCompletableFuture.thenAcceptAsync(callBack::callBack);
     }
 
     @Override

@@ -47,7 +47,7 @@
     </scm>
 
     <properties>
-        <spring.boot.version>2.7.10</spring.boot.version>
+        <spring.boot.version>2.7.11</spring.boot.version>
         <revision>2.0.1</revision>
         <aliyun.version>2.0.23</aliyun.version>
         <tencent.version>3.1.622</tencent.version>
@@ -89,6 +89,7 @@
                 <version>${revision}</version>
             </dependency>
 
+            <!--核心模块-->
             <dependency>
                 <groupId>org.dromara.sms4j</groupId>
                 <artifactId>sms4j-core</artifactId>
@@ -145,19 +146,6 @@
                 <scope>provided</scope>
             </dependency>
 
-            <!--合一短信依赖-->
-            <dependency>
-                <groupId>com.apistd.uni</groupId>
-                <artifactId>uni-sdk</artifactId>
-                <version>${unisms.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.squareup.okhttp3</groupId>
-                        <artifactId>okhttp</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
             <!-- 京东云短信依赖 -->
             <dependency>
                 <groupId>com.jdcloud.sdk</groupId>
@@ -165,12 +153,6 @@
                 <version>${jdcloud.version}</version>
             </dependency>
 
-            <!-- okhttp依赖,防止出现java.lang.NoSuchFieldError: Companion异常-->
-            <dependency>
-                <groupId>com.squareup.okhttp3</groupId>
-                <artifactId>okhttp</artifactId>
-                <version>${okhttp.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -239,20 +221,20 @@
                     </execution>
                 </executions>
             </plugin>
-<!--            &lt;!&ndash; GPG &ndash;&gt;-->
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-gpg-plugin</artifactId>-->
-<!--                <version>1.6</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <phase>verify</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>sign</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
+            <!--            &lt;!&ndash; GPG &ndash;&gt;-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-gpg-plugin</artifactId>-->
+            <!--                <version>1.6</version>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <phase>verify</phase>-->
+            <!--                        <goals>-->
+            <!--                            <goal>sign</goal>-->
+            <!--                        </goals>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
             <!--Compiler -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

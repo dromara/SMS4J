@@ -14,6 +14,7 @@ import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 /**
@@ -75,10 +76,8 @@ public class CloopenSmsImpl implements SmsBlend {
     @Override
     @Restricted
     public void sendMessageAsync(String phone, String message, CallBack callBack) {
-        pool.execute(() -> {
-            SmsResponse smsResponse = sendMessage(phone, message);
-            callBack.callBack(smsResponse);
-        });
+        CompletableFuture<SmsResponse> smsResponseCompletableFuture = CompletableFuture.supplyAsync(() -> sendMessage(phone, message), pool);
+        smsResponseCompletableFuture.thenAcceptAsync(callBack::callBack);
     }
 
     @Override
@@ -90,10 +89,8 @@ public class CloopenSmsImpl implements SmsBlend {
     @Override
     @Restricted
     public void sendMessageAsync(String phone, String templateId, LinkedHashMap<String, String> messages, CallBack callBack) {
-        pool.execute(() -> {
-            SmsResponse smsResponse = sendMessage(phone, templateId, messages);
-            callBack.callBack(smsResponse);
-        });
+        CompletableFuture<SmsResponse> smsResponseCompletableFuture = CompletableFuture.supplyAsync(() -> sendMessage(phone,templateId, messages), pool);
+        smsResponseCompletableFuture.thenAcceptAsync(callBack::callBack);
     }
 
     @Override

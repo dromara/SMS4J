@@ -1,8 +1,5 @@
 package org.dromara.sms4j.unisms.service;
 
-import com.apistd.uni.UniResponse;
-import com.apistd.uni.sms.UniMessage;
-import com.apistd.uni.sms.UniSMS;
 import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.callback.CallBack;
 import org.dromara.sms4j.api.entity.SmsResponse;
@@ -11,11 +8,19 @@ import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.unisms.config.UniConfig;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.sms4j.unisms.core.Uni;
+import org.dromara.sms4j.unisms.core.UniResponse;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimerTask;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
+import java.util.function.Supplier;
 
 
 /**
@@ -52,10 +57,12 @@ public class UniSmsImpl implements SmsBlend {
     @Override
     @Restricted
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
-        UniMessage uniMes = UniSMS.buildMessage().setSignature(config.getSignature()).setTo(phone)
-                .setTemplateId(templateId)
-                .setTemplateData(messages);
-        return getSmsResponse(uniMes);
+        Map<String, Object> data = new HashMap<>();
+        data.put("to", Collections.singletonList(phone));
+        data.put("signature", config.getSignature());
+        data.put("templateId", templateId);
+        data.put("templateData", messages);
+        return getSmsResponse(data);
     }
 
     @Override
@@ -75,20 +82,19 @@ public class UniSmsImpl implements SmsBlend {
         if (phones.size()>1000){
             throw new SmsBlendException("单次发送超过最大发送上限，建议每次群发短信人数低于1000");
         }
-        String[] s = new String[phones.size()];
-        UniMessage uniMes = UniSMS.buildMessage().setSignature(config.getSignature()).setTo(phones.toArray(s))
-                .setTemplateId(templateId)
-                .setTemplateData(messages);
-        return getSmsResponse(uniMes);
+        Map<String, Object> data = new HashMap<>();
+        data.put("to", phones);
+        data.put("signature", config.getSignature());
+        data.put("templateId", templateId);
+        data.put("templateData", messages);
+        return getSmsResponse(data);
     }
 
     @Override
     @Restricted
     public void sendMessageAsync(String phone, String message, CallBack callBack) {
-        pool.execute(()->{
-            SmsResponse smsResponse = sendMessage(phone, message);
-            callBack.callBack(smsResponse);
-        });
+        CompletableFuture<SmsResponse> smsResponseCompletableFuture = CompletableFuture.supplyAsync(() -> sendMessage(phone, message), pool);
+        smsResponseCompletableFuture.thenAcceptAsync(callBack::callBack);
     }
 
     @Override
@@ -101,10 +107,8 @@ public class UniSmsImpl implements SmsBlend {
     @Override
     @Restricted
     public void sendMessageAsync(String phone, String templateId, LinkedHashMap<String, String> messages, CallBack callBack) {
-        pool.execute(()->{
-            SmsResponse smsResponse = sendMessage(phone,templateId,messages);
-            callBack.callBack(smsResponse);
-        });
+        CompletableFuture<SmsResponse> smsResponseCompletableFuture = CompletableFuture.supplyAsync(() -> sendMessage(phone, templateId, messages), pool);
+        smsResponseCompletableFuture.thenAcceptAsync(callBack::callBack);
     }
 
     @Override
@@ -156,10 +160,10 @@ public class UniSmsImpl implements SmsBlend {
         },delayedTime);
     }
 
-    private SmsResponse getSmsResponse(UniMessage uniMes) {
+    private SmsResponse getSmsResponse( Map<String, Object> data) {
         SmsResponse smsResponse = new SmsResponse();
         try {
-            UniResponse send = uniMes.send();
+            UniResponse send = Uni.getClient().request("sms.message.send", data);
             smsResponse.setCode(String.valueOf(send.status));
             smsResponse.setErrorCode(send.code);
             smsResponse.setMessage(send.message);

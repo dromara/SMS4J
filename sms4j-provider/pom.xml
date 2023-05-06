@@ -20,12 +20,6 @@
             <artifactId>sms4j-api</artifactId>
         </dependency>
 
-        <!-- 合一短信依赖 -->
-        <dependency>
-            <groupId>com.apistd.uni</groupId>
-            <artifactId>uni-sdk</artifactId>
-        </dependency>
-
         <!-- 京东云短信依赖 -->
         <dependency>
             <groupId>com.jdcloud.sdk</groupId>

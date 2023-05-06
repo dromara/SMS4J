@@ -100,9 +100,9 @@ public abstract class SmsFactory {
             case EMAY:
                 EmaySmsConfig.refresh(SupplierFactory.getEmayConfig());
                 break;
-                
+            default:
+                throw new SmsBlendException("An attempt to construct a SmsBlend object failed. Please check that the enumeration is valid");
         }
-        throw new SmsBlendException("An attempt to construct a SmsBlend object failed. Please check that the enumeration is valid");
     }
 
     /**

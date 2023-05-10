@@ -93,7 +93,7 @@ public class AlibabaSmsImpl implements SmsBlend {
             log.error("aliyun send message error", e);
             throw new SmsBlendException(e.getMessage());
         }
-        log.info("requestUrl {}", requestUrl);
+        log.debug("requestUrl {}", requestUrl);
         http.post(requestUrl)
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .addBody(paramStr)

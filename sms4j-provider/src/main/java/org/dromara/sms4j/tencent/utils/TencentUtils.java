@@ -1,12 +1,12 @@
 package org.dromara.sms4j.tencent.utils;
 
-import cn.hutool.core.codec.Base64;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.tencent.config.TencentConfig;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
@@ -44,8 +44,7 @@ public class TencentUtils {
     private static String sha256Hex(String s) throws Exception {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         byte[] d = md.digest(s.getBytes(StandardCharsets.UTF_8));
-        return Base64.encode(d).toLowerCase();
-//        return DatatypeConverter.printHexBinary(d).toLowerCase();
+        return DatatypeConverter.printHexBinary(d).toLowerCase();
     }
 
     /**
@@ -86,8 +85,7 @@ public class TencentUtils {
         byte[] secretDate = hmac256(("TC3" + tencentConfig.getAccessKeySecret()).getBytes(StandardCharsets.UTF_8), date);
         byte[] secretService = hmac256(secretDate, tencentConfig.getService());
         byte[] secretSigning = hmac256(secretService, "tc3_request");
-//        String signature = DatatypeConverter.printHexBinary(hmac256(secretSigning, stringToSign)).toLowerCase();
-        String signature = Base64.encode(hmac256(secretSigning, stringToSign)).toLowerCase();
+        String signature = DatatypeConverter.printHexBinary(hmac256(secretSigning, stringToSign)).toLowerCase();
         // ************* 步骤 4：拼接 Authorization *************
         return ALGORITHM + " " + "Credential=" + tencentConfig.getAccessKeyId() + "/" + credentialScope + ", "
                 + "SignedHeaders=" + signedHeaders + ", " + "Signature=" + signature;

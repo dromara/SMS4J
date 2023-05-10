@@ -10,12 +10,9 @@
     </parent>
 
     <artifactId>sms4j-api</artifactId>
+
     <name>sms4j-api</name>
     <description>sms4j-api</description>
-    <version>${revision}</version>
-
-    <properties>
-    </properties>
 
     <dependencies>
         <dependency>

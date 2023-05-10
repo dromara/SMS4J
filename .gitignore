@@ -30,7 +30,11 @@ target/
 build/
 !**/src/main/**/build/
 !**/src/test/**/build/
-.flattened-pom.xml
-**/.flattened-pom.xml
+
 ### VS Code ###
 .vscode/
+
+### Temp
+.flattened-pom.xml
+**/.flattened-pom.xml
+/.fastRequest/**

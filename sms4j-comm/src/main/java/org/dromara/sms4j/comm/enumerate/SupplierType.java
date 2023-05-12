@@ -26,6 +26,8 @@ public enum SupplierType {
      * 亿美软通
      */
     EMAY("亿美软通"),
+    /** 天翼云 */
+    CTYUN("天翼云短信"),
     ;
 
 

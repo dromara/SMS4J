@@ -39,13 +39,6 @@ public class CtyunSmsImpl implements SmsBlend {
 
     private final ForestConfiguration http = BeanFactory.getForestConfiguration();
 
-    /**
-     * AlibabaSmsImpl
-     * <p>构造器，用于构造短信实现模块
-     *
-     * @author :Wind
-     */
-
     public CtyunSmsImpl(CtyunConfig ctyunConfig, Executor pool, DelayedTime delayedTime) {
         this.ctyunConfig = ctyunConfig;
         this.pool = pool;

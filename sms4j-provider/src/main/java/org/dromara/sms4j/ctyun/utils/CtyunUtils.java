@@ -1,13 +1,13 @@
 package org.dromara.sms4j.ctyun.utils;
 
+import cn.hutool.crypto.digest.HMac;
+import cn.hutool.crypto.digest.HmacAlgorithm;
 import com.alibaba.fastjson.JSONObject;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.ctyun.config.CtyunConfig;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -104,9 +104,9 @@ public class CtyunUtils {
 
     private static byte[] hmacSHA256(byte[] data, byte[] key){
         try {
-            Mac mac = Mac.getInstance("HmacSHA256");
-            mac.init(new SecretKeySpec(key, "HmacSHA256"));
-            return mac.doFinal(data);
+            HMac hMac = new HMac(HmacAlgorithm.HmacSHA256, key);
+            hMac.digest(data);
+            return hMac.digest(data);
         } catch (Exception e) {
             throw new SmsBlendException(e.getMessage());
         }

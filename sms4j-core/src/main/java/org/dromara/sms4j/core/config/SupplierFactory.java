@@ -2,6 +2,7 @@ package org.dromara.sms4j.core.config;
 
 import org.dromara.sms4j.comm.enumerate.SupplierType;
 import org.dromara.sms4j.core.factory.SmsFactory;
+import org.dromara.sms4j.ctyun.config.CtyunConfig;
 import org.dromara.sms4j.emay.config.EmayConfig;
 import org.dromara.sms4j.aliyun.config.AlibabaConfig;
 import org.dromara.sms4j.cloopen.config.CloopenConfig;
@@ -46,6 +47,11 @@ public class SupplierFactory {
      * 亿美软通短信差异配置
      */
     private static EmayConfig emayConfig;
+
+    /**
+     * 天翼云短信差异配置
+     */
+    private static CtyunConfig ctyunConfig;
 
     /** 阿里云配置获取*/
     public static AlibabaConfig getAlibabaConfig() {
@@ -114,6 +120,16 @@ public class SupplierFactory {
     }
 
     /**
+     * 天翼云配置获取
+     */
+    public static CtyunConfig getCtyunConfig() {
+        if (ctyunConfig == null) {
+            ctyunConfig = CtyunConfig.builder().build();
+        }
+        return ctyunConfig;
+    }
+
+    /**
      * 设置 alibabaConfig
      */
     public static void setAlibabaConfig(AlibabaConfig alibabaConfig) {
@@ -174,6 +190,14 @@ public class SupplierFactory {
      */
     public static void setEmayConfig(EmayConfig emayConfig) {
         SupplierFactory.emayConfig = emayConfig;
+        SmsFactory.refresh(SupplierType.EMAY);
+    }
+
+    /**
+     * 设置 ctyunConfig
+     */
+    public static void setCtyunConfig(CtyunConfig ctyunConfig) {
+        SupplierFactory.ctyunConfig = ctyunConfig;
         SmsFactory.refresh(SupplierType.EMAY);
     }
 }

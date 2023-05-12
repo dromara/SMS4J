@@ -105,7 +105,6 @@ public class CtyunUtils {
     private static byte[] hmacSHA256(byte[] data, byte[] key){
         try {
             HMac hMac = new HMac(HmacAlgorithm.HmacSHA256, key);
-            hMac.digest(data);
             return hMac.digest(data);
         } catch (Exception e) {
             throw new SmsBlendException(e.getMessage());

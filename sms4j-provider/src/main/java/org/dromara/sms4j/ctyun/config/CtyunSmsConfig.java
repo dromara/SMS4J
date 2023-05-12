@@ -24,13 +24,13 @@ public class CtyunSmsConfig {
      *
      * @author :bleachhtred
      */
-    public static CtyunSmsImpl createCtyunSms(CtyunConfig alibabaConfig) {
+    public static CtyunSmsImpl createCtyunSms(CtyunConfig ctyunConfig) {
         if (ctyunSmsConfig == null) {
             ctyunSmsConfig = new CtyunSmsConfig();
         }
         if (ctyunSms == null) {
             ctyunSms = new CtyunSmsImpl(
-                    alibabaConfig,
+                    ctyunConfig,
                     BeanFactory.getExecutor(),
                     BeanFactory.getDelayedTime());
         }
@@ -43,14 +43,14 @@ public class CtyunSmsConfig {
      *
      * @author :bleachhtred
      */
-    public static CtyunSmsImpl refresh(CtyunConfig alibabaConfig) {
+    public static CtyunSmsImpl refresh(CtyunConfig ctyunConfig) {
         // 如果配置对象为空则创建一个
         if (ctyunSmsConfig == null) {
             ctyunSmsConfig = new CtyunSmsConfig();
         }
         //重新构造一个实现对象
         ctyunSms = new CtyunSmsImpl(
-                alibabaConfig,
+                ctyunConfig,
                 BeanFactory.getExecutor(),
                 BeanFactory.getDelayedTime());
         return ctyunSms;

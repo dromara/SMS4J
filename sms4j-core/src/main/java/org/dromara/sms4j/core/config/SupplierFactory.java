@@ -194,7 +194,7 @@ public class SupplierFactory {
     }
 
     /**
-     * 设置 emayConfig
+     * 设置 ctyunConfig
      */
     public static void setCtyunConfig(CtyunConfig ctyunConfig) {
         SupplierFactory.ctyunConfig = ctyunConfig;

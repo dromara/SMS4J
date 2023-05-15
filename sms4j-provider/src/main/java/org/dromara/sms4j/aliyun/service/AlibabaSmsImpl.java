@@ -1,7 +1,6 @@
 package org.dromara.sms4j.aliyun.service;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.dtflys.forest.config.ForestConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.aliyun.config.AlibabaConfig;
@@ -16,9 +15,11 @@ import org.dromara.sms4j.comm.factory.BeanFactory;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimerTask;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * <p>类名: AlibabaSmsImpl
@@ -83,7 +84,7 @@ public class AlibabaSmsImpl implements SmsBlend {
     }
 
     private SmsResponse getSmsResponse(String phone, String message, String templateId) {
-        SmsResponse smsResponse = new SmsResponse();
+        AtomicReference<SmsResponse> reference = new AtomicReference<>();
         String requestUrl;
         String paramStr;
         try {
@@ -98,14 +99,24 @@ public class AlibabaSmsImpl implements SmsBlend {
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .addBody(paramStr)
                 .onSuccess(((data, req, res) -> {
-                    JSONObject jsonBody = res.get(JSONObject.class);
-                    log.info(jsonBody.toJSONString());
+                    Map map = res.get(Map.class);
+                    reference.set(getResponse(map));
                 }))
                 .onError((ex, req, res) -> {
-                    JSONObject jsonBody = res.get(JSONObject.class);
-                    log.info(jsonBody.toJSONString());
+                    Map map = res.get(Map.class);
+                    reference.set(getResponse(map));
                 })
                 .execute();
+        return reference.get();
+    }
+
+    private static SmsResponse getResponse(Map map) {
+        SmsResponse smsResponse = new SmsResponse();
+        smsResponse.setCode((String) map.get("Code"));
+        smsResponse.setMessage((String) map.get("Message"));
+        if ("OK".equals(smsResponse.getCode())){
+            smsResponse.setBizId((String) map.get("BizId"));
+        }
         return smsResponse;
     }
 

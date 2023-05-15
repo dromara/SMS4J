@@ -13,6 +13,7 @@ import org.dromara.sms4j.huawei.config.HuaweiSmsConfig;
 import org.dromara.sms4j.jdcloud.config.JdCloudSmsConfig;
 import org.dromara.sms4j.tencent.config.TencentSmsConfig;
 import org.dromara.sms4j.unisms.config.UniSmsConfig;
+import org.dromara.sms4j.yunpian.config.YunPianSmsConfig;
 
 /**
  * SmsFactory
@@ -52,6 +53,8 @@ public abstract class SmsFactory {
                 return EmaySmsConfig.createEmaySms(SupplierFactory.getEmayConfig());
             case CTYUN:
                 return CtyunSmsConfig.createCtyunSms(SupplierFactory.getCtyunConfig());
+            case YUNPIAN:
+                return YunPianSmsConfig.createTencentSms(SupplierFactory.getYunpianConfig());
         }
         throw new SmsBlendException("An attempt to construct a SmsBlend object failed. Please check that the enumeration is valid");
     }
@@ -72,6 +75,7 @@ public abstract class SmsFactory {
         CloopenSmsConfig.refresh(SupplierFactory.getCloopenConfig());
         EmaySmsConfig.refresh(SupplierFactory.getEmayConfig());
         CtyunSmsConfig.refresh(SupplierFactory.getCtyunConfig());
+        YunPianSmsConfig.refresh(SupplierFactory.getYunpianConfig());
     }
 
     /**
@@ -106,6 +110,9 @@ public abstract class SmsFactory {
                 break;
             case CTYUN:
                 CtyunSmsConfig.refresh(SupplierFactory.getCtyunConfig());
+                break;
+            case YUNPIAN:
+                YunPianSmsConfig.refresh(SupplierFactory.getYunpianConfig());
                 break;
             default:
                 throw new SmsBlendException("An attempt to construct a SmsBlend object failed. Please check that the enumeration is valid");

@@ -9,6 +9,7 @@ import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
+import org.dromara.sms4j.comm.factory.BeanFactory;
 import org.dromara.sms4j.yunpian.config.YunpianConfig;
 
 import java.util.*;
@@ -20,13 +21,19 @@ import static org.dromara.sms4j.comm.utils.SmsUtil.listToString;
 
 public class YunPianSmsImpl implements SmsBlend {
 
+    public YunPianSmsImpl(Executor pool, DelayedTime delayed, YunpianConfig config) {
+        this.pool = pool;
+        this.delayed = delayed;
+        this.config = config;
+    }
+
     private Executor pool;
 
     private DelayedTime delayed;
 
     private YunpianConfig config;
 
-    private ForestConfiguration http;
+    private final ForestConfiguration http = BeanFactory.getForestConfiguration();
 
     private static SmsResponse getSmsResponse(JSONObject execute) {
         SmsResponse smsResponse = new SmsResponse();
@@ -165,7 +172,7 @@ public class YunPianSmsImpl implements SmsBlend {
             message.put(config.getTemplateName(), mes);
         }
         Map<String, String> body = new HashMap<>();
-        body.put("apikey", config.getApikey());
+        body.put("apikey", config.getAccessKeyId());
         body.put("mobile", phone);
         body.put("tpl_id", tplId);
         body.put("tpl_value", formattingMap(message));

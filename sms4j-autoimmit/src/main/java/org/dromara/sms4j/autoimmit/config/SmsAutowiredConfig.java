@@ -76,7 +76,7 @@ public class SmsAutowiredConfig {
         /* 如果配置中启用了redis，则注入redis工具*/
         if (BeanFactory.getSmsConfig().getRedisCache()){
             springUtil.createBean(RedisUtils.class);
-            log.debug("The redis cache is enabled for sms-aggregation");
+            log.debug("The redis cache is enabled for sms4j");
         }
         /* 如果启用了短信限制，则注入AOP组件*/
         if (BeanFactory.getSmsConfig().getRestricted()){
@@ -85,7 +85,7 @@ public class SmsAutowiredConfig {
         }
         //打印banner
         if (BeanFactory.getSmsConfig().getIsPrint()){
-            SmsBanner.PrintBanner("V 2.0.1");
+            SmsBanner.PrintBanner("V 2.0.2");
         }
     }
 }

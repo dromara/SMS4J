@@ -19,7 +19,6 @@ import java.util.Objects;
 /**
  * SupplierFactory
  * <p> 差异化配置工厂
- *
  * @author :Wind
  * 2023/4/8  15:02
  **/

@@ -24,7 +24,6 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * <p>类名: AlibabaSmsImpl
  * <p>说明：  阿里云短信实现
- *
  * @author :Wind
  * 2023/3/26  17:16
  **/
@@ -43,10 +42,8 @@ public class AlibabaSmsImpl implements SmsBlend {
     /**
      * AlibabaSmsImpl
      * <p>构造器，用于构造短信实现模块
-     *
      * @author :Wind
      */
-
     public AlibabaSmsImpl(AlibabaConfig alibabaSmsConfig, Executor pool, DelayedTime delayedTime) {
         this.alibabaSmsConfig = alibabaSmsConfig;
         this.pool = pool;

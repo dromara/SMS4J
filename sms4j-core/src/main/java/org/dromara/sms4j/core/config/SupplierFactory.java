@@ -1,6 +1,8 @@
 package org.dromara.sms4j.core.config;
 
+import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.comm.enumerate.SupplierType;
+import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.core.factory.SmsFactory;
 import org.dromara.sms4j.ctyun.config.CtyunConfig;
 import org.dromara.sms4j.emay.config.EmayConfig;
@@ -166,7 +168,7 @@ public class SupplierFactory {
      * @param t 配置对象
      * @author :Wind
     */
-    public static <T> void setSupplierConfig(T t) {
+    public static <T extends SupplierConfig> void setSupplierConfig(T t) {
         if (t instanceof AlibabaConfig) {
             setAlibabaConfig((AlibabaConfig) t);
         } else if (t instanceof HuaweiConfig) {
@@ -177,6 +179,16 @@ public class SupplierFactory {
             setTencentConfig((TencentConfig) t);
         } else if (t instanceof YunpianConfig) {
             setYunpianConfig((YunpianConfig) t);
+        } else if (t instanceof JdCloudConfig) {
+            setJdCloudConfig((JdCloudConfig) t);
+        } else if (t instanceof CloopenConfig) {
+            setCloopenConfig((CloopenConfig) t);
+        } else if (t instanceof EmayConfig) {
+            setEmayConfig((EmayConfig) t);
+        } else if (t instanceof CtyunConfig) {
+            setCtyunConfig((CtyunConfig) t);
+        }else {
+            throw new SmsBlendException("Loading failure! Please check the configuration type.");
         }
     }
 

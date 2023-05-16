@@ -18,6 +18,7 @@
         <module>sms4j-core</module>
         <module>sms4j-autoimmit</module>
         <module>sms4j-spring-boot-starter</module>
+        <module>sms4j-solon-plugin</module>
     </modules>
 
     <!-- 开源协议 Apache 2.0 -->
@@ -47,8 +48,11 @@
     </scm>
 
     <properties>
-        <spring.boot.version>2.7.11</spring.boot.version>
         <revision>2.0.2</revision>
+
+        <spring.boot.version>2.7.11</spring.boot.version>
+        <solon.version>2.2.0</solon.version>
+        <redisson.version>3.17.0</redisson.version>
         <aliyun.version>2.0.23</aliyun.version>
         <tencent.version>3.1.622</tencent.version>
         <unisms.version>0.0.4</unisms.version>

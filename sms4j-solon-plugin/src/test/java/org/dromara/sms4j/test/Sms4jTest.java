@@ -13,20 +13,18 @@ import org.noear.solon.test.SolonTest;
 @RunWith(SolonJUnit4ClassRunner.class)
 @SolonTest
 public class Sms4jTest {
-    public static final String USER_AGENT = "uni-java-sdk" + "/0.0.4" ;
 
     @Test
     public void uniSmsTest() {
         UniConfig build = UniConfig.builder()
-                .signature("洙旭阁")
-                .accessKeyId("7Cr1ZaQVJQ11Ap4HBQMo7xmFg")
+                .signature("***")
+                .accessKeyId("7Cr1***VJQ11Ap4***Mo7xmFg")
                 .templateId("2001")
                 .templateName("message")
                 .isSimple(true)
                 .build();
         SupplierFactory.setUniConfig(build);
-
-        SmsResponse smsResponse = SmsFactory.createSmsBlend(SupplierType.UNI_SMS).sendMessage("17531165952", "123123");
+        SmsResponse smsResponse = SmsFactory.createSmsBlend(SupplierType.UNI_SMS).sendMessage("175***65952", "123123");
         System.out.println(smsResponse);
     }
 }

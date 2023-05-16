@@ -194,7 +194,7 @@ public class YunPianSmsImpl implements SmsBlend {
 
     private SmsResponse getSendResponse(Map<String, String> body) {
         Map<String, String> headers = getHeaders();
-        AtomicReference<SmsResponse> smsResponse = null;
+        AtomicReference<SmsResponse> smsResponse = new AtomicReference<>();
         http.post(Constant.YUNPIAN_URL + "/sms/tpl_single_send.json")
                 .addHeader(headers)
                 .addBody(body)

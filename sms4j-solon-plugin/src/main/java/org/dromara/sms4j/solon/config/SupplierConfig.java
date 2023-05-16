@@ -3,6 +3,7 @@ package org.dromara.sms4j.solon.config;
 import org.dromara.sms4j.aliyun.config.AlibabaConfig;
 import org.dromara.sms4j.cloopen.config.CloopenConfig;
 import org.dromara.sms4j.core.config.SupplierFactory;
+import org.dromara.sms4j.ctyun.config.CtyunConfig;
 import org.dromara.sms4j.emay.config.EmayConfig;
 import org.dromara.sms4j.huawei.config.HuaweiConfig;
 import org.dromara.sms4j.jdcloud.config.JdCloudConfig;
@@ -73,5 +74,11 @@ public class SupplierConfig {
     @Bean
     public EmayConfig emayConfig(){
         return injectObj("sms.emay", SupplierFactory.getEmayConfig());
+    }
+
+    /** 天翼云短信差异化配置 */
+    @Bean
+    public CtyunConfig ctyunConfig(){
+        return injectObj("sms.ctyun", SupplierFactory.getCtyunConfig());
     }
 }

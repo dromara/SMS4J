@@ -5,13 +5,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.comm.config.BaseConfig;
 
 @Data
 @SuperBuilder
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class AlibabaConfig extends BaseConfig {
+public class AlibabaConfig extends BaseConfig implements SupplierConfig {
 
     /**
      * 模板变量名称

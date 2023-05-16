@@ -14,9 +14,23 @@ public class RedisUtils {
     private RedissonClient redisTemplate;
 
     public RedisUtils() {
-        Solon.context().getBeanAsync(RedissonClient.class, bean -> {
-            redisTemplate = bean;
+        Thread t = new Thread(()->{
+            //如果获取到的bean为null则等待后重试，最多重试五次
+            for(int i = 0; i < 5 ;i++){
+                RedissonClient bean = Solon.context().getBean(RedissonClient.class);
+                if (Objects.isNull(bean)){
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }else{
+                    redisTemplate = bean;
+                    return;
+                }
+            }
         });
+        t.start();
     }
 
     public RedisUtils(RedissonClient redisTemplate) {

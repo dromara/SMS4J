@@ -6,6 +6,7 @@ import org.dromara.sms4j.comm.enumerate.SupplierType;
 import org.dromara.sms4j.comm.utils.JDBCTool;
 import org.dromara.sms4j.comm.utils.SmsUtil;
 import org.dromara.sms4j.core.config.SupplierFactory;
+import org.dromara.sms4j.ctyun.config.CtyunConfig;
 import org.dromara.sms4j.emay.config.EmayConfig;
 import org.dromara.sms4j.huawei.config.HuaweiConfig;
 import org.dromara.sms4j.jdcloud.config.JdCloudConfig;
@@ -48,6 +49,7 @@ public class SupplierSqlConfig {
         yunPian();
         cloopen();
         emay();
+        ctyun();
     }
 
     public SupplierSqlConfig() {
@@ -135,5 +137,15 @@ public class SupplierSqlConfig {
     public static void emay() {
         EmayConfig emayConfig = SmsUtil.jsonForObject(select.get(SupplierType.EMAY.getName()), EmayConfig.class);
         SupplierFactory.setEmayConfig(emayConfig);
+    }
+
+    /**
+     *  ctyun
+     * <p>数据库读取并设置天翼云短信
+     * @author :Wind
+    */
+    public static void ctyun(){
+        CtyunConfig ctyunConfig = SmsUtil.jsonForObject(select.get(SupplierType.CTYUN.getName()), CtyunConfig.class);
+        SupplierFactory.setCtyunConfig(ctyunConfig);
     }
 }

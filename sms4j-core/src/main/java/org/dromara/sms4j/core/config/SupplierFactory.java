@@ -12,9 +12,12 @@ import org.dromara.sms4j.tencent.config.TencentConfig;
 import org.dromara.sms4j.unisms.config.UniConfig;
 import org.dromara.sms4j.yunpian.config.YunpianConfig;
 
+import java.util.Objects;
+
 /**
  * SupplierFactory
  * <p> 差异化配置工厂
+ *
  * @author :Wind
  * 2023/4/8  15:02
  **/
@@ -22,25 +25,39 @@ public class SupplierFactory {
     private SupplierFactory() {
     }
 
-    /** 阿里云差异化配置*/
+    /**
+     * 阿里云差异化配置
+     */
     private static AlibabaConfig alibabaConfig;
 
-    /** 华为云差异化配置*/
+    /**
+     * 华为云差异化配置
+     */
     private static HuaweiConfig huaweiConfig;
 
-    /** 合一短信差异化配置*/
+    /**
+     * 合一短信差异化配置
+     */
     private static UniConfig uniConfig;
 
-    /** 腾讯云短信差异化配置*/
+    /**
+     * 腾讯云短信差异化配置
+     */
     private static TencentConfig tencentConfig;
 
-    /** 云片短信差异配置*/
+    /**
+     * 云片短信差异配置
+     */
     private static YunpianConfig yunpianConfig;
 
-    /** 京东云短信差异配置 */
+    /**
+     * 京东云短信差异配置
+     */
     private static JdCloudConfig jdCloudConfig;
 
-    /** 容联云短信差异配置 */
+    /**
+     * 容联云短信差异配置
+     */
     private static CloopenConfig cloopenConfig;
 
     /**
@@ -53,57 +70,71 @@ public class SupplierFactory {
      */
     private static CtyunConfig ctyunConfig;
 
-    /** 阿里云配置获取*/
+    /**
+     * 阿里云配置获取
+     */
     public static AlibabaConfig getAlibabaConfig() {
-        if (alibabaConfig == null){
+        if (alibabaConfig == null) {
             alibabaConfig = AlibabaConfig.builder().build();
         }
         return alibabaConfig;
     }
 
-    /** 华为云配置获取*/
+    /**
+     * 华为云配置获取
+     */
     public static HuaweiConfig getHuaweiConfig() {
-        if (huaweiConfig == null){
+        if (huaweiConfig == null) {
             huaweiConfig = HuaweiConfig.builder().build();
         }
         return huaweiConfig;
     }
 
-    /** 合一短信配置获取*/
+    /**
+     * 合一短信配置获取
+     */
     public static UniConfig getUniConfig() {
-        if (uniConfig == null){
+        if (uniConfig == null) {
             uniConfig = UniConfig.builder().build();
         }
         return uniConfig;
     }
 
-    /** 腾讯短信配置获取*/
+    /**
+     * 腾讯短信配置获取
+     */
     public static TencentConfig getTencentConfig() {
-        if (tencentConfig == null){
+        if (tencentConfig == null) {
             tencentConfig = TencentConfig.builder().build();
         }
         return tencentConfig;
     }
 
-    /** 云片短信配置获取*/
+    /**
+     * 云片短信配置获取
+     */
     public static YunpianConfig getYunpianConfig() {
-        if (yunpianConfig == null){
+        if (yunpianConfig == null) {
             yunpianConfig = YunpianConfig.builder().build();
         }
         return yunpianConfig;
     }
 
-    /** 京东云短信配置获取 */
+    /**
+     * 京东云短信配置获取
+     */
     public static JdCloudConfig getJdCloudConfig() {
-        if (jdCloudConfig == null){
+        if (jdCloudConfig == null) {
             jdCloudConfig = JdCloudConfig.builder().build();
         }
         return jdCloudConfig;
     }
 
-    /** 容联云短信配置获取 */
+    /**
+     * 容联云短信配置获取
+     */
     public static CloopenConfig getCloopenConfig() {
-        if (cloopenConfig == null){
+        if (cloopenConfig == null) {
             cloopenConfig = CloopenConfig.builder().build();
         }
         return cloopenConfig;
@@ -127,6 +158,26 @@ public class SupplierFactory {
             ctyunConfig = CtyunConfig.builder().build();
         }
         return ctyunConfig;
+    }
+
+    /**
+     *  setSupplierConfig
+     * <p>通用化set，用于设置
+     * @param t 配置对象
+     * @author :Wind
+    */
+    public static <T> void setSupplierConfig(T t) {
+        if (t instanceof AlibabaConfig) {
+            setAlibabaConfig((AlibabaConfig) t);
+        } else if (t instanceof HuaweiConfig) {
+            setHuaweiConfig((HuaweiConfig) t);
+        } else if (t instanceof UniConfig) {
+            setUniConfig((UniConfig) t);
+        } else if (t instanceof TencentConfig) {
+            setTencentConfig((TencentConfig) t);
+        } else if (t instanceof YunpianConfig) {
+            setYunpianConfig((YunpianConfig) t);
+        }
     }
 
     /**

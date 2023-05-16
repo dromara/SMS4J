@@ -40,9 +40,9 @@ public class HuaweiSmsImpl implements SmsBlend {
     @Override
     @Restricted
     public SmsResponse sendMessage(String phone, String message) {
-        LinkedHashMap<String,String> mes = new LinkedHashMap<>();
-        mes.put(UUID.randomUUID().toString().replaceAll("-",""),message);
-        return sendMessage(phone,config.getTemplateId(),mes);
+        LinkedHashMap<String, String> mes = new LinkedHashMap<>();
+        mes.put(UUID.randomUUID().toString().replaceAll("-", ""), message);
+        return sendMessage(phone, config.getTemplateId(), mes);
     }
 
     @Override
@@ -55,26 +55,30 @@ public class HuaweiSmsImpl implements SmsBlend {
         }
         String mess = listToString(list);
         String requestBody = HuaweiBuilder.buildRequestBody(config.getSender(), phone, templateId, mess, config.getStatusCallBack(), config.getSignature());
-        Map<String,String> headers = new LinkedHashMap<>();
-        headers.put("Authorization",Constant.HUAWEI_AUTH_HEADER_VALUE);
-        headers.put("X-WSSE",HuaweiBuilder.buildWsseHeader(config.getAppKey(), config.getAppSecret()));
-        headers.put("Content-Type",Constant.FROM_URLENCODED);
+        Map<String, String> headers = new LinkedHashMap<>();
+        headers.put("Authorization", Constant.HUAWEI_AUTH_HEADER_VALUE);
+        headers.put("X-WSSE", HuaweiBuilder.buildWsseHeader(config.getAppKey(), config.getAppSecret()));
+        headers.put("Content-Type", Constant.FROM_URLENCODED);
         SmsResponse smsResponse = new SmsResponse();
         http.post(url)
                 .addHeader(headers)
                 .addBody(requestBody)
-                .onSuccess(((data,req,res)->{
+                .onSuccess(((data, req, res) -> {
                     HuaweiResponse jsonBody = res.get(HuaweiResponse.class);
                     smsResponse.setCode(jsonBody.getCode());
                     smsResponse.setMessage(jsonBody.getDescription());
                     smsResponse.setBizId(jsonBody.getResult().get(0).getSmsMsgId());
                     smsResponse.setData(jsonBody.getResult());
                 }))
-                .onError((ex,req,res)->{
+                .onError((ex, req, res) -> {
                     HuaweiResponse huaweiResponse = res.get(HuaweiResponse.class);
-                    smsResponse.setErrMessage(huaweiResponse.getDescription());
-                    smsResponse.setErrorCode(huaweiResponse.getCode());
-                    log.debug(huaweiResponse.getDescription());
+                    if (huaweiResponse == null) {
+                        smsResponse.setErrorCode("500");
+                        smsResponse.setErrMessage("huawei send sms response is null.check param");
+                    } else {
+                        smsResponse.setErrMessage(huaweiResponse.getDescription());
+                        smsResponse.setErrorCode(huaweiResponse.getCode());
+                    }
                 })
                 .execute();
         return smsResponse;
@@ -83,7 +87,7 @@ public class HuaweiSmsImpl implements SmsBlend {
     @Override
     @Restricted
     public SmsResponse massTexting(List<String> phones, String message) {
-        return sendMessage(listToString(phones),message);
+        return sendMessage(listToString(phones), message);
     }
 
     @Override

@@ -179,6 +179,11 @@ public class EmaySmsImpl implements SmsBlend {
 
     private static SmsResponse getSmsResponse(JSONObject execute) {
         SmsResponse smsResponse = new SmsResponse();
+        if (execute == null ){
+            smsResponse.setErrorCode("500");
+            smsResponse.setErrMessage("emay send sms response is null.check param");
+            return smsResponse;
+        }
         String code = execute.getString("code");
         if (StringUtils.isEmpty(code)) {
             smsResponse.setErrorCode("emay response code is null");

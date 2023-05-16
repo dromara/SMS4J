@@ -37,6 +37,11 @@ public class YunPianSmsImpl implements SmsBlend {
 
     private static SmsResponse getSmsResponse(JSONObject execute) {
         SmsResponse smsResponse = new SmsResponse();
+        if (execute == null){
+            smsResponse.setErrorCode("500");
+            smsResponse.setErrMessage("yunpian send sms response is null.check param");
+            return smsResponse;
+        }
         smsResponse.setCode(execute.getString("code"));
         smsResponse.setMessage(execute.getString("msg"));
         smsResponse.setBizId(execute.getString("sid"));

@@ -20,7 +20,8 @@ public class SupplierConfig {
     private <T> T injectObj(String prefix, T obj) {
         //@Inject 只支持在字段、参数、类型上注入
         Props props = Solon.cfg().getProp(prefix);
-        return Utils.injectProperties(obj, props);
+        Utils.injectProperties(obj, props);
+        return obj;
     }
 
 

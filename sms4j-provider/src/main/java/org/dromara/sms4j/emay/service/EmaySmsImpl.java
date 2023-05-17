@@ -1,7 +1,9 @@
 package org.dromara.sms4j.emay.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.dromara.sms4j.api.AbstractSmsBlend;
+import org.dromara.sms4j.comm.utils.SmsUtil;
 import org.dromara.sms4j.emay.config.EmayConfig;
 import org.dromara.sms4j.emay.util.EmayBuilder;
 import lombok.extern.slf4j.Slf4j;
@@ -102,7 +104,7 @@ public class EmaySmsImpl extends AbstractSmsBlend {
             return smsResponse;
         }
         String code = execute.getString("code");
-        if (StringUtils.isEmpty(code)) {
+        if (SmsUtil.isEmpty(code)) {
             smsResponse.setErrorCode("emay response code is null");
             smsResponse.setErrMessage("emay is error");
         } else {

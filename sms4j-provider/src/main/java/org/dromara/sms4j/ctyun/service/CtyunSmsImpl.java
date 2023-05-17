@@ -92,7 +92,7 @@ public class CtyunSmsImpl extends AbstractSmsBlend {
 
     private static SmsResponse getResponse(Map map) {
         SmsResponse smsResponse = new SmsResponse();
-        smsResponse.setCode((String) map.get("code"));
+        smsResponse.setCode(String.valueOf(map.get("code")));
         smsResponse.setMessage((String) map.get("message"));
         smsResponse.setBizId((String) map.get("requestId"));
         return smsResponse;

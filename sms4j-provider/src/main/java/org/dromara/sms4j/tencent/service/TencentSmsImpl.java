@@ -108,10 +108,15 @@ public class TencentSmsImpl implements SmsBlend {
                 }))
                 .onError((ex, req, res) -> {
                     JSONObject jsonBody = res.get(JSONObject.class);
-                    JSONObject response = jsonBody.getJSONObject("Response");
-                    JSONArray sendStatusSet = response.getJSONArray("SendStatusSet");
-                    smsResponse.setErrMessage(sendStatusSet.getJSONObject(0).getString("Message"));
-                    smsResponse.setErrorCode(sendStatusSet.getJSONObject(0).getString("Code"));
+                    if (jsonBody == null) {
+                        smsResponse.setErrorCode("500");
+                        smsResponse.setErrMessage("tencent send sms response is null.check param");
+                    } else {
+                        JSONObject response = jsonBody.getJSONObject("Response");
+                        JSONArray sendStatusSet = response.getJSONArray("SendStatusSet");
+                        smsResponse.setErrMessage(sendStatusSet.getJSONObject(0).getString("Message"));
+                        smsResponse.setErrorCode(sendStatusSet.getJSONObject(0).getString("Code"));
+                    }
                 })
                 .execute();
         return smsResponse;

@@ -109,6 +109,11 @@ public class AlibabaSmsImpl implements SmsBlend {
 
     private static SmsResponse getResponse(Map map) {
         SmsResponse smsResponse = new SmsResponse();
+        if (map == null){
+            smsResponse.setErrorCode("500");
+            smsResponse.setErrMessage("aliyun send sms response is null.check param");
+            return smsResponse;
+        }
         smsResponse.setCode((String) map.get("Code"));
         smsResponse.setMessage((String) map.get("Message"));
         if ("OK".equals(smsResponse.getCode())){

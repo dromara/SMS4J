@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.comm.config.SmsBanner;
 import org.dromara.sms4j.comm.config.SmsConfig;
 import org.dromara.sms4j.comm.config.SmsSqlConfig;
+import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.factory.BeanFactory;
 import org.dromara.sms4j.core.SupplierSqlConfig;
@@ -82,7 +83,7 @@ public class SmsAutowiredConfig {
 
         //打印banner
         if (BeanFactory.getSmsConfig().getIsPrint()){
-            SmsBanner.PrintBanner("V 2.0.2");
+            SmsBanner.PrintBanner(Constant.VERSION);
         }
     }
 }

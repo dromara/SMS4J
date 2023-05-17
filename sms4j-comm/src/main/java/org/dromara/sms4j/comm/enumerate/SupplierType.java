@@ -21,10 +21,7 @@ public enum SupplierType {
     JD_CLOUD("京东云短信"),
     /** 容联云 */
     CLOOPEN("容联云短信"),
-
-    /**
-     * 亿美软通
-     */
+    /** 亿美软通*/
     EMAY("亿美软通"),
     /** 天翼云 */
     CTYUN("天翼云短信"),

@@ -7,6 +7,7 @@ import org.dromara.sms4j.comm.exception.SmsSqlException;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -87,6 +88,12 @@ public class SmsUtil {
         return !isEmpty(str);
     }
 
+    /**
+     *  listToString
+     * <p>将list转化为string，元素之间使用逗号分隔，此方法只支持list内部元素为String类型的
+     * @param list 要转换的list
+     * @author :Wind
+    */
     public static String listToString(List<String> list) {
         StringBuilder str = new StringBuilder();
         for (int i = 0; i < list.size(); i++) {
@@ -124,6 +131,16 @@ public class SmsUtil {
         if (t != null){
             BeanUtil.copyProperties(t, m);
         }
+    }
+
+    /**
+     *  getNewMap
+     * <p>获取一个新的空LinkedHashMap
+     * @return 空的 LinkedHashMap 实例
+     * @author :Wind
+    */
+    public static LinkedHashMap<String,String> getNewMap(){
+        return new LinkedHashMap<>();
     }
 
 }

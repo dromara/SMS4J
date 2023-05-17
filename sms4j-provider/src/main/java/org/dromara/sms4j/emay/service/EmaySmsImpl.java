@@ -1,7 +1,9 @@
 package org.dromara.sms4j.emay.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dtflys.forest.config.ForestConfiguration;
+import com.jdcloud.sdk.utils.StringUtils;
 import org.dromara.sms4j.emay.config.EmayConfig;
 import org.dromara.sms4j.emay.util.EmayBuilder;
 import lombok.extern.slf4j.Slf4j;
@@ -177,14 +179,25 @@ public class EmaySmsImpl implements SmsBlend {
 
     private static SmsResponse getSmsResponse(JSONObject execute) {
         SmsResponse smsResponse = new SmsResponse();
-        String code = execute.getString("code");
-        smsResponse.setCode(code);
-        if ("success".equalsIgnoreCase(code)) {
-            JSONObject data = execute.getJSONObject("data");
-            String smsId = data.getString("smsId");
-            smsResponse.setBizId(smsId);
+        if (execute == null ){
+            smsResponse.setErrorCode("500");
+            smsResponse.setErrMessage("emay send sms response is null.check param");
+            return smsResponse;
         }
-        smsResponse.setData(execute);
+        String code = execute.getString("code");
+        if (StringUtils.isEmpty(code)) {
+            smsResponse.setErrorCode("emay response code is null");
+            smsResponse.setErrMessage("emay is error");
+        } else {
+            smsResponse.setCode(code);
+            if ("success".equalsIgnoreCase(code)) {
+                JSONArray data = execute.getJSONArray("data");
+                JSONObject result = (JSONObject) data.get(0);
+                String smsId = result.getString("smsId");
+                smsResponse.setBizId(smsId);
+            }
+            smsResponse.setData(execute);
+        }
         return smsResponse;
     }
 }

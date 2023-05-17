@@ -1,20 +1,18 @@
 package org.dromara.sms4j.core.config;
 
+import org.dromara.sms4j.aliyun.config.AlibabaConfig;
 import org.dromara.sms4j.api.universal.SupplierConfig;
+import org.dromara.sms4j.cloopen.config.CloopenConfig;
 import org.dromara.sms4j.comm.enumerate.SupplierType;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.core.factory.SmsFactory;
 import org.dromara.sms4j.ctyun.config.CtyunConfig;
 import org.dromara.sms4j.emay.config.EmayConfig;
-import org.dromara.sms4j.aliyun.config.AlibabaConfig;
-import org.dromara.sms4j.cloopen.config.CloopenConfig;
 import org.dromara.sms4j.huawei.config.HuaweiConfig;
 import org.dromara.sms4j.jdcloud.config.JdCloudConfig;
 import org.dromara.sms4j.tencent.config.TencentConfig;
 import org.dromara.sms4j.unisms.config.UniConfig;
 import org.dromara.sms4j.yunpian.config.YunpianConfig;
-
-import java.util.Objects;
 
 /**
  * SupplierFactory
@@ -261,6 +259,6 @@ public class SupplierFactory {
      */
     public static void setCtyunConfig(CtyunConfig ctyunConfig) {
         SupplierFactory.ctyunConfig = ctyunConfig;
-        SmsFactory.refresh(SupplierType.EMAY);
+        SmsFactory.refresh(SupplierType.CTYUN);
     }
 }

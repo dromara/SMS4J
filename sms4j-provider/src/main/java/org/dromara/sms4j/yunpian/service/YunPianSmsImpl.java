@@ -37,6 +37,11 @@ public class YunPianSmsImpl implements SmsBlend {
 
     private static SmsResponse getSmsResponse(JSONObject execute) {
         SmsResponse smsResponse = new SmsResponse();
+        if (execute == null){
+            smsResponse.setErrorCode("500");
+            smsResponse.setErrMessage("yunpian send sms response is null.check param");
+            return smsResponse;
+        }
         smsResponse.setCode(execute.getString("code"));
         smsResponse.setMessage(execute.getString("msg"));
         smsResponse.setBizId(execute.getString("sid"));
@@ -189,7 +194,7 @@ public class YunPianSmsImpl implements SmsBlend {
 
     private SmsResponse getSendResponse(Map<String, String> body) {
         Map<String, String> headers = getHeaders();
-        AtomicReference<SmsResponse> smsResponse = null;
+        AtomicReference<SmsResponse> smsResponse = new AtomicReference<>();
         http.post(Constant.YUNPIAN_URL + "/sms/tpl_single_send.json")
                 .addHeader(headers)
                 .addBody(body)

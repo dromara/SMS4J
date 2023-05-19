@@ -1,5 +1,7 @@
-package org.dromara.sms4j.test;
+package org.dromara.sms4j.example;
 
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.StrUtil;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.enumerate.SupplierType;
 import org.dromara.sms4j.core.config.SupplierFactory;
@@ -9,8 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class Sms4jTest {
-    public static final String USER_AGENT = "uni-java-sdk" + "/0.0.4" ;
+class Sms4jTest {
+    public static final String USER_AGENT = "uni-java-sdk" + "/0.0.4";
 
     @Test
     public void uniSmsTest() {
@@ -30,4 +32,15 @@ public class Sms4jTest {
 //        Uni.getClient().request("sms.message.send",mes)
 //        UniClient.request()
     }
+
+    @Test
+    public void alibabaSmsTest() {
+        String phone = "";
+        if (StrUtil.isBlank(phone)) {
+            return;
+        }
+        SmsResponse smsResponse = SmsFactory.createSmsBlend(SupplierType.ALIBABA).sendMessage(phone, "123456");
+        Assert.isTrue("OK".equals(smsResponse.getCode()));
+    }
+
 }

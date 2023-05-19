@@ -1,9 +1,9 @@
 package org.dromara.sms4j.comm.utils;
 
 
-import com.alibaba.fastjson.JSONObject;
-import org.dromara.sms4j.comm.exception.SmsBlendException;
+import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.sms4j.comm.exception.SmsBlendException;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,8 +66,7 @@ public class TimeExpiredPoolCache {
     private static boolean persistenceInit() {
         String path = FileTool.getPath() + FILE_TYPE;
         try {
-
-            DataWrapper d = JSONObject.parseObject(FileTool.readFile(path), DataWrapper.class);
+            DataWrapper d = JSONUtil.toBean(FileTool.readFile(path), DataWrapper.class);
             if (dataPool != null) {
                 return true;
             }
@@ -95,7 +94,7 @@ public class TimeExpiredPoolCache {
     private static void persistence() {
         String path = FileTool.getPath() + FILE_TYPE;
         FileTool.createFile(path);
-        FileTool.writeFile(new File(path), JSONObject.toJSONString(dataPool), false);
+        FileTool.writeFile(new File(path), JSONUtil.toJsonStr(dataPool), false);
     }
 
     /**

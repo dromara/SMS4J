@@ -1,9 +1,7 @@
 package org.dromara.sms4j.comm.utils;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.alibaba.fastjson.JSONException;
-import com.alibaba.fastjson.JSONObject;
-import org.dromara.sms4j.comm.exception.SmsSqlException;
+import cn.hutool.json.JSONUtil;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -113,11 +111,7 @@ public class SmsUtil {
      * @author :Wind
     */
     public static <T> T jsonForObject(String json, Class<T> t) {
-        try {
-            return json == null||"".equals(json)?null: JSONObject.toJavaObject(JSONObject.parseObject(json), t);
-        } catch (JSONException e) {
-            throw new SmsSqlException("json sequence exception" + e.getMessage());
-        }
+        return JSONUtil.toBean(json,t);
     }
 
     /**

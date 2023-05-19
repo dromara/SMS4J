@@ -41,6 +41,8 @@ public abstract class SmsFactory {
 
     private static Map<SupplierType, SmsBlend> beans = new HashMap<>();
 
+    private static final Map<SupplierType, SmsBlend> smsBlendMap = new HashMap<>();
+
     private SmsFactory() {
     }
 
@@ -52,6 +54,12 @@ public abstract class SmsFactory {
      * @author :Wind
      */
     public static SmsBlend createSmsBlend(SupplierType supplierType) {
+        if (!smsBlendMap.containsKey(supplierType)){
+            smsBlendMap.put(supplierType,getSmsBlendImpl(supplierType));
+        }
+       return smsBlendMap.get(supplierType);
+    }
+    private static SmsBlend getSmsBlendImpl(SupplierType supplierType){
         switch (supplierType) {
             case ALIBABA:
                 return AlibabaSmsConfig.createAlibabaSms(SupplierFactory.getAlibabaConfig());

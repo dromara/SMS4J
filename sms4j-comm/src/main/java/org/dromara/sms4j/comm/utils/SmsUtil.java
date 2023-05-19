@@ -1,6 +1,11 @@
 package org.dromara.sms4j.comm.utils;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 
 import java.security.NoSuchAlgorithmException;
@@ -9,10 +14,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * @author wind
+ */
 public class SmsUtil {
     private SmsUtil() {
     }   //私有构造防止实例化
-
 
     /**
      * <p>说明：生成一个指定长度的随机字符串，包含大小写英文字母和数字但不包含符号
@@ -22,18 +29,7 @@ public class SmsUtil {
      * @author :Wind
      */
     public static String getRandomString(int len) {
-        String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        StringBuilder sb = new StringBuilder();
-        try {
-            Random random = SecureRandom.getInstanceStrong();
-            for (int i = 0; i < len; i++) {
-                int number = random.nextInt(62);
-                sb.append(str.charAt(number));
-            }
-        } catch (NoSuchAlgorithmException e){
-            throw new RuntimeException(e);
-        }
-        return sb.toString();
+        return RandomUtil.randomString(RandomUtil.BASE_CHAR_NUMBER + RandomUtil.BASE_CHAR.toUpperCase(), len);
     }
 
     /**
@@ -52,18 +48,7 @@ public class SmsUtil {
      * @author :Wind
      */
     public static String getRandomInt(int len) {
-        String str = "0123456789";
-        StringBuilder sb = new StringBuilder();
-        try {
-        Random random = SecureRandom.getInstanceStrong();
-        for (int i = 0; i < len; i++) {
-            int number = random.nextInt(10);
-            sb.append(str.charAt(number));
-        }
-        } catch (NoSuchAlgorithmException e){
-            throw new RuntimeException(e);
-        }
-        return sb.toString();
+        return RandomUtil.randomString(RandomUtil.BASE_NUMBER, len);
     }
 
     /**
@@ -73,7 +58,7 @@ public class SmsUtil {
      * @author :Wind
      */
     public static boolean isEmpty(Object str) {
-        return str == null || "".equals(str);
+        return ObjectUtil.isEmpty(str);
     }
 
     /**
@@ -93,16 +78,7 @@ public class SmsUtil {
      * @author :Wind
     */
     public static String listToString(List<String> list) {
-        StringBuilder str = new StringBuilder();
-        for (int i = 0; i < list.size(); i++) {
-            if (i == list.size() - 1) {
-                str.append(list.get(i));
-            } else {
-                str.append(list.get(i));
-                str.append(",");
-            }
-        }
-        return str.toString();
+        return CollUtil.join(list, ",");
     }
 
     /**
@@ -122,9 +98,7 @@ public class SmsUtil {
      * @author :Wind
     */
     public static <T,M>void copyBean(T t,M m){
-        if (t != null){
-            BeanUtil.copyProperties(t, m);
-        }
+        BeanUtil.copyProperties(t, m);
     }
 
     /**

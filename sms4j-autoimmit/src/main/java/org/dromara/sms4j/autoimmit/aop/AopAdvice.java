@@ -14,6 +14,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 
 @Aspect
@@ -30,7 +31,6 @@ public class AopAdvice {
 
     @Autowired
     private SpringUtil springUtil;
-
 
     @Pointcut("@annotation(org.dromara.sms4j.comm.annotation.Restricted)")
     public void restricted() {
@@ -132,5 +132,4 @@ public class AopAdvice {
         }
         return null;
     }
-
 }

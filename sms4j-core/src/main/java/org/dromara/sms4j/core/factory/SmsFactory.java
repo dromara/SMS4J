@@ -1,10 +1,18 @@
 package org.dromara.sms4j.core.factory;
 
 import org.dromara.sms4j.aliyun.config.AlibabaSmsConfig;
+import org.dromara.sms4j.api.AbstractSmsBlend;
 import org.dromara.sms4j.api.SmsBlend;
+import org.dromara.sms4j.api.smsProxy.RestrictedProcess;
+import org.dromara.sms4j.api.smsProxy.SmsInvocationHandler;
+import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.cloopen.config.CloopenSmsConfig;
+import org.dromara.sms4j.comm.config.SmsConfig;
+import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.enumerate.SupplierType;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
+import org.dromara.sms4j.comm.factory.BeanFactory;
+import org.dromara.sms4j.comm.utils.SmsUtil;
 import org.dromara.sms4j.core.SupplierSqlConfig;
 import org.dromara.sms4j.core.config.SupplierFactory;
 import org.dromara.sms4j.ctyun.config.CtyunSmsConfig;
@@ -14,6 +22,11 @@ import org.dromara.sms4j.jdcloud.config.JdCloudSmsConfig;
 import org.dromara.sms4j.tencent.config.TencentSmsConfig;
 import org.dromara.sms4j.unisms.config.UniSmsConfig;
 import org.dromara.sms4j.yunpian.config.YunPianSmsConfig;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Proxy;
+import java.util.*;
+import java.util.concurrent.Executor;
 
 /**
  * SmsFactory
@@ -25,6 +38,9 @@ import org.dromara.sms4j.yunpian.config.YunPianSmsConfig;
  * 2023/4/8  15:55
  **/
 public abstract class SmsFactory {
+
+    private static Map<SupplierType, SmsBlend> beans = new HashMap<>();
+
     private SmsFactory() {
     }
 
@@ -129,4 +145,44 @@ public abstract class SmsFactory {
         SupplierSqlConfig.refreshSqlConfig();
     }
 
+
+    /**
+     * getRestrictedSmsBlend
+     * <p>获取某个厂商的带有短信拦截的实现
+     *
+     * @param supplierType 厂商枚举
+     * @author :Wind
+     */
+    public static SmsBlend getRestrictedSmsBlend(SupplierType supplierType) {
+        SmsBlend smsBlend = beans.get(supplierType);
+        if (Objects.isNull(smsBlend)) {
+            smsBlend = getSmsBlend(supplierType);
+            beans.put(supplierType, smsBlend);
+        }
+        return smsBlend;
+    }
+
+    /**
+     *  refreshRestrictedSmsBlend
+     * <p>刷新带有短信拦截的对象实现
+     * @param supplierType 厂商枚举
+     * @author :Wind
+    */
+    public static void refreshRestrictedSmsBlend(SupplierType supplierType) {
+        refresh(supplierType);
+        beans.put(supplierType,getSmsBlend(supplierType));
+    }
+
+    private static SmsBlend getSmsBlend(SupplierType supplierType) {
+        SmsBlend sms = createSmsBlend(supplierType);
+        SmsInvocationHandler smsInvocationHandler = SmsInvocationHandler.newSmsInvocationHandler(
+                sms,
+                BeanFactory.getSmsConfig()
+        );
+        return (SmsBlend) Proxy.newProxyInstance(
+                sms.getClass().getClassLoader(),
+                new Class[]{SmsBlend.class},
+                smsInvocationHandler
+        );
+    }
 }

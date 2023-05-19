@@ -24,6 +24,11 @@ public abstract class AbstractSmsBlend implements SmsBlend{
         this.delayed = delayed;
     }
 
+    protected AbstractSmsBlend() {
+        this.pool = BeanFactory.getExecutor();
+        this.delayed = BeanFactory.getDelayedTime();
+    }
+
     /**
      * <p>说明：发送固定消息模板短信
      * <p>此方法将使用配置文件中预设的短信模板进行短信发送

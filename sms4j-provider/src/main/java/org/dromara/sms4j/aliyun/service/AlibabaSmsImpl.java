@@ -1,10 +1,10 @@
 package org.dromara.sms4j.aliyun.service;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.dtflys.forest.config.ForestConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.aliyun.config.AlibabaConfig;
+import org.dromara.sms4j.aliyun.entity.AlibabaResponse;
 import org.dromara.sms4j.aliyun.utils.AliyunUtils;
 import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.callback.CallBack;
@@ -98,12 +98,16 @@ public class AlibabaSmsImpl implements SmsBlend {
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .addBody(paramStr)
                 .onSuccess(((data, req, res) -> {
-                    JSONObject jsonBody = res.get(JSONObject.class);
-                    log.info(jsonBody.toJSONString());
+                    AlibabaResponse alibabaResponse = res.get(AlibabaResponse.class);
+                    smsResponse.setCode(alibabaResponse.getCode());
+                    smsResponse.setMessage(alibabaResponse.getMessage());
+                    smsResponse.setBizId(alibabaResponse.getBizId());
+                    smsResponse.setData(alibabaResponse);
                 }))
                 .onError((ex, req, res) -> {
-                    JSONObject jsonBody = res.get(JSONObject.class);
-                    log.info(jsonBody.toJSONString());
+                    AlibabaResponse alibabaResponse = res.get(AlibabaResponse.class);
+                    smsResponse.setErrMessage(alibabaResponse.getMessage());
+                    smsResponse.setErrorCode(alibabaResponse.getCode());
                 })
                 .execute();
         return smsResponse;
@@ -127,7 +131,7 @@ public class AlibabaSmsImpl implements SmsBlend {
     @Override
     @Restricted
     public void sendMessageAsync(String phone, String templateId, LinkedHashMap<String, String> messages, CallBack callBack) {
-        CompletableFuture<SmsResponse> smsResponseCompletableFuture = CompletableFuture.supplyAsync(() -> sendMessage(phone,templateId, messages), pool);
+        CompletableFuture<SmsResponse> smsResponseCompletableFuture = CompletableFuture.supplyAsync(() -> sendMessage(phone, templateId, messages), pool);
         smsResponseCompletableFuture.thenAcceptAsync(callBack::callBack);
     }
 

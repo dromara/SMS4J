@@ -1,9 +1,15 @@
 package org.dromara.sms4j.core.config;
 
 import org.dromara.sms4j.aliyun.config.AlibabaConfig;
+import org.dromara.sms4j.aliyun.config.AlibabaFactory;
 import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.cloopen.config.CloopenConfig;
-import org.dromara.sms4j.comm.enumerate.SupplierType;
+import org.dromara.sms4j.cloopen.config.CloopenFactory;
+import org.dromara.sms4j.ctyun.config.CtyunFactory;
+import org.dromara.sms4j.emay.config.EmayFactory;
+import org.dromara.sms4j.huawei.config.HuaweiFactory;
+import org.dromara.sms4j.jdcloud.config.JdCloudFactory;
+import org.dromara.sms4j.provider.enumerate.SupplierType;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.core.factory.SmsFactory;
 import org.dromara.sms4j.ctyun.config.CtyunConfig;
@@ -11,7 +17,10 @@ import org.dromara.sms4j.emay.config.EmayConfig;
 import org.dromara.sms4j.huawei.config.HuaweiConfig;
 import org.dromara.sms4j.jdcloud.config.JdCloudConfig;
 import org.dromara.sms4j.tencent.config.TencentConfig;
+import org.dromara.sms4j.tencent.config.TencentFactory;
 import org.dromara.sms4j.unisms.config.UniConfig;
+import org.dromara.sms4j.unisms.config.UniFactory;
+import org.dromara.sms4j.yunpian.config.YunPianFactory;
 import org.dromara.sms4j.yunpian.config.YunpianConfig;
 
 /**
@@ -25,138 +34,66 @@ public class SupplierFactory {
     }
 
     /**
-     * 阿里云差异化配置
-     */
-    private static AlibabaConfig alibabaConfig;
-
-    /**
-     * 华为云差异化配置
-     */
-    private static HuaweiConfig huaweiConfig;
-
-    /**
-     * 合一短信差异化配置
-     */
-    private static UniConfig uniConfig;
-
-    /**
-     * 腾讯云短信差异化配置
-     */
-    private static TencentConfig tencentConfig;
-
-    /**
-     * 云片短信差异配置
-     */
-    private static YunpianConfig yunpianConfig;
-
-    /**
-     * 京东云短信差异配置
-     */
-    private static JdCloudConfig jdCloudConfig;
-
-    /**
-     * 容联云短信差异配置
-     */
-    private static CloopenConfig cloopenConfig;
-
-    /**
-     * 亿美软通短信差异配置
-     */
-    private static EmayConfig emayConfig;
-
-    /**
-     * 天翼云短信差异配置
-     */
-    private static CtyunConfig ctyunConfig;
-
-    /**
      * 阿里云配置获取
      */
     public static AlibabaConfig getAlibabaConfig() {
-        if (alibabaConfig == null) {
-            alibabaConfig = AlibabaConfig.builder().build();
-        }
-        return alibabaConfig;
+        return AlibabaFactory.instance().getConfig();
     }
 
     /**
      * 华为云配置获取
      */
     public static HuaweiConfig getHuaweiConfig() {
-        if (huaweiConfig == null) {
-            huaweiConfig = HuaweiConfig.builder().build();
-        }
-        return huaweiConfig;
+        return HuaweiFactory.instance().getConfig();
     }
 
     /**
      * 合一短信配置获取
      */
     public static UniConfig getUniConfig() {
-        if (uniConfig == null) {
-            uniConfig = UniConfig.builder().build();
-        }
-        return uniConfig;
+        return UniFactory.instance().getConfig();
     }
 
     /**
      * 腾讯短信配置获取
      */
     public static TencentConfig getTencentConfig() {
-        if (tencentConfig == null) {
-            tencentConfig = TencentConfig.builder().build();
-        }
-        return tencentConfig;
+        return TencentFactory.instance().getConfig();
     }
 
     /**
      * 云片短信配置获取
      */
     public static YunpianConfig getYunpianConfig() {
-        if (yunpianConfig == null) {
-            yunpianConfig = YunpianConfig.builder().build();
-        }
-        return yunpianConfig;
+        return YunPianFactory.instance().getConfig();
     }
 
     /**
      * 京东云短信配置获取
      */
     public static JdCloudConfig getJdCloudConfig() {
-        if (jdCloudConfig == null) {
-            jdCloudConfig = JdCloudConfig.builder().build();
-        }
-        return jdCloudConfig;
+        return JdCloudFactory.instance().getConfig();
     }
 
     /**
      * 容联云短信配置获取
      */
     public static CloopenConfig getCloopenConfig() {
-        if (cloopenConfig == null) {
-            cloopenConfig = CloopenConfig.builder().build();
-        }
-        return cloopenConfig;
+        return CloopenFactory.instance().getConfig();
     }
 
     /**
      * 亿美软通配置获取
      */
     public static EmayConfig getEmayConfig() {
-        if (emayConfig == null) {
-            emayConfig = EmayConfig.builder().build();
-        }
-        return emayConfig;
+        return EmayFactory.instance().getConfig();
     }
 
     /**
      * 天翼云配置获取
      */
     public static CtyunConfig getCtyunConfig() {
-        if (ctyunConfig == null) {
-            ctyunConfig = CtyunConfig.builder().build();
-        }
-        return ctyunConfig;
+        return CtyunFactory.instance().getConfig();
     }
 
     /**
@@ -193,7 +130,7 @@ public class SupplierFactory {
      * 设置 alibabaConfig
      */
     public static void setAlibabaConfig(AlibabaConfig alibabaConfig) {
-        SupplierFactory.alibabaConfig = alibabaConfig;
+        AlibabaFactory.instance().setConfig(alibabaConfig);
         SmsFactory.refresh(SupplierType.ALIBABA);
     }
 
@@ -201,7 +138,7 @@ public class SupplierFactory {
      * 设置 huaweiConfig
      */
     public static void setHuaweiConfig(HuaweiConfig huaweiConfig) {
-        SupplierFactory.huaweiConfig = huaweiConfig;
+        HuaweiFactory.instance().setConfig(huaweiConfig);
         SmsFactory.refresh(SupplierType.HUAWEI);
     }
 
@@ -209,7 +146,7 @@ public class SupplierFactory {
      * 设置 uniConfig
      */
     public static void setUniConfig(UniConfig uniConfig) {
-        SupplierFactory.uniConfig = uniConfig;
+        UniFactory.instance().setConfig(uniConfig);
         SmsFactory.refresh(SupplierType.UNI_SMS);
     }
 
@@ -217,7 +154,7 @@ public class SupplierFactory {
      * 设置 tencentConfig
      */
     public static void setTencentConfig(TencentConfig tencentConfig) {
-        SupplierFactory.tencentConfig = tencentConfig;
+        TencentFactory.instance().setConfig(tencentConfig);
         SmsFactory.refresh(SupplierType.TENCENT);
     }
 
@@ -225,7 +162,7 @@ public class SupplierFactory {
      * 设置 yunpianConfig
      */
     public static void setYunpianConfig(YunpianConfig yunpianConfig) {
-        SupplierFactory.yunpianConfig = yunpianConfig;
+        YunPianFactory.instance().setConfig(yunpianConfig);
         SmsFactory.refresh(SupplierType.YUNPIAN);
     }
 
@@ -233,7 +170,7 @@ public class SupplierFactory {
      * 设置 jdCloudConfig
      */
     public static void setJdCloudConfig(JdCloudConfig jdCloudConfig) {
-        SupplierFactory.jdCloudConfig = jdCloudConfig;
+        JdCloudFactory.instance().setConfig(jdCloudConfig);
         SmsFactory.refresh(SupplierType.JD_CLOUD);
     }
 
@@ -241,7 +178,7 @@ public class SupplierFactory {
      * 设置 cloopenConfig
      */
     public static void setCloopenConfig(CloopenConfig cloopenConfig) {
-        SupplierFactory.cloopenConfig = cloopenConfig;
+        CloopenFactory.instance().setConfig(cloopenConfig);
         SmsFactory.refresh(SupplierType.CLOOPEN);
     }
 
@@ -249,7 +186,7 @@ public class SupplierFactory {
      * 设置 emayConfig
      */
     public static void setEmayConfig(EmayConfig emayConfig) {
-        SupplierFactory.emayConfig = emayConfig;
+        EmayFactory.instance().setConfig(emayConfig);
         SmsFactory.refresh(SupplierType.EMAY);
     }
 
@@ -257,7 +194,7 @@ public class SupplierFactory {
      * 设置 ctyunConfig
      */
     public static void setCtyunConfig(CtyunConfig ctyunConfig) {
-        SupplierFactory.ctyunConfig = ctyunConfig;
+        CtyunFactory.instance().setConfig(ctyunConfig);
         SmsFactory.refresh(SupplierType.CTYUN);
     }
 }

@@ -101,7 +101,7 @@ public class YunPianSmsImpl extends AbstractSmsBlend {
         body.put("mobile", phone);
         body.put("tpl_id", tplId);
         body.put("tpl_value", formattingMap(message));
-        if (!config.getCallbackUrl().isEmpty()) body.put("callback_url", config.getCallbackUrl());
+        if (config.getCallbackUrl() != null && !config.getCallbackUrl().isEmpty()) body.put("callback_url", config.getCallbackUrl());
         return body;
     }
 

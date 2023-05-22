@@ -1,6 +1,6 @@
 package org.dromara.sms4j.yunpian.service;
 
-import com.alibaba.fastjson.JSONObject;
+import cn.hutool.json.JSONObject;
 import org.dromara.sms4j.api.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
@@ -9,7 +9,10 @@ import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.yunpian.config.YunpianConfig;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -31,11 +34,11 @@ public class YunPianSmsImpl extends AbstractSmsBlend {
             smsResponse.setErrMessage("yunpian send sms response is null.check param");
             return smsResponse;
         }
-        smsResponse.setCode(execute.getString("code"));
-        smsResponse.setMessage(execute.getString("msg"));
-        smsResponse.setBizId(execute.getString("sid"));
-        if (execute.getInteger("code") != 0) {
-            smsResponse.setErrMessage(execute.getString("msg"));
+        smsResponse.setCode(execute.getStr("code"));
+        smsResponse.setMessage(execute.getStr("msg"));
+        smsResponse.setBizId(execute.getStr("sid"));
+        if (execute.getInt("code") != 0) {
+            smsResponse.setErrMessage(execute.getStr("msg"));
         }
         smsResponse.setData(execute);
         return smsResponse;

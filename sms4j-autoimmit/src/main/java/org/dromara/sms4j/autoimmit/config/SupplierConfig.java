@@ -1,10 +1,10 @@
 package org.dromara.sms4j.autoimmit.config;
 
-import org.dromara.sms4j.ctyun.config.CtyunConfig;
-import org.dromara.sms4j.emay.config.EmayConfig;
 import org.dromara.sms4j.aliyun.config.AlibabaConfig;
 import org.dromara.sms4j.cloopen.config.CloopenConfig;
 import org.dromara.sms4j.core.config.SupplierFactory;
+import org.dromara.sms4j.ctyun.config.CtyunConfig;
+import org.dromara.sms4j.emay.config.EmayConfig;
 import org.dromara.sms4j.huawei.config.HuaweiConfig;
 import org.dromara.sms4j.jdcloud.config.JdCloudConfig;
 import org.dromara.sms4j.tencent.config.TencentConfig;

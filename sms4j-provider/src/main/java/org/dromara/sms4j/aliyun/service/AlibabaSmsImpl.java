@@ -1,6 +1,6 @@
 package org.dromara.sms4j.aliyun.service;
 
-import com.alibaba.fastjson.JSON;
+import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.aliyun.config.AlibabaConfig;
 import org.dromara.sms4j.aliyun.utils.AliyunUtils;
@@ -19,6 +19,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * <p>类名: AlibabaSmsImpl
  * <p>说明：  阿里云短信实现
+ *
  * @author :Wind
  * 2023/3/26  17:16
  **/
@@ -31,6 +32,7 @@ public class AlibabaSmsImpl extends AbstractSmsBlend {
     /**
      * AlibabaSmsImpl
      * <p>构造器，用于构造短信实现模块
+     *
      * @author :Wind
      */
     public AlibabaSmsImpl(AlibabaConfig alibabaSmsConfig, Executor pool, DelayedTime delayedTime) {
@@ -49,7 +51,7 @@ public class AlibabaSmsImpl extends AbstractSmsBlend {
     @Override
     @Restricted
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
-        String messageStr = JSON.toJSONString(messages);
+        String messageStr = JSONUtil.toJsonStr(messages);
         return getSmsResponse(phone, messageStr, templateId);
     }
 
@@ -64,7 +66,7 @@ public class AlibabaSmsImpl extends AbstractSmsBlend {
     @Override
     @Restricted
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
-        String messageStr = JSON.toJSONString(messages);
+        String messageStr = JSONUtil.toJsonStr(messages);
         return getSmsResponse(arrayToString(phones), messageStr, templateId);
     }
 
@@ -97,14 +99,14 @@ public class AlibabaSmsImpl extends AbstractSmsBlend {
 
     private static SmsResponse getResponse(Map map) {
         SmsResponse smsResponse = new SmsResponse();
-        if (map == null){
+        if (map == null) {
             smsResponse.setErrorCode("500");
             smsResponse.setErrMessage("aliyun send sms response is null.check param");
             return smsResponse;
         }
         smsResponse.setCode((String) map.get("Code"));
         smsResponse.setMessage((String) map.get("Message"));
-        if ("OK".equals(smsResponse.getCode())){
+        if ("OK".equals(smsResponse.getCode())) {
             smsResponse.setBizId((String) map.get("BizId"));
         }
         return smsResponse;

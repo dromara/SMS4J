@@ -1,18 +1,21 @@
 package org.dromara.sms4j.emay.service;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import org.dromara.sms4j.api.AbstractSmsBlend;
-import org.dromara.sms4j.comm.utils.SmsUtil;
-import org.dromara.sms4j.emay.config.EmayConfig;
-import org.dromara.sms4j.emay.util.EmayBuilder;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.sms4j.api.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
+import org.dromara.sms4j.comm.utils.SmsUtil;
+import org.dromara.sms4j.emay.config.EmayConfig;
+import org.dromara.sms4j.emay.util.EmayBuilder;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -103,7 +106,7 @@ public class EmaySmsImpl extends AbstractSmsBlend {
             smsResponse.setErrMessage("emay send sms response is null.check param");
             return smsResponse;
         }
-        String code = execute.getString("code");
+        String code = execute.getStr("code");
         if (SmsUtil.isEmpty(code)) {
             smsResponse.setErrorCode("emay response code is null");
             smsResponse.setErrMessage("emay is error");
@@ -112,7 +115,7 @@ public class EmaySmsImpl extends AbstractSmsBlend {
             if ("success".equalsIgnoreCase(code)) {
                 JSONArray data = execute.getJSONArray("data");
                 JSONObject result = (JSONObject) data.get(0);
-                String smsId = result.getString("smsId");
+                String smsId = result.getStr("smsId");
                 smsResponse.setBizId(smsId);
             }
             smsResponse.setData(execute);

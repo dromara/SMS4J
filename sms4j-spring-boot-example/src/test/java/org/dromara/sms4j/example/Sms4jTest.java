@@ -3,9 +3,10 @@ package org.dromara.sms4j.example;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import org.dromara.sms4j.api.entity.SmsResponse;
-import org.dromara.sms4j.provider.enumerate.SupplierType;
+import org.dromara.sms4j.comm.utils.SmsUtil;
 import org.dromara.sms4j.core.config.SupplierFactory;
 import org.dromara.sms4j.core.factory.SmsFactory;
+import org.dromara.sms4j.provider.enumerate.SupplierType;
 import org.dromara.sms4j.unisms.config.UniConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,11 +36,11 @@ class Sms4jTest {
 
     @Test
     public void alibabaSmsTest() {
-        String phone = "";
+        String phone = "13546606929";
         if (StrUtil.isBlank(phone)) {
             return;
         }
-        SmsResponse smsResponse = SmsFactory.createSmsBlend(SupplierType.ALIBABA).sendMessage(phone, "123456");
+        SmsResponse smsResponse = SmsFactory.createSmsBlend(SupplierType.ALIBABA).sendMessage(phone, SmsUtil.getRandomInt(6));
         Assert.isTrue("OK".equals(smsResponse.getCode()));
     }
 

@@ -2,7 +2,6 @@ package org.dromara.sms4j.provider.base;
 
 import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.universal.SupplierConfig;
-import org.dromara.sms4j.comm.config.BaseConfig;
 
 /**
  * AlibabaSmsConfig

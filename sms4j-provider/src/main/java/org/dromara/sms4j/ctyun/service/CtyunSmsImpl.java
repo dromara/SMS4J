@@ -1,6 +1,6 @@
 package org.dromara.sms4j.ctyun.service;
 
-import com.alibaba.fastjson.JSON;
+import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
@@ -19,6 +19,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * <p>类名: CtyunSmsImpl
  * <p>说明： 天翼云短信实现
+ *
  * @author :bleachhtred
  * 2023/5/12  15:06
  **/
@@ -29,7 +30,7 @@ public class CtyunSmsImpl extends AbstractSmsBlend {
 
 
     public CtyunSmsImpl(CtyunConfig ctyunConfig, Executor pool, DelayedTime delayedTime) {
-        super(pool,delayedTime);
+        super(pool, delayedTime);
         this.ctyunConfig = ctyunConfig;
     }
 
@@ -44,7 +45,7 @@ public class CtyunSmsImpl extends AbstractSmsBlend {
     @Override
     @Restricted
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
-        String messageStr = JSON.toJSONString(messages);
+        String messageStr = JSONUtil.toJsonStr(messages);
         return getSmsResponse(phone, messageStr, templateId);
     }
 
@@ -59,7 +60,7 @@ public class CtyunSmsImpl extends AbstractSmsBlend {
     @Override
     @Restricted
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
-        String messageStr = JSON.toJSONString(messages);
+        String messageStr = JSONUtil.toJsonStr(messages);
         return getSmsResponse(arrayToString(phones), messageStr, templateId);
     }
 

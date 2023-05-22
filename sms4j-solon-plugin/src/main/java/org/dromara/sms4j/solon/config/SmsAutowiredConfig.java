@@ -11,7 +11,10 @@ import org.dromara.sms4j.core.SupplierSqlConfig;
 import org.dromara.sms4j.solon.utils.RedisUtils;
 import org.noear.solon.Solon;
 import org.noear.solon.Utils;
-import org.noear.solon.annotation.*;
+import org.noear.solon.annotation.Bean;
+import org.noear.solon.annotation.Condition;
+import org.noear.solon.annotation.Configuration;
+import org.noear.solon.annotation.Inject;
 import org.noear.solon.core.Props;
 
 import java.util.concurrent.Executor;

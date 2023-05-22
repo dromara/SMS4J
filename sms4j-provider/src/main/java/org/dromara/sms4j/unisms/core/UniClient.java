@@ -1,6 +1,6 @@
 package org.dromara.sms4j.unisms.core;
 
-import com.alibaba.fastjson.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.dtflys.forest.config.ForestConfiguration;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.factory.BeanFactory;
@@ -79,6 +79,7 @@ public class UniClient {
     /**
      * request
      * <p>向 uni-sms发送请求
+     *
      * @param action 接口名称
      * @author :Wind
      */
@@ -91,21 +92,19 @@ public class UniClient {
         headers.put("User-Agent", USER_AGENT);
         headers.put("Content-Type", "application/json;charset=utf-8");
         headers.put("Accept", "application/json");
-        return new UniResponse(
-                JSONObject.parseObject(
-                        http.post(this.endpoint)
-                                .addHeader(headers)
-                                .addQuery(this.sign(query))
-                                .addBody(JSONObject.toJSONString(data))
-                                .successWhen(((req, res) -> {
-                                    return res.noException() &&   // 请求过程没有异常
-                                            res.statusIsNot(500); // 不能是 500
-                                }))
-                                .onError((ex, req, res) -> {
-                                    throw new SmsBlendException(ex.getMessage());
-                                })
-                                .executeAsString()
-                ));
+        String str = http.post(this.endpoint)
+                .addHeader(headers)
+                .addQuery(this.sign(query))
+                .addBody(JSONUtil.toJsonStr(data))
+                .successWhen(((req, res) -> {
+                    return res.noException() &&   // 请求过程没有异常
+                            res.statusIsNot(500); // 不能是 500
+                }))
+                .onError((ex, req, res) -> {
+                    throw new SmsBlendException(ex.getMessage());
+                })
+                .executeAsString();
+        return new UniResponse(JSONUtil.parseObj(str));
     }
 
     public static class Builder {

@@ -1,9 +1,6 @@
 package org.dromara.sms4j.comm.constant;
 
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-
 /**
  * Constant
  * <p> 短信应用常量

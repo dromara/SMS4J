@@ -1,8 +1,8 @@
 package org.dromara.sms4j.comm.config;
 
 
-import org.dromara.sms4j.comm.enumerate.ConfigType;
 import lombok.Data;
+import org.dromara.sms4j.comm.enumerate.ConfigType;
 
 @Data
 public class SmsConfig {

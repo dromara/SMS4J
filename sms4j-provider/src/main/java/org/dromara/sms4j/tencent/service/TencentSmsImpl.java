@@ -1,7 +1,7 @@
 package org.dromara.sms4j.tencent.service;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
@@ -12,7 +12,10 @@ import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.tencent.config.TencentConfig;
 import org.dromara.sms4j.tencent.utils.TencentUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executor;
 
 @Slf4j
@@ -91,9 +94,9 @@ public class TencentSmsImpl extends AbstractSmsBlend {
                     JSONObject jsonBody = res.get(JSONObject.class);
                     JSONObject response = jsonBody.getJSONObject("Response");
                     JSONArray sendStatusSet = response.getJSONArray("SendStatusSet");
-                    smsResponse.setBizId(sendStatusSet.getJSONObject(0).getString("SerialNo"));
-                    smsResponse.setMessage(sendStatusSet.getJSONObject(0).getString("Message"));
-                    smsResponse.setCode(sendStatusSet.getJSONObject(0).getString("Code"));
+                    smsResponse.setBizId(sendStatusSet.getJSONObject(0).getStr("SerialNo"));
+                    smsResponse.setMessage(sendStatusSet.getJSONObject(0).getStr("Message"));
+                    smsResponse.setCode(sendStatusSet.getJSONObject(0).getStr("Code"));
                 }))
                 .onError((ex, req, res) -> {
                     JSONObject jsonBody = res.get(JSONObject.class);
@@ -103,8 +106,8 @@ public class TencentSmsImpl extends AbstractSmsBlend {
                     } else {
                         JSONObject response = jsonBody.getJSONObject("Response");
                         JSONArray sendStatusSet = response.getJSONArray("SendStatusSet");
-                        smsResponse.setErrMessage(sendStatusSet.getJSONObject(0).getString("Message"));
-                        smsResponse.setErrorCode(sendStatusSet.getJSONObject(0).getString("Code"));
+                        smsResponse.setErrMessage(sendStatusSet.getJSONObject(0).getStr("Message"));
+                        smsResponse.setErrorCode(sendStatusSet.getJSONObject(0).getStr("Code"));
                     }
                 })
                 .execute();

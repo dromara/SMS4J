@@ -2,7 +2,8 @@ package org.dromara.sms4j.core.load;
 
 import org.dromara.sms4j.api.SmsBlend;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * SmsLoad

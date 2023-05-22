@@ -2,7 +2,7 @@ package org.dromara.sms4j.ctyun.utils;
 
 import cn.hutool.crypto.digest.HMac;
 import cn.hutool.crypto.digest.HmacAlgorithm;
-import com.alibaba.fastjson.JSONObject;
+import cn.hutool.json.JSONUtil;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
@@ -12,7 +12,12 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Base64;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -75,7 +80,7 @@ public class CtyunUtils {
         paramMap.put("signName", ctyunConfig.getSignature());
         paramMap.put("templateParam", message);
         paramMap.put("templateCode", templateId);
-        return JSONObject.toJSONString(paramMap);
+        return JSONUtil.toJsonStr(paramMap);
     }
 
     private static String toHex(byte[] data) {

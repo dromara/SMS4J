@@ -1,20 +1,19 @@
 package org.dromara.sms4j.autoimmit.aop;
 
 
-import org.dromara.sms4j.comm.exception.SmsBlendException;
-import org.dromara.sms4j.comm.config.SmsConfig;
-import org.dromara.sms4j.autoimmit.utils.RedisUtils;
-import org.dromara.sms4j.comm.utils.SmsUtil;
-import org.dromara.sms4j.comm.utils.TimeExpiredPoolCache;
-import org.dromara.sms4j.autoimmit.utils.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.dromara.sms4j.autoimmit.utils.RedisUtils;
+import org.dromara.sms4j.autoimmit.utils.SpringUtil;
+import org.dromara.sms4j.comm.config.SmsConfig;
+import org.dromara.sms4j.comm.exception.SmsBlendException;
+import org.dromara.sms4j.comm.utils.SmsUtil;
+import org.dromara.sms4j.comm.utils.TimeExpiredPoolCache;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 
 @Aspect

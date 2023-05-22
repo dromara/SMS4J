@@ -1,5 +1,6 @@
 package org.dromara.sms4j.autoimmit.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.smsProxy.SmsInvocationHandler;
 import org.dromara.sms4j.autoimmit.aop.AopAdvice;
 import org.dromara.sms4j.autoimmit.aop.RestrictedProcessImpl;
@@ -12,7 +13,6 @@ import org.dromara.sms4j.comm.config.SmsSqlConfig;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.factory.BeanFactory;
-import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.core.SupplierSqlConfig;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;

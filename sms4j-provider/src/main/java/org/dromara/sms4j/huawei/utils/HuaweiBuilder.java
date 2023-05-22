@@ -127,8 +127,9 @@ public class HuaweiBuilder {
             stringBuffer.append(s);
             stringBuffer.append("\"");
             stringBuffer.append(",");
+            stringBuffer.append("\"");
         }
-        stringBuffer.deleteCharAt(stringBuffer.length()-1);
+        stringBuffer.delete(stringBuffer.length()-3,stringBuffer.length()-1);
         stringBuffer.append("]");
         return stringBuffer.toString();
     }

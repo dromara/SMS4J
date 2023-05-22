@@ -49,7 +49,7 @@
     </scm>
 
     <properties>
-        <revision>2.1.0</revision>
+        <revision>2.1.0.SNAPSHOT</revision>
 
         <spring.boot.version>2.7.11</spring.boot.version>
         <solon.version>2.2.0</solon.version>

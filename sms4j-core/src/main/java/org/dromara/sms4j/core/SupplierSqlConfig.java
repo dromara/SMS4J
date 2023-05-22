@@ -2,7 +2,7 @@ package org.dromara.sms4j.core;
 
 import org.dromara.sms4j.aliyun.config.AlibabaConfig;
 import org.dromara.sms4j.cloopen.config.CloopenConfig;
-import org.dromara.sms4j.comm.enumerate.SupplierType;
+import org.dromara.sms4j.provider.enumerate.SupplierType;
 import org.dromara.sms4j.comm.utils.JDBCTool;
 import org.dromara.sms4j.comm.utils.SmsUtil;
 import org.dromara.sms4j.core.config.SupplierFactory;

@@ -1,6 +1,8 @@
 package org.dromara.sms4j.autoimmit.config;
 
+import org.dromara.sms4j.api.smsProxy.SmsInvocationHandler;
 import org.dromara.sms4j.autoimmit.aop.AopAdvice;
+import org.dromara.sms4j.autoimmit.aop.RestrictedProcessImpl;
 import org.dromara.sms4j.autoimmit.utils.ConfigUtil;
 import org.dromara.sms4j.autoimmit.utils.RedisUtils;
 import org.dromara.sms4j.autoimmit.utils.SpringUtil;
@@ -9,8 +11,6 @@ import org.dromara.sms4j.comm.config.SmsConfig;
 import org.dromara.sms4j.comm.config.SmsSqlConfig;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
-import org.dromara.sms4j.comm.enumerate.ConfigType;
-import org.dromara.sms4j.comm.enumerate.SupplierType;
 import org.dromara.sms4j.comm.factory.BeanFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.core.SupplierSqlConfig;
@@ -72,11 +72,11 @@ public class SmsAutowiredConfig {
         return new SupplierSqlConfig();
     }
 
-
     void init(){
         /* 如果配置中启用了redis，则注入redis工具*/
         if (BeanFactory.getSmsConfig().getRedisCache()){
             springUtil.createBean(RedisUtils.class);
+            SmsInvocationHandler.setRestrictedProcess(new RestrictedProcessImpl());
             log.debug("The redis cache is enabled for sms4j");
         }
         /* 如果启用了短信限制，则注入AOP组件*/

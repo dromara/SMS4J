@@ -19,7 +19,6 @@ import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.dromara.sms4j.comm.utils.SmsUtil.listToString;
 
 /**
  * @author Richard
@@ -28,7 +27,7 @@ import static org.dromara.sms4j.comm.utils.SmsUtil.listToString;
 @Slf4j
 public class EmaySmsImpl extends AbstractSmsBlend {
     public EmaySmsImpl(EmayConfig config, Executor pool, DelayedTime delayed) {
-        super(pool,delayed);
+        super(pool, delayed);
         this.config = config;
     }
 
@@ -65,7 +64,7 @@ public class EmaySmsImpl extends AbstractSmsBlend {
         if (phones.size() > 500) {
             throw new SmsBlendException("单次发送超过最大发送上限，建议每次群发短信人数低于500");
         }
-        return sendMessage(listToString(phones), message);
+        return sendMessage(SmsUtil.listToString(phones), message);
     }
 
     @Override
@@ -78,7 +77,7 @@ public class EmaySmsImpl extends AbstractSmsBlend {
         for (Map.Entry<String, String> entry : messages.entrySet()) {
             list.add(entry.getValue());
         }
-        return sendMessage(listToString(phones), EmayBuilder.listToString(list));
+        return sendMessage(SmsUtil.listToString(phones), EmayBuilder.listToString(list));
     }
 
     private SmsResponse getSendResponse(Map<String, Object> body, String requestUrl) {
@@ -101,7 +100,7 @@ public class EmaySmsImpl extends AbstractSmsBlend {
 
     private static SmsResponse getSmsResponse(JSONObject execute) {
         SmsResponse smsResponse = new SmsResponse();
-        if (execute == null ){
+        if (execute == null) {
             smsResponse.setErrorCode("500");
             smsResponse.setErrMessage("emay send sms response is null.check param");
             return smsResponse;

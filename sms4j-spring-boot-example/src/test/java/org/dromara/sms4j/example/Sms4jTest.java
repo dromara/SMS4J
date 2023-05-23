@@ -36,7 +36,7 @@ class Sms4jTest {
 
     @Test
     public void alibabaSmsTest() {
-        String phone = "13546606929";
+        String phone = "";
         if (StrUtil.isBlank(phone)) {
             return;
         }

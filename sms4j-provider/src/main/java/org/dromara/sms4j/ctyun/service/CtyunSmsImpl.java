@@ -1,5 +1,6 @@
 package org.dromara.sms4j.ctyun.service;
 
+import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.AbstractSmsBlend;
@@ -7,12 +8,12 @@ import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
+import org.dromara.sms4j.comm.utils.SmsUtil;
 import org.dromara.sms4j.ctyun.config.CtyunConfig;
 import org.dromara.sms4j.ctyun.utils.CtyunUtils;
 
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -61,7 +62,7 @@ public class CtyunSmsImpl extends AbstractSmsBlend {
     @Restricted
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
         String messageStr = JSONUtil.toJsonStr(messages);
-        return getSmsResponse(arrayToString(phones), messageStr, templateId);
+        return getSmsResponse(SmsUtil.arrayToString(phones), messageStr, templateId);
     }
 
     private SmsResponse getSmsResponse(String phone, String message, String templateId) {
@@ -80,30 +81,21 @@ public class CtyunSmsImpl extends AbstractSmsBlend {
                 .addHeader(CtyunUtils.signHeader(paramStr, ctyunConfig.getAccessKeyId(), ctyunConfig.getAccessKeySecret()))
                 .addBody(paramStr)
                 .onSuccess(((data, req, res) -> {
-                    Map map = res.get(Map.class);
-                    smsResponse.set(getResponse(map));
+                    smsResponse.set(this.getResponse(res.get(JSONObject.class)));
                 }))
                 .onError((ex, req, res) -> {
-                    Map map = res.get(Map.class);
-                    smsResponse.set(getResponse(map));
+                    smsResponse.set(this.getResponse(res.get(JSONObject.class)));
                 })
                 .execute();
         return smsResponse.get();
     }
 
-    private static SmsResponse getResponse(Map map) {
+    private SmsResponse getResponse(JSONObject resJson) {
         SmsResponse smsResponse = new SmsResponse();
-        smsResponse.setCode(String.valueOf(map.get("code")));
-        smsResponse.setMessage((String) map.get("message"));
-        smsResponse.setBizId((String) map.get("requestId"));
+        smsResponse.setCode(resJson.getStr("code"));
+        smsResponse.setMessage(resJson.getStr("message"));
+        smsResponse.setBizId(resJson.getStr("requestId"));
         return smsResponse;
     }
 
-    private String arrayToString(List<String> list) {
-        StringBuilder sb = new StringBuilder();
-        for (String s : list) {
-            sb.append(",").append("+86").append(s);
-        }
-        return sb.substring(1);
-    }
 }

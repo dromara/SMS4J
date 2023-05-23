@@ -9,6 +9,7 @@ import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
+import org.dromara.sms4j.comm.utils.SmsUtil;
 import org.dromara.sms4j.tencent.config.TencentConfig;
 import org.dromara.sms4j.tencent.utils.TencentUtils;
 
@@ -18,13 +19,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
+/**
+ * @author wind
+ */
 @Slf4j
 public class TencentSmsImpl extends AbstractSmsBlend {
 
     private TencentConfig tencentSmsConfig;
 
     public TencentSmsImpl(TencentConfig tencentSmsConfig, Executor pool, DelayedTime delayed) {
-        super(pool,delayed);
+        super(pool, delayed);
         this.tencentSmsConfig = tencentSmsConfig;
     }
 
@@ -69,7 +73,7 @@ public class TencentSmsImpl extends AbstractSmsBlend {
             list.add(entry.getValue());
         }
         String[] s = new String[list.size()];
-        return getSmsResponse(arrayToString(phones), list.toArray(s), templateId);
+        return getSmsResponse(SmsUtil.listToArray(phones), list.toArray(s), templateId);
     }
 
     private SmsResponse getSmsResponse(String[] phones, String[] messages, String templateId) {
@@ -114,12 +118,4 @@ public class TencentSmsImpl extends AbstractSmsBlend {
         return smsResponse;
     }
 
-    private String[] arrayToString(List<String> list) {
-        String[] strs = new String[list.size()];
-        List<String> toStr = new ArrayList<>();
-        for (String s : list) {
-            toStr.add("+86" + s);
-        }
-        return toStr.toArray(strs);
-    }
 }

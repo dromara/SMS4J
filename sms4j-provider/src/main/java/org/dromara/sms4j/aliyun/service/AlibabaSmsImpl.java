@@ -1,5 +1,6 @@
 package org.dromara.sms4j.aliyun.service;
 
+import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.aliyun.config.AlibabaConfig;
@@ -9,10 +10,10 @@ import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
+import org.dromara.sms4j.comm.utils.SmsUtil;
 
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -67,7 +68,7 @@ public class AlibabaSmsImpl extends AbstractSmsBlend {
     @Restricted
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
         String messageStr = JSONUtil.toJsonStr(messages);
-        return getSmsResponse(arrayToString(phones), messageStr, templateId);
+        return getSmsResponse(SmsUtil.arrayToString(phones), messageStr, templateId);
     }
 
     private SmsResponse getSmsResponse(String phone, String message, String templateId) {
@@ -86,38 +87,28 @@ public class AlibabaSmsImpl extends AbstractSmsBlend {
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .addBody(paramStr)
                 .onSuccess(((data, req, res) -> {
-                    Map map = res.get(Map.class);
-                    reference.set(getResponse(map));
+                    reference.set(this.getResponse(res.get(JSONObject.class)));
                 }))
                 .onError((ex, req, res) -> {
-                    Map map = res.get(Map.class);
-                    reference.set(getResponse(map));
+                    reference.set(this.getResponse(res.get(JSONObject.class)));
                 })
                 .execute();
         return reference.get();
     }
 
-    private static SmsResponse getResponse(Map map) {
+    private SmsResponse getResponse(JSONObject resJson) {
         SmsResponse smsResponse = new SmsResponse();
-        if (map == null) {
+        if (resJson == null) {
             smsResponse.setErrorCode("500");
             smsResponse.setErrMessage("aliyun send sms response is null.check param");
             return smsResponse;
         }
-        smsResponse.setCode((String) map.get("Code"));
-        smsResponse.setMessage((String) map.get("Message"));
+        smsResponse.setCode(resJson.getStr("Code"));
+        smsResponse.setMessage(resJson.getStr("Message"));
         if ("OK".equals(smsResponse.getCode())) {
-            smsResponse.setBizId((String) map.get("BizId"));
+            smsResponse.setBizId(resJson.getStr("BizId"));
         }
         return smsResponse;
     }
 
-
-    private String arrayToString(List<String> list) {
-        StringBuilder sb = new StringBuilder();
-        for (String s : list) {
-            sb.append(",").append("+86").append(s);
-        }
-        return sb.substring(1);
-    }
 }

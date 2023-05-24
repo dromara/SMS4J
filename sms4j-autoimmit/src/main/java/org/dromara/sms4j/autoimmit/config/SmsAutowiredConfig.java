@@ -2,7 +2,6 @@ package org.dromara.sms4j.autoimmit.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.smsProxy.SmsInvocationHandler;
-import org.dromara.sms4j.autoimmit.aop.AopAdvice;
 import org.dromara.sms4j.autoimmit.aop.RestrictedProcessImpl;
 import org.dromara.sms4j.autoimmit.utils.ConfigUtil;
 import org.dromara.sms4j.autoimmit.utils.RedisUtils;
@@ -80,10 +79,10 @@ public class SmsAutowiredConfig {
             log.debug("The redis cache is enabled for sms4j");
         }
         /* 如果启用了短信限制，则注入AOP组件*/
-        if (BeanFactory.getSmsConfig().getRestricted()){
-            springUtil.createBean(AopAdvice.class);
-            log.debug("SMS restriction is enabled");
-        }
+//        if (BeanFactory.getSmsConfig().getRestricted()){
+//            springUtil.createBean(AopAdvice.class);
+//            log.debug("SMS restriction is enabled");
+//        }
         //打印banner
         if (BeanFactory.getSmsConfig().getIsPrint()){
             SmsBanner.PrintBanner(Constant.VERSION);

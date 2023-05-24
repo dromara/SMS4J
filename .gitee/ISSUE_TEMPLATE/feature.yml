@@ -1,12 +1,12 @@
 name: 功能建议
-description: 对sms4j提出一个功能建议
+description: 对本项目提出一个功能建议
 title: "[功能建议]: "
 labels: ["enhancement"]
 body:
   - type: markdown
     attributes:
       value: |
-        感谢提出功能建议，我们将仔细考虑！如果你的建议被选中，我们将会有成员进行认领，并标记为进行中
+        感谢提出功能建议，我们将仔细考虑！
   - type: textarea
     id: related-problem
     attributes:

@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        感谢提出功能建议，我们将仔细考虑！
+        感谢提出功能建议，我们将仔细考虑！请持续关注该issues，在加入计划后我们会有贡献者设置为负责人，同时状态成为进行中。
   - type: textarea
     id: related-problem
     attributes:

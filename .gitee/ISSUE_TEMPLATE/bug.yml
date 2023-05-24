@@ -7,12 +7,12 @@ body:
     attributes:
       value: |
         感谢对项目的支持与关注。在提出问题之前，请确保您已查看相关开发或使用文档：
-        - https://www.herodotus
+        - https://wind.kim
   - type: checkboxes
     attributes:
       label: 这个问题是否已经存在？
       options:
-        - label: 我已经搜索过现有的问题 (https://gitee.com/dromara/dante-cloud/issues)
+        - label: 我已经搜索过现有的问题 (https://gitee.com/dromara/sms4j/issues)
           required: true
   - type: textarea
     attributes:
@@ -26,8 +26,8 @@ body:
       required: true
   - type: textarea
     attributes:
-      label: 预期结果
-      description: 请告诉我们你预期会发生什么。
+      label: 错误堆栈
+      description: 请将错误堆栈抹除关键信息后贴到这里。
     validations:
       required: true
   - type: textarea
@@ -48,7 +48,14 @@ body:
       label: 版本
       description: 你当前正在使用我们软件的哪个版本/分支？
       options:
-        - 3.1.X
-        - 2.7.X
+        - 1.0.1
+        - 1.0.2
+        - 1.0.3
+        - 1.0.4
+        - 2.0.0
+        - 2.0.1
+        - 2.0.2
+        - 2.0.3
+        - 2.1.0
     validations:
       required: true

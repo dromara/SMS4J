@@ -1,25 +1,21 @@
 package org.dromara.sms4j.yunpian.config;
 
-import lombok.Builder;
 import lombok.Data;
-
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
+import org.dromara.sms4j.api.universal.SupplierConfig;
+import org.dromara.sms4j.comm.config.BaseConfig;
 @Data
-@Builder
-public class YunpianConfig {
-    /**
-     * 账号唯一标识
-     */
-    private String apikey;
+@SuperBuilder
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+public class YunpianConfig extends BaseConfig implements SupplierConfig {
 
     /**
      * 短信发送后将向这个地址推送(运营商返回的)发送报告
      */
     private String callbackUrl;
-
-    /**
-     * 模板Id
-     */
-    private String templateId;
 
     /**
      * 模板变量名称

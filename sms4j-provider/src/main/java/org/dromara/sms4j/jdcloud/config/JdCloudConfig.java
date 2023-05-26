@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.comm.config.BaseConfig;
 
 /**
@@ -17,7 +18,7 @@ import org.dromara.sms4j.comm.config.BaseConfig;
 @SuperBuilder
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class JdCloudConfig extends BaseConfig {
+public class JdCloudConfig extends BaseConfig implements SupplierConfig {
 
     /**
      * 地域信息

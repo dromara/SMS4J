@@ -1,17 +1,17 @@
 package org.dromara.sms4j.autoimmit.config;
 
-import org.dromara.sms4j.autoimmit.aop.AopAdvice;
+import lombok.extern.slf4j.Slf4j;
+import org.dromara.sms4j.api.smsProxy.SmsInvocationHandler;
+import org.dromara.sms4j.autoimmit.aop.RestrictedProcessImpl;
 import org.dromara.sms4j.autoimmit.utils.ConfigUtil;
 import org.dromara.sms4j.autoimmit.utils.RedisUtils;
 import org.dromara.sms4j.autoimmit.utils.SpringUtil;
 import org.dromara.sms4j.comm.config.SmsBanner;
 import org.dromara.sms4j.comm.config.SmsConfig;
 import org.dromara.sms4j.comm.config.SmsSqlConfig;
+import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
-import org.dromara.sms4j.comm.enumerate.ConfigType;
-import org.dromara.sms4j.comm.enumerate.SupplierType;
 import org.dromara.sms4j.comm.factory.BeanFactory;
-import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.core.SupplierSqlConfig;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -71,21 +71,21 @@ public class SmsAutowiredConfig {
         return new SupplierSqlConfig();
     }
 
-
     void init(){
         /* 如果配置中启用了redis，则注入redis工具*/
         if (BeanFactory.getSmsConfig().getRedisCache()){
             springUtil.createBean(RedisUtils.class);
-            log.debug("The redis cache is enabled for sms-aggregation");
+            SmsInvocationHandler.setRestrictedProcess(new RestrictedProcessImpl());
+            log.debug("The redis cache is enabled for sms4j");
         }
         /* 如果启用了短信限制，则注入AOP组件*/
-        if (BeanFactory.getSmsConfig().getRestricted()){
-            springUtil.createBean(AopAdvice.class);
-            log.debug("SMS restriction is enabled");
-        }
+//        if (BeanFactory.getSmsConfig().getRestricted()){
+//            springUtil.createBean(AopAdvice.class);
+//            log.debug("SMS restriction is enabled");
+//        }
         //打印banner
         if (BeanFactory.getSmsConfig().getIsPrint()){
-            SmsBanner.PrintBanner("V 2.0.1");
+            SmsBanner.PrintBanner(Constant.VERSION);
         }
     }
 }

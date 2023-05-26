@@ -1,9 +1,6 @@
 package org.dromara.sms4j.comm.constant;
 
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-
 /**
  * Constant
  * <p> 短信应用常量
@@ -12,6 +9,8 @@ import java.nio.charset.StandardCharsets;
  * 2023/3/31  19:33
  **/
 public abstract class Constant {
+    /** 项目版本号*/
+    public static final String VERSION = "V 2.1.0";
 
     /**
      * 用于格式化鉴权头域,给"Authorization"参数赋值

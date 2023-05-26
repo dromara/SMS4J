@@ -4,8 +4,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.IdUtil;
 import com.dtflys.forest.Forest;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.sms4j.api.SmsBlend;
-import org.dromara.sms4j.api.callback.CallBack;
+import org.dromara.sms4j.api.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.cloopen.api.CloopenRestApi;
 import org.dromara.sms4j.cloopen.config.CloopenConfig;
@@ -13,8 +12,10 @@ import org.dromara.sms4j.cloopen.util.CloopenHelper;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executor;
 
 /**
@@ -24,20 +25,15 @@ import java.util.concurrent.Executor;
  * @since 2023/4/10 22:10
  */
 @Slf4j
-public class CloopenSmsImpl implements SmsBlend {
+public class CloopenSmsImpl extends AbstractSmsBlend {
 
     private final CloopenRestApi restApi;
 
     private final CloopenConfig config;
 
-    private final Executor pool;
-
-    private final DelayedTime delayed;
-
     public CloopenSmsImpl(CloopenConfig config, Executor pool, DelayedTime delayed) {
+        super(pool,delayed);
         this.config = config;
-        this.pool = pool;
-        this.delayed = delayed;
         restApi = Forest.client(CloopenRestApi.class);
     }
 
@@ -71,75 +67,5 @@ public class CloopenSmsImpl implements SmsBlend {
         paramMap.put("templateId", templateId);
         paramMap.put("datas", messages.keySet().stream().map(messages::get).toArray(String[]::new));
         return helper.request(restApi::sendSms, paramMap);
-    }
-
-    @Override
-    @Restricted
-    public void sendMessageAsync(String phone, String message, CallBack callBack) {
-        CompletableFuture<SmsResponse> smsResponseCompletableFuture = CompletableFuture.supplyAsync(() -> sendMessage(phone, message), pool);
-        smsResponseCompletableFuture.thenAcceptAsync(callBack::callBack);
-    }
-
-    @Override
-    @Restricted
-    public void sendMessageAsync(String phone, String message) {
-        pool.execute(() -> sendMessage(phone, message));
-    }
-
-    @Override
-    @Restricted
-    public void sendMessageAsync(String phone, String templateId, LinkedHashMap<String, String> messages, CallBack callBack) {
-        CompletableFuture<SmsResponse> smsResponseCompletableFuture = CompletableFuture.supplyAsync(() -> sendMessage(phone,templateId, messages), pool);
-        smsResponseCompletableFuture.thenAcceptAsync(callBack::callBack);
-    }
-
-    @Override
-    @Restricted
-    public void sendMessageAsync(String phone, String templateId, LinkedHashMap<String, String> messages) {
-        pool.execute(() -> sendMessage(phone, templateId, messages));
-    }
-
-    @Override
-    @Restricted
-    public void delayedMessage(String phone, String message, Long delayedTime) {
-        this.delayed.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                sendMessage(phone, message);
-            }
-        }, delayedTime);
-    }
-
-    @Override
-    @Restricted
-    public void delayedMessage(String phone, String templateId, LinkedHashMap<String, String> messages, Long delayedTime) {
-        this.delayed.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                sendMessage(phone, templateId, messages);
-            }
-        }, delayedTime);
-    }
-
-    @Override
-    @Restricted
-    public void delayMassTexting(List<String> phones, String message, Long delayedTime) {
-        this.delayed.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                massTexting(phones, message);
-            }
-        }, delayedTime);
-    }
-
-    @Override
-    @Restricted
-    public void delayMassTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages, Long delayedTime) {
-        this.delayed.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                massTexting(phones, templateId, messages);
-            }
-        }, delayedTime);
     }
 }

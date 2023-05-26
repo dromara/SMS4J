@@ -58,16 +58,14 @@ public class TencentUtils {
      */
     public static String generateSignature(TencentConfig tencentConfig, String templateId, String[] messages, String[] phones,
                                            String timestamp) throws Exception {
-        // ************* 步骤 1：拼接规范请求串 *************
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         String date = sdf.format(new Date(Long.parseLong(timestamp + "000")));
         String canonicalUri = "/";
         String canonicalQueryString = "";
-        String canonicalHeaders = "content-type:application/json; charset=utf-8\n" + "host:" + tencentConfig.getRequestUrl() + "\n";
+        String canonicalHeaders = "content-type:application/json; charset=utf-8\nhost:" + tencentConfig.getRequestUrl() + "\n";
         String signedHeaders = "content-type;host";
-        HashMap<String, Object> params = new HashMap<>();
-        // 实际调用需要更新参数，这里仅作为演示签名验证通过的例子
+        Map<String, Object> params = new HashMap<>();
         params.put("PhoneNumberSet", phones);
         params.put("SmsSdkAppId", tencentConfig.getSdkAppId());
         params.put("SignName", tencentConfig.getSignature());
@@ -75,20 +73,15 @@ public class TencentUtils {
         params.put("TemplateParamSet", messages);
         String payload = JSON.toJSONString(params);
         String hashedRequestPayload = sha256Hex(payload);
-        String canonicalRequest = HTTP_REQUEST_METHOD + "\n" + canonicalUri + "\n" + canonicalQueryString + "\n"
-                + canonicalHeaders + "\n" + signedHeaders + "\n" + hashedRequestPayload;
-        // ************* 步骤 2：拼接待签名字符串 *************
-        String credentialScope = date + "/" + tencentConfig.getService() + "/" + "tc3_request";
+        String canonicalRequest = HTTP_REQUEST_METHOD + "\n" + canonicalUri + "\n" + canonicalQueryString + "\n" + canonicalHeaders + "\n" + signedHeaders + "\n" + hashedRequestPayload;
+        String credentialScope = date + "/" + tencentConfig.getService() + "/tc3_request";
         String hashedCanonicalRequest = sha256Hex(canonicalRequest);
         String stringToSign = ALGORITHM + "\n" + timestamp + "\n" + credentialScope + "\n" + hashedCanonicalRequest;
-        // ************* 步骤 3：计算签名 *************
         byte[] secretDate = hmac256(("TC3" + tencentConfig.getAccessKeySecret()).getBytes(StandardCharsets.UTF_8), date);
         byte[] secretService = hmac256(secretDate, tencentConfig.getService());
         byte[] secretSigning = hmac256(secretService, "tc3_request");
         String signature = DatatypeConverter.printHexBinary(hmac256(secretSigning, stringToSign)).toLowerCase();
-        // ************* 步骤 4：拼接 Authorization *************
-        return ALGORITHM + " " + "Credential=" + tencentConfig.getAccessKeyId() + "/" + credentialScope + ", "
-                + "SignedHeaders=" + signedHeaders + ", " + "Signature=" + signature;
+        return ALGORITHM + " Credential=" + tencentConfig.getAccessKeyId() + "/" + credentialScope + ", SignedHeaders=" + signedHeaders + ", Signature=" + signature;
     }
 
     /**

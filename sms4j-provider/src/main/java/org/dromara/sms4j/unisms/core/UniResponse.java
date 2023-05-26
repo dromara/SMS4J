@@ -1,7 +1,9 @@
 package org.dromara.sms4j.unisms.core;
 
-import com.alibaba.fastjson.JSONObject;
+import cn.hutool.json.JSONObject;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
+
+import java.util.Objects;
 
 
 public class UniResponse {
@@ -20,22 +22,23 @@ public class UniResponse {
      */
     public UniResponse(final JSONObject response) throws SmsBlendException {
         JSONObject body = response.getJSONObject("data");
-        this.status = body.getJSONArray("messages").getJSONObject(0).getString("status");
-        this.requestId = body.getJSONArray("messages").getJSONObject(0).getString("id");
-        this.raw = body;
-
-        if (this.status != "400") {
-            String code = response.getString("code");
-            String message = body.getJSONArray("messages").getString(0);
-            if (!"0".equals(code)) {
-                throw new SmsBlendException(message, code, this.requestId);
-            }
-            this.code = code;
-            this.message = message;
+        if (!Objects.isNull(body)) {
+            this.status = body.getJSONArray("messages").getJSONObject(0).getStr("status");
+            this.requestId = body.getJSONArray("messages").getJSONObject(0).getStr("id");
+            this.raw = body;
             this.data = body;
         }
-        else {
-            throw new SmsBlendException(response.getString("message"), "-1");
+        if (this.status != "400") {
+            String code = response.getStr("code");
+            if (!"0".equals(code)) {
+                this.message = response.getStr("message");
+            } else {
+                this.message = body.getJSONArray("messages").getStr(0);
+                ;
+            }
+            this.code = code;
+        } else {
+            throw new SmsBlendException(response.getStr("message"), "-1");
         }
     }
 

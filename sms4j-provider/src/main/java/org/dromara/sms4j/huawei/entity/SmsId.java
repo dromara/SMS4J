@@ -2,8 +2,6 @@ package org.dromara.sms4j.huawei.entity;
 
 import lombok.Data;
 
-import java.util.Date;
-
 /**
  * SmsId
  * <p> 短信ID列表

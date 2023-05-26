@@ -1,24 +1,21 @@
 package org.dromara.sms4j.aliyun.service;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.dtflys.forest.config.ForestConfiguration;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.aliyun.config.AlibabaConfig;
 import org.dromara.sms4j.aliyun.utils.AliyunUtils;
-import org.dromara.sms4j.api.SmsBlend;
-import org.dromara.sms4j.api.callback.CallBack;
+import org.dromara.sms4j.api.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
-import org.dromara.sms4j.comm.factory.BeanFactory;
+import org.dromara.sms4j.comm.utils.SmsUtil;
 
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.TimerTask;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * <p>类名: AlibabaSmsImpl
@@ -29,15 +26,9 @@ import java.util.concurrent.Executor;
  **/
 
 @Slf4j
-public class AlibabaSmsImpl implements SmsBlend {
+public class AlibabaSmsImpl extends AbstractSmsBlend {
 
     private final AlibabaConfig alibabaSmsConfig;
-
-    private final Executor pool;
-
-    private final DelayedTime delayed;
-
-    private final ForestConfiguration http = BeanFactory.getForestConfiguration();
 
     /**
      * AlibabaSmsImpl
@@ -45,11 +36,9 @@ public class AlibabaSmsImpl implements SmsBlend {
      *
      * @author :Wind
      */
-
     public AlibabaSmsImpl(AlibabaConfig alibabaSmsConfig, Executor pool, DelayedTime delayedTime) {
+        super(pool, delayedTime);
         this.alibabaSmsConfig = alibabaSmsConfig;
-        this.pool = pool;
-        this.delayed = delayedTime;
     }
 
     @Override
@@ -63,7 +52,7 @@ public class AlibabaSmsImpl implements SmsBlend {
     @Override
     @Restricted
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
-        String messageStr = JSON.toJSONString(messages);
+        String messageStr = JSONUtil.toJsonStr(messages);
         return getSmsResponse(phone, messageStr, templateId);
     }
 
@@ -78,12 +67,12 @@ public class AlibabaSmsImpl implements SmsBlend {
     @Override
     @Restricted
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
-        String messageStr = JSON.toJSONString(messages);
-        return getSmsResponse(arrayToString(phones), messageStr, templateId);
+        String messageStr = JSONUtil.toJsonStr(messages);
+        return getSmsResponse(SmsUtil.arrayToString(phones), messageStr, templateId);
     }
 
     private SmsResponse getSmsResponse(String phone, String message, String templateId) {
-        SmsResponse smsResponse = new SmsResponse();
+        AtomicReference<SmsResponse> reference = new AtomicReference<>();
         String requestUrl;
         String paramStr;
         try {
@@ -94,100 +83,32 @@ public class AlibabaSmsImpl implements SmsBlend {
             throw new SmsBlendException(e.getMessage());
         }
         log.debug("requestUrl {}", requestUrl);
-        http.post(requestUrl)
+        super.http.post(requestUrl)
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .addBody(paramStr)
                 .onSuccess(((data, req, res) -> {
-                    JSONObject jsonBody = res.get(JSONObject.class);
-                    log.info(jsonBody.toJSONString());
+                    reference.set(this.getResponse(res.get(JSONObject.class)));
                 }))
                 .onError((ex, req, res) -> {
-                    JSONObject jsonBody = res.get(JSONObject.class);
-                    log.info(jsonBody.toJSONString());
+                    reference.set(this.getResponse(res.get(JSONObject.class)));
                 })
                 .execute();
+        return reference.get();
+    }
+
+    private SmsResponse getResponse(JSONObject resJson) {
+        SmsResponse smsResponse = new SmsResponse();
+        if (resJson == null) {
+            smsResponse.setErrorCode("500");
+            smsResponse.setErrMessage("aliyun send sms response is null.check param");
+            return smsResponse;
+        }
+        smsResponse.setCode(resJson.getStr("Code"));
+        smsResponse.setMessage(resJson.getStr("Message"));
+        if ("OK".equals(smsResponse.getCode())) {
+            smsResponse.setBizId(resJson.getStr("BizId"));
+        }
         return smsResponse;
     }
 
-    @Override
-    @Restricted
-    public void sendMessageAsync(String phone, String message, CallBack callBack) {
-        CompletableFuture<SmsResponse> smsResponseCompletableFuture = CompletableFuture.supplyAsync(() -> sendMessage(phone, message), pool);
-        smsResponseCompletableFuture.thenAcceptAsync(callBack::callBack);
-    }
-
-    @Override
-    @Restricted
-    public void sendMessageAsync(String phone, String message) {
-        pool.execute(() -> {
-            sendMessage(phone, message);
-        });
-    }
-
-    @Override
-    @Restricted
-    public void sendMessageAsync(String phone, String templateId, LinkedHashMap<String, String> messages, CallBack callBack) {
-        CompletableFuture<SmsResponse> smsResponseCompletableFuture = CompletableFuture.supplyAsync(() -> sendMessage(phone,templateId, messages), pool);
-        smsResponseCompletableFuture.thenAcceptAsync(callBack::callBack);
-    }
-
-    @Override
-    @Restricted
-    public void sendMessageAsync(String phone, String templateId, LinkedHashMap<String, String> messages) {
-        pool.execute(() -> {
-            sendMessage(phone, templateId, messages);
-        });
-    }
-
-    @Override
-    @Restricted
-    public void delayedMessage(String phone, String message, Long delayedTime) {
-        this.delayed.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                sendMessage(phone, message);
-            }
-        }, delayedTime);
-    }
-
-    @Override
-    @Restricted
-    public void delayedMessage(String phone, String templateId, LinkedHashMap<String, String> messages, Long delayedTime) {
-        this.delayed.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                sendMessage(phone, templateId, messages);
-            }
-        }, delayedTime);
-    }
-
-    @Override
-    @Restricted
-    public void delayMassTexting(List<String> phones, String message, Long delayedTime) {
-        this.delayed.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                massTexting(phones, message);
-            }
-        }, delayedTime);
-    }
-
-    @Override
-    @Restricted
-    public void delayMassTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages, Long delayedTime) {
-        this.delayed.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                massTexting(phones, templateId, messages);
-            }
-        }, delayedTime);
-    }
-
-    private String arrayToString(List<String> list) {
-        StringBuilder sb = new StringBuilder();
-        for (String s : list) {
-            sb.append(",").append("+86").append(s);
-        }
-        return sb.substring(1);
-    }
 }

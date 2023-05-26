@@ -1,40 +1,46 @@
 package org.dromara.sms4j.yunpian.service;
 
-import com.alibaba.fastjson.JSONObject;
-import com.dtflys.forest.config.ForestConfiguration;
-import org.dromara.sms4j.api.SmsBlend;
-import org.dromara.sms4j.api.callback.CallBack;
+import cn.hutool.json.JSONObject;
+import org.dromara.sms4j.api.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
+import org.dromara.sms4j.comm.utils.SmsUtil;
 import org.dromara.sms4j.yunpian.config.YunpianConfig;
 
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.dromara.sms4j.comm.utils.SmsUtil.listToString;
+/**
+ * @author wind
+ */
+public class YunPianSmsImpl extends AbstractSmsBlend {
 
-public class YunPianSmsImpl implements SmsBlend {
-
-    private Executor pool;
-
-    private DelayedTime delayed;
+    public YunPianSmsImpl(Executor pool, DelayedTime delayed, YunpianConfig config) {
+        super(pool, delayed);
+        this.config = config;
+    }
 
     private YunpianConfig config;
 
-    private ForestConfiguration http;
-
     private static SmsResponse getSmsResponse(JSONObject execute) {
         SmsResponse smsResponse = new SmsResponse();
-        smsResponse.setCode(execute.getString("code"));
-        smsResponse.setMessage(execute.getString("msg"));
-        smsResponse.setBizId(execute.getString("sid"));
-        if (execute.getInteger("code") != 0) {
-            smsResponse.setErrMessage(execute.getString("msg"));
+        if (execute == null) {
+            smsResponse.setErrorCode("500");
+            smsResponse.setErrMessage("yunpian send sms response is null.check param");
+            return smsResponse;
+        }
+        smsResponse.setCode(execute.getStr("code"));
+        smsResponse.setMessage(execute.getStr("msg"));
+        smsResponse.setBizId(execute.getStr("sid"));
+        if (execute.getInt("code") != 0) {
+            smsResponse.setErrMessage(execute.getStr("msg"));
         }
         smsResponse.setData(execute);
         return smsResponse;
@@ -50,7 +56,7 @@ public class YunPianSmsImpl implements SmsBlend {
     @Override
     @Restricted
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
-        Map<String, String> body = setBody(phone, "", messages,templateId);
+        Map<String, String> body = setBody(phone, "", messages, templateId);
         return getSendResponse(body);
     }
 
@@ -60,7 +66,7 @@ public class YunPianSmsImpl implements SmsBlend {
         if (phones.size() > 1000) {
             throw new SmsBlendException("单次发送超过最大发送上限，建议每次群发短信人数低于1000");
         }
-        return sendMessage(listToString(phones), message);
+        return sendMessage(SmsUtil.listToString(phones), message);
     }
 
     @Override
@@ -69,79 +75,7 @@ public class YunPianSmsImpl implements SmsBlend {
         if (phones.size() > 1000) {
             throw new SmsBlendException("单次发送超过最大发送上限，建议每次群发短信人数低于1000");
         }
-        return sendMessage(listToString(phones), templateId, messages);
-    }
-
-    @Override
-    @Restricted
-    public void sendMessageAsync(String phone, String message, CallBack callBack) {
-        CompletableFuture<SmsResponse> smsResponseCompletableFuture = CompletableFuture.supplyAsync(() -> sendMessage(phone, message), pool);
-        smsResponseCompletableFuture.thenAcceptAsync(callBack::callBack);
-    }
-
-    @Override
-    @Restricted
-    public void sendMessageAsync(String phone, String message) {
-        pool.execute(() -> sendMessage(phone, message));
-    }
-
-    @Override
-    @Restricted
-    public void sendMessageAsync(String phone, String templateId, LinkedHashMap<String, String> messages, CallBack callBack) {
-        CompletableFuture<SmsResponse> smsResponseCompletableFuture = CompletableFuture.supplyAsync(() -> sendMessage(phone, templateId, messages), pool);
-        smsResponseCompletableFuture.thenAcceptAsync(callBack::callBack);
-    }
-
-    @Override
-    @Restricted
-    public void sendMessageAsync(String phone, String templateId, LinkedHashMap<String, String> messages) {
-        pool.execute(() -> {
-            sendMessage(phone, templateId, messages);
-        });
-    }
-
-    @Override
-    @Restricted
-    public void delayedMessage(String phone, String message, Long delayedTime) {
-        this.delayed.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                sendMessage(phone, message);
-            }
-        }, delayedTime);
-    }
-
-    @Override
-    @Restricted
-    public void delayedMessage(String phone, String templateId, LinkedHashMap<String, String> messages, Long delayedTime) {
-        this.delayed.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                sendMessage(phone, templateId, messages);
-            }
-        }, delayedTime);
-    }
-
-    @Override
-    @Restricted
-    public void delayMassTexting(List<String> phones, String message, Long delayedTime) {
-        this.delayed.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                massTexting(phones, message);
-            }
-        }, delayedTime);
-    }
-
-    @Override
-    @Restricted
-    public void delayMassTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages, Long delayedTime) {
-        this.delayed.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                massTexting(phones, templateId, messages);
-            }
-        }, delayedTime);
+        return sendMessage(SmsUtil.listToString(phones), templateId, messages);
     }
 
     private String formattingMap(Map<String, String> messages) {
@@ -165,11 +99,12 @@ public class YunPianSmsImpl implements SmsBlend {
             message.put(config.getTemplateName(), mes);
         }
         Map<String, String> body = new HashMap<>();
-        body.put("apikey", config.getApikey());
+        body.put("apikey", config.getAccessKeyId());
         body.put("mobile", phone);
         body.put("tpl_id", tplId);
         body.put("tpl_value", formattingMap(message));
-        if (!config.getCallbackUrl().isEmpty()) body.put("callback_url", config.getCallbackUrl());
+        if (config.getCallbackUrl() != null && !config.getCallbackUrl().isEmpty())
+            body.put("callback_url", config.getCallbackUrl());
         return body;
     }
 
@@ -182,7 +117,7 @@ public class YunPianSmsImpl implements SmsBlend {
 
     private SmsResponse getSendResponse(Map<String, String> body) {
         Map<String, String> headers = getHeaders();
-        AtomicReference<SmsResponse> smsResponse = null;
+        AtomicReference<SmsResponse> smsResponse = new AtomicReference<>();
         http.post(Constant.YUNPIAN_URL + "/sms/tpl_single_send.json")
                 .addHeader(headers)
                 .addBody(body)

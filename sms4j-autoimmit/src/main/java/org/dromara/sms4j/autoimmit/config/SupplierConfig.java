@@ -1,9 +1,10 @@
 package org.dromara.sms4j.autoimmit.config;
 
-import org.dromara.sms4j.emay.config.EmayConfig;
 import org.dromara.sms4j.aliyun.config.AlibabaConfig;
 import org.dromara.sms4j.cloopen.config.CloopenConfig;
 import org.dromara.sms4j.core.config.SupplierFactory;
+import org.dromara.sms4j.ctyun.config.CtyunConfig;
+import org.dromara.sms4j.emay.config.EmayConfig;
 import org.dromara.sms4j.huawei.config.HuaweiConfig;
 import org.dromara.sms4j.jdcloud.config.JdCloudConfig;
 import org.dromara.sms4j.tencent.config.TencentConfig;
@@ -71,5 +72,14 @@ public class SupplierConfig {
     @ConfigurationProperties(prefix = "sms.emay")
     protected EmayConfig emayConfig(){
         return SupplierFactory.getEmayConfig();
+    }
+
+    /**
+     * 天翼云短信差异化配置
+     */
+    @Bean
+    @ConfigurationProperties(prefix = "sms.ctyun")
+    protected CtyunConfig ctyunConfig(){
+        return SupplierFactory.getCtyunConfig();
     }
 }

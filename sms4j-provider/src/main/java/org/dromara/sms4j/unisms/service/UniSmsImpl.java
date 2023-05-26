@@ -1,13 +1,12 @@
 package org.dromara.sms4j.unisms.service;
 
-import org.dromara.sms4j.api.SmsBlend;
-import org.dromara.sms4j.api.callback.CallBack;
+import lombok.extern.slf4j.Slf4j;
+import org.dromara.sms4j.api.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.unisms.config.UniConfig;
-import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.unisms.core.Uni;
 import org.dromara.sms4j.unisms.core.UniResponse;
 
@@ -16,11 +15,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimerTask;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
-import java.util.function.Supplier;
 
 
 /**
@@ -31,16 +26,13 @@ import java.util.function.Supplier;
  **/
 
 @Slf4j
-public class UniSmsImpl implements SmsBlend {
+public class UniSmsImpl extends AbstractSmsBlend {
 
     private UniConfig config;
-    private Executor pool;
-    private DelayedTime delayed;
 
     public UniSmsImpl(UniConfig config, Executor pool, DelayedTime delayed) {
+        super(pool,delayed);
         this.config = config;
-        this.pool = pool;
-        this.delayed = delayed;
     }
 
     @Override
@@ -88,76 +80,6 @@ public class UniSmsImpl implements SmsBlend {
         data.put("templateId", templateId);
         data.put("templateData", messages);
         return getSmsResponse(data);
-    }
-
-    @Override
-    @Restricted
-    public void sendMessageAsync(String phone, String message, CallBack callBack) {
-        CompletableFuture<SmsResponse> smsResponseCompletableFuture = CompletableFuture.supplyAsync(() -> sendMessage(phone, message), pool);
-        smsResponseCompletableFuture.thenAcceptAsync(callBack::callBack);
-    }
-
-    @Override
-    public void sendMessageAsync(String phone, String message) {
-        pool.execute(()->{
-            sendMessage(phone, message);
-        });
-    }
-
-    @Override
-    @Restricted
-    public void sendMessageAsync(String phone, String templateId, LinkedHashMap<String, String> messages, CallBack callBack) {
-        CompletableFuture<SmsResponse> smsResponseCompletableFuture = CompletableFuture.supplyAsync(() -> sendMessage(phone, templateId, messages), pool);
-        smsResponseCompletableFuture.thenAcceptAsync(callBack::callBack);
-    }
-
-    @Override
-    public void sendMessageAsync(String phone, String templateId, LinkedHashMap<String, String> messages) {
-        pool.execute(()->{
-            sendMessage(phone,templateId,messages);
-        });
-    }
-
-    @Override
-    @Restricted
-    public void delayedMessage(String phone, String message, Long delayedTime) {
-        this.delayed.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                sendMessage(phone,message);
-            }
-        },delayedTime);
-    }
-
-    @Override
-    @Restricted
-    public void delayedMessage(String phone, String templateId, LinkedHashMap<String, String> messages, Long delayedTime) {
-        this.delayed.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                sendMessage(phone,templateId,messages);
-            }
-        },delayedTime);
-    }
-
-    @Override
-    public void delayMassTexting(List<String> phones, String message, Long delayedTime) {
-        this.delayed.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                massTexting(phones,message);
-            }
-        },delayedTime);
-    }
-
-    @Override
-    public void delayMassTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages, Long delayedTime) {
-        this.delayed.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                massTexting(phones,templateId,messages);
-            }
-        },delayedTime);
     }
 
     private SmsResponse getSmsResponse( Map<String, Object> data) {

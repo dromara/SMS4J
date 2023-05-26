@@ -2,6 +2,7 @@ package org.dromara.sms4j.tencent.service;
 
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
+import com.jdcloud.sdk.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
@@ -97,10 +98,16 @@ public class TencentSmsImpl extends AbstractSmsBlend {
                 .onSuccess(((data, req, res) -> {
                     JSONObject jsonBody = res.get(JSONObject.class);
                     JSONObject response = jsonBody.getJSONObject("Response");
-                    JSONArray sendStatusSet = response.getJSONArray("SendStatusSet");
-                    smsResponse.setBizId(sendStatusSet.getJSONObject(0).getStr("SerialNo"));
-                    smsResponse.setMessage(sendStatusSet.getJSONObject(0).getStr("Message"));
-                    smsResponse.setCode(sendStatusSet.getJSONObject(0).getStr("Code"));
+                    String error = response.getStr("Error");
+                    if (StringUtils.isNotBlank(error)){
+                        smsResponse.setErrorCode("500");
+                        smsResponse.setErrMessage(error);
+                    }else {
+                        JSONArray sendStatusSet = response.getJSONArray("SendStatusSet");
+                        smsResponse.setBizId(sendStatusSet.getJSONObject(0).getStr("SerialNo"));
+                        smsResponse.setMessage(sendStatusSet.getJSONObject(0).getStr("Message"));
+                        smsResponse.setCode(sendStatusSet.getJSONObject(0).getStr("Code"));
+                    }
                 }))
                 .onError((ex, req, res) -> {
                     JSONObject jsonBody = res.get(JSONObject.class);

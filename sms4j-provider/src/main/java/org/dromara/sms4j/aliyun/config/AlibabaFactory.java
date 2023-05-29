@@ -50,10 +50,7 @@ public class AlibabaFactory implements BaseProviderFactory<AlibabaSmsImpl, Aliba
 
     @Override
     public AlibabaSmsImpl createMultitonSms(AlibabaConfig alibabaConfig) {
-        return  alibabaSms = new AlibabaSmsImpl(
-                alibabaConfig,
-                BeanFactory.getExecutor(),
-                BeanFactory.getDelayedTime());
+        return new AlibabaSmsImpl(alibabaConfig, BeanFactory.getExecutor(), BeanFactory.getDelayedTime());
     }
 
     /**
@@ -64,10 +61,7 @@ public class AlibabaFactory implements BaseProviderFactory<AlibabaSmsImpl, Aliba
     @Override
     public AlibabaSmsImpl refresh(AlibabaConfig alibabaConfig) {
         //重新构造一个实现对象
-        alibabaSms = new AlibabaSmsImpl(
-                alibabaConfig,
-                BeanFactory.getExecutor(),
-                BeanFactory.getDelayedTime());
+        alibabaSms = new AlibabaSmsImpl(alibabaConfig, BeanFactory.getExecutor(), BeanFactory.getDelayedTime());
         return alibabaSms;
     }
 

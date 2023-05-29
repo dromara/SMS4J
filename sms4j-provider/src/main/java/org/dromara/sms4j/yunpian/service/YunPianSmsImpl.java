@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class YunPianSmsImpl extends AbstractSmsBlend {
 
-    public YunPianSmsImpl(Executor pool, DelayedTime delayed, YunpianConfig config) {
+    public YunPianSmsImpl(YunpianConfig config, Executor pool, DelayedTime delayed) {
         super(pool, delayed);
         this.config = config;
     }

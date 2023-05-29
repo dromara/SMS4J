@@ -45,10 +45,7 @@ public class TencentFactory implements BaseProviderFactory<TencentSmsImpl, Tence
 
     @Override
     public TencentSmsImpl createMultitonSms(TencentConfig tencentConfig) {
-        return new TencentSmsImpl(
-                tencentConfig,
-                BeanFactory.getExecutor(),
-                BeanFactory.getDelayedTime()
+        return new TencentSmsImpl(tencentConfig, BeanFactory.getExecutor(), BeanFactory.getDelayedTime()
         );
     }
 
@@ -57,10 +54,7 @@ public class TencentFactory implements BaseProviderFactory<TencentSmsImpl, Tence
      */
     @Override
     public TencentSmsImpl refresh(TencentConfig tencentConfig) {
-        tencentSms = new TencentSmsImpl(
-                tencentConfig,
-                BeanFactory.getExecutor(),
-                BeanFactory.getDelayedTime()
+        tencentSms = new TencentSmsImpl(tencentConfig, BeanFactory.getExecutor(), BeanFactory.getDelayedTime()
         );
         return tencentSms;
     }

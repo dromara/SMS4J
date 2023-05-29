@@ -51,13 +51,18 @@ public class UniFactory implements BaseProviderFactory<UniSmsImpl, UniConfig> {
     public UniSmsImpl createSms(UniConfig uniConfig){
         if (uniSmsImpl == null){
             this.buildSms(uniConfig);
-            uniSmsImpl = new UniSmsImpl(
-                    uniConfig,
-                    BeanFactory.getExecutor(),
-                    BeanFactory.getDelayedTime()
-            );
+            uniSmsImpl = createMultitonSms(uniConfig);
         }
         return uniSmsImpl;
+    }
+
+    @Override
+    public UniSmsImpl createMultitonSms(UniConfig config) {
+        return new UniSmsImpl(
+                config,
+                BeanFactory.getExecutor(),
+                BeanFactory.getDelayedTime()
+        );
     }
 
     /**

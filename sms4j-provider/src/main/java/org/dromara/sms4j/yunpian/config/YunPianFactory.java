@@ -31,13 +31,18 @@ public class YunPianFactory implements BaseProviderFactory<YunPianSmsImpl, Yunpi
     @Override
     public YunPianSmsImpl createSms(YunpianConfig yunpianConfig){
         if (yunpianSmsImpl == null){
-            yunpianSmsImpl = new YunPianSmsImpl(
-                    BeanFactory.getExecutor(),
-                    BeanFactory.getDelayedTime(),
-                    yunpianConfig
-                    );
+            yunpianSmsImpl = createMultitonSms(yunpianConfig);
         }
         return yunpianSmsImpl;
+    }
+
+    @Override
+    public YunPianSmsImpl createMultitonSms(YunpianConfig yunpianConfig) {
+        return new YunPianSmsImpl(
+                BeanFactory.getExecutor(),
+                BeanFactory.getDelayedTime(),
+                yunpianConfig
+        );
     }
 
     /** 刷新对象*/

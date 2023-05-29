@@ -39,9 +39,14 @@ public class CloopenFactory implements BaseProviderFactory<CloopenSmsImpl, Cloop
     @Override
     public CloopenSmsImpl createSms(CloopenConfig cloopenConfig) {
         if (cloopenSms == null) {
-            cloopenSms = new CloopenSmsImpl(cloopenConfig, BeanFactory.getExecutor(), BeanFactory.getDelayedTime());
+            cloopenSms = createMultitonSms(cloopenConfig);
         }
         return cloopenSms;
+    }
+
+    @Override
+    public CloopenSmsImpl createMultitonSms(CloopenConfig cloopenConfig) {
+        return new CloopenSmsImpl(cloopenConfig, BeanFactory.getExecutor(), BeanFactory.getDelayedTime());
     }
 
     /**

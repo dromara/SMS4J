@@ -43,12 +43,17 @@ public class AlibabaFactory implements BaseProviderFactory<AlibabaSmsImpl, Aliba
     @Override
     public AlibabaSmsImpl createSms(AlibabaConfig alibabaConfig) {
         if (alibabaSms == null) {
-            alibabaSms = new AlibabaSmsImpl(
-                    alibabaConfig,
-                    BeanFactory.getExecutor(),
-                    BeanFactory.getDelayedTime());
+            alibabaSms = createMultitonSms(alibabaConfig);
         }
         return alibabaSms;
+    }
+
+    @Override
+    public AlibabaSmsImpl createMultitonSms(AlibabaConfig alibabaConfig) {
+        return  alibabaSms = new AlibabaSmsImpl(
+                alibabaConfig,
+                BeanFactory.getExecutor(),
+                BeanFactory.getDelayedTime());
     }
 
     /**

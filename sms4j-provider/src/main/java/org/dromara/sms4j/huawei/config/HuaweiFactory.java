@@ -34,9 +34,14 @@ public class HuaweiFactory implements BaseProviderFactory<HuaweiSmsImpl, HuaweiC
     @Override
     public HuaweiSmsImpl createSms(HuaweiConfig huaweiConfig) {
         if (huaweiSms == null){
-            huaweiSms = new HuaweiSmsImpl(huaweiConfig, BeanFactory.getExecutor(),BeanFactory.getDelayedTime());
+            huaweiSms = createMultitonSms(huaweiConfig);
         }
         return huaweiSms;
+    }
+
+    @Override
+    public HuaweiSmsImpl createMultitonSms(HuaweiConfig huaweiConfig) {
+        return new HuaweiSmsImpl(huaweiConfig, BeanFactory.getExecutor(),BeanFactory.getDelayedTime());
     }
 
     /** 刷新对象*/

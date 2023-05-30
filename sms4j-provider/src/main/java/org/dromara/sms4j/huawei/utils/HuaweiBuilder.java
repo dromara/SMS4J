@@ -1,5 +1,6 @@
 package org.dromara.sms4j.huawei.utils;
 
+import cn.hutool.core.codec.Base64;
 import org.dromara.sms4j.comm.constant.Constant;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -10,11 +11,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +46,7 @@ public class HuaweiBuilder {
             e.printStackTrace();
         }
 
-        String passwordDigestBase64Str = Base64.getEncoder().encodeToString(passwordDigest); //PasswordDigest
+        String passwordDigestBase64Str = Base64.encode(passwordDigest); //PasswordDigest
         //若passwordDigestBase64Str中包含换行符,请执行如下代码进行修正
         //passwordDigestBase64Str = passwordDigestBase64Str.replaceAll("[\\s*\t\n\r]", "");
         return String.format(Constant.HUAWEI_WSSE_HEADER_FORMAT, appKey, passwordDigestBase64Str, nonce, time);
@@ -56,11 +55,9 @@ public class HuaweiBuilder {
     static void trustAllHttpsCertificates() throws Exception {
         TrustManager[] trustAllCerts = new TrustManager[] {
                 new X509TrustManager() {
-                    public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                        return;
+                    public void checkClientTrusted(X509Certificate[] chain, String authType) {
                     }
-                    public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                        return;
+                    public void checkServerTrusted(X509Certificate[] chain, String authType) {
                     }
                     public X509Certificate[] getAcceptedIssuers() {
                         return null;

@@ -7,6 +7,7 @@ import org.dromara.sms4j.ctyun.config.CtyunConfig;
 import org.dromara.sms4j.emay.config.EmayConfig;
 import org.dromara.sms4j.huawei.config.HuaweiConfig;
 import org.dromara.sms4j.jdcloud.config.JdCloudConfig;
+import org.dromara.sms4j.netease.config.NeteaseConfig;
 import org.dromara.sms4j.tencent.config.TencentConfig;
 import org.dromara.sms4j.unisms.config.UniConfig;
 import org.dromara.sms4j.yunpian.config.YunpianConfig;
@@ -81,5 +82,14 @@ public class SupplierConfig {
     @ConfigurationProperties(prefix = "sms.ctyun")
     protected CtyunConfig ctyunConfig(){
         return SupplierFactory.getCtyunConfig();
+    }
+
+    /**
+     * 网易云信差异化配置
+     */
+    @Bean
+    @ConfigurationProperties(prefix = "sms.netease")
+    protected NeteaseConfig neteaseConfig(){
+        return SupplierFactory.getNeteaseConfig();
     }
 }

@@ -9,6 +9,7 @@ import org.dromara.sms4j.ctyun.config.CtyunConfig;
 import org.dromara.sms4j.emay.config.EmayConfig;
 import org.dromara.sms4j.huawei.config.HuaweiConfig;
 import org.dromara.sms4j.jdcloud.config.JdCloudConfig;
+import org.dromara.sms4j.netease.config.NeteaseConfig;
 import org.dromara.sms4j.provider.enumerate.SupplierType;
 import org.dromara.sms4j.tencent.config.TencentConfig;
 import org.dromara.sms4j.unisms.config.UniConfig;
@@ -50,6 +51,7 @@ public class SupplierSqlConfig {
         cloopen();
         emay();
         ctyun();
+        netease();
     }
 
     public SupplierSqlConfig() {
@@ -147,5 +149,15 @@ public class SupplierSqlConfig {
     public static void ctyun(){
         CtyunConfig ctyunConfig = SmsUtil.jsonForObject(select.get(SupplierType.CTYUN.getName()), CtyunConfig.class);
         SupplierFactory.setCtyunConfig(ctyunConfig);
+    }
+
+    /**
+     *  netease
+     * <p>数据库读取并设置网易云短信
+     * @author : Adam
+     */
+    public static void netease(){
+        NeteaseConfig neteaseConfig = SmsUtil.jsonForObject(select.get(SupplierType.NETEASE.getName()), NeteaseConfig.class);
+        SupplierFactory.setNeteaseConfig(neteaseConfig);
     }
 }

@@ -35,7 +35,7 @@ public class CloopenConfig extends BaseConfig implements SupplierConfig {
      * Rest URL 域名
      *
      * @deprecated v2.0.1
-     * @see baseUrl
+     * @see #baseUrl
      */
     @Deprecated
     private String serverIp;
@@ -44,7 +44,7 @@ public class CloopenConfig extends BaseConfig implements SupplierConfig {
      * Rest URL 端口
      *
      * @deprecated v2.0.1
-     * @see baseUrl
+     * @see #baseUrl
      */
     @Deprecated
     private String serverPort;

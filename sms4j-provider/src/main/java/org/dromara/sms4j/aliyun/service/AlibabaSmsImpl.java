@@ -24,7 +24,6 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author :Wind
  * 2023/3/26  17:16
  **/
-
 @Slf4j
 public class AlibabaSmsImpl extends AbstractSmsBlend {
 

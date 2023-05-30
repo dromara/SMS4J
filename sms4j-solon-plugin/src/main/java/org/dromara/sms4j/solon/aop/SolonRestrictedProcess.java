@@ -23,7 +23,7 @@ public class SolonRestrictedProcess extends RestrictedProcess {
     }
 
     @Override
-    public SmsBlendException process(SmsConfig config, String args) throws Exception {
+    public SmsBlendException process(SmsConfig config, String args) {
         Integer accountMax = config.getAccountMax();//每日最大发送量
         Integer minuteMax = config.getMinuteMax();//每分钟最大发送量
         if (SmsUtil.isNotEmpty(accountMax)) {   //是否配置了每日限制

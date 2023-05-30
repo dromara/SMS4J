@@ -19,7 +19,6 @@ import java.util.concurrent.Executor;
 
 import static org.dromara.sms4j.huawei.utils.HuaweiBuilder.listToString;
 
-
 @Slf4j
 public class HuaweiSmsImpl extends AbstractSmsBlend {
     public HuaweiSmsImpl(HuaweiConfig config, Executor pool, DelayedTime delayed) {

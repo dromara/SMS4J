@@ -132,16 +132,16 @@ public class HuaweiBuilder {
     }
 
     static String dateFormat(Date date){
-        SimpleDateFormat sdf = new SimpleDateFormat(Constant.HUAWEI_JAVA_DATE);
-       return sdf.format(date);
+       return SDF.format(date);
     }
 
     static Date strForDate(String date){
-        SimpleDateFormat sdf = new SimpleDateFormat(Constant.HUAWEI_JAVA_DATE);
         try {
-           return sdf.parse(date);
+           return SDF.parse(date);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
     }
+
+    private static final SimpleDateFormat SDF = new SimpleDateFormat(Constant.HUAWEI_JAVA_DATE);
 }

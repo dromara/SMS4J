@@ -19,7 +19,6 @@ import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicReference;
 
-
 /**
  * @author Richard
  * @date 2023-04-11 12:00
@@ -90,7 +89,6 @@ public class EmaySmsImpl extends AbstractSmsBlend {
 
         return smsResponse.get();
     }
-
 
     private static SmsResponse getSmsResponse(JSONObject execute) {
         SmsResponse smsResponse = new SmsResponse();

@@ -27,5 +27,4 @@ public class SmsId {
     /** 短信资源的创建时间，即短信平台接收到用户发送短信请求的时间，为UTC时间*/
     private String createTime;
 
-
 }

@@ -27,7 +27,7 @@ public class YunPianSmsImpl extends AbstractSmsBlend {
         this.config = config;
     }
 
-    private YunpianConfig config;
+    private final YunpianConfig config;
 
     private static SmsResponse getSmsResponse(JSONObject execute) {
         SmsResponse smsResponse = new SmsResponse();

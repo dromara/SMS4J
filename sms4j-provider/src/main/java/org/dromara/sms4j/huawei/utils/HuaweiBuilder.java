@@ -75,11 +75,11 @@ public class HuaweiBuilder {
     /**
      *  buildRequestBody
      * <p>构造请求Body体
-     * @param sender
-     * @param receiver
-     * @param templateId
-     * @param templateParas
-     * @param statusCallBack
+     * @param sender 国内短信签名通道号
+     * @param receiver 短信接收者
+     * @param templateId 短信模板id
+     * @param templateParas 模板参数
+     * @param statusCallBack 短信状态报告接收地
      * @param signature | 签名名称,使用国内短信通用模板时填写
      * @author :Wind
     */

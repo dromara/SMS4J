@@ -29,7 +29,6 @@ public class CtyunSmsImpl extends AbstractSmsBlend {
 
     private final CtyunConfig ctyunConfig;
 
-
     public CtyunSmsImpl(CtyunConfig ctyunConfig, Executor pool, DelayedTime delayedTime) {
         super(pool, delayedTime);
         this.ctyunConfig = ctyunConfig;

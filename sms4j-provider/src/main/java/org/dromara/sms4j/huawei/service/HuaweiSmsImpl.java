@@ -27,7 +27,7 @@ public class HuaweiSmsImpl extends AbstractSmsBlend {
         this.config = config;
     }
 
-    private HuaweiConfig config;
+    private final HuaweiConfig config;
 
     @Override
     @Restricted

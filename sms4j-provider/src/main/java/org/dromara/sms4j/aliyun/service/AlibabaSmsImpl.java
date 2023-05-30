@@ -86,12 +86,8 @@ public class AlibabaSmsImpl extends AbstractSmsBlend {
         super.http.post(requestUrl)
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .addBody(paramStr)
-                .onSuccess(((data, req, res) -> {
-                    reference.set(this.getResponse(res.get(JSONObject.class)));
-                }))
-                .onError((ex, req, res) -> {
-                    reference.set(this.getResponse(res.get(JSONObject.class)));
-                })
+                .onSuccess(((data, req, res) -> reference.set(this.getResponse(res.get(JSONObject.class)))))
+                .onError((ex, req, res) -> reference.set(this.getResponse(res.get(JSONObject.class))))
                 .execute();
         return reference.get();
     }

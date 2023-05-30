@@ -28,7 +28,7 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class UniSmsImpl extends AbstractSmsBlend {
 
-    private UniConfig config;
+    private final UniConfig config;
 
     public UniSmsImpl(UniConfig config, Executor pool, DelayedTime delayed) {
         super(pool,delayed);

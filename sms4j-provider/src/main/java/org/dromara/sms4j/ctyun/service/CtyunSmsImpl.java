@@ -80,12 +80,8 @@ public class CtyunSmsImpl extends AbstractSmsBlend {
         http.post(requestUrl)
                 .addHeader(CtyunUtils.signHeader(paramStr, ctyunConfig.getAccessKeyId(), ctyunConfig.getAccessKeySecret()))
                 .addBody(paramStr)
-                .onSuccess(((data, req, res) -> {
-                    smsResponse.set(this.getResponse(res.get(JSONObject.class)));
-                }))
-                .onError((ex, req, res) -> {
-                    smsResponse.set(this.getResponse(res.get(JSONObject.class)));
-                })
+                .onSuccess(((data, req, res) -> smsResponse.set(this.getResponse(res.get(JSONObject.class)))))
+                .onError((ex, req, res) -> smsResponse.set(this.getResponse(res.get(JSONObject.class))))
                 .execute();
         return smsResponse.get();
     }

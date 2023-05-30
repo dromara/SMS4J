@@ -121,14 +121,8 @@ public class YunPianSmsImpl extends AbstractSmsBlend {
         http.post(Constant.YUNPIAN_URL + "/sms/tpl_single_send.json")
                 .addHeader(headers)
                 .addBody(body)
-                .onSuccess(((data, req, res) -> {
-                    JSONObject jsonBody = res.get(JSONObject.class);
-                    smsResponse.set(getSmsResponse(jsonBody));
-                }))
-                .onError((ex, req, res) -> {
-                    JSONObject jsonBody = res.get(JSONObject.class);
-                    smsResponse.set(getSmsResponse(jsonBody));
-                })
+                .onSuccess(((data, req, res) -> smsResponse.set(getSmsResponse(res.get(JSONObject.class)))))
+                .onError((ex, req, res) -> smsResponse.set(getSmsResponse(res.get(JSONObject.class))))
                 .execute();
 
         return smsResponse.get();

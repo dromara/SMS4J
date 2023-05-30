@@ -8,6 +8,7 @@ import org.dromara.sms4j.ctyun.config.CtyunFactory;
 import org.dromara.sms4j.emay.config.EmayFactory;
 import org.dromara.sms4j.huawei.config.HuaweiFactory;
 import org.dromara.sms4j.jdcloud.config.JdCloudFactory;
+import org.dromara.sms4j.netease.config.NeteaseFactory;
 import org.dromara.sms4j.provider.base.BaseProviderFactory;
 import org.dromara.sms4j.tencent.config.TencentFactory;
 import org.dromara.sms4j.unisms.config.UniFactory;
@@ -38,6 +39,8 @@ public enum SupplierType {
     EMAY("亿美软通", EmayFactory.instance()),
     /** 天翼云 */
     CTYUN("天翼云短信", CtyunFactory.instance()),
+    /** 网易云信 */
+    NETEASE("网易云短信", NeteaseFactory.instance())
     ;
 
 

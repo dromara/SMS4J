@@ -5,7 +5,6 @@ import org.dromara.sms4j.aliyun.service.AlibabaSmsImpl;
 import org.dromara.sms4j.comm.factory.BeanFactory;
 import org.dromara.sms4j.provider.base.BaseProviderFactory;
 
-
 /**
  * AlibabaSmsConfig
  * <p> 阿里巴巴对象建造者

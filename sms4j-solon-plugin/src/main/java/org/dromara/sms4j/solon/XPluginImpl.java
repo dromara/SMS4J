@@ -9,7 +9,7 @@ import org.noear.solon.core.Plugin;
  */
 public class XPluginImpl implements Plugin {
     @Override
-    public void start(AopContext context) throws Throwable {
+    public void start(AopContext context) {
         context.beanMake(SmsAutowiredConfig.class);
         SmsAutowiredConfig.aopContext = context;
     }

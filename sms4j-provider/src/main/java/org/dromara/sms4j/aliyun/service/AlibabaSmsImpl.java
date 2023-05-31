@@ -24,7 +24,6 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author :Wind
  * 2023/3/26  17:16
  **/
-
 @Slf4j
 public class AlibabaSmsImpl extends AbstractSmsBlend {
 
@@ -86,12 +85,8 @@ public class AlibabaSmsImpl extends AbstractSmsBlend {
         super.http.post(requestUrl)
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .addBody(paramStr)
-                .onSuccess(((data, req, res) -> {
-                    reference.set(this.getResponse(res.get(JSONObject.class)));
-                }))
-                .onError((ex, req, res) -> {
-                    reference.set(this.getResponse(res.get(JSONObject.class)));
-                })
+                .onSuccess(((data, req, res) -> reference.set(this.getResponse(res.get(JSONObject.class)))))
+                .onError((ex, req, res) -> reference.set(this.getResponse(res.get(JSONObject.class))))
                 .execute();
         return reference.get();
     }

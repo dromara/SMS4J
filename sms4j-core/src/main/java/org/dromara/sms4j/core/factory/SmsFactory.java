@@ -24,7 +24,7 @@ import java.util.Objects;
  **/
 public abstract class SmsFactory {
 
-    private static Map<SupplierType, SmsBlend> beans = new HashMap<>();
+    private static final Map<SupplierType, SmsBlend> beans = new HashMap<>();
 
     private SmsFactory() {
     }

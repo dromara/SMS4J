@@ -19,7 +19,6 @@ import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicReference;
 
-
 /**
  * @author Richard
  * @date 2023-04-11 12:00
@@ -31,7 +30,7 @@ public class EmaySmsImpl extends AbstractSmsBlend {
         this.config = config;
     }
 
-    private EmayConfig config;
+    private final EmayConfig config;
 
     @Override
     @Restricted
@@ -84,19 +83,12 @@ public class EmaySmsImpl extends AbstractSmsBlend {
         AtomicReference<SmsResponse> smsResponse = new AtomicReference<>();
         http.post(requestUrl)
                 .addBody(body)
-                .onSuccess(((data, req, res) -> {
-                    JSONObject jsonBody = res.get(JSONObject.class);
-                    smsResponse.set(getSmsResponse(jsonBody));
-                }))
-                .onError((ex, req, res) -> {
-                    JSONObject jsonBody = res.get(JSONObject.class);
-                    smsResponse.set(getSmsResponse(jsonBody));
-                })
+                .onSuccess(((data, req, res) -> smsResponse.set(getSmsResponse(res.get(JSONObject.class)))))
+                .onError((ex, req, res) -> smsResponse.set(getSmsResponse(res.get(JSONObject.class))))
                 .execute();
 
         return smsResponse.get();
     }
-
 
     private static SmsResponse getSmsResponse(JSONObject execute) {
         SmsResponse smsResponse = new SmsResponse();

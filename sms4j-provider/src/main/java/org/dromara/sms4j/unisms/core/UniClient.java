@@ -1,13 +1,13 @@
 package org.dromara.sms4j.unisms.core;
 
+import cn.hutool.core.codec.Base64;
+import cn.hutool.crypto.digest.HMac;
+import cn.hutool.crypto.digest.HmacAlgorithm;
 import cn.hutool.json.JSONUtil;
 import com.dtflys.forest.config.ForestConfiguration;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.factory.BeanFactory;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import java.util.Base64;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -36,12 +36,9 @@ public class UniClient {
 
     private static String getSignature(final String message, final String secretKey) {
         try {
-            Mac hmac = Mac.getInstance("HmacSHA256");
-            SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), "HmacSHA256");
-            hmac.init(secretKeySpec);
-
-            byte[] bytes = hmac.doFinal(message.getBytes());
-            return Base64.getEncoder().encodeToString(bytes);
+            HMac hMac = new HMac(HmacAlgorithm.HmacSHA256, secretKey.getBytes());
+            byte[] bytes =  hMac.digest(message.getBytes());
+            return Base64.encode(bytes);
         } catch (Exception e) {
             return null;
         }

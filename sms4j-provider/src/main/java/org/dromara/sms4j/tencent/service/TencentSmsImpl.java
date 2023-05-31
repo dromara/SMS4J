@@ -26,7 +26,7 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class TencentSmsImpl extends AbstractSmsBlend {
 
-    private TencentConfig tencentSmsConfig;
+    private final TencentConfig tencentSmsConfig;
 
     public TencentSmsImpl(TencentConfig tencentSmsConfig, Executor pool, DelayedTime delayed) {
         super(pool, delayed);

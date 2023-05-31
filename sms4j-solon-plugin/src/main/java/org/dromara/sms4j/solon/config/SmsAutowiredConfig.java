@@ -22,7 +22,6 @@ import org.noear.solon.core.Props;
 
 import java.util.concurrent.Executor;
 
-
 @Slf4j
 @Configuration
 public class SmsAutowiredConfig {

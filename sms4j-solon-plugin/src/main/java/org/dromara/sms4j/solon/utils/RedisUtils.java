@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-
 @Slf4j
 public class RedisUtils {
 
@@ -97,9 +96,7 @@ public class RedisUtils {
      */
     public boolean multiSet(Map valueMap) {
         try {
-            valueMap.forEach((key, val) -> {
-                redisTemplate.getBucket((String) key).set(val);
-            });
+            valueMap.forEach((key, val) -> redisTemplate.getBucket((String) key).set(val));
             return true;
         } catch (Exception e) {
             log.error(e.toString());

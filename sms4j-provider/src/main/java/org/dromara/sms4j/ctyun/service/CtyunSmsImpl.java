@@ -29,7 +29,6 @@ public class CtyunSmsImpl extends AbstractSmsBlend {
 
     private final CtyunConfig ctyunConfig;
 
-
     public CtyunSmsImpl(CtyunConfig ctyunConfig, Executor pool, DelayedTime delayedTime) {
         super(pool, delayedTime);
         this.ctyunConfig = ctyunConfig;
@@ -80,12 +79,8 @@ public class CtyunSmsImpl extends AbstractSmsBlend {
         http.post(requestUrl)
                 .addHeader(CtyunUtils.signHeader(paramStr, ctyunConfig.getAccessKeyId(), ctyunConfig.getAccessKeySecret()))
                 .addBody(paramStr)
-                .onSuccess(((data, req, res) -> {
-                    smsResponse.set(this.getResponse(res.get(JSONObject.class)));
-                }))
-                .onError((ex, req, res) -> {
-                    smsResponse.set(this.getResponse(res.get(JSONObject.class)));
-                })
+                .onSuccess(((data, req, res) -> smsResponse.set(this.getResponse(res.get(JSONObject.class)))))
+                .onError((ex, req, res) -> smsResponse.set(this.getResponse(res.get(JSONObject.class))))
                 .execute();
         return smsResponse.get();
     }

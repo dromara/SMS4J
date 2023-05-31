@@ -1,6 +1,5 @@
 package org.dromara.sms4j.comm.constant;
 
-
 /**
  * Constant
  * <p> 短信应用常量

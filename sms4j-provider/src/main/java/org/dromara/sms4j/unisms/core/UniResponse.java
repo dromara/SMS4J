@@ -34,7 +34,6 @@ public class UniResponse {
                 this.message = response.getStr("message");
             } else {
                 this.message = body.getJSONArray("messages").getStr(0);
-                ;
             }
             this.code = code;
         } else {

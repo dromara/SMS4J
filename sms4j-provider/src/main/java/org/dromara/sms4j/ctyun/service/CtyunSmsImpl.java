@@ -95,6 +95,7 @@ public class CtyunSmsImpl extends AbstractSmsBlend {
         smsResponse.setCode(resJson.getStr("code"));
         smsResponse.setMessage(resJson.getStr("message"));
         smsResponse.setBizId(resJson.getStr("requestId"));
+        smsResponse.setSuccess("OK".equals(smsResponse.getCode()));
         return smsResponse;
     }
 

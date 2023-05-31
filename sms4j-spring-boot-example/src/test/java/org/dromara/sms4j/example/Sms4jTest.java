@@ -86,4 +86,37 @@ class Sms4jTest {
         Assert.isTrue("0".equals(smsResponse.getCode()) && smsResponse.isSuccess());
     }
 
+    @Test
+    public void tencentSmsTest() {
+        if (StrUtil.isBlank(PHONE)) {
+            return;
+        }
+        // 腾讯
+        SmsResponse smsResponse = SmsFactory.createSmsBlend(SupplierType.TENCENT).sendMessage(PHONE, SmsUtil.getRandomInt(6));
+        log.info(JSONUtil.toJsonStr(smsResponse));
+        Assert.isTrue("Ok".equals(smsResponse.getCode()) && smsResponse.isSuccess());
+    }
+
+    @Test
+    public void uniSmsTest() {
+        if (StrUtil.isBlank(PHONE)) {
+            return;
+        }
+        // 合一
+        SmsResponse smsResponse = SmsFactory.createSmsBlend(SupplierType.UNI_SMS).sendMessage(PHONE, SmsUtil.getRandomInt(6));
+        log.info(JSONUtil.toJsonStr(smsResponse));
+        Assert.isTrue("Success".equals(smsResponse.getMessage()) && smsResponse.isSuccess());
+    }
+
+    @Test
+    public void cyYunSmsTest() {
+        if (StrUtil.isBlank(PHONE)) {
+            return;
+        }
+        // 天翼云
+        SmsResponse smsResponse = SmsFactory.createSmsBlend(SupplierType.CTYUN).sendMessage(PHONE, SmsUtil.getRandomInt(6));
+        log.info(JSONUtil.toJsonStr(smsResponse));
+        Assert.isTrue("OK".equals(smsResponse.getCode()) && smsResponse.isSuccess());
+    }
+
 }

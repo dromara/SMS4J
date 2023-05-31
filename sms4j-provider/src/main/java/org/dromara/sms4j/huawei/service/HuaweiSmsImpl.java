@@ -10,11 +10,7 @@ import org.dromara.sms4j.huawei.config.HuaweiConfig;
 import org.dromara.sms4j.huawei.entity.HuaweiResponse;
 import org.dromara.sms4j.huawei.utils.HuaweiBuilder;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Executor;
 
 import static org.dromara.sms4j.huawei.utils.HuaweiBuilder.listToString;
@@ -23,7 +19,7 @@ import static org.dromara.sms4j.huawei.utils.HuaweiBuilder.listToString;
 @Slf4j
 public class HuaweiSmsImpl extends AbstractSmsBlend {
     public HuaweiSmsImpl(HuaweiConfig config, Executor pool, DelayedTime delayed) {
-        super(pool,delayed);
+        super(pool, delayed);
         this.config = config;
     }
 
@@ -61,6 +57,9 @@ public class HuaweiSmsImpl extends AbstractSmsBlend {
                     smsResponse.setMessage(jsonBody.getDescription());
                     smsResponse.setBizId(jsonBody.getResult().get(0).getSmsMsgId());
                     smsResponse.setData(jsonBody.getResult());
+                    if ("000000".equals(jsonBody.getCode())) {
+                        smsResponse.setSuccess(true);
+                    }
                 }))
                 .onError((ex, req, res) -> {
                     HuaweiResponse huaweiResponse = res.get(HuaweiResponse.class);

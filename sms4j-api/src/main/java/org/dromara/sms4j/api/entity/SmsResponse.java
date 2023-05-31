@@ -10,6 +10,14 @@ import lombok.Data;
  **/
 @Data
 public class SmsResponse {
+
+    /**
+     * 是否成功
+     *
+     * @since 2.2.0
+     */
+    private boolean success;
+
     /** 状态码*/
     private String code;
     /** 返回消息*/

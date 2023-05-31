@@ -112,6 +112,7 @@ public class EmaySmsImpl extends AbstractSmsBlend {
         } else {
             smsResponse.setCode(code);
             if ("success".equalsIgnoreCase(code)) {
+                smsResponse.setSuccess(true);
                 JSONArray data = execute.getJSONArray("data");
                 JSONObject result = (JSONObject) data.get(0);
                 String smsId = result.getStr("smsId");

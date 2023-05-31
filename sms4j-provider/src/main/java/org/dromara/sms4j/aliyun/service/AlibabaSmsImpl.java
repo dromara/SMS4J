@@ -107,6 +107,7 @@ public class AlibabaSmsImpl extends AbstractSmsBlend {
         smsResponse.setMessage(resJson.getStr("Message"));
         if ("OK".equals(smsResponse.getCode())) {
             smsResponse.setBizId(resJson.getStr("BizId"));
+            smsResponse.setSuccess(true);
         }
         return smsResponse;
     }

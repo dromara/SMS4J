@@ -47,6 +47,11 @@ public class NeteaseFactory implements BaseProviderFactory<NeteaseSmsImpl, Netea
         return neteaseSms;
     }
 
+    @Override
+    public NeteaseSmsImpl createMultitonSms(NeteaseConfig neteaseConfig) {
+        return new NeteaseSmsImpl(neteaseConfig, BeanFactory.getExecutor(), BeanFactory.getDelayedTime());
+    }
+
     /**
      * 刷新对象
      */

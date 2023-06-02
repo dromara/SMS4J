@@ -214,6 +214,6 @@ public class SupplierFactory {
      */
     public static void setNeteaseConfig(NeteaseConfig neteaseConfig) {
         NeteaseFactory.instance().setConfig(neteaseConfig);
-        SmsFactory.refresh(SupplierType.CTYUN);
+        SmsFactory.refresh(SupplierType.NETEASE);
     }
 }

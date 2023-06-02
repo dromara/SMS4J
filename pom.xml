@@ -16,7 +16,6 @@
         <module>sms4j-api</module>
         <module>sms4j-provider</module>
         <module>sms4j-core</module>
-        <module>sms4j-autoimmit</module>
         <module>sms4j-spring-boot-starter</module>
         <module>sms4j-solon-plugin</module>
         <module>sms4j-spring-boot-example</module>
@@ -86,12 +85,6 @@
                 <version>${revision}</version>
             </dependency>
 
-            <dependency>
-                <groupId>org.dromara.sms4j</groupId>
-                <artifactId>sms4j-autoimmit</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
             <!--核心模块-->
             <dependency>
                 <groupId>org.dromara.sms4j</groupId>
@@ -125,13 +118,6 @@
                 <groupId>com.dtflys.forest</groupId>
                 <artifactId>forest-core</artifactId>
                 <version>${forest.version}</version>
-            </dependency>
-
-            <!--aop依赖-->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-aop</artifactId>
-                <version>${spring.boot.version}</version>
             </dependency>
 
             <!-- redis 缓存操作 -->

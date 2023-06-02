@@ -1,4 +1,4 @@
-package org.dromara.sms4j.autoimmit.utils;
+package org.dromara.sms4j.starter.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;

@@ -1,11 +1,7 @@
-package org.dromara.sms4j.autoimmit.config;
+package org.dromara.sms4j.starter.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.smsProxy.SmsInvocationHandler;
-import org.dromara.sms4j.autoimmit.aop.RestrictedProcessImpl;
-import org.dromara.sms4j.autoimmit.utils.ConfigUtil;
-import org.dromara.sms4j.autoimmit.utils.RedisUtils;
-import org.dromara.sms4j.autoimmit.utils.SpringUtil;
 import org.dromara.sms4j.comm.config.SmsBanner;
 import org.dromara.sms4j.comm.config.SmsConfig;
 import org.dromara.sms4j.comm.config.SmsSqlConfig;
@@ -13,6 +9,10 @@ import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.factory.BeanFactory;
 import org.dromara.sms4j.core.SupplierSqlConfig;
+import org.dromara.sms4j.starter.aop.RestrictedProcessImpl;
+import org.dromara.sms4j.starter.utils.ConfigUtil;
+import org.dromara.sms4j.starter.utils.RedisUtils;
+import org.dromara.sms4j.starter.utils.SpringUtil;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -78,11 +78,6 @@ public class SmsAutowiredConfig {
             SmsInvocationHandler.setRestrictedProcess(new RestrictedProcessImpl());
             log.debug("The redis cache is enabled for sms4j");
         }
-        /* 如果启用了短信限制，则注入AOP组件*/
-//        if (BeanFactory.getSmsConfig().getRestricted()){
-//            springUtil.createBean(AopAdvice.class);
-//            log.debug("SMS restriction is enabled");
-//        }
         //打印banner
         if (BeanFactory.getSmsConfig().getIsPrint()){
             SmsBanner.PrintBanner(Constant.VERSION);

@@ -1,4 +1,4 @@
-package org.dromara.sms4j.autoimmit.config;
+package org.dromara.sms4j.starter.config;
 
 import org.dromara.sms4j.aliyun.config.AlibabaConfig;
 import org.dromara.sms4j.cloopen.config.CloopenConfig;

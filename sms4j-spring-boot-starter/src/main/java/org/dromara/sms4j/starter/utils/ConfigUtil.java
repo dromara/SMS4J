@@ -1,4 +1,4 @@
-package org.dromara.sms4j.autoimmit.utils;
+package org.dromara.sms4j.starter.utils;
 
 import org.springframework.core.env.Environment;
 

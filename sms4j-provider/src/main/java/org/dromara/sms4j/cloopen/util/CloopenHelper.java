@@ -63,6 +63,7 @@ public class CloopenHelper {
             String statusMsg = Convert.toStr(responseMap.get("statusMsg"));
             boolean isSuccess = "000000".equals(statusCode);
             if (isSuccess) {
+                smsResponse.setSuccess(true);
                 smsResponse.setCode(statusCode);
                 smsResponse.setMessage(statusMsg);
                 smsResponse.setData(response);

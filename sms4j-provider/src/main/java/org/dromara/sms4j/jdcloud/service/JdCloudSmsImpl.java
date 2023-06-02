@@ -91,6 +91,7 @@ public class JdCloudSmsImpl extends AbstractSmsBlend {
         smsResponse.setMessage(res.getMessage());
         Boolean status = res.getStatus();
         boolean isSuccess = status != null && status;
+        smsResponse.setSuccess(isSuccess);
         if (!isSuccess) {
             smsResponse.setErrMessage(res.getMessage());
             smsResponse.setErrorCode(String.valueOf(res.getCode()));

@@ -39,7 +39,8 @@ public class YunPianSmsImpl extends AbstractSmsBlend {
         smsResponse.setCode(execute.getStr("code"));
         smsResponse.setMessage(execute.getStr("msg"));
         smsResponse.setBizId(execute.getStr("sid"));
-        if (execute.getInt("code") != 0) {
+        smsResponse.setSuccess(execute.getInt("code") == 0);
+        if (!smsResponse.isSuccess()) {
             smsResponse.setErrMessage(execute.getStr("msg"));
         }
         smsResponse.setData(execute);

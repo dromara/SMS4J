@@ -124,6 +124,7 @@ public class NeteaseSmsImpl extends AbstractSmsBlend {
             response.setErrorCode(String.valueOf(code));
             response.setErrMessage(jsonObject.getString("msg"));
         } else {
+            response.setSuccess(true);
             response.setCode(String.valueOf(code));
             response.setMessage(jsonObject.getString("msg"));
             response.setData(jsonObject.get("obj"));

@@ -119,4 +119,15 @@ class Sms4jTest {
         Assert.isTrue("OK".equals(smsResponse.getCode()) && smsResponse.isSuccess());
     }
 
+    @Test
+    public void neteaseSmsTest() {
+        if (StrUtil.isBlank(PHONE)) {
+            return;
+        }
+        // 网易云短信
+        SmsResponse smsResponse = SmsFactory.createSmsBlend(SupplierType.NETEASE).sendMessage(PHONE, SmsUtil.getRandomInt(6));
+        log.info(JSONUtil.toJsonStr(smsResponse));
+        Assert.isTrue(Long.parseLong(smsResponse.getCode()) <= 200 && smsResponse.isSuccess());
+    }
+
 }

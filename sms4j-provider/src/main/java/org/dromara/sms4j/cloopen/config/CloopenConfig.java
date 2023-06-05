@@ -3,6 +3,7 @@ package org.dromara.sms4j.cloopen.config;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.dromara.sms4j.api.universal.SupplierConfig;
@@ -18,6 +19,7 @@ import org.dromara.sms4j.comm.config.BaseConfig;
 @SuperBuilder
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 public class CloopenConfig extends BaseConfig implements SupplierConfig {
 
     /**
@@ -34,8 +36,8 @@ public class CloopenConfig extends BaseConfig implements SupplierConfig {
     /**
      * Rest URL 域名
      *
-     * @deprecated v2.0.1
      * @see #baseUrl
+     * @deprecated v2.0.1
      */
     @Deprecated
     private String serverIp;
@@ -43,8 +45,8 @@ public class CloopenConfig extends BaseConfig implements SupplierConfig {
     /**
      * Rest URL 端口
      *
-     * @deprecated v2.0.1
      * @see #baseUrl
+     * @deprecated v2.0.1
      */
     @Deprecated
     private String serverPort;

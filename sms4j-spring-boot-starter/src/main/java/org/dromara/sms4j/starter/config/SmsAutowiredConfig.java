@@ -16,6 +16,7 @@ import org.dromara.sms4j.starter.utils.SpringUtil;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 
 import java.util.concurrent.Executor;
@@ -35,6 +36,7 @@ public class SmsAutowiredConfig {
     protected SmsSqlConfig smsSqlConfig(){return BeanFactory.getSmsSqlConfig();}
 
     @Bean
+    @Primary
     @ConfigurationProperties(prefix = "sms")     //指定配置文件注入属性前缀
     protected SmsConfig smsConfig(){
         return BeanFactory.getSmsConfig();

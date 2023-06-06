@@ -10,6 +10,7 @@ import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.factory.BeanFactory;
 import org.dromara.sms4j.core.SupplierSqlConfig;
 import org.dromara.sms4j.starter.aop.RestrictedProcessImpl;
+import org.dromara.sms4j.api.universal.RedisUtil;
 import org.dromara.sms4j.starter.utils.ConfigUtil;
 import org.dromara.sms4j.starter.utils.RedisUtils;
 import org.dromara.sms4j.starter.utils.SpringUtil;
@@ -76,7 +77,10 @@ public class SmsAutowiredConfig {
     void init(){
         /* 如果配置中启用了redis，则注入redis工具*/
         if (BeanFactory.getSmsConfig().getRedisCache()){
-            springUtil.createBean(RedisUtils.class);
+            //如果用户没有实现RedisUtil接口则注入默认的实现
+            if (!SpringUtil.interfaceExist(RedisUtil.class)){
+                springUtil.createBean(RedisUtils.class);
+            }
             SmsInvocationHandler.setRestrictedProcess(new RestrictedProcessImpl());
             log.debug("The redis cache is enabled for sms4j");
         }

@@ -1,6 +1,7 @@
 package org.dromara.sms4j.starter.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.sms4j.api.universal.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -13,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 
 @Slf4j
-public class RedisUtils {
+public class RedisUtils implements RedisUtil {
 
     private RedisTemplate<String, Object> redisTemplate;
 

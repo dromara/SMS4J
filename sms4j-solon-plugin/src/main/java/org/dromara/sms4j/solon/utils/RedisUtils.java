@@ -1,6 +1,7 @@
 package org.dromara.sms4j.solon.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.sms4j.api.universal.RedisUtil;
 import org.noear.solon.Solon;
 import org.redisson.api.RedissonClient;
 
@@ -9,7 +10,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-public class RedisUtils {
+public class RedisUtils implements RedisUtil {
 
     private RedissonClient redisTemplate;
 

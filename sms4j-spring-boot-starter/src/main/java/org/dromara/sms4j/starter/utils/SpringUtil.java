@@ -90,4 +90,13 @@ public class SpringUtil implements ApplicationContextAware {
     public void deleteBean(String beanName) {
         beanFactory.removeBeanDefinition(beanName);
     }
+
+    /**
+     *  interfaceExist
+     * <p>判断容器中是否存在某类型的bean
+     * @author :Wind
+    */
+    public static boolean interfaceExist(Class<?>interfaceType) {
+        return !applicationContext.getBeansOfType(interfaceType).isEmpty();
+    }
 }

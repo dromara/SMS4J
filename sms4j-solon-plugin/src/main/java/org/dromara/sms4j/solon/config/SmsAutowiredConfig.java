@@ -2,6 +2,7 @@ package org.dromara.sms4j.solon.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.smsProxy.SmsInvocationHandler;
+import org.dromara.sms4j.api.universal.RedisUtil;
 import org.dromara.sms4j.comm.config.SmsBanner;
 import org.dromara.sms4j.comm.config.SmsConfig;
 import org.dromara.sms4j.comm.config.SmsSqlConfig;
@@ -79,7 +80,10 @@ public class SmsAutowiredConfig {
     private void smsConfigCheck(){
         /* 如果配置中启用了redis，则注入redis工具*/
         if (BeanFactory.getSmsConfig().getRedisCache()){
-            Solon.context().wrapAndPut(RedisUtils.class);
+            //如果容器中不存在一个已经实现的redisUtil则自己注入一个
+            if (!Solon.context().hasWrap(RedisUtil.class)){
+                Solon.context().wrapAndPut(RedisUtils.class);
+            }
             SmsInvocationHandler.setRestrictedProcess(new SolonRestrictedProcess(aopContext));
             log.debug("The redis cache is enabled for sms4j");
         }

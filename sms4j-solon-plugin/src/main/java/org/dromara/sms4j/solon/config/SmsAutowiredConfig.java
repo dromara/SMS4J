@@ -17,12 +17,13 @@ import org.noear.solon.Utils;
 import org.noear.solon.annotation.*;
 import org.noear.solon.core.AopContext;
 import org.noear.solon.core.Props;
+import org.noear.solon.core.bean.LifecycleBean;
 
 import java.util.concurrent.Executor;
 
 @Slf4j
 @Configuration
-public class SmsAutowiredConfig {
+public class SmsAutowiredConfig implements LifecycleBean {
 
     public static AopContext aopContext;
 
@@ -75,9 +76,9 @@ public class SmsAutowiredConfig {
         return new SupplierSqlConfig();
     }
 
-    //@Init 是在 solon 容器扫描完成之后执行的
-    @Init
-    public void smsConfigCheck() {
+    //是在 solon 容器扫描完成之后执行的
+    @Override
+    public void start() throws Throwable {
         /* 如果配置中启用了redis，则注入redis工具*/
         if (BeanFactory.getSmsConfig().getRedisCache()) {
             //如果容器中不存在一个已经实现的redisUtil则自己注入一个

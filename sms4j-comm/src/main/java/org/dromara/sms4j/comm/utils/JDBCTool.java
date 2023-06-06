@@ -29,12 +29,9 @@ public class JDBCTool {
 
     public JDBCTool(SmsSqlConfig config) {
         if (config == null) {
-            throw new SmsSqlException("The configuration file failed to be loaded. Procedure");
+            throw new SmsSqlException("The configuration file failed to be loaded");
         }
         this.config = config;
-        if (StrUtil.isEmpty(this.config.getDatabaseName())) {
-            throw new SmsSqlException("You did not specify a database driver");
-        }
     }
 
     public static Map<String, String> selectConfig() {

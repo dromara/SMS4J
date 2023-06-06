@@ -1,5 +1,12 @@
 package org.dromara.sms4j.api.universal;
 
+/**
+ * RedisUtil
+ * <p> redis工具接口，用户可自主实现以更换redis的来源
+ *@since 2.2.0
+ * @author :Wind
+ * 2023/6/6  22:21
+ **/
 public interface RedisUtil {
 
     /**

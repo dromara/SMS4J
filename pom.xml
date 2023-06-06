@@ -127,13 +127,6 @@
                 <version>${forest.version}</version>
             </dependency>
 
-            <!--aop依赖-->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-aop</artifactId>
-                <version>${spring.boot.version}</version>
-            </dependency>
-
             <!-- redis 缓存操作 -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>

@@ -8,6 +8,7 @@ import org.dromara.sms4j.comm.config.SmsSqlConfig;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.factory.BeanFactory;
+import org.dromara.sms4j.comm.utils.JDBCTool;
 import org.dromara.sms4j.core.SupplierSqlConfig;
 import org.dromara.sms4j.starter.aop.RestrictedProcessImpl;
 import org.dromara.sms4j.api.universal.RedisUtil;
@@ -20,6 +21,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 
+import javax.sql.DataSource;
+import java.sql.SQLException;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 
 
@@ -70,7 +74,11 @@ public class SmsAutowiredConfig {
 
     @Bean
     @ConditionalOnProperty(prefix = "sms", name = "config-type", havingValue = "sql_config")
-    protected SupplierSqlConfig supplierSqlConfig(SmsSqlConfig smsSqlConfig){
+    protected SupplierSqlConfig supplierSqlConfig(SmsSqlConfig smsSqlConfig) throws SQLException {
+        DataSource bean = SpringUtil.getBean(DataSource.class);
+        if (!Objects.isNull(bean)){
+            BeanFactory.getJDBCTool().setConnection(bean.getConnection());
+        }
         return new SupplierSqlConfig();
     }
 

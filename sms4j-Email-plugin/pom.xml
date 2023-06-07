@@ -20,29 +20,43 @@
 
     <name>sms4j-Email-plugin</name>
     <description>sms4j-Email-plugin</description>
+
     <properties>
 
     </properties>
+
     <dependencyManagement>
-    <dependencies>
-        <dependency>
-            <groupId>org.dromara.sms4j</groupId>
-            <artifactId>sms4j-Email-api</artifactId>
-            <version>${revision}</version>
-        </dependency>
+        <dependencies>
+            <dependency>
+                <groupId>org.dromara.sms4j</groupId>
+                <artifactId>sms4j-Email-api</artifactId>
+                <version>${revision}</version>
+            </dependency>
 
-        <dependency>
-            <groupId>org.dromara.sms4j</groupId>
-            <artifactId>sms4j-Email-comm</artifactId>
-            <version>${revision}</version>
-        </dependency>
+            <dependency>
+                <groupId>org.dromara.sms4j</groupId>
+                <artifactId>sms4j-Email-comm</artifactId>
+                <version>${revision}</version>
+            </dependency>
 
-        <dependency>
-            <groupId>org.dromara.sms4j</groupId>
-            <artifactId>sms4j-Email-core</artifactId>
-            <version>${revision}</version>
-        </dependency>
-    </dependencies>
+            <dependency>
+                <groupId>org.dromara.sms4j</groupId>
+                <artifactId>sms4j-Email-core</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.sun.mail</groupId>
+                <artifactId>javax.mail</artifactId>
+                <version>${mail.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.sun.activation</groupId>
+                <artifactId>javax.activation</artifactId>
+                <version>${sunactivation.version}</version>
+            </dependency>
+        </dependencies>
     </dependencyManagement>
 
 </project>

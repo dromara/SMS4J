@@ -12,13 +12,15 @@ import java.util.Objects;
 /**
  * HtmlUtil
  * <p> Html相关工具
- *
  * @author :Wind
  * 2023/6/7  20:15
  **/
-public class HtmlUtil {
+public final class HtmlUtil {
 
     private static final HtmlUtil htmlUtil = new HtmlUtil();
+
+    private HtmlUtil() {
+    }
 
     /**
      * readHtml
@@ -88,7 +90,10 @@ public class HtmlUtil {
                 String piece = piece(s.getKey());
                 if (datum.contains(piece)){
                     list.add(datum.replace(piece, s.getValue()));
+                }else {
+                    list.add(datum);
                 }
+
             }
         }
         return list;

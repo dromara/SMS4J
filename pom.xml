@@ -19,6 +19,7 @@
         <module>sms4j-spring-boot-starter</module>
         <module>sms4j-solon-plugin</module>
         <module>sms4j-spring-boot-example</module>
+        <module>sms4j-Email-plugin</module>
     </modules>
 
     <!-- 开源协议 Apache 2.0 -->

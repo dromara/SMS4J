@@ -1,11 +1,17 @@
 package org.dromara.sms4j.huawei.config;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import org.dromara.sms4j.api.universal.SupplierConfig;
 
 @Data
-@Builder
+@SuperBuilder
+@ToString
+@EqualsAndHashCode
+@NoArgsConstructor
 public class HuaweiConfig implements SupplierConfig {
 
     /** appKey*/

@@ -1,7 +1,10 @@
 package org.dromara.sms4j.emay.config;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import org.dromara.sms4j.api.universal.SupplierConfig;
 
 /**
@@ -9,7 +12,10 @@ import org.dromara.sms4j.api.universal.SupplierConfig;
  * @date 2023-04-11 12:00
  */
 @Data
-@Builder
+@SuperBuilder
+@ToString
+@EqualsAndHashCode
+@NoArgsConstructor
 public class EmayConfig implements SupplierConfig {
     /** appKey*/
     private String appId ;

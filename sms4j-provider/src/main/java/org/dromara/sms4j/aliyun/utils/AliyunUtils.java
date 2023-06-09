@@ -68,7 +68,7 @@ public class AliyunUtils {
             sortQueryString.append("&").append(specialUrlEncode(key)).append("=").append(specialUrlEncode(paras.get(key)));
         }
         // 6.生成合法请求URL
-        return Constant.HTTPS_PREFIX + alibabaConfig.getRequestUrl() + "/?Signature=" + signature + sortQueryString;
+        return Constant.HTTPS_PREFIX + alibabaConfig.getRequestUrl() + "/?Signature=" + specialUrlEncode(signature) + sortQueryString;
     }
 
     /**

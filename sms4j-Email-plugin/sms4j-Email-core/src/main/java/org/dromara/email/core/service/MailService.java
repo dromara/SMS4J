@@ -1,6 +1,5 @@
 package org.dromara.email.core.service;
 
-import lombok.extern.slf4j.Slf4j;
 import org.dromara.email.api.MailClient;
 import org.dromara.email.api.Parameter;
 import org.dromara.email.comm.errors.MailException;
@@ -11,14 +10,15 @@ import org.dromara.email.core.ReflectUtil;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.Transport;
 import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import java.util.*;
-
-@Slf4j
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 public class MailService implements MailClient {
 
     private MailBuild mailBuild;

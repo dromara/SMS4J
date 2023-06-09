@@ -1,9 +1,9 @@
-package org.dromara.email.comm.utils;
+package org.dromara.email.core;
 
+import org.dromara.email.api.Parameter;
 import org.dromara.email.comm.errors.MailException;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Parameter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,14 +19,14 @@ public class ReflectUtil {
     /**
      * 将对象的属性和属性值变为map
      * */
-    public static Map<String, Object> getValues(Parameter parameter) {
+    public static Map<String, String> getValues(Parameter parameter) {
         try {
-            Map<String ,Object> map = new HashMap<>();
+            Map<String ,String> map = new HashMap<>();
             Class<?> clazz = Class.forName(getObjectName(parameter));
             Field[] declaredFields = clazz.getDeclaredFields();
             for (Field declaredField : declaredFields) {
                 declaredField.setAccessible(true);
-                map.put(declaredField.getName(),declaredField.get(parameter));
+                map.put(declaredField.getName(), (String) declaredField.get(parameter));
             }
             return map;
         } catch (Exception e) {

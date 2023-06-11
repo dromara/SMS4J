@@ -12,6 +12,7 @@ import java.util.Objects;
 /**
  * HtmlUtil
  * <p> Html相关工具
+ *
  * @author :Wind
  * 2023/6/7  20:15
  **/
@@ -30,7 +31,7 @@ public final class HtmlUtil {
      * @author :Wind
      */
     public static List<String> readHtml(String name) throws MailException {
-        try (InputStream is = htmlUtil.getClass().getResourceAsStream("/template/" + name);) {
+        try (InputStream is = HtmlUtil.class.getResourceAsStream("/template/" + name);) {
             return readHtml(is);
         } catch (IOException e) {
             throw new MailException(e);
@@ -77,49 +78,48 @@ public final class HtmlUtil {
     }
 
     /**
-     *  replacePlaceholder
+     * replacePlaceholder
      * <p>将所包含占位符的字符串替换为固定值
-     * @param data 源数据
+     *
+     * @param data      源数据
      * @param parameter key为占位符名称 value为占位符应替换的值
      * @author :Wind
-    */
+     */
     public static List<String> replacePlaceholder(List<String> data, Map<String, String> parameter) {
-        List<String> list = new ArrayList<>();
-        for (String datum : data) {
+        for (int i = 0; i < data.size(); i++) {
             for (Map.Entry<String, String> s : parameter.entrySet()) {
                 String piece = piece(s.getKey());
-                if (datum.contains(piece)){
-                    list.add(datum.replace(piece, s.getValue()));
-                }else {
-                    list.add(datum);
+                if (data.get(i).contains(piece)){
+                    data.set(i,s.getValue());
                 }
-
             }
         }
-        return list;
+        return data;
     }
 
     /**
-     *  pieceHtml
+     * pieceHtml
      * <p>将数据拼合为html
+     *
      * @param data 需要拼合的数据
      * @author :Wind
-    */
-    public static String pieceHtml(List<String> data){
+     */
+    public static String pieceHtml(List<String> data) {
         StringBuilder sb = new StringBuilder();
         for (String datum : data) {
-          sb.append(datum);
-          sb.append("\r\n");
+            sb.append(datum);
+            sb.append("\r\n");
         }
         return sb.toString();
     }
 
     /**
-     *  piece
+     * piece
      * <p>将参数拼合为完整占位符
+     *
      * @author :Wind
-    */
-    public static String piece(String parameter){
-        return "#{"+parameter+"}";
+     */
+    public static String piece(String parameter) {
+        return "#{" + parameter + "}";
     }
 }

@@ -1,11 +1,15 @@
 package org.dromara.email.comm.utils;
 
-import java.io.File;
-
 public class BaseUtil {
 
-public static String getPathName(String path) {
-    String[] split = path.split(File.separator);
-    return split[split.length-1];
-}
+    /**
+     * getPathName
+     * <p>分隔文件路径，并获取文件名
+     * @param path 文件路径
+     * @author :Wind
+     */
+    public static String getPathName(String path) {
+        String[] split = path.split("/");
+        return split[split.length - 1];
+    }
 }

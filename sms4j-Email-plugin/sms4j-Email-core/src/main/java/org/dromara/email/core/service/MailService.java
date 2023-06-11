@@ -19,6 +19,8 @@ import javax.mail.internet.MimeMultipart;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
 public class MailService implements MailClient {
 
     private MailBuild mailBuild;
@@ -52,11 +54,14 @@ public class MailService implements MailClient {
             Message message = mailBuild.getMessage();
             message.setRecipients(Message.RecipientType.TO, mailBuild.eliminate(mailAddress));
             message.setSubject(title);
-            message.setText(body);
-            Multipart multipart = new MimeMultipart();
-            forFiles(multipart, files);
-            message.setContent(multipart);
-
+            if (Objects.isNull(body) ||body.isEmpty()){
+                message.setText(body);
+            }
+            if (files.length != 0){
+                Multipart multipart = new MimeMultipart();
+                forFiles(multipart, files);
+                message.setContent(multipart);
+            }
             Transport.send(message);
         } catch (MessagingException e) {
             throw new MailException(e);
@@ -134,14 +139,22 @@ public class MailService implements MailClient {
             Message message = mailBuild.getMessage();
             message.setRecipients(Message.RecipientType.TO, mailBuild.eliminate(mailAddress));
             message.setSubject(title);
-            message.setText(body);
-            Multipart multipart = new MimeMultipart();
+
+            Multipart multipart = new MimeMultipart("alternative");
             //读取模板并进行变量替换
             List<String> strings = HtmlUtil.replacePlaceholder(HtmlUtil.readHtml(htmlName), parameter);
             //拼合HTML数据
             String htmlData = HtmlUtil.pieceHtml(strings);
+            if (!body.isEmpty()){
+                // 创建文本正文部分
+                MimeBodyPart textPart = new MimeBodyPart();
+                textPart.setText(body);
+                multipart.addBodyPart(textPart);
+            }
             //添加附件
-            forFiles(multipart, files);
+            if (files.length != 0){
+                forFiles(multipart, files);
+            }
             MimeBodyPart htmlPart = new MimeBodyPart();
             htmlPart.setContent(htmlData, "text/html;charset=UTF-8");
             multipart.addBodyPart(htmlPart);

@@ -3,7 +3,6 @@ package org.dromara.email.core.service;
 import org.dromara.email.api.MailClient;
 import org.dromara.email.api.Parameter;
 import org.dromara.email.comm.errors.MailException;
-import org.dromara.email.comm.utils.BaseUtil;
 import org.dromara.email.comm.utils.HtmlUtil;
 import org.dromara.email.core.ReflectUtil;
 
@@ -16,7 +15,10 @@ import javax.mail.Multipart;
 import javax.mail.Transport;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class MailService implements MailClient {
 

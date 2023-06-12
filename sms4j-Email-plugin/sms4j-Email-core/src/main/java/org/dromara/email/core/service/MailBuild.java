@@ -72,7 +72,6 @@ public class MailBuild {
     /**
      * eliminate
      * <p>过滤黑名单内容
-     *
      * @param
      * @author :Wind
      */

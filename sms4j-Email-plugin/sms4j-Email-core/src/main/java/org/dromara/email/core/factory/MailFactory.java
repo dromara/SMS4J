@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * ConfigFactory
+ * MailFactory
  * <p> 配置工厂
  * @author :Wind
  * 2023/6/8  22:35

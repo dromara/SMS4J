@@ -44,8 +44,29 @@ public class MailBuild {
         this.config = config;
     }
 
+    private MailBuild(MailSmtpConfig config,Blacklist blacklist)throws MessagingException{
+        Properties props = new Properties();
+        props.put("mail.smtp.host", config.getSmtpServer());
+        props.put("mail.smtp.auth", config.getIsAuth());
+        props.put("mail.smtp.port", config.getPort());
+        props.put("mail.smtp.ssl.enable", config.getIsSSL());
+//        props.put("mail.smtp.ssl.socketFactory", new MailSSLSocketFactory());
+        this.session = Session.getInstance(props, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(config.getUsername(), config.getPassword());
+            }
+        });
+        this.message = new MimeMessage(session);
+        this.message.setFrom(new InternetAddress(config.getFromAddress()));
+        this.config = config;
+        this.blacklist = blacklist;
+    }
+
     public static MailClient build(MailSmtpConfig config) throws MessagingException {
         return MailService.NewMailService(new MailBuild(config));
+    }
+    public static MailClient build(MailSmtpConfig config,Blacklist blacklist)throws MessagingException {
+       return MailService.NewMailService(new MailBuild(config,blacklist));
     }
 
     /**

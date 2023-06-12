@@ -35,7 +35,7 @@ public interface MailClient {
      * @param files 附件，可添加多个
      * @author :Wind
     */
-    void sendEmail(String mailAddress, String title, String body, String... files);
+    void sendEmail(String mailAddress, String title, String body,Map<String,String> files);
 
     /**
      *  sendEmail
@@ -46,7 +46,7 @@ public interface MailClient {
      * @param files 附件，可添加多个
      * @author :Wind
      */
-    void sendEmail(List<String> mailAddress, String title, String body, String... files);
+    void sendEmail(List<String> mailAddress, String title, String body, Map<String,String> files);
 
     /**
      *  sendHtml
@@ -109,7 +109,7 @@ public interface MailClient {
      * @param files 附件，可添加多个
      * @author :Wind
      */
-    void sendHtml(String mailAddress, String title , String htmlName,Map<String,String> parameter,String...files);
+    void sendHtml(String mailAddress, String title , String htmlName,Map<String,String> parameter,Map<String,String> files);
 
     /**
      *  sendHtml
@@ -122,7 +122,7 @@ public interface MailClient {
      * @param files 附件，可添加多个
      * @author :Wind
      */
-    void sendHtml(List<String> mailAddress, String title , String htmlName,Map<String,String> parameter,String...files);
+    void sendHtml(List<String> mailAddress, String title , String htmlName,Map<String,String> parameter,Map<String,String> files);
 
     /**
      *  sendHtml
@@ -136,7 +136,7 @@ public interface MailClient {
      * @param files 附件，可添加多个
      * @author :Wind
      */
-    void sendHtml(String mailAddress, String title , String htmlName,Parameter parameter,String...files);
+    void sendHtml(String mailAddress, String title , String htmlName,Parameter parameter,Map<String,String> files);
 
     /**
      *  sendHtml
@@ -150,7 +150,7 @@ public interface MailClient {
      * @param files 附件，可添加多个
      * @author :Wind
      */
-    void sendHtml(List<String> mailAddress, String title , String htmlName,Parameter parameter,String...files);
+    void sendHtml(List<String> mailAddress, String title , String htmlName,Parameter parameter,Map<String,String> files);
 
     /**
      *  sendHtml
@@ -215,10 +215,10 @@ public interface MailClient {
      * @param body 邮件文本正文
      * @param htmlName 邮件正文
      * @param parameter key为模板的变量名称 无需携带大括号  value为模板变量所对应的值
-     * @param files 附件，可添加多个
+     * @param files 附件，可添加多个 key 为文件名，value为文件的路径
      * @author :Wind
      */
-    void sendHtml(String mailAddress, String title ,String body, String htmlName, Map<String,String> parameter,String...files);
+    void sendHtml(String mailAddress, String title ,String body, String htmlName, Map<String,String> parameter,Map<String,String> files);
 
     /**
      *  sendHtml
@@ -229,10 +229,10 @@ public interface MailClient {
      * @param body 邮件文本正文
      * @param htmlName 邮件正文
      * @param parameter key为模板的变量名称 无需携带大括号  value为模板变量所对应的值
-     * @param files 附件，可添加多个
+     * @param files 附件，可添加多个 key 为文件名，value为文件的路径
      * @author :Wind
      */
-    void sendHtml(List<String> mailAddress, String title ,String body, String htmlName, Map<String,String> parameter,String...files);
+    void sendHtml(List<String> mailAddress, String title ,String body, String htmlName, Map<String,String> parameter,Map<String,String> files);
 
     /**
      *  sendHtml
@@ -244,11 +244,10 @@ public interface MailClient {
      * @param body 邮件文本正文
      * @param htmlName 邮件正文
      * @param parameter key为模板的变量名称 无需携带大括号  value为模板变量所对应的值
-     * @param files 附件，可添加多个
+     * @param files 附件，可添加多个 key 为文件名，value为文件的路径
      * @author :Wind
      */
-    void sendHtml(String mailAddress, String title ,String body, String htmlName, Parameter parameter,String...files);
-
+    void sendHtml(String mailAddress, String title ,String body, String htmlName, Parameter parameter,Map<String,String> files);
 
     /**
      *  sendHtml
@@ -260,10 +259,10 @@ public interface MailClient {
      * @param body 邮件文本正文
      * @param htmlName 邮件正文
      * @param parameter key为模板的变量名称 无需携带大括号  value为模板变量所对应的值
-     * @param files 附件，可添加多个
+     * @param files 附件，可添加多个 key 为文件名，value为文件的路径
      * @author :Wind
      */
-    void sendHtml(List<String> mailAddress, String title ,String body, String htmlName, Parameter parameter,String...files);
+    void sendHtml(List<String> mailAddress, String title ,String body, String htmlName, Parameter parameter,Map<String,String> files);
 
 
 }

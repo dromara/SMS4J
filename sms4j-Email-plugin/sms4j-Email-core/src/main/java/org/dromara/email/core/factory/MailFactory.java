@@ -16,7 +16,7 @@ import java.util.Map;
  * @author :Wind
  * 2023/6/8  22:35
  **/
-public class ConfigFactory{
+public class MailFactory{
     private static final Map<Object,MailSmtpConfig> configs = new HashMap<>();
 
     /**
@@ -42,7 +42,7 @@ public class ConfigFactory{
     */
     public static MailClient createMailClient(Object key, Blacklist blacklist){
         try {
-            return MailBuild.build(configs.get(key));
+            return MailBuild.build(configs.get(key),blacklist);
         } catch (MessagingException e) {
             throw new MailException(e);
         }
@@ -55,7 +55,7 @@ public class ConfigFactory{
      * @param config 配置对象
      * @author :Wind
     */
-    public static void set(Object key, MailSmtpConfig config){
+    public static void put(Object key, MailSmtpConfig config){
         configs.put(key,config);
     }
 

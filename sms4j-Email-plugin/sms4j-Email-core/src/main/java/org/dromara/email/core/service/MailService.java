@@ -16,10 +16,7 @@ import javax.mail.Multipart;
 import javax.mail.Transport;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class MailService implements MailClient {
 
@@ -35,29 +32,29 @@ public class MailService implements MailClient {
 
     @Override
     public void sendMail(String mailAddress, String title, String body) {
-        sendEmail(mailAddress, title, body);
+        sendEmail(mailAddress, title, body,null);
     }
 
     @Override
     public void sendMail(List<String> mailAddress, String title, String body) {
-        sendEmail(mailAddress, title, body);
+        sendEmail(mailAddress, title, body,null);
     }
 
     @Override
-    public void sendEmail(String mailAddress, String title, String body, String... files) {
+    public void sendEmail(String mailAddress, String title, String body, Map<String,String> files) {
         sendEmail(Collections.singletonList(mailAddress), title, body, files);
     }
 
     @Override
-    public void sendEmail(List<String> mailAddress, String title, String body, String... files) {
+    public void sendEmail(List<String> mailAddress, String title, String body, Map<String,String> files) {
         try {
             Message message = mailBuild.getMessage();
             message.setRecipients(Message.RecipientType.TO, mailBuild.eliminate(mailAddress));
             message.setSubject(title);
-            if (Objects.isNull(body) ||body.isEmpty()){
+            if (Objects.isNull(body) || body.isEmpty()) {
                 message.setText(body);
             }
-            if (files.length != 0){
+            if (files != null && files.size() != 0) {
                 Multipart multipart = new MimeMultipart();
                 forFiles(multipart, files);
                 message.setContent(multipart);
@@ -75,7 +72,7 @@ public class MailService implements MailClient {
 
     @Override
     public void sendHtml(List<String> mailAddress, String title, String htmlName, Map<String, String> parameter) {
-        sendHtml(mailAddress, title, htmlName, parameter, new String[0]);
+        sendHtml(mailAddress, title, htmlName, parameter, null);
     }
 
     @Override
@@ -89,33 +86,33 @@ public class MailService implements MailClient {
     }
 
     @Override
-    public void sendHtml(String mailAddress, String title, String htmlName, Map<String, String> parameter, String... files) {
+    public void sendHtml(String mailAddress, String title, String htmlName, Map<String, String> parameter, Map<String,String> files) {
         sendHtml(mailAddress, title, "", htmlName, parameter, files);
     }
 
     @Override
-    public void sendHtml(List<String> mailAddress, String title, String htmlName, Map<String, String> parameter, String... files) {
+    public void sendHtml(List<String> mailAddress, String title, String htmlName, Map<String, String> parameter, Map<String,String> files) {
         sendHtml(mailAddress, title, "", htmlName, parameter, files);
     }
 
     @Override
-    public void sendHtml(String mailAddress, String title, String htmlName, Parameter parameter, String... files) {
+    public void sendHtml(String mailAddress, String title, String htmlName, Parameter parameter, Map<String,String> files) {
         sendHtml(mailAddress, title, htmlName, ReflectUtil.getValues(parameter), files);
     }
 
     @Override
-    public void sendHtml(List<String> mailAddress, String title, String htmlName, Parameter parameter, String... files) {
+    public void sendHtml(List<String> mailAddress, String title, String htmlName, Parameter parameter, Map<String,String> files) {
         sendHtml(mailAddress, title, htmlName, ReflectUtil.getValues(parameter), files);
     }
 
     @Override
     public void sendHtml(String mailAddress, String title, String body, String htmlName, Map<String, String> parameter) {
-        sendHtml(mailAddress, title, body, htmlName, parameter, new String[0]);
+        sendHtml(mailAddress, title, body, htmlName, parameter, null);
     }
 
     @Override
     public void sendHtml(List<String> mailAddress, String title, String body, String htmlName, Map<String, String> parameter) {
-        sendHtml(mailAddress, title, body, htmlName, parameter, new String[0]);
+        sendHtml(mailAddress, title, body, htmlName, parameter, null);
     }
 
     @Override
@@ -125,16 +122,16 @@ public class MailService implements MailClient {
 
     @Override
     public void sendHtml(List<String> mailAddress, String title, String body, String htmlName, Parameter parameter) {
-        sendHtml(mailAddress, title, body, htmlName, parameter, new String[0]);
+        sendHtml(mailAddress, title, body, htmlName, parameter, null);
     }
 
     @Override
-    public void sendHtml(String mailAddress, String title, String body, String htmlName, Map<String, String> parameter, String... files) {
+    public void sendHtml(String mailAddress, String title, String body, String htmlName, Map<String, String> parameter, Map<String, String> files) {
         sendHtml(Collections.singletonList(mailAddress), title, body, htmlName, parameter, files);
     }
 
     @Override
-    public void sendHtml(List<String> mailAddress, String title, String body, String htmlName, Map<String, String> parameter, String... files) {
+    public void sendHtml(List<String> mailAddress, String title, String body, String htmlName, Map<String, String> parameter, Map<String, String> files) {
         try {
             Message message = mailBuild.getMessage();
             message.setRecipients(Message.RecipientType.TO, mailBuild.eliminate(mailAddress));
@@ -145,14 +142,14 @@ public class MailService implements MailClient {
             List<String> strings = HtmlUtil.replacePlaceholder(HtmlUtil.readHtml(htmlName), parameter);
             //拼合HTML数据
             String htmlData = HtmlUtil.pieceHtml(strings);
-            if (!body.isEmpty()){
+            if (!body.isEmpty()) {
                 // 创建文本正文部分
                 MimeBodyPart textPart = new MimeBodyPart();
                 textPart.setText(body);
                 multipart.addBodyPart(textPart);
             }
             //添加附件
-            if (files.length != 0){
+            if (files != null && files.size() != 0) {
                 forFiles(multipart, files);
             }
             MimeBodyPart htmlPart = new MimeBodyPart();
@@ -166,22 +163,24 @@ public class MailService implements MailClient {
     }
 
     @Override
-    public void sendHtml(String mailAddress, String title, String body, String htmlName, Parameter parameter, String... files) {
+    public void sendHtml(String mailAddress, String title, String body, String htmlName, Parameter parameter, Map<String, String> files) {
         sendHtml(Collections.singletonList(mailAddress), title, body, htmlName, parameter, files);
     }
 
     @Override
-    public void sendHtml(List<String> mailAddress, String title, String body, String htmlName, Parameter parameter, String... files) {
+    public void sendHtml(List<String> mailAddress, String title, String body, String htmlName, Parameter parameter, Map<String, String> files) {
         sendHtml(mailAddress, title, body, htmlName, ReflectUtil.getValues(parameter), files);
     }
 
-    private void forFiles(Multipart multipart, String[] files) throws MessagingException {
-        for (String file : files) {
+    private void forFiles(Multipart multipart, Map<String, String> files) throws MessagingException {
+        for (Map.Entry<String, String> entry : files.entrySet()) {
+            String k = entry.getKey();
+            String v = entry.getValue();
             // 设置附件消息部分
             MimeBodyPart messageBodyPart = new MimeBodyPart();
-            DataSource source = new FileDataSource(file);
+            DataSource source = new FileDataSource(v);
             messageBodyPart.setDataHandler(new DataHandler(source));
-            messageBodyPart.setFileName(BaseUtil.getPathName(file));
+            messageBodyPart.setFileName(k);
             multipart.addBodyPart(messageBodyPart);
         }
     }

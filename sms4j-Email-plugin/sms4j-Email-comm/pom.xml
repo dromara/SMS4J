@@ -22,6 +22,11 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-cron</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-http</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

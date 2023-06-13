@@ -315,7 +315,7 @@ public interface MailClient {
      * @param mailAddress 收件人地址，添加多个
      * @param title 邮件标题
      * @param body 邮件文本正文
-     * @param html html模板的输入流
+     * @param html html模板的输入流，这个流可以来自任何来源，例如网络请求，或是本地文件，或者对象存储等
      * @param parameter key为模板的变量名称 无需携带大括号  value为模板变量所对应的值
      * @param files 附件，可添加多个 key 为文件名，value为文件的路径
      * @author :Wind
@@ -330,7 +330,7 @@ public interface MailClient {
      * @param mailAddress 收件人地址，添加多个
      * @param title 邮件标题
      * @param body 邮件文本正文
-     * @param html html模板的输入流
+     * @param html html模板的输入流,这个流可以来自任何来源，例如网络请求，或是本地文件，或者对象存储等
      * @param parameter 字段名称为变量名称，字段值为变量值
      * @param files 附件，可添加多个 key 为文件名，value为文件的路径
      * @author :Wind

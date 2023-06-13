@@ -51,11 +51,12 @@ public class MailBuild {
         props.put("mail.smtp.port", config.getPort());
         props.put("mail.smtp.ssl.enable", config.getIsSSL());
 //        props.put("mail.smtp.ssl.socketFactory", new MailSSLSocketFactory());
-        this.session = Session.getInstance(props, new Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(config.getUsername(), config.getPassword());
-            }
-        });
+        this.session = Session.getInstance(props,
+                new Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(config.getUsername(), config.getPassword());
+                    }
+                });
         this.message = new MimeMessage(session);
         this.message.setFrom(new InternetAddress(config.getFromAddress()));
         this.config = config;
@@ -72,7 +73,7 @@ public class MailBuild {
     /**
      * eliminate
      * <p>过滤黑名单内容
-     * @param
+     * @param source 需要过滤的源数据
      * @author :Wind
      */
     public InternetAddress[] eliminate(List<String> source) {

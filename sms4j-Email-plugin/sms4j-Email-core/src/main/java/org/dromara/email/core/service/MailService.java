@@ -25,14 +25,14 @@ import javax.mail.util.ByteArrayDataSource;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class MailService implements MailClient {
 
-    private final MailBuild mailBuild;
+    private MailBuild mailBuild;
 
     private MailService(MailBuild mailBuild) {
         this.mailBuild = mailBuild;
@@ -44,16 +44,16 @@ public class MailService implements MailClient {
 
     @Override
     public void sendMail(String mailAddress, String title, String body) {
-        sendEmail(mailAddress, title, body,null);
+        sendEmail(mailAddress, title, body, null);
     }
 
     @Override
     public void sendMail(List<String> mailAddress, String title, String body) {
-        sendEmail(mailAddress, title, body,null);
+        sendEmail(mailAddress, title, body, null);
     }
 
     @Override
-    public void sendEmail(String mailAddress, String title, String body, Map<String,String> files) {
+    public void sendEmail(String mailAddress, String title, String body, Map<String, String> files) {
         sendEmail(Collections.singletonList(mailAddress), title, body, files);
     }
 
@@ -78,7 +78,7 @@ public class MailService implements MailClient {
     }
 
     @Override
-    public void sendEmail(List<String> mailAddress, String title, String body, Map<String,String> files) {
+    public void sendEmail(List<String> mailAddress, String title, String body, Map<String, String> files) {
         try {
             Message message = mailBuild.getMessage();
             message.setRecipients(Message.RecipientType.TO, mailBuild.eliminate(mailAddress));
@@ -118,22 +118,22 @@ public class MailService implements MailClient {
     }
 
     @Override
-    public void sendHtml(String mailAddress, String title, String htmlName, Map<String, String> parameter, Map<String,String> files) {
+    public void sendHtml(String mailAddress, String title, String htmlName, Map<String, String> parameter, Map<String, String> files) {
         sendHtml(mailAddress, title, "", htmlName, parameter, files);
     }
 
     @Override
-    public void sendHtml(List<String> mailAddress, String title, String htmlName, Map<String, String> parameter, Map<String,String> files) {
+    public void sendHtml(List<String> mailAddress, String title, String htmlName, Map<String, String> parameter, Map<String, String> files) {
         sendHtml(mailAddress, title, "", htmlName, parameter, files);
     }
 
     @Override
-    public void sendHtml(String mailAddress, String title, String htmlName, Parameter parameter, Map<String,String> files) {
+    public void sendHtml(String mailAddress, String title, String htmlName, Parameter parameter, Map<String, String> files) {
         sendHtml(mailAddress, title, htmlName, ReflectUtil.getValues(parameter), files);
     }
 
     @Override
-    public void sendHtml(List<String> mailAddress, String title, String htmlName, Parameter parameter, Map<String,String> files) {
+    public void sendHtml(List<String> mailAddress, String title, String htmlName, Parameter parameter, Map<String, String> files) {
         sendHtml(mailAddress, title, htmlName, ReflectUtil.getValues(parameter), files);
     }
 
@@ -195,6 +195,11 @@ public class MailService implements MailClient {
     }
 
     @Override
+    public void sendHtml(String mailAddress, String title, String body, String htmlName, Parameter parameter, String zipName, Map<String, String> files) {
+        sendHtml(mailAddress, title, body,htmlName, ReflectUtil.getValues(parameter),zipName,files );
+    }
+
+    @Override
     public void sendHtml(List<String> mailAddress, String title, String body, String htmlName, Map<String, String> parameter, Map<String, String> files) {
         try {
             Message message = mailBuild.getMessage();
@@ -236,6 +241,43 @@ public class MailService implements MailClient {
         sendHtml(mailAddress, title, body, htmlName, ReflectUtil.getValues(parameter), files);
     }
 
+    @Override
+    public void sendHtml(List<String> mailAddress, String title, String body, InputStream html, Map<String, String> parameter, Map<String, String> files) {
+        try {
+            Message message = mailBuild.getMessage();
+            message.setRecipients(Message.RecipientType.TO, mailBuild.eliminate(mailAddress));
+            message.setSubject(title);
+
+            Multipart multipart = new MimeMultipart("alternative");
+            //读取模板并进行变量替换
+            List<String> strings = HtmlUtil.replacePlaceholder(HtmlUtil.readHtml(html), parameter);
+            //拼合HTML数据
+            String htmlData = HtmlUtil.pieceHtml(strings);
+            if (!body.isEmpty()) {
+                // 创建文本正文部分
+                MimeBodyPart textPart = new MimeBodyPart();
+                textPart.setText(body);
+                multipart.addBodyPart(textPart);
+            }
+            //添加附件
+            if (files != null && files.size() != 0) {
+                forFiles(multipart, files);
+            }
+            MimeBodyPart htmlPart = new MimeBodyPart();
+            htmlPart.setContent(htmlData, "text/html;charset=UTF-8");
+            multipart.addBodyPart(htmlPart);
+            message.setContent(multipart);
+            Transport.send(message);
+        } catch (MessagingException e) {
+            throw new MailException(e);
+        }
+    }
+
+    @Override
+    public void sendHtml(List<String> mailAddress, String title, String body, InputStream html, Parameter parameter, Map<String, String> files) {
+        sendHtml(mailAddress, title, body, html, ReflectUtil.getValues(parameter), files);
+    }
+
     private void forFiles(Multipart multipart, Map<String, String> files) throws MessagingException {
         for (Map.Entry<String, String> entry : files.entrySet()) {
             String k = entry.getKey();
@@ -257,7 +299,7 @@ public class MailService implements MailClient {
         ByteArrayInputStream stream = IoUtil.toStream(os);
         DataSource source = new ByteArrayDataSource(stream, "application/octet-stream");
         messageBodyPart.setDataHandler(new DataHandler(source));
-        messageBodyPart.setFileName(StrUtil.isNotBlank(zipName) ? zipName: UUID.fastUUID() + ".zip");
+        messageBodyPart.setFileName(StrUtil.isNotBlank(zipName) ? zipName : UUID.fastUUID() + ".zip");
         multipart.addBodyPart(messageBodyPart);
     }
 }

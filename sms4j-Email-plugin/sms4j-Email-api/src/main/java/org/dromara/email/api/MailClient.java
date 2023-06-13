@@ -1,5 +1,6 @@
 package org.dromara.email.api;
 
+import java.io.InputStream;
 import java.lang.String;
 import java.util.List;
 import java.util.Map;
@@ -243,9 +244,24 @@ public interface MailClient {
      * @param parameter key为模板的变量名称 无需携带大括号  value为模板变量所对应的值
      * @param zipName 压缩包名称 比如 附件.zip
      * @param files 附件，可添加多个 key 为文件名，value为文件的路径
-     * @author :Wind
+     * @author :bleachtred
      */
     void sendHtml(String mailAddress, String title, String body, String htmlName, Map<String,String> parameter, String zipName, Map<String,String> files);
+
+    /**
+     *  sendHtml
+     * <p> 读取模板发送html邮件,并携带正文和附件
+     * <p> 将默认读取resources/template下的html文件，第四个参数为html的名称，需携带尾缀
+     * @param mailAddress 收件人地址 多个收件人地址请按英文','字符隔开
+     * @param title 邮件标题
+     * @param body 邮件文本正文 可为空
+     * @param htmlName 邮件正文
+     * @param parameter 字段名称为变量名称，字段值为变量值
+     * @param zipName 压缩包名称 比如 附件.zip
+     * @param files 附件，可添加多个 key 为文件名，value为文件的路径
+     * @author :Wind
+     */
+    void sendHtml(String mailAddress, String title, String body, String htmlName, Parameter parameter, String zipName, Map<String,String> files);
 
     /**
      *  sendHtml
@@ -270,7 +286,7 @@ public interface MailClient {
      * @param title 邮件标题
      * @param body 邮件文本正文
      * @param htmlName 邮件正文
-     * @param parameter key为模板的变量名称 无需携带大括号  value为模板变量所对应的值
+     * @param parameter 字段名称为变量名称，字段值为变量值
      * @param files 附件，可添加多个 key 为文件名，value为文件的路径
      * @author :Wind
      */
@@ -285,11 +301,39 @@ public interface MailClient {
      * @param title 邮件标题
      * @param body 邮件文本正文
      * @param htmlName 邮件正文
-     * @param parameter key为模板的变量名称 无需携带大括号  value为模板变量所对应的值
+     * @param parameter 字段名称为变量名称，字段值为变量值
      * @param files 附件，可添加多个 key 为文件名，value为文件的路径
      * @author :Wind
      */
     void sendHtml(List<String> mailAddress, String title ,String body, String htmlName, Parameter parameter,Map<String,String> files);
 
+    /**
+     *  sendHtml
+     * <p> 读取模板发送html邮件,并携带正文和附件
+     * <p> 从用户给定的输入流获取html模板文件
+     * <p> 用户可以自己编写一个实体类，并实现Parameter接口，编写get和set方法，这样一来字段的名称则为模板变量名称，对象的值则为模板变量的值
+     * @param mailAddress 收件人地址，添加多个
+     * @param title 邮件标题
+     * @param body 邮件文本正文
+     * @param html html模板的输入流
+     * @param parameter key为模板的变量名称 无需携带大括号  value为模板变量所对应的值
+     * @param files 附件，可添加多个 key 为文件名，value为文件的路径
+     * @author :Wind
+     */
+    void sendHtml(List<String> mailAddress, String title , String body, InputStream html, Map<String, String> parameter, Map<String,String> files);
 
+    /**
+     *  sendHtml
+     * <p> 读取模板发送html邮件,并携带正文和附件
+     * <p> 从用户给定的输入流获取html模板文件
+     * <p> 用户可以自己编写一个实体类，并实现Parameter接口，编写get和set方法，这样一来字段的名称则为模板变量名称，对象的值则为模板变量的值
+     * @param mailAddress 收件人地址，添加多个
+     * @param title 邮件标题
+     * @param body 邮件文本正文
+     * @param html html模板的输入流
+     * @param parameter 字段名称为变量名称，字段值为变量值
+     * @param files 附件，可添加多个 key 为文件名，value为文件的路径
+     * @author :Wind
+     */
+    void sendHtml(List<String> mailAddress, String title ,String body, InputStream html, Parameter parameter,Map<String,String> files);
 }

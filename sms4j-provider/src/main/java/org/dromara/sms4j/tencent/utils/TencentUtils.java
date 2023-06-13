@@ -2,7 +2,7 @@ package org.dromara.sms4j.tencent.utils;
 
 import cn.hutool.crypto.digest.HMac;
 import cn.hutool.crypto.digest.HmacAlgorithm;
-import com.alibaba.fastjson.JSON;
+import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.tencent.config.TencentConfig;
 
@@ -69,7 +69,7 @@ public class TencentUtils {
         params.put("SignName", tencentConfig.getSignature());
         params.put("TemplateId", templateId);
         params.put("TemplateParamSet", messages);
-        String payload = JSON.toJSONString(params);
+        String payload = JSONUtil.toJsonStr(params);
         String hashedRequestPayload = sha256Hex(payload);
         String canonicalRequest = HTTP_REQUEST_METHOD + "\n" + canonicalUri + "\n" + canonicalQueryString + "\n" + canonicalHeaders + "\n" + signedHeaders + "\n" + hashedRequestPayload;
         String credentialScope = date + "/" + tencentConfig.getService() + "/tc3_request";

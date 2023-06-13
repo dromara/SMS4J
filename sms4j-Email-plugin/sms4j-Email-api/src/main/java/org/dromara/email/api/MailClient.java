@@ -39,6 +39,18 @@ public interface MailClient {
 
     /**
      *  sendEmail
+     * <p>发送带有附件的文本邮件
+     * @param mailAddress 收件人地址 多个收件人地址请按英文','字符隔开
+     * @param title 邮件标题
+     * @param body 邮件正文
+     * @param zipName 压缩包名称 比如 附件.zip
+     * @param files 附件，可添加多个
+     * @author :Wind
+     */
+    void sendEmail(String mailAddress, String title, String body, String zipName, Map<String,String> files);
+
+    /**
+     *  sendEmail
      * <p>群体发送带有附件的文本邮件
      * @param mailAddress 收件人地址，添加多个
      * @param title 邮件标题
@@ -219,6 +231,21 @@ public interface MailClient {
      * @author :Wind
      */
     void sendHtml(String mailAddress, String title ,String body, String htmlName, Map<String,String> parameter,Map<String,String> files);
+
+    /**
+     *  sendHtml
+     * <p> 读取模板发送html邮件,并携带正文和附件
+     * <p> 将默认读取resources/template下的html文件，第四个参数为html的名称，需携带尾缀
+     * @param mailAddress 收件人地址 多个收件人地址请按英文','字符隔开
+     * @param title 邮件标题
+     * @param body 邮件文本正文 可为空
+     * @param htmlName 邮件正文
+     * @param parameter key为模板的变量名称 无需携带大括号  value为模板变量所对应的值
+     * @param zipName 压缩包名称 比如 附件.zip
+     * @param files 附件，可添加多个 key 为文件名，value为文件的路径
+     * @author :Wind
+     */
+    void sendHtml(String mailAddress, String title, String body, String htmlName, Map<String,String> parameter, String zipName, Map<String,String> files);
 
     /**
      *  sendHtml

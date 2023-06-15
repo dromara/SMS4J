@@ -20,6 +20,7 @@
         <module>sms4j-solon-plugin</module>
         <module>sms4j-spring-boot-example</module>
         <module>sms4j-javase-plugin</module>
+        <module>sms4j-Email-plugin</module>
     </modules>
 
     <!-- 开源协议 Apache 2.0 -->
@@ -61,6 +62,9 @@
         <hutool.version>5.8.18</hutool.version>
         <xmlblend.version>2.3.0</xmlblend.version>
         <activation.version>1.1.1</activation.version>
+        <mail.version>1.6.2</mail.version>
+        <sunactivation.version>1.2.0</sunactivation.version>
+        <jakarta.activation.version>1.2.2</jakarta.activation.version>
         <snakeyaml.version>2.0</snakeyaml.version>
     </properties>
 
@@ -165,6 +169,24 @@
                 <version>${hutool.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.sun.mail</groupId>
+                <artifactId>javax.mail</artifactId>
+                <version>${mail.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.sun.activation</groupId>
+                <artifactId>javax.activation</artifactId>
+                <version>${sunactivation.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>jakarta.activation</groupId>
+                <artifactId>jakarta.activation-api</artifactId>
+                <version>${jakarta.activation.version}</version>
             </dependency>
 
         </dependencies>

@@ -18,17 +18,7 @@ public class NeteaseConfig extends BaseConfig implements SupplierConfig {
     /**
      * 模板变量名称
      */
-    private String templateId;
-
-    /**
-     * appKey
-     */
-    private String appKey;
-
-    /**
-     * secret
-     */
-    private String secret;
+    private String templateName;
 
     /**
      * 模板短信请求地址

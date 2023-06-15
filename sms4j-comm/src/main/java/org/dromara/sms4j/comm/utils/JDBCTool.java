@@ -5,12 +5,7 @@ import org.dromara.sms4j.comm.config.SmsSqlConfig;
 import org.dromara.sms4j.comm.exception.SmsSqlException;
 import org.dromara.sms4j.comm.factory.BeanFactory;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Objects;
@@ -82,7 +77,6 @@ public class JDBCTool {
     /**
      * select
      * <p>查询封装
-     *
      * @param sql 要查询的sql语句
      * @author :Wind
      */
@@ -116,17 +110,16 @@ public class JDBCTool {
     /**
      * close
      * <p>关闭链接方法
-     *
      * @author :Wind
      */
     private void close(Connection conn, PreparedStatement stmt, ResultSet rs) {
         // 关闭连接
         if (conn != null) {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                throw new SmsSqlException(e.getMessage());
-            }
+//            try {
+//                conn.close();
+//            } catch (SQLException e) {
+//                throw new SmsSqlException(e.getMessage());
+//            }
         }
         // 关闭 statement
         if (stmt != null) {

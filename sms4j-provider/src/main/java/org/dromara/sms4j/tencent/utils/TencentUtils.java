@@ -1,11 +1,11 @@
 package org.dromara.sms4j.tencent.utils;
 
-import com.alibaba.fastjson.JSON;
+import cn.hutool.crypto.digest.HMac;
+import cn.hutool.crypto.digest.HmacAlgorithm;
+import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.tencent.config.TencentConfig;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -34,11 +34,9 @@ public class TencentUtils {
     private static final String CT_JSON = "application/json; charset=utf-8";
 
 
-    private static byte[] hmac256(byte[] key, String msg) throws Exception {
-        Mac mac = Mac.getInstance("HmacSHA256");
-        SecretKeySpec secretKeySpec = new SecretKeySpec(key, mac.getAlgorithm());
-        mac.init(secretKeySpec);
-        return mac.doFinal(msg.getBytes(StandardCharsets.UTF_8));
+    private static byte[] hmac256(byte[] key, String msg) {
+        HMac hMac = new HMac(HmacAlgorithm.HmacSHA256, key);
+        return hMac.digest(msg.getBytes(StandardCharsets.UTF_8));
     }
 
     private static String sha256Hex(String s) throws Exception {
@@ -71,7 +69,7 @@ public class TencentUtils {
         params.put("SignName", tencentConfig.getSignature());
         params.put("TemplateId", templateId);
         params.put("TemplateParamSet", messages);
-        String payload = JSON.toJSONString(params);
+        String payload = JSONUtil.toJsonStr(params);
         String hashedRequestPayload = sha256Hex(payload);
         String canonicalRequest = HTTP_REQUEST_METHOD + "\n" + canonicalUri + "\n" + canonicalQueryString + "\n" + canonicalHeaders + "\n" + signedHeaders + "\n" + hashedRequestPayload;
         String credentialScope = date + "/" + tencentConfig.getService() + "/tc3_request";

@@ -20,12 +20,10 @@ import java.util.Map;
 @Slf4j
 public class EmayBuilder {
 
-
     public static Map<String, Object> buildRequestBody(String appId, String secretKey, String phone,
                                                        String message) throws SmsBlendException {
         return getParamsMap(appId, secretKey, phone, message);
     }
-
 
     /**
      * @param appId       用户Appid(必填)

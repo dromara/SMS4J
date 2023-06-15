@@ -2,6 +2,7 @@ package org.dromara.sms4j.core.factory;
 
 import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.smsProxy.SmsInvocationHandler;
+import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.comm.factory.BeanFactory;
 import org.dromara.sms4j.core.SupplierSqlConfig;
 import org.dromara.sms4j.provider.base.BaseProviderFactory;
@@ -23,7 +24,7 @@ import java.util.Objects;
  **/
 public abstract class SmsFactory {
 
-    private static Map<SupplierType, SmsBlend> beans = new HashMap<>();
+    private static final Map<SupplierType, SmsBlend> beans = new HashMap<>();
 
     private SmsFactory() {
     }
@@ -38,6 +39,18 @@ public abstract class SmsFactory {
     public static SmsBlend createSmsBlend(SupplierType supplierType) {
         BaseProviderFactory providerFactory = supplierType.getProviderFactory();
         return providerFactory.createSms(providerFactory.getConfig());
+    }
+
+    /**
+     *  createSmsBlend
+     * <p>获取各个厂商的多例实现对象
+     * @param supplierType 厂商枚举
+     * @param config 短信配置
+     * @author :Wind
+    */
+    public static SmsBlend createSmsBlend(SupplierType supplierType,SupplierConfig config){
+        BaseProviderFactory providerFactory = supplierType.getProviderFactory();
+        return providerFactory.createMultitonSms(config);
     }
 
     /**

@@ -5,7 +5,6 @@ import org.dromara.sms4j.aliyun.service.AlibabaSmsImpl;
 import org.dromara.sms4j.comm.factory.BeanFactory;
 import org.dromara.sms4j.provider.base.BaseProviderFactory;
 
-
 /**
  * AlibabaSmsConfig
  * <p> 阿里巴巴对象建造者
@@ -43,12 +42,14 @@ public class AlibabaFactory implements BaseProviderFactory<AlibabaSmsImpl, Aliba
     @Override
     public AlibabaSmsImpl createSms(AlibabaConfig alibabaConfig) {
         if (alibabaSms == null) {
-            alibabaSms = new AlibabaSmsImpl(
-                    alibabaConfig,
-                    BeanFactory.getExecutor(),
-                    BeanFactory.getDelayedTime());
+            alibabaSms = createMultitonSms(alibabaConfig);
         }
         return alibabaSms;
+    }
+
+    @Override
+    public AlibabaSmsImpl createMultitonSms(AlibabaConfig alibabaConfig) {
+        return new AlibabaSmsImpl(alibabaConfig, BeanFactory.getExecutor(), BeanFactory.getDelayedTime());
     }
 
     /**
@@ -59,10 +60,7 @@ public class AlibabaFactory implements BaseProviderFactory<AlibabaSmsImpl, Aliba
     @Override
     public AlibabaSmsImpl refresh(AlibabaConfig alibabaConfig) {
         //重新构造一个实现对象
-        alibabaSms = new AlibabaSmsImpl(
-                alibabaConfig,
-                BeanFactory.getExecutor(),
-                BeanFactory.getDelayedTime());
+        alibabaSms = new AlibabaSmsImpl(alibabaConfig, BeanFactory.getExecutor(), BeanFactory.getDelayedTime());
         return alibabaSms;
     }
 

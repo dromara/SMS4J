@@ -43,12 +43,14 @@ public class CtyunFactory implements BaseProviderFactory<CtyunSmsImpl, CtyunConf
     @Override
     public CtyunSmsImpl createSms(CtyunConfig ctyunConfig) {
         if (ctyunSms == null) {
-            ctyunSms = new CtyunSmsImpl(
-                    ctyunConfig,
-                    BeanFactory.getExecutor(),
-                    BeanFactory.getDelayedTime());
+            ctyunSms = createMultitonSms(ctyunConfig);
         }
         return ctyunSms;
+    }
+
+    @Override
+    public CtyunSmsImpl createMultitonSms(CtyunConfig ctyunConfig) {
+        return new CtyunSmsImpl(ctyunConfig, BeanFactory.getExecutor(), BeanFactory.getDelayedTime());
     }
 
     /**
@@ -60,10 +62,7 @@ public class CtyunFactory implements BaseProviderFactory<CtyunSmsImpl, CtyunConf
     @Override
     public CtyunSmsImpl refresh(CtyunConfig ctyunConfig) {
         //重新构造一个实现对象
-        ctyunSms = new CtyunSmsImpl(
-                ctyunConfig,
-                BeanFactory.getExecutor(),
-                BeanFactory.getDelayedTime());
+        ctyunSms = new CtyunSmsImpl( ctyunConfig, BeanFactory.getExecutor(), BeanFactory.getDelayedTime());
         return ctyunSms;
     }
 

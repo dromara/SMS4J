@@ -1,9 +1,9 @@
-<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">sms4j v2.1.1</h1>
+<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">sms4j v2.2.0</h1>
 <h4 align="center" style="margin: 30px 0 30px; font-weight: bold;">sms4j -- 让发送短信变的更简单</h4>
 <p align="center">
 <a href="https://gitee.com/dromara/sms4j/stargazers"><img src="https://gitee.com/dromara/sms4j/badge/star.svg?theme=gvp"></a>
 <a href="https://gitee.com/dromara/sms4j/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-green"></a>
-<a href="https://gitee.com/dromara/sms4j"><img src="https://img.shields.io/badge/version-v2.1.1-blue"></a>
+<a href="https://gitee.com/dromara/sms4j"><img src="https://img.shields.io/badge/version-v2.2.0-blue"></a>
 </p>
 <img src="/public/logo.png">
 
@@ -21,13 +21,13 @@
 #### [JavaDoc文档](https://apidoc.gitee.com/dromara/sms4j/)
 
 ## 支持厂商一览
-
+- **亿美软通国内短信**
 - **阿里云国内短信**
 - **腾讯云国内短信**
 - **华为云国内短信**
 - **京东云国内短信**
 - **容联云国内短信**
-- **亿美软通国内短信**
+- **网易云信短信**
 - **天翼云短信**
 - **合一短信**
 - **云片短信**

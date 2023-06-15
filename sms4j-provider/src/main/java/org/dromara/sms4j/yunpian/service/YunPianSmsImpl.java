@@ -22,12 +22,12 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class YunPianSmsImpl extends AbstractSmsBlend {
 
-    public YunPianSmsImpl(Executor pool, DelayedTime delayed, YunpianConfig config) {
+    public YunPianSmsImpl(YunpianConfig config, Executor pool, DelayedTime delayed) {
         super(pool, delayed);
         this.config = config;
     }
 
-    private YunpianConfig config;
+    private final YunpianConfig config;
 
     private static SmsResponse getSmsResponse(JSONObject execute) {
         SmsResponse smsResponse = new SmsResponse();
@@ -39,7 +39,8 @@ public class YunPianSmsImpl extends AbstractSmsBlend {
         smsResponse.setCode(execute.getStr("code"));
         smsResponse.setMessage(execute.getStr("msg"));
         smsResponse.setBizId(execute.getStr("sid"));
-        if (execute.getInt("code") != 0) {
+        smsResponse.setSuccess(execute.getInt("code") == 0);
+        if (!smsResponse.isSuccess()) {
             smsResponse.setErrMessage(execute.getStr("msg"));
         }
         smsResponse.setData(execute);
@@ -121,14 +122,8 @@ public class YunPianSmsImpl extends AbstractSmsBlend {
         http.post(Constant.YUNPIAN_URL + "/sms/tpl_single_send.json")
                 .addHeader(headers)
                 .addBody(body)
-                .onSuccess(((data, req, res) -> {
-                    JSONObject jsonBody = res.get(JSONObject.class);
-                    smsResponse.set(getSmsResponse(jsonBody));
-                }))
-                .onError((ex, req, res) -> {
-                    JSONObject jsonBody = res.get(JSONObject.class);
-                    smsResponse.set(getSmsResponse(jsonBody));
-                })
+                .onSuccess(((data, req, res) -> smsResponse.set(getSmsResponse(res.get(JSONObject.class)))))
+                .onError((ex, req, res) -> smsResponse.set(getSmsResponse(res.get(JSONObject.class))))
                 .execute();
 
         return smsResponse.get();

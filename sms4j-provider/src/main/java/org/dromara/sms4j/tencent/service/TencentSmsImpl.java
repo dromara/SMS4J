@@ -26,7 +26,7 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class TencentSmsImpl extends AbstractSmsBlend {
 
-    private TencentConfig tencentSmsConfig;
+    private final TencentConfig tencentSmsConfig;
 
     public TencentSmsImpl(TencentConfig tencentSmsConfig, Executor pool, DelayedTime delayed) {
         super(pool, delayed);
@@ -107,6 +107,7 @@ public class TencentSmsImpl extends AbstractSmsBlend {
                         smsResponse.setBizId(sendStatusSet.getJSONObject(0).getStr("SerialNo"));
                         smsResponse.setMessage(sendStatusSet.getJSONObject(0).getStr("Message"));
                         smsResponse.setCode(sendStatusSet.getJSONObject(0).getStr("Code"));
+                        smsResponse.setSuccess(true);
                     }
                 }))
                 .onError((ex, req, res) -> {

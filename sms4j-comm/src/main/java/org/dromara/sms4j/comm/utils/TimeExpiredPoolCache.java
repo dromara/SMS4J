@@ -1,6 +1,5 @@
 package org.dromara.sms4j.comm.utils;
 
-
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
@@ -27,8 +26,8 @@ public class TimeExpiredPoolCache {
      * 持久化文件格式
      */
     private static final String FILE_TYPE = "persistence.data";
-    private static long defaultCachedMillis = 24 * 60 * 60 * 1000L;//过期时间默认24小时
-    private static long timerMillis = 30 * 1000L;//定时清理默认1分钟
+    private static final long defaultCachedMillis = 24 * 60 * 60 * 1000L;//过期时间默认24小时
+    private static final long timerMillis = 30 * 1000L;//定时清理默认1分钟
     /**
      * 对象池
      */
@@ -40,7 +39,7 @@ public class TimeExpiredPoolCache {
     /**
      * 定时器定时清理过期缓存
      */
-    private static Timer timer = new Timer();
+    private static final Timer timer = new Timer();
 
     private TimeExpiredPoolCache() {
     }
@@ -48,7 +47,7 @@ public class TimeExpiredPoolCache {
     private static synchronized void syncInit() {
         if (instance == null) {
             instance = new TimeExpiredPoolCache();
-            dataPool = new ConcurrentHashMap<String, DataWrapper<?>>();
+            dataPool = new ConcurrentHashMap<>();
             initTimer();
         }
     }
@@ -70,8 +69,8 @@ public class TimeExpiredPoolCache {
             if (dataPool != null) {
                 return true;
             }
-        } catch (IOException ignored) {
-            log.error(ignored.getMessage());
+        } catch (IOException e) {
+            log.error(e.getMessage());
         }
         return false;
     }
@@ -101,7 +100,7 @@ public class TimeExpiredPoolCache {
      * 清除过期的缓存
      */
     private static void clearExpiredCaches() {
-        List<String> expiredKeyList = new LinkedList<String>();
+        List<String> expiredKeyList = new LinkedList<>();
 
         for (Entry<String, DataWrapper<?>> entry : dataPool.entrySet()) {
             if (entry.getValue().isExpired()) {
@@ -135,7 +134,7 @@ public class TimeExpiredPoolCache {
             //更新
             dataWrapper.update(data, cachedMillis);
         } else {
-            dataWrapper = new DataWrapper<T>(data, cachedMillis);
+            dataWrapper = new DataWrapper<>(data, cachedMillis);
             dataPool.put(key, dataWrapper);
         }
         return data;
@@ -210,7 +209,7 @@ public class TimeExpiredPoolCache {
     /**
      * 数据封装
      */
-    private class DataWrapper<T> {
+    private static class DataWrapper<T> {
         /**
          * 数据
          */

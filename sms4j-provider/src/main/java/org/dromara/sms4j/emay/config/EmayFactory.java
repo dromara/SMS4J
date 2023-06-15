@@ -38,9 +38,14 @@ public class EmayFactory implements BaseProviderFactory<EmaySmsImpl, EmayConfig>
     @Override
     public EmaySmsImpl createSms(EmayConfig emayConfig) {
         if (emaySms == null){
-            emaySms = new EmaySmsImpl(emayConfig, BeanFactory.getExecutor(),BeanFactory.getDelayedTime());
+            emaySms = createMultitonSms(emayConfig);
         }
         return emaySms;
+    }
+
+    @Override
+    public EmaySmsImpl createMultitonSms(EmayConfig emayConfig) {
+        return new EmaySmsImpl(emayConfig, BeanFactory.getExecutor(),BeanFactory.getDelayedTime());
     }
 
     /**

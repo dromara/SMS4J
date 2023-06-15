@@ -11,8 +11,8 @@ import java.util.Objects;
 
 @Slf4j
 public class SmsInvocationHandler implements InvocationHandler {
-    private SmsBlend smsBlend;
-    private SmsConfig config;
+    private final SmsBlend smsBlend;
+    private final SmsConfig config;
     private static RestrictedProcess restrictedProcess = new RestrictedProcess();
 
     private SmsInvocationHandler(SmsBlend smsBlend, SmsConfig config) {
@@ -26,7 +26,7 @@ public class SmsInvocationHandler implements InvocationHandler {
 
     @Override
     public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
-        Object result = null;
+        Object result;
         if ("sendMessage".equals(method.getName()) || "massTexting".equals(method.getName())) {
             //取手机号作为参数
             String phone = (String) objects[0];

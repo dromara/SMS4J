@@ -5,13 +5,10 @@ import org.dromara.sms4j.comm.config.SmsSqlConfig;
 import org.dromara.sms4j.comm.exception.SmsSqlException;
 import org.dromara.sms4j.comm.factory.BeanFactory;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * JDBCTool
@@ -25,16 +22,26 @@ public class JDBCTool {
     public static final String SELECT = "select {},{} from {} where {} = {}";
     private static final String ERR_CONFIG = "One configuration was expected, but {} was found. Please check your database configuration";
     private final SmsSqlConfig config;
+    /**
+     * 数据库链接
+     * */
+    private Connection connection;
 
+
+    public JDBCTool(SmsSqlConfig config,Connection connection) {
+//        if (config == null) {
+//            throw new SmsSqlException("The configuration file failed to be loaded");
+//        }
+        this.config = config;
+        this.connection = connection;
+    }
 
     public JDBCTool(SmsSqlConfig config) {
-        if (config == null) {
-            throw new SmsSqlException("The configuration file failed to be loaded. Procedure");
-        }
         this.config = config;
-        if (StrUtil.isEmpty(this.config.getDatabaseName())) {
-            throw new SmsSqlException("You did not specify a database driver");
-        }
+    }
+
+    public void setConnection(Connection connection){
+        this.connection = connection;
     }
 
     public static Map<String, String> selectConfig() {
@@ -51,6 +58,9 @@ public class JDBCTool {
     public Connection getConn() {
         Connection connection;
         String url;
+        if (SmsUtil.isEmpty(config.getUrl())) {
+            throw new SmsSqlException("The configuration file failed to be loaded");
+        }
         try {
             if (config.getDatabaseName().isEmpty()){
                 url = config.getUrl();
@@ -67,18 +77,20 @@ public class JDBCTool {
     /**
      * select
      * <p>查询封装
-     *
      * @param sql 要查询的sql语句
      * @author :Wind
      */
     public Map<String, String> select(String sql) {
-        Connection conn = null;
+//        Connection conn = null;
+        if (Objects.isNull(connection)){
+            connection = getConn();
+        }
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         Map<String, String> map = new Hashtable<>();
         try {
-            conn = getConn();
-            preparedStatement = conn.prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+//            conn = getConn();
+            preparedStatement = connection.prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             preparedStatement.setFetchSize(1000);
             resultSet = preparedStatement.executeQuery();
 
@@ -90,7 +102,7 @@ public class JDBCTool {
         } catch (SQLException e) {
             throw new SmsSqlException(e.getMessage());
         } finally {
-            close(conn, preparedStatement, resultSet);
+            close(connection, preparedStatement, resultSet);
         }
         return map;
     }
@@ -98,17 +110,16 @@ public class JDBCTool {
     /**
      * close
      * <p>关闭链接方法
-     *
      * @author :Wind
      */
     private void close(Connection conn, PreparedStatement stmt, ResultSet rs) {
         // 关闭连接
         if (conn != null) {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                throw new SmsSqlException(e.getMessage());
-            }
+//            try {
+//                conn.close();
+//            } catch (SQLException e) {
+//                throw new SmsSqlException(e.getMessage());
+//            }
         }
         // 关闭 statement
         if (stmt != null) {

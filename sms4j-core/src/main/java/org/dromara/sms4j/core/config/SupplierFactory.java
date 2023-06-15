@@ -15,6 +15,8 @@ import org.dromara.sms4j.huawei.config.HuaweiConfig;
 import org.dromara.sms4j.huawei.config.HuaweiFactory;
 import org.dromara.sms4j.jdcloud.config.JdCloudConfig;
 import org.dromara.sms4j.jdcloud.config.JdCloudFactory;
+import org.dromara.sms4j.netease.config.NeteaseConfig;
+import org.dromara.sms4j.netease.config.NeteaseFactory;
 import org.dromara.sms4j.provider.enumerate.SupplierType;
 import org.dromara.sms4j.tencent.config.TencentConfig;
 import org.dromara.sms4j.tencent.config.TencentFactory;
@@ -97,11 +99,18 @@ public class SupplierFactory {
     }
 
     /**
+     * 网易云信配置获取
+     */
+    public static NeteaseConfig getNeteaseConfig() {
+        return NeteaseFactory.instance().getConfig();
+    }
+
+    /**
      *  setSupplierConfig
      * <p>通用化set，用于设置
      * @param t 配置对象
      * @author :Wind
-    */
+     */
     public static <T extends SupplierConfig> void setSupplierConfig(T t) {
         if (t instanceof AlibabaConfig) {
             setAlibabaConfig((AlibabaConfig) t);
@@ -121,7 +130,9 @@ public class SupplierFactory {
             setEmayConfig((EmayConfig) t);
         } else if (t instanceof CtyunConfig) {
             setCtyunConfig((CtyunConfig) t);
-        }else {
+        } else if (t instanceof NeteaseConfig) {
+            setNeteaseConfig((NeteaseConfig) t);
+        } else {
             throw new SmsBlendException("Loading failure! Please check the configuration type.");
         }
     }
@@ -196,5 +207,13 @@ public class SupplierFactory {
     public static void setCtyunConfig(CtyunConfig ctyunConfig) {
         CtyunFactory.instance().setConfig(ctyunConfig);
         SmsFactory.refresh(SupplierType.CTYUN);
+    }
+
+    /**
+     * 设置 neteaseConfig
+     */
+    public static void setNeteaseConfig(NeteaseConfig neteaseConfig) {
+        NeteaseFactory.instance().setConfig(neteaseConfig);
+        SmsFactory.refresh(SupplierType.NETEASE);
     }
 }

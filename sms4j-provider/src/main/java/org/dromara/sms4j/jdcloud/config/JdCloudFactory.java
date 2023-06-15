@@ -55,14 +55,19 @@ public class JdCloudFactory implements BaseProviderFactory<JdCloudSmsImpl, JdClo
     @Override
     public JdCloudSmsImpl createSms(JdCloudConfig jdCloudConfig) {
         if (jdCloudSms == null) {
-            jdCloudSms = new JdCloudSmsImpl(
-                    this.client(jdCloudConfig),
-                    jdCloudConfig,
-                    BeanFactory.getExecutor(),
-                    BeanFactory.getDelayedTime()
-            );
+            jdCloudSms = createMultitonSms(jdCloudConfig);
         }
         return jdCloudSms;
+    }
+
+    @Override
+    public JdCloudSmsImpl createMultitonSms(JdCloudConfig jdCloudConfig) {
+        return new JdCloudSmsImpl(
+                this.client(jdCloudConfig),
+                jdCloudConfig,
+                BeanFactory.getExecutor(),
+                BeanFactory.getDelayedTime()
+        );
     }
 
     /**

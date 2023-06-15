@@ -2,28 +2,28 @@ package org.dromara.sms4j.solon.aop;
 
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.smsProxy.RestrictedProcess;
+import org.dromara.sms4j.api.universal.RedisUtil;
 import org.dromara.sms4j.comm.config.SmsConfig;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtil;
-import org.dromara.sms4j.solon.utils.RedisUtils;
 import org.noear.solon.core.AopContext;
 
 @Slf4j
 public class SolonRestrictedProcess extends RestrictedProcess {
 
-    private RedisUtils redis;
+    private RedisUtil redis;
     private static final Long minTimer = 60 * 1000L;
     private static final Long accTimer = 24 * 60 * 60 * 1000L;
     private static final String REDIS_KEY = "sms:restricted:";
 
     public SolonRestrictedProcess(AopContext context){
-        context.getBeanAsync(RedisUtils.class, bean->{
+        context.getBeanAsync(RedisUtil.class, bean->{
             redis = bean;
         });
     }
 
     @Override
-    public SmsBlendException process(SmsConfig config, String args) throws Exception {
+    public SmsBlendException process(SmsConfig config, String args) {
         Integer accountMax = config.getAccountMax();//每日最大发送量
         Integer minuteMax = config.getMinuteMax();//每分钟最大发送量
         if (SmsUtil.isNotEmpty(accountMax)) {   //是否配置了每日限制

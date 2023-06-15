@@ -35,6 +35,7 @@ public class SmsSqlConfig {
     /**
      * 数据库名
      */
+    @Deprecated
     private String databaseName;
 
     /**

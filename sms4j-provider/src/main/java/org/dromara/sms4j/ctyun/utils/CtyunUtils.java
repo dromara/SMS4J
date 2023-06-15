@@ -1,5 +1,6 @@
 package org.dromara.sms4j.ctyun.utils;
 
+import cn.hutool.core.codec.Base64;
 import cn.hutool.crypto.digest.HMac;
 import cn.hutool.crypto.digest.HmacAlgorithm;
 import cn.hutool.json.JSONUtil;
@@ -12,7 +13,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -56,7 +56,7 @@ public class CtyunUtils {
         // 报文原封不动进行sha256摘要
         String signatureStr = String.format("ctyun-eop-request-id:%s\neop-date:%s\n", uuid, signatureTime) + "\n\n"  + calculateContentHash;
         // 构造签名
-        String signature = Base64.getEncoder().encodeToString(hmacSHA256(signatureStr.getBytes(StandardCharsets.UTF_8), kDate));
+        String signature = Base64.encode(hmacSHA256(signatureStr.getBytes(StandardCharsets.UTF_8), kDate));
         String signHeader =  String.format("%s Headers=ctyun-eop-request-id;eop-date Signature=%s", key, signature);
         map.put("Content-Type", "application/json;charset=UTF-8");
         map.put("ctyun-eop-request-id", uuid);

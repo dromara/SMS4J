@@ -1,5 +1,6 @@
 package org.dromara.sms4j.huawei.utils;
 
+import cn.hutool.core.codec.Base64;
 import org.dromara.sms4j.comm.constant.Constant;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -10,11 +11,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +46,7 @@ public class HuaweiBuilder {
             e.printStackTrace();
         }
 
-        String passwordDigestBase64Str = Base64.getEncoder().encodeToString(passwordDigest); //PasswordDigest
+        String passwordDigestBase64Str = Base64.encode(passwordDigest); //PasswordDigest
         //若passwordDigestBase64Str中包含换行符,请执行如下代码进行修正
         //passwordDigestBase64Str = passwordDigestBase64Str.replaceAll("[\\s*\t\n\r]", "");
         return String.format(Constant.HUAWEI_WSSE_HEADER_FORMAT, appKey, passwordDigestBase64Str, nonce, time);
@@ -56,11 +55,9 @@ public class HuaweiBuilder {
     static void trustAllHttpsCertificates() throws Exception {
         TrustManager[] trustAllCerts = new TrustManager[] {
                 new X509TrustManager() {
-                    public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                        return;
+                    public void checkClientTrusted(X509Certificate[] chain, String authType) {
                     }
-                    public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                        return;
+                    public void checkServerTrusted(X509Certificate[] chain, String authType) {
                     }
                     public X509Certificate[] getAcceptedIssuers() {
                         return null;
@@ -75,11 +72,11 @@ public class HuaweiBuilder {
     /**
      *  buildRequestBody
      * <p>构造请求Body体
-     * @param sender
-     * @param receiver
-     * @param templateId
-     * @param templateParas
-     * @param statusCallBack
+     * @param sender 国内短信签名通道号
+     * @param receiver 短信接收者
+     * @param templateId 短信模板id
+     * @param templateParas 模板参数
+     * @param statusCallBack 短信状态报告接收地
      * @param signature | 签名名称,使用国内短信通用模板时填写
      * @author :Wind
     */
@@ -135,16 +132,16 @@ public class HuaweiBuilder {
     }
 
     static String dateFormat(Date date){
-        SimpleDateFormat sdf = new SimpleDateFormat(Constant.HUAWEI_JAVA_DATE);
-       return sdf.format(date);
+       return SDF.format(date);
     }
 
     static Date strForDate(String date){
-        SimpleDateFormat sdf = new SimpleDateFormat(Constant.HUAWEI_JAVA_DATE);
         try {
-           return sdf.parse(date);
+           return SDF.parse(date);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
     }
+
+    private static final SimpleDateFormat SDF = new SimpleDateFormat(Constant.HUAWEI_JAVA_DATE);
 }

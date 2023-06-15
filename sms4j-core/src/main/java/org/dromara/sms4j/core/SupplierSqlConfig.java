@@ -9,6 +9,7 @@ import org.dromara.sms4j.ctyun.config.CtyunConfig;
 import org.dromara.sms4j.emay.config.EmayConfig;
 import org.dromara.sms4j.huawei.config.HuaweiConfig;
 import org.dromara.sms4j.jdcloud.config.JdCloudConfig;
+import org.dromara.sms4j.netease.config.NeteaseConfig;
 import org.dromara.sms4j.provider.enumerate.SupplierType;
 import org.dromara.sms4j.tencent.config.TencentConfig;
 import org.dromara.sms4j.unisms.config.UniConfig;
@@ -29,7 +30,7 @@ public class SupplierSqlConfig {
      *  readSqlConfig
      * <p>读取数据库配置信息
      * @author :Wind
-    */
+     */
     public static void readSqlConfig(){
         select = JDBCTool.selectConfig();
     }
@@ -38,7 +39,7 @@ public class SupplierSqlConfig {
      *  refreshSqlConfig
      * <p>读取并刷新数据库配置
      * @author :Wind
-    */
+     */
     public static void refreshSqlConfig(){
         readSqlConfig();
         alibaba();
@@ -50,6 +51,7 @@ public class SupplierSqlConfig {
         cloopen();
         emay();
         ctyun();
+        netease();
     }
 
     public SupplierSqlConfig() {
@@ -64,17 +66,17 @@ public class SupplierSqlConfig {
      *  alibaba
      * <p>数据库读取并设置阿里云短信
      * @author :Wind
-    */
+     */
     public static void alibaba(){
         AlibabaConfig alibabaConfig = SmsUtil.jsonForObject(select.get(SupplierType.ALIBABA.getName()), AlibabaConfig.class);
-       SupplierFactory.setAlibabaConfig(alibabaConfig);
+        SupplierFactory.setAlibabaConfig(alibabaConfig);
     }
 
     /**
      *  huawei
      * <p>数据库读取并设置华为短信
      * @author :Wind
-    */
+     */
     public static void huawei(){
         HuaweiConfig huaweiConfig = SmsUtil.jsonForObject(select.get(SupplierType.HUAWEI.getName()), HuaweiConfig.class);
         SupplierFactory.setHuaweiConfig(huaweiConfig);
@@ -84,7 +86,7 @@ public class SupplierSqlConfig {
      *  jingdong
      * <p>数据库读取并设置京东短信
      * @author :Wind
-    */
+     */
     public static void jingdong(){
         JdCloudConfig jdCloudConfig = SmsUtil.jsonForObject(select.get(SupplierType.JD_CLOUD.getName()), JdCloudConfig.class);
         SupplierFactory.setJdCloudConfig(jdCloudConfig);
@@ -94,7 +96,7 @@ public class SupplierSqlConfig {
      *  tencent
      * <p>数据库读取并设置腾讯短信
      * @author :Wind
-    */
+     */
     public static void tencent(){
         TencentConfig tencentConfig = SmsUtil.jsonForObject(select.get(SupplierType.TENCENT.getName()), TencentConfig.class);
         SupplierFactory.setTencentConfig(tencentConfig);
@@ -104,7 +106,7 @@ public class SupplierSqlConfig {
      *  uniSms
      * <p>数据库读取并设置合一短信配置
      * @author :Wind
-    */
+     */
     public static void uniSms(){
         UniConfig uniConfig = SmsUtil.jsonForObject(select.get(SupplierType.UNI_SMS.getName()), UniConfig.class);
         SupplierFactory.setUniConfig(uniConfig);
@@ -114,7 +116,7 @@ public class SupplierSqlConfig {
      *  yunPian
      * <p>数据库读取并设置云片短信
      * @author :Wind
-    */
+     */
     public static void yunPian(){
         YunpianConfig yunpianConfig = SmsUtil.jsonForObject(select.get(SupplierType.YUNPIAN.getName()), YunpianConfig.class);
         SupplierFactory.setYunpianConfig(yunpianConfig);
@@ -124,7 +126,7 @@ public class SupplierSqlConfig {
      *  cloopen
      * <p>数据库读取并设置容联云短信
      * @author :Wind
-    */
+     */
     public static void cloopen(){
         CloopenConfig cloopenConfig = SmsUtil.jsonForObject(select.get(SupplierType.CLOOPEN.getName()), CloopenConfig.class);
         SupplierFactory.setCloopenConfig(cloopenConfig);
@@ -143,9 +145,19 @@ public class SupplierSqlConfig {
      *  ctyun
      * <p>数据库读取并设置天翼云短信
      * @author :Wind
-    */
+     */
     public static void ctyun(){
         CtyunConfig ctyunConfig = SmsUtil.jsonForObject(select.get(SupplierType.CTYUN.getName()), CtyunConfig.class);
         SupplierFactory.setCtyunConfig(ctyunConfig);
+    }
+
+    /**
+     *  netease
+     * <p>数据库读取并设置网易云短信
+     * @author : Adam
+     */
+    public static void netease(){
+        NeteaseConfig neteaseConfig = SmsUtil.jsonForObject(select.get(SupplierType.NETEASE.getName()), NeteaseConfig.class);
+        SupplierFactory.setNeteaseConfig(neteaseConfig);
     }
 }

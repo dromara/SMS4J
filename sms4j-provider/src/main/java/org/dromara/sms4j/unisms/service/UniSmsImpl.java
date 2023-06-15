@@ -17,18 +17,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
-
 /**
  * <p>类名: UniSmsImpl
  * <p>说明：  uniSms短信实现
  * @author :Wind
  * 2023/3/26  17:10
  **/
-
 @Slf4j
 public class UniSmsImpl extends AbstractSmsBlend {
 
-    private UniConfig config;
+    private final UniConfig config;
 
     public UniSmsImpl(UniConfig config, Executor pool, DelayedTime delayed) {
         super(pool,delayed);
@@ -91,6 +89,7 @@ public class UniSmsImpl extends AbstractSmsBlend {
             smsResponse.setMessage(send.message);
             smsResponse.setBizId(send.requestId);
             smsResponse.setData(send);
+            smsResponse.setSuccess("Success".equals(send.message));
         }catch(Exception e){
             smsResponse.setErrMessage(e.getMessage());
         }

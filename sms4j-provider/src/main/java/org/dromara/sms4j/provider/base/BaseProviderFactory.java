@@ -19,6 +19,16 @@ public interface BaseProviderFactory<S extends SmsBlend, C extends SupplierConfi
     S createSms(C c);
 
     /**
+     *  createMultitonSms
+     * <p> 创建多例的短信实现对象
+     * 在此方法中创建的短信实现对象框架将不再持有单例，故而JVM中可以同时存在多个，如果更改配置后需要重新调用该方法
+     * @param c 短信配置对象
+     * @return 短信实现对象
+     * @author :Wind
+    */
+    S createMultitonSms(C c);
+
+    /**
      * 刷新短信实现对象
      * @param c 短信配置对象
      * @return 刷新后的短信实现对象

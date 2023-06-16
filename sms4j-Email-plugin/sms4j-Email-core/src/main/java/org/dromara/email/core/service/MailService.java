@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class MailService implements MailClient {
 
@@ -79,6 +80,16 @@ public class MailService implements MailClient {
 
     @Override
     public void sendEmail(List<String> mailAddress, String title, String body, Map<String, String> files) {
+        sendEmail(mailAddress,title,body,null,null,files);
+    }
+
+    @Override
+    public void sendEmail(String mailAddress, String title, String body, List<String> cc, List<String> bcc, Map<String, String> files) {
+        sendEmail(Collections.singletonList(mailAddress),title,body,cc,bcc,files);
+    }
+
+    @Override
+    public void sendEmail(List<String> mailAddress, String title, String body, List<String> cc, List<String> bcc, Map<String, String> files) {
         try {
             Message message = mailBuild.getMessage();
             message.setRecipients(Message.RecipientType.TO, mailBuild.eliminate(mailAddress));
@@ -90,6 +101,12 @@ public class MailService implements MailClient {
                 Multipart multipart = new MimeMultipart();
                 forFiles(multipart, files);
                 message.setContent(multipart);
+            }
+            if (cc != null && cc.size() > 0){
+                message.addRecipients(Message.RecipientType.CC,mailBuild.eliminate(cc));
+            }
+            if (bcc != null && bcc.size() > 0){
+                message.addRecipients(Message.RecipientType.BCC,mailBuild.eliminate(bcc));
             }
             Transport.send(message);
         } catch (MessagingException e) {

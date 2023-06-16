@@ -62,6 +62,30 @@ public interface MailClient {
     void sendEmail(List<String> mailAddress, String title, String body, Map<String,String> files);
 
     /**
+     *  sendEmail
+     * <p>单人发送带有附件的文本邮件,同时可以携带密送人和抄送人
+     * <p>需要注意的是，密送人和抄送人也不能存在于黑名单内，否则也会被过滤
+     * @param mailAddress 收件人地址，添加多个
+     * @param title 邮件标题
+     * @param body 邮件正文
+     * @param files 附件，可添加多个
+     * @author :Wind
+     */
+    void sendEmail(String mailAddress, String title, String body,List<String> cc,List<String> bcc,Map<String,String> files);
+
+    /**
+     *  sendEmail
+     * <p>群体发送带有附件的文本邮件,同时可以携带密送人和抄送人
+     * <p>需要注意的是，密送人和抄送人也不能存在于黑名单内，否则也会被过滤
+     * @param mailAddress 收件人地址，添加多个
+     * @param title 邮件标题
+     * @param body 邮件正文
+     * @param files 附件，可添加多个
+     * @author :Wind
+    */
+    void sendEmail(List<String> mailAddress, String title, String body,List<String> cc,List<String> bcc,Map<String,String> files);
+
+    /**
      *  sendHtml
      * <p> 读取模板发送html邮件，无正文
      * <p> 将默认读取resources/template下的html文件，第三个参数为html的名称，需携带尾缀

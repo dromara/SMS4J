@@ -14,7 +14,11 @@ import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.netease.config.NeteaseConfig;
 import org.dromara.sms4j.netease.utils.NeteaseUtils;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -36,8 +40,7 @@ public class NeteaseSmsImpl extends AbstractSmsBlend {
     }
 
     /**
-     *
-     * @param phone 接收短信的手机号
+     * @param phone   接收短信的手机号
      * @param message 短信变量 ["xxx","yyy"]
      * @return
      */
@@ -51,7 +54,6 @@ public class NeteaseSmsImpl extends AbstractSmsBlend {
 
 
     /**
-     *
      * @param phone
      * @param templateId 模板id
      * @param messages   短信变量 key为默认 params value为模板变量值 ["xxx","yyy"]
@@ -107,28 +109,16 @@ public class NeteaseSmsImpl extends AbstractSmsBlend {
                 .addHeader("CurTime", curTime)
                 .addHeader("CheckSum", checkSum)
                 .addBody(body)
-                .onSuccess(((data, req, res) -> {
-                    reference.set(this.getResponse(res.get(JSONObject.class)));
-                }))
-                .onError((ex, req, res) -> {
-                    reference.set(this.getResponse(res.get(JSONObject.class)));
-                })
+                .onSuccess(((data, req, res) -> reference.set(this.getResponse(res.get(JSONObject.class)))))
+                .onError((ex, req, res) -> reference.set(this.getResponse(res.get(JSONObject.class))))
                 .execute();
         return reference.get();
     }
 
     private SmsResponse getResponse(JSONObject jsonObject) {
         SmsResponse response = new SmsResponse();
-        Integer code = jsonObject.getInteger("code");
-        if (code > 200) {
-            response.setErrorCode(String.valueOf(code));
-            response.setErrMessage(jsonObject.getString("msg"));
-        } else {
-            response.setSuccess(true);
-            response.setCode(String.valueOf(code));
-            response.setMessage(jsonObject.getString("msg"));
-            response.setData(jsonObject.get("obj"));
-        }
+        response.setSuccess(jsonObject.getInteger("code") <= 200);
+        response.setData(jsonObject);
         return response;
     }
 

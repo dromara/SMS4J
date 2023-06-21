@@ -93,17 +93,8 @@ public class AlibabaSmsImpl extends AbstractSmsBlend {
 
     private SmsResponse getResponse(JSONObject resJson) {
         SmsResponse smsResponse = new SmsResponse();
-        if (resJson == null) {
-            smsResponse.setErrorCode("500");
-            smsResponse.setErrMessage("aliyun send sms response is null.check param");
-            return smsResponse;
-        }
-        smsResponse.setCode(resJson.getStr("Code"));
-        smsResponse.setMessage(resJson.getStr("Message"));
-        if ("OK".equals(smsResponse.getCode())) {
-            smsResponse.setBizId(resJson.getStr("BizId"));
-            smsResponse.setSuccess(true);
-        }
+        smsResponse.setSuccess("OK".equals(resJson.getStr("Code")));
+        smsResponse.setData(resJson);
         return smsResponse;
     }
 

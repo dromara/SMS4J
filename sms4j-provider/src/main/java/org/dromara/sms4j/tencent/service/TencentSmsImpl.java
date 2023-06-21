@@ -1,6 +1,5 @@
 package org.dromara.sms4j.tencent.service;
 
-import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import com.jdcloud.sdk.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -99,28 +98,13 @@ public class TencentSmsImpl extends AbstractSmsBlend {
                     JSONObject jsonBody = res.get(JSONObject.class);
                     JSONObject response = jsonBody.getJSONObject("Response");
                     String error = response.getStr("Error");
-                    if (StringUtils.isNotBlank(error)){
-                        smsResponse.setErrorCode("500");
-                        smsResponse.setErrMessage(error);
-                    }else {
-                        JSONArray sendStatusSet = response.getJSONArray("SendStatusSet");
-                        smsResponse.setBizId(sendStatusSet.getJSONObject(0).getStr("SerialNo"));
-                        smsResponse.setMessage(sendStatusSet.getJSONObject(0).getStr("Message"));
-                        smsResponse.setCode(sendStatusSet.getJSONObject(0).getStr("Code"));
-                        smsResponse.setSuccess(true);
-                    }
+                    smsResponse.setSuccess(StringUtils.isBlank(error));
+                    smsResponse.setData(jsonBody);
                 }))
                 .onError((ex, req, res) -> {
                     JSONObject jsonBody = res.get(JSONObject.class);
-                    if (jsonBody == null) {
-                        smsResponse.setErrorCode("500");
-                        smsResponse.setErrMessage("tencent send sms response is null.check param");
-                    } else {
-                        JSONObject response = jsonBody.getJSONObject("Response");
-                        JSONArray sendStatusSet = response.getJSONArray("SendStatusSet");
-                        smsResponse.setErrMessage(sendStatusSet.getJSONObject(0).getStr("Message"));
-                        smsResponse.setErrorCode(sendStatusSet.getJSONObject(0).getStr("Code"));
-                    }
+                    smsResponse.setSuccess(false);
+                    smsResponse.setData(jsonBody);
                 })
                 .execute();
         return smsResponse;

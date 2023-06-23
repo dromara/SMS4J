@@ -59,20 +59,8 @@ public class CloopenHelper {
                     .map(JSONUtil::parseObj)
                     .map(obj -> (Map<String, Object>) obj)
                     .orElse(Collections.emptyMap());
-            String statusCode = Convert.toStr(responseMap.get("statusCode"));
-            String statusMsg = Convert.toStr(responseMap.get("statusMsg"));
-            boolean isSuccess = "000000".equals(statusCode);
-            if (isSuccess) {
-                smsResponse.setSuccess(true);
-                smsResponse.setCode(statusCode);
-                smsResponse.setMessage(statusMsg);
-                smsResponse.setData(response);
-                Object bizId = JSONUtil.getByPath(JSONUtil.parse(responseMap), "templateSMS.smsMessageSid");
-                smsResponse.setBizId(Convert.toStr(bizId));
-            } else {
-                smsResponse.setErrMessage(statusMsg);
-                smsResponse.setErrorCode(statusCode);
-            }
+            smsResponse.setSuccess("000000".equals(Convert.toStr(responseMap.get("statusCode"))));
+            smsResponse.setData(JSONUtil.toJsonStr(response));
         } catch (Exception e) {
             throw new SmsBlendException(e.getMessage());
         }

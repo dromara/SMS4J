@@ -1,6 +1,5 @@
 package org.dromara.sms4j.emay.service;
 
-import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.AbstractSmsBlend;
@@ -41,7 +40,7 @@ public class EmaySmsImpl extends AbstractSmsBlend {
             params = EmayBuilder.buildRequestBody(config.getAppId(), config.getSecretKey(), phone, message);
         } catch (SmsBlendException e) {
             SmsResponse smsResponse = new SmsResponse();
-            smsResponse.setErrMessage(e.getMessage());
+            smsResponse.setSuccess(false);
             return smsResponse;
         }
         return getSendResponse(params, url);
@@ -83,35 +82,17 @@ public class EmaySmsImpl extends AbstractSmsBlend {
         AtomicReference<SmsResponse> smsResponse = new AtomicReference<>();
         http.post(requestUrl)
                 .addBody(body)
-                .onSuccess(((data, req, res) -> smsResponse.set(getSmsResponse(res.get(JSONObject.class)))))
-                .onError((ex, req, res) -> smsResponse.set(getSmsResponse(res.get(JSONObject.class))))
+                .onSuccess(((data, req, res) -> smsResponse.set(this.getSmsResponse(res.get(JSONObject.class)))))
+                .onError((ex, req, res) -> smsResponse.set(this.getSmsResponse(res.get(JSONObject.class))))
                 .execute();
-
         return smsResponse.get();
     }
 
-    private static SmsResponse getSmsResponse(JSONObject execute) {
+    private SmsResponse getSmsResponse(JSONObject resJson) {
         SmsResponse smsResponse = new SmsResponse();
-        if (execute == null) {
-            smsResponse.setErrorCode("500");
-            smsResponse.setErrMessage("emay send sms response is null.check param");
-            return smsResponse;
-        }
-        String code = execute.getStr("code");
-        if (SmsUtil.isEmpty(code)) {
-            smsResponse.setErrorCode("emay response code is null");
-            smsResponse.setErrMessage("emay is error");
-        } else {
-            smsResponse.setCode(code);
-            if ("success".equalsIgnoreCase(code)) {
-                smsResponse.setSuccess(true);
-                JSONArray data = execute.getJSONArray("data");
-                JSONObject result = (JSONObject) data.get(0);
-                String smsId = result.getStr("smsId");
-                smsResponse.setBizId(smsId);
-            }
-            smsResponse.setData(execute);
-        }
+        smsResponse.setSuccess("success".equalsIgnoreCase(resJson.getStr("code")));
+        smsResponse.setData(resJson);
         return smsResponse;
     }
+
 }

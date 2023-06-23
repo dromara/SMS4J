@@ -32,17 +32,10 @@ public class YunPianSmsImpl extends AbstractSmsBlend {
     private static SmsResponse getSmsResponse(JSONObject execute) {
         SmsResponse smsResponse = new SmsResponse();
         if (execute == null) {
-            smsResponse.setErrorCode("500");
-            smsResponse.setErrMessage("yunpian send sms response is null.check param");
+            smsResponse.setSuccess(false);
             return smsResponse;
         }
-        smsResponse.setCode(execute.getStr("code"));
-        smsResponse.setMessage(execute.getStr("msg"));
-        smsResponse.setBizId(execute.getStr("sid"));
         smsResponse.setSuccess(execute.getInt("code") == 0);
-        if (!smsResponse.isSuccess()) {
-            smsResponse.setErrMessage(execute.getStr("msg"));
-        }
         smsResponse.setData(execute);
         return smsResponse;
     }

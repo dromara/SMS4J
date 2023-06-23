@@ -32,7 +32,7 @@ public class JdCloudSmsImpl extends AbstractSmsBlend {
     private final JdCloudConfig config;
 
     public JdCloudSmsImpl(SmsClient client, JdCloudConfig config, Executor pool, DelayedTime delayed) {
-        super(pool,delayed);
+        super(pool, delayed);
         this.client = client;
         this.config = config;
     }
@@ -85,17 +85,8 @@ public class JdCloudSmsImpl extends AbstractSmsBlend {
      */
     private SmsResponse getSmsResponse(BatchSendResult res) {
         SmsResponse smsResponse = new SmsResponse();
-        smsResponse.setBizId(res.getData().getSequenceNumber());
-        smsResponse.setData(res.getData());
-        smsResponse.setCode(String.valueOf(res.getCode()));
-        smsResponse.setMessage(res.getMessage());
-        Boolean status = res.getStatus();
-        boolean isSuccess = status != null && status;
-        smsResponse.setSuccess(isSuccess);
-        if (!isSuccess) {
-            smsResponse.setErrMessage(res.getMessage());
-            smsResponse.setErrorCode(String.valueOf(res.getCode()));
-        }
+        smsResponse.setSuccess(res.getStatus() != null && res.getStatus());
+        smsResponse.setData(res);
         return smsResponse;
     }
 }

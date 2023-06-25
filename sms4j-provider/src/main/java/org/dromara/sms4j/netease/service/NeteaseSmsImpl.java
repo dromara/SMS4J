@@ -94,7 +94,7 @@ public class NeteaseSmsImpl extends AbstractSmsBlend {
         AtomicReference<SmsResponse> reference = new AtomicReference<>();
         String nonce = IdUtil.fastSimpleUUID();
         String curTime = String.valueOf(DateUtil.currentSeconds());
-        String checkSum = NeteaseUtils.getCheckSum(config.getSecret(), nonce, curTime);
+        String checkSum = NeteaseUtils.getCheckSum(config.getAccessKeySecret(), nonce, curTime);
         Map<String, Object> body = new LinkedHashMap<>(4);
         body.put("templateid", templateId);
         body.put("mobiles", JSONArray.parseArray(JSON.toJSONString(phones)).toJSONString());
@@ -102,7 +102,7 @@ public class NeteaseSmsImpl extends AbstractSmsBlend {
         body.put("needUp", config.getNeedUp());
         http.post(requestUrl)
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
-                .addHeader("AppKey", config.getAppKey())
+                .addHeader("AppKey", config.getAccessKeyId())
                 .addHeader("Nonce", nonce)
                 .addHeader("CurTime", curTime)
                 .addHeader("CheckSum", checkSum)

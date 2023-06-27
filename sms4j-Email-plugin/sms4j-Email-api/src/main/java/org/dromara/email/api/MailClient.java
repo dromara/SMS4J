@@ -81,6 +81,8 @@ public interface MailClient {
      * @param title 邮件标题
      * @param body 邮件正文
      * @param files 附件，可添加多个
+     * @param bcc 密送人
+     * @param cc 抄送人
      * @author :Wind
     */
     void sendEmail(List<String> mailAddress, String title, String body,List<String> cc,List<String> bcc,Map<String,String> files);

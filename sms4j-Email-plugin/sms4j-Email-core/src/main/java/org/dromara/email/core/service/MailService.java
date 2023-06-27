@@ -7,6 +7,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import org.dromara.email.api.MailClient;
 import org.dromara.email.api.Parameter;
+import org.dromara.email.comm.entity.MailMessage;
 import org.dromara.email.comm.errors.MailException;
 import org.dromara.email.comm.utils.HtmlUtil;
 import org.dromara.email.comm.utils.ZipUtils;
@@ -112,6 +113,16 @@ public class MailService implements MailClient {
         } catch (MessagingException e) {
             throw new MailException(e);
         }
+    }
+
+    @Override
+    public void sendEmail(MailMessage mailMessage) {
+        sendEmail(mailMessage.getMailAddress(),
+                mailMessage.getTitle(),
+                mailMessage.getBody(),
+                mailMessage.getCc(),
+                mailMessage.getBcc(),
+                mailMessage.getFiles());
     }
 
     @Override

@@ -1,4 +1,4 @@
-package org.dromara.email.core.entity;
+package org.dromara.email.comm.entity;
 
 import lombok.Getter;
 

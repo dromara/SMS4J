@@ -1,5 +1,7 @@
 package org.dromara.email.api;
 
+import org.dromara.email.comm.entity.MailMessage;
+
 import java.io.InputStream;
 import java.lang.String;
 import java.util.List;
@@ -86,6 +88,15 @@ public interface MailClient {
      * @author :Wind
     */
     void sendEmail(List<String> mailAddress, String title, String body,List<String> cc,List<String> bcc,Map<String,String> files);
+
+    /**
+     *  sendEmail
+     * <p> 发送邮件，可以通过对象构造群体发送或者单体发送，取决于添加进去的收件人，同时可以添加
+     * 密送人，抄送人，附件等参数
+     * @param mailMessage 发送邮件参数对象
+     * @author :Wind
+    */
+    void sendEmail(MailMessage mailMessage);
 
     /**
      *  sendHtml

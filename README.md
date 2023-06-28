@@ -21,16 +21,16 @@
 #### [JavaDoc文档](https://apidoc.gitee.com/dromara/sms4j/)
 
 ## 支持厂商一览
-- **亿美软通国内短信**
-- **阿里云国内短信**
-- **腾讯云国内短信**
-- **华为云国内短信**
-- **京东云国内短信**
-- **容联云国内短信**
-- **网易云信短信**
-- **天翼云短信**
-- **合一短信**
-- **云片短信**
+- **[亿美软通国内短信](https://www.emay.cn/article949.html)**
+- **[阿里云国内短信](https://www.aliyun.com/product/sms)**
+- **[腾讯云国内短信](https://cloud.tencent.com/product/sms)**
+- **[华为云国内短信](https://www.huaweicloud.com/product/msgsms.html)**
+- **[京东云国内短信](https://www.jdcloud.com/cn/products/text-message)**
+- **[容联云国内短信](https://www.yuntongxun.com/sms/note-inform)**
+- **[网易云信短信](https://netease.im/sms)**
+- **[天翼云短信](https://www.ctyun.cn/products/10020341)**
+- **[合一短信](https://unisms.apistd.com/)**
+- **[云片短信](https://www.yunpian.com/product/domestic-sms)**
 
 ## 在SpringBoot环境集成
 

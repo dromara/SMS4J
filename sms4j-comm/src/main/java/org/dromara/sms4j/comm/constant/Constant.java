@@ -9,7 +9,7 @@ package org.dromara.sms4j.comm.constant;
  **/
 public abstract class Constant {
     /** 项目版本号*/
-    public static final String VERSION = "V 2.1.0";
+    public static final String VERSION = "V 2.2.1";
 
     /**
      * 用于格式化鉴权头域,给"Authorization"参数赋值

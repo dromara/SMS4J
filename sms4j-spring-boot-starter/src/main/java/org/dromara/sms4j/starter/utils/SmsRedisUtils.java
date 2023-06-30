@@ -3,6 +3,8 @@ package org.dromara.sms4j.starter.utils;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.universal.SmsRedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;

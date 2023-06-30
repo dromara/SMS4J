@@ -15,11 +15,14 @@ import org.dromara.sms4j.starter.utils.ConfigUtil;
 import org.dromara.sms4j.starter.utils.SmsRedisUtils;
 import org.dromara.sms4j.starter.utils.SmsSpringUtil;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 
+import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.Objects;
@@ -81,6 +84,7 @@ public class SmsAutowiredConfig {
         return new SupplierSqlConfig();
     }
 
+    @PostConstruct
     void init(){
         /* 如果配置中启用了redis，则注入redis工具*/
         if (BeanFactory.getSmsConfig().getRedisCache()){

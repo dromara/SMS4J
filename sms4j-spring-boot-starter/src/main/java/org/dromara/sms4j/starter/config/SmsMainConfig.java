@@ -16,7 +16,7 @@ public class SmsMainConfig {
     }
 
     /** 主要配置注入 确保springUtil注入后再注入*/
-    @Bean(initMethod = "init")
+    @Bean
     public SmsAutowiredConfig smsAutowiredConfig(SmsSpringUtil smsSpringUtil){
         return new SmsAutowiredConfig(smsSpringUtil);
     }

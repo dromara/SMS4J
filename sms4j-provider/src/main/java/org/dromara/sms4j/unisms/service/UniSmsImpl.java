@@ -89,7 +89,7 @@ public class UniSmsImpl extends AbstractSmsBlend {
             smsResponse.setMessage(send.message);
             smsResponse.setBizId(send.requestId);
             smsResponse.setData(send);
-            smsResponse.setSuccess("Success".equals(send.message));
+            smsResponse.setSuccess("0".equals(send.code));
         }catch(Exception e){
             smsResponse.setErrMessage(e.getMessage());
         }

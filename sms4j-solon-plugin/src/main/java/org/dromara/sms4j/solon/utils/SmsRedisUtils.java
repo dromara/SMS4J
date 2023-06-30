@@ -1,7 +1,7 @@
 package org.dromara.sms4j.solon.utils;
 
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.sms4j.api.universal.RedisUtil;
+import org.dromara.sms4j.api.universal.SmsRedisUtil;
 import org.noear.solon.Solon;
 import org.redisson.api.RedissonClient;
 
@@ -10,11 +10,11 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-public class RedisUtils implements RedisUtil {
+public class SmsRedisUtils implements SmsRedisUtil {
 
     private RedissonClient redisTemplate;
 
-    public RedisUtils() {
+    public SmsRedisUtils() {
         Thread t = new Thread(()->{
             //如果获取到的bean为null则等待后重试，最多重试五次
             for(int i = 0; i < 5 ;i++){
@@ -34,7 +34,7 @@ public class RedisUtils implements RedisUtil {
         t.start();
     }
 
-    public RedisUtils(RedissonClient redisTemplate) {
+    public SmsRedisUtils(RedissonClient redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 

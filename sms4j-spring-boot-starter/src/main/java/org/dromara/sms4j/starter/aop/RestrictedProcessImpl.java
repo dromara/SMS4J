@@ -2,11 +2,11 @@ package org.dromara.sms4j.starter.aop;
 
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.smsProxy.RestrictedProcess;
+import org.dromara.sms4j.api.universal.SmsRedisUtil;
 import org.dromara.sms4j.comm.config.SmsConfig;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtil;
-import org.dromara.sms4j.api.universal.RedisUtil;
-import org.dromara.sms4j.starter.utils.SpringUtil;
+import org.dromara.sms4j.starter.utils.SmsSpringUtil;
 
 import java.util.Objects;
 
@@ -19,7 +19,7 @@ public class RestrictedProcessImpl extends RestrictedProcess {
 
     @Override
     public SmsBlendException process(SmsConfig config,String args) throws Exception {
-        RedisUtil redis = SpringUtil.getBean(RedisUtil.class);
+        SmsRedisUtil redis = SmsSpringUtil.getBean(SmsRedisUtil.class);
         if (Objects.isNull(redis)){
             throw new SmsBlendException("The redis tool could not be found");
         }

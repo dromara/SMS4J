@@ -2,7 +2,7 @@ package org.dromara.sms4j.solon.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.smsProxy.SmsInvocationHandler;
-import org.dromara.sms4j.api.universal.RedisUtil;
+import org.dromara.sms4j.api.universal.SmsRedisUtil;
 import org.dromara.sms4j.comm.config.SmsBanner;
 import org.dromara.sms4j.comm.config.SmsConfig;
 import org.dromara.sms4j.comm.config.SmsSqlConfig;
@@ -11,7 +11,7 @@ import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.factory.BeanFactory;
 import org.dromara.sms4j.core.SupplierSqlConfig;
 import org.dromara.sms4j.solon.aop.SolonRestrictedProcess;
-import org.dromara.sms4j.solon.utils.RedisUtils;
+import org.dromara.sms4j.solon.utils.SmsRedisUtils;
 import org.noear.solon.Solon;
 import org.noear.solon.Utils;
 import org.noear.solon.annotation.*;
@@ -82,8 +82,8 @@ public class SmsAutowiredConfig implements LifecycleBean {
         /* 如果配置中启用了redis，则注入redis工具*/
         if (BeanFactory.getSmsConfig().getRedisCache()) {
             //如果容器中不存在一个已经实现的redisUtil则自己注入一个
-            if (!Solon.context().hasWrap(RedisUtil.class)) {
-                Solon.context().wrapAndPut(RedisUtils.class);
+            if (!Solon.context().hasWrap(SmsRedisUtil.class)) {
+                Solon.context().wrapAndPut(SmsRedisUtils.class);
             }
             SmsInvocationHandler.setRestrictedProcess(new SolonRestrictedProcess(aopContext));
             log.debug("The redis cache is enabled for sms4j");

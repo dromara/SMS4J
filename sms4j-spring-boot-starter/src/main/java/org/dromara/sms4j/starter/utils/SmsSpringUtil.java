@@ -8,20 +8,20 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 /**
- * <p>类名: SpringUtil
+ * <p>类名: SmsSpringUtil
  * <p>说明：spring bean工具
  *
  * @author :Wind
  * 2023/3/25  0:13
  **/
 @Slf4j
-public class SpringUtil implements ApplicationContextAware {
+public class SmsSpringUtil implements ApplicationContextAware {
 
     private static ApplicationContext applicationContext;
 
     private final DefaultListableBeanFactory beanFactory;
 
-    public SpringUtil(DefaultListableBeanFactory beanFactory) {
+    public SmsSpringUtil(DefaultListableBeanFactory beanFactory) {
         this.beanFactory = beanFactory;
     }
 
@@ -31,8 +31,8 @@ public class SpringUtil implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        if (SpringUtil.applicationContext == null) {
-            SpringUtil.applicationContext = applicationContext;
+        if (SmsSpringUtil.applicationContext == null) {
+            SmsSpringUtil.applicationContext = applicationContext;
         }
     }
 

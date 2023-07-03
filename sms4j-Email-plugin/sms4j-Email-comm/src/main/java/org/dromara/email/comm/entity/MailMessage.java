@@ -2,6 +2,7 @@ package org.dromara.email.comm.entity;
 
 import lombok.Getter;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,15 @@ public class MailMessage {
 
     /** 文字正文*/
     private String body;
+
+    /** html模板文件路径（resources目录下的路径）*/
+    private String htmlPath;
+
+    /** html模板文件的输入流，可来自任意可读取位置*/
+    private InputStream htmlInputStream;
+
+    /** html 模板参数*/
+    private Map<String,String> htmlValues;
 
     /** 抄送人*/
     private List<String> cc;
@@ -99,6 +109,32 @@ public class MailMessage {
                 mailMessage.files = new HashMap<>();
             }
             mailMessage.files.put(fileName,filePath);
+            return this;
+        }
+
+        public MailsBuilder setHtmlPath(String htmlPath){
+            mailMessage.htmlPath = htmlPath;
+            return this;
+        }
+
+        public MailsBuilder setHtmlInputStream(InputStream htmlInputStream){
+            mailMessage.htmlInputStream = htmlInputStream;
+            return this;
+        }
+
+        public MailsBuilder setHtmlValues(String key, String value){
+            if (mailMessage.files == null){
+                mailMessage.files = new HashMap<>();
+            }
+            mailMessage.htmlValues.put(key,value);
+            return this;
+        }
+
+        public MailsBuilder setHtmlValues(Map<String,String> htmlValues){
+            if (mailMessage.files == null){
+                mailMessage.files = new HashMap<>();
+            }
+            mailMessage.htmlValues.putAll(htmlValues);
             return this;
         }
     }

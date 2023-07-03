@@ -306,6 +306,27 @@ public class MailService implements MailClient {
         sendHtml(mailAddress, title, body, html, ReflectUtil.getValues(parameter), files);
     }
 
+    @Override
+    public void sendHtml(MailMessage mailMessage) {
+        if (mailMessage.getHtmlInputStream() == null){
+            sendHtml(mailMessage.getMailAddress(),
+                    mailMessage.getTitle(),
+                    mailMessage.getBody(),
+                    mailMessage.getHtmlPath(),
+                    mailMessage.getHtmlValues(),
+                    mailMessage.getFiles()
+            );
+        }else{
+            sendHtml(mailMessage.getMailAddress(),
+                    mailMessage.getTitle(),
+                    mailMessage.getBody(),
+                    mailMessage.getHtmlInputStream(),
+                    mailMessage.getHtmlValues(),
+                    mailMessage.getFiles()
+            );
+        }
+    }
+
     private void forFiles(Multipart multipart, Map<String, String> files) throws MessagingException {
         for (Map.Entry<String, String> entry : files.entrySet()) {
             String k = entry.getKey();

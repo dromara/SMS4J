@@ -25,4 +25,8 @@ public class SmsResponse {
      * @since 2.3.0
      */
     private Object data;
+
+    /** 状态码*/
+    private String code;
+    private String message;
 }

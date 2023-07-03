@@ -27,3 +27,10 @@ sms:
     statusCallBack:
     #华为分配的app请求地址
     url: https://XXXXX.cn-north-4.XXXXXXXX.com:443
+  zhutong:
+    #助通终端用户管理的用户名 username,非登录账号密码，请登录后台管理地址进行查看：http://mix2.zthysms.com/login
+    accessKeyId: tushu1122XXX
+    #助通终端用户管理的用户名 passwrod
+    accessKeySecret: UbXXX4SL
+    #短信签名，具体在这里查看审核过的短信签名：https://mix2.zthysms.com/index.html#/SignatureManagement
+    signature: 上海千XXXX

@@ -24,6 +24,8 @@ import org.dromara.sms4j.unisms.config.UniConfig;
 import org.dromara.sms4j.unisms.config.UniFactory;
 import org.dromara.sms4j.yunpian.config.YunPianFactory;
 import org.dromara.sms4j.yunpian.config.YunpianConfig;
+import org.dromara.sms4j.zhutong.config.ZhutongConfig;
+import org.dromara.sms4j.zhutong.config.ZhutongFactory;
 
 /**
  * SupplierFactory
@@ -103,6 +105,13 @@ public class SupplierFactory {
      */
     public static NeteaseConfig getNeteaseConfig() {
         return NeteaseFactory.instance().getConfig();
+    }
+
+    /**
+     * 助通信配置获取
+     */
+    public static ZhutongConfig getZhutongConfig() {
+        return ZhutongFactory.instance().getConfig();
     }
 
     /**

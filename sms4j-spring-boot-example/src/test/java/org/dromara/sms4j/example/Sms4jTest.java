@@ -1,5 +1,6 @@
 package org.dromara.sms4j.example;
 
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
@@ -10,6 +11,8 @@ import org.dromara.sms4j.core.factory.SmsFactory;
 import org.dromara.sms4j.provider.enumerate.SupplierType;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.LinkedHashMap;
 
 @Slf4j
 @SpringBootTest
@@ -130,4 +133,65 @@ class Sms4jTest {
         Assert.isTrue(Long.parseLong(smsResponse.getCode()) <= 200 && smsResponse.isSuccess());
     }
 
+    /**
+     * 助通短信测试1：无模板
+     */
+    @Test
+    public void zhutongSms1Test() {
+        if (StrUtil.isBlank(PHONE)) {
+            return;
+        }
+        // 助通短信短信
+        String msg = StrUtil.format("【图书商城】您好，你的验证码是{}：（5分钟失效）", SmsUtil.getRandomInt(6));
+        SmsResponse smsResponse = SmsFactory.createSmsBlend(SupplierType.ZHUTONG).sendMessage(PHONE, msg);
+        log.info(JSONUtil.toJsonStr(smsResponse));
+        Assert.isTrue(smsResponse.isSuccess());
+    }
+
+    /**
+     * 助通短信测试2：有模板
+     */
+    @Test
+    public void zhutongSmsTest2Template() {
+        if (StrUtil.isBlank(PHONE)) {
+            return;
+        }
+        // 助通短信短信
+        LinkedHashMap<String, String> messages = new LinkedHashMap<>(1);
+        messages.put("code", SmsUtil.getRandomInt(6));
+        SmsResponse smsResponse = SmsFactory.createSmsBlend(SupplierType.ZHUTONG).sendMessage(PHONE, "59264", messages);
+        log.info(JSONUtil.toJsonStr(smsResponse));
+        Assert.isTrue(smsResponse.isSuccess());
+    }
+
+    /**
+     * 助通短信测试3：无模板群发
+     */
+    @Test
+    public void zhutongSms3MoreTest() {
+        if (StrUtil.isBlank(PHONE)) {
+            return;
+        }
+        // 助通短信短信
+        String msg = StrUtil.format("【图书商城】您好，你的验证码是{}：（5分钟失效）", SmsUtil.getRandomInt(6));
+        SmsResponse smsResponse = SmsFactory.createSmsBlend(SupplierType.ZHUTONG).massTexting(ListUtil.of(PHONE, "17312345678"), msg);
+        log.info(JSONUtil.toJsonStr(smsResponse));
+        Assert.isTrue(smsResponse.isSuccess());
+    }
+
+    /**
+     * 助通短信测试4：有模板 多人群发
+     */
+    @Test
+    public void zhutongSms4TemplateTest() {
+        if (StrUtil.isBlank(PHONE)) {
+            return;
+        }
+        // 助通短信短信
+        LinkedHashMap<String, String> messages = new LinkedHashMap<>(1);
+        messages.put("code", SmsUtil.getRandomInt(6));
+        SmsResponse smsResponse = SmsFactory.createSmsBlend(SupplierType.ZHUTONG).massTexting(ListUtil.of(PHONE, "17312345678"), "59264", messages);
+        log.info(JSONUtil.toJsonStr(smsResponse));
+        Assert.isTrue(smsResponse.isSuccess());
+    }
 }

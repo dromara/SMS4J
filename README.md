@@ -26,7 +26,7 @@
 - **[腾讯云国内短信](https://cloud.tencent.com/product/sms)**
 - **[华为云国内短信](https://www.huaweicloud.com/product/msgsms.html)**
 - **[京东云国内短信](https://www.jdcloud.com/cn/products/text-message)**
-- **[容联云国内短信](https://www.yuntongxun.com/sms/note-inform)**
+- **[容联云国内短信（原云通讯）](https://www.yuntongxun.com/sms/note-inform)**
 - **[网易云信短信](https://netease.im/sms)**
 - **[天翼云短信](https://www.ctyun.cn/products/10020341)**
 - **[合一短信](https://unisms.apistd.com/)**

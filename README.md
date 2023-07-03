@@ -31,6 +31,7 @@
 - **[天翼云短信](https://www.ctyun.cn/products/10020341)**
 - **[合一短信](https://unisms.apistd.com/)**
 - **[云片短信](https://www.yunpian.com/product/domestic-sms)**
+- **[助通短信](https://www.ztinfo.cn/products/sms)**
 
 ## 在SpringBoot环境集成
 
@@ -75,6 +76,14 @@ sms:
       statusCallBack:
       #华为分配的app请求地址
       url: https://XXXXX.cn-north-4.XXXXXXXX.com:443
+   zhutong:
+      #助通短信
+      #助通终端用户管理的用户名 username 必填；非登录账号密码，请登录后台管理地址进行查看：http://mix2.zthysms.com/login
+      accessKeyId: tushu1122XXX
+      #助通终端用户管理的用户名 passwrod 必填；
+      accessKeySecret: UbXXX4SL
+      #短信签名，可选；可选的时候，只能使用自定义短信不能使用模板短信； 具体在这里查看审核过的短信签名：https://mix2.zthysms.com/index.html#/SignatureManagement
+      signature: 上海千XXXX
 ```
 
 3. 方法使用

@@ -31,7 +31,7 @@ class Sms4jTest {
         // 阿里
         SmsResponse smsResponse = SmsFactory.createSmsBlend(SupplierType.ALIBABA).sendMessage(PHONE, SmsUtil.getRandomInt(6));
         log.info(JSONUtil.toJsonStr(smsResponse));
-        Assert.isTrue("OK".equals(smsResponse.getCode()) && smsResponse.isSuccess());
+        Assert.isTrue(smsResponse.isSuccess());
     }
 
     @Test
@@ -42,7 +42,7 @@ class Sms4jTest {
         // 华为
         SmsResponse smsResponse = SmsFactory.createSmsBlend(SupplierType.HUAWEI).sendMessage(PHONE, SmsUtil.getRandomInt(6));
         log.info(JSONUtil.toJsonStr(smsResponse));
-        Assert.isTrue("000000".equals(smsResponse.getCode()) && smsResponse.isSuccess());
+        Assert.isTrue(smsResponse.isSuccess());
     }
 
     @Test
@@ -53,7 +53,7 @@ class Sms4jTest {
         // 容联云
         SmsResponse smsResponse = SmsFactory.createSmsBlend(SupplierType.CLOOPEN).sendMessage(PHONE, SmsUtil.getRandomInt(6));
         log.info(JSONUtil.toJsonStr(smsResponse));
-        Assert.isTrue("000000".equals(smsResponse.getCode()) && smsResponse.isSuccess());
+        Assert.isTrue(smsResponse.isSuccess());
     }
 
     @Test
@@ -64,7 +64,7 @@ class Sms4jTest {
         // 亿美软通
         SmsResponse smsResponse = SmsFactory.createSmsBlend(SupplierType.EMAY).sendMessage(PHONE, SmsUtil.getRandomInt(6));
         log.info(JSONUtil.toJsonStr(smsResponse));
-        Assert.isTrue("success".equals(smsResponse.getCode()) && smsResponse.isSuccess());
+        Assert.isTrue(smsResponse.isSuccess());
     }
 
     @Test
@@ -86,7 +86,7 @@ class Sms4jTest {
         // 云片
         SmsResponse smsResponse = SmsFactory.createSmsBlend(SupplierType.YUNPIAN).sendMessage(PHONE, SmsUtil.getRandomInt(6));
         log.info(JSONUtil.toJsonStr(smsResponse));
-        Assert.isTrue("0".equals(smsResponse.getCode()) && smsResponse.isSuccess());
+        Assert.isTrue(smsResponse.isSuccess());
     }
 
     @Test
@@ -97,7 +97,7 @@ class Sms4jTest {
         // 腾讯
         SmsResponse smsResponse = SmsFactory.createSmsBlend(SupplierType.TENCENT).sendMessage(PHONE, SmsUtil.getRandomInt(6));
         log.info(JSONUtil.toJsonStr(smsResponse));
-        Assert.isTrue("Ok".equals(smsResponse.getCode()) && smsResponse.isSuccess());
+        Assert.isTrue(smsResponse.isSuccess());
     }
 
     @Test
@@ -108,7 +108,7 @@ class Sms4jTest {
         // 合一
         SmsResponse smsResponse = SmsFactory.createSmsBlend(SupplierType.UNI_SMS).sendMessage(PHONE, SmsUtil.getRandomInt(6));
         log.info(JSONUtil.toJsonStr(smsResponse));
-        Assert.isTrue("Success".equals(smsResponse.getMessage()) && smsResponse.isSuccess());
+        Assert.isTrue(smsResponse.isSuccess());
     }
 
     @Test
@@ -119,7 +119,7 @@ class Sms4jTest {
         // 天翼云
         SmsResponse smsResponse = SmsFactory.createSmsBlend(SupplierType.CTYUN).sendMessage(PHONE, SmsUtil.getRandomInt(6));
         log.info(JSONUtil.toJsonStr(smsResponse));
-        Assert.isTrue("OK".equals(smsResponse.getCode()) && smsResponse.isSuccess());
+        Assert.isTrue(smsResponse.isSuccess());
     }
 
     @Test
@@ -130,7 +130,7 @@ class Sms4jTest {
         // 网易云短信
         SmsResponse smsResponse = SmsFactory.createSmsBlend(SupplierType.NETEASE).sendMessage(PHONE, SmsUtil.getRandomInt(6));
         log.info(JSONUtil.toJsonStr(smsResponse));
-        Assert.isTrue(Long.parseLong(smsResponse.getCode()) <= 200 && smsResponse.isSuccess());
+        Assert.isTrue(smsResponse.isSuccess());
     }
 
     /**
@@ -174,7 +174,7 @@ class Sms4jTest {
         }
         // 助通短信短信
         String msg = StrUtil.format("【图书商城】您好，你的验证码是{}：（5分钟失效）", SmsUtil.getRandomInt(6));
-        SmsResponse smsResponse = SmsFactory.createSmsBlend(SupplierType.ZHUTONG).massTexting(ListUtil.of(PHONE, "17312345678"), msg);
+        SmsResponse smsResponse = SmsFactory.createSmsBlend(SupplierType.ZHUTONG).massTexting(ListUtil.of(PHONE, "180****1111"), msg);
         log.info(JSONUtil.toJsonStr(smsResponse));
         Assert.isTrue(smsResponse.isSuccess());
     }
@@ -190,7 +190,7 @@ class Sms4jTest {
         // 助通短信短信
         LinkedHashMap<String, String> messages = new LinkedHashMap<>(1);
         messages.put("code", SmsUtil.getRandomInt(6));
-        SmsResponse smsResponse = SmsFactory.createSmsBlend(SupplierType.ZHUTONG).massTexting(ListUtil.of(PHONE, "17312345678"), "59264", messages);
+        SmsResponse smsResponse = SmsFactory.createSmsBlend(SupplierType.ZHUTONG).massTexting(ListUtil.of(PHONE, "180****1111"), "59264", messages);
         log.info(JSONUtil.toJsonStr(smsResponse));
         Assert.isTrue(smsResponse.isSuccess());
     }

@@ -5,9 +5,9 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
@@ -198,11 +198,11 @@ public class ZhutongSmsImpl extends AbstractSmsBlend {
         AtomicReference<SmsResponse> reference = new AtomicReference<>();
         http.post(urls)
                 .addHeader("Content-Type", Constant.APPLICATION_JSON_UTF8)
-                .addBody(requestJson.getInnerMap())
+                .addBody(requestJson)
                 .onSuccess(((data, req, res) -> reference.set(this.getResponse(res.get(JSONObject.class)))))
                 .onError((ex, req, res) -> reference.set(this.getResponse(res.get(JSONObject.class))))
                 .execute();
-        log.info("助通短信 URL={} json={} 响应值为={}", urls, requestJson.toJSONString(), reference.get());
+        log.info("助通短信 URL={} json={} 响应值为={}", urls, requestJson, reference.get());
         return reference.get();
     }
 
@@ -212,7 +212,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend {
 
     private SmsResponse getResponse(JSONObject jsonObject) {
         SmsResponse response = new SmsResponse();
-        response.setSuccess(jsonObject.getInteger("code") <= 200);
+        response.setSuccess(jsonObject.getInt("code", -1) <= 200);
         response.setData(jsonObject);
         return response;
     }

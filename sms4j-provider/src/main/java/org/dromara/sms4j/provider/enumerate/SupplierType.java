@@ -13,6 +13,7 @@ import org.dromara.sms4j.provider.base.BaseProviderFactory;
 import org.dromara.sms4j.tencent.config.TencentFactory;
 import org.dromara.sms4j.unisms.config.UniFactory;
 import org.dromara.sms4j.yunpian.config.YunPianFactory;
+import org.dromara.sms4j.zhutong.config.ZhutongFactory;
 
 /**
  * SupplierType
@@ -40,7 +41,9 @@ public enum SupplierType {
     /** 天翼云 */
     CTYUN("天翼云短信", CtyunFactory.instance()),
     /** 网易云信 */
-    NETEASE("网易云短信", NeteaseFactory.instance())
+    NETEASE("网易云短信", NeteaseFactory.instance()),
+    /** 助通短信 */
+    ZHUTONG("助通短信", ZhutongFactory.instance())
     ;
 
 

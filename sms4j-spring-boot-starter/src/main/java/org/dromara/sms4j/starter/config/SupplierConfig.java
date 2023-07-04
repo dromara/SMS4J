@@ -11,6 +11,7 @@ import org.dromara.sms4j.netease.config.NeteaseConfig;
 import org.dromara.sms4j.tencent.config.TencentConfig;
 import org.dromara.sms4j.unisms.config.UniConfig;
 import org.dromara.sms4j.yunpian.config.YunpianConfig;
+import org.dromara.sms4j.zhutong.config.ZhutongConfig;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
@@ -92,5 +93,14 @@ public class SupplierConfig {
     @ConfigurationProperties(prefix = "sms.netease")
     protected NeteaseConfig neteaseConfig(){
         return SupplierFactory.getNeteaseConfig();
+    }
+
+    /**
+     * 助通信差异化配置
+     */
+    @Bean
+    @ConfigurationProperties(prefix = "sms.zhutong")
+    protected ZhutongConfig zhutongConfig(){
+        return SupplierFactory.getZhutongConfig();
     }
 }

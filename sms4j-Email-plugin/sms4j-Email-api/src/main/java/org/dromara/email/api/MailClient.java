@@ -376,6 +376,75 @@ public interface MailClient {
 
     /**
      *  sendHtml
+     * <p> 读取模板发送html邮件,并携带正文和附件
+     * <p> 从用户给定的输入流获取html模板文件
+     * <p> 用户可以自己编写一个实体类，并实现Parameter接口，编写get和set方法，这样一来字段的名称则为模板变量名称，对象的值则为模板变量的值
+     * @param mailAddress 收件人地址，添加多个
+     * @param title 邮件标题
+     * @param body 邮件文本正文
+     * @param html html模板的输入流,这个流可以来自任何来源，例如网络请求，或是本地文件，或者对象存储等
+     * @param parameter key为变量名称，value为变量值
+     * @param files 附件，可添加多个 key 为文件名，value为文件的路径
+     * @param cc 抄送人，可添加多个
+     * @param bcc 密送人，可添加多个
+     * @author :Wind
+     */
+    void sendHtml(List<String> mailAddress, String title,String body,InputStream html,List<String> cc,List<String> bcc,Map<String, String> parameter, Map<String,String> files);
+
+    /**
+     *  sendHtml
+     * <p> 读取模板发送html邮件,并携带正文和附件
+     * <p> 从用户给定的输入流获取html模板文件
+     * <p> 用户可以自己编写一个实体类，并实现Parameter接口，编写get和set方法，这样一来字段的名称则为模板变量名称，对象的值则为模板变量的值
+     * @param mailAddress 收件人地址，添加多个
+     * @param title 邮件标题
+     * @param body 邮件文本正文
+     * @param html html模板的输入流,这个流可以来自任何来源，例如网络请求，或是本地文件，或者对象存储等
+     * @param parameter 字段名称为变量名称，字段值为变量值
+     * @param files 附件，可添加多个 key 为文件名，value为文件的路径
+     * @param cc 抄送人，可添加多个
+     * @param bcc 密送人，可添加多个
+     * @author :Wind
+     */
+    void sendHtml(List<String> mailAddress, String title,String body,InputStream html,List<String> cc,List<String> bcc,Parameter parameter, Map<String,String> files);
+
+    /**
+     *  sendHtml
+     * <p> 读取模板发送html邮件,并携带正文和附件
+     * <p> 从用户给定的输入流获取html模板文件
+     * <p> 用户可以自己编写一个实体类，并实现Parameter接口，编写get和set方法，这样一来字段的名称则为模板变量名称，对象的值则为模板变量的值
+     * @param mailAddress 收件人地址，添加多个
+     * @param title 邮件标题
+     * @param body 邮件文本正文
+     * @param html html模板的名称
+     * @param parameter 字段名称为变量名称，字段值为变量值
+     * @param files 附件，可添加多个 key 为文件名，value为文件的路径
+     * @param cc 抄送人，可添加多个
+     * @param bcc 密送人，可添加多个
+     * @author :Wind
+     */
+    void sendHtml(List<String> mailAddress, String title,String body,String html,List<String> cc,List<String> bcc,Map<String, String> parameter, Map<String,String> files);
+
+    /**
+     *  sendHtml
+     * <p> 读取模板发送html邮件,并携带正文和附件
+     * <p> 从用户给定的输入流获取html模板文件
+     * <p> 用户可以自己编写一个实体类，并实现Parameter接口，编写get和set方法，这样一来字段的名称则为模板变量名称，对象的值则为模板变量的值
+     * @param mailAddress 收件人地址，添加多个
+     * @param title 邮件标题
+     * @param body 邮件文本正文
+     * @param html html模板的名称
+     * @param parameter 字段名称为变量名称，字段值为变量值
+     * @param files 附件，可添加多个 key 为文件名，value为文件的路径
+     * @param cc 抄送人，可添加多个
+     * @param bcc 密送人，可添加多个
+     * @author :Wind
+     */
+    void sendHtml(List<String> mailAddress, String title,String body,String html,List<String> cc,List<String> bcc,Parameter parameter, Map<String,String> files);
+
+
+    /**
+     *  sendHtml
      * <p> 发送邮件，可以通过对象构造群体发送或者单体发送，取决于添加进去的收件人，同时可以添加
      * 密送人，抄送人，附件等参数
      * @param mailMessage 发送邮件参数对象

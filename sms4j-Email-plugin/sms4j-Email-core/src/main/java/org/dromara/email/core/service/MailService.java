@@ -223,7 +223,7 @@ public class MailService implements MailClient {
 
     @Override
     public void sendHtml(List<String> mailAddress, String title, String body, String htmlName, Map<String, String> parameter, Map<String, String> files) {
-        send(mailAddress, title, body, HtmlUtil.readHtml(htmlName), parameter, files,null,null);
+        send(mailAddress, title, body, HtmlUtil.readHtml(htmlName), parameter, files, null, null);
     }
 
     @Override
@@ -238,7 +238,7 @@ public class MailService implements MailClient {
 
     @Override
     public void sendHtml(List<String> mailAddress, String title, String body, InputStream html, Map<String, String> parameter, Map<String, String> files) {
-        send(mailAddress, title, body, HtmlUtil.readHtml(html), parameter, files,null,null);
+        send(mailAddress, title, body, HtmlUtil.readHtml(html), parameter, files, null, null);
     }
 
     @Override
@@ -247,23 +247,51 @@ public class MailService implements MailClient {
     }
 
     @Override
-    public void sendHtml(List<String> mailAddress, String title, String body, InputStream html, List<String> cc, List<String> bcc, Map<String, String> parameter, Map<String, String> files) {
-        send(mailAddress,title,body,HtmlUtil.readHtml(html),parameter,files,cc,bcc);
+    public void sendHtml(List<String> mailAddress,
+                         String title,
+                         String body,
+                         InputStream html,
+                         List<String> cc,
+                         List<String> bcc,
+                         Map<String, String> parameter,
+                         Map<String, String> files) {
+        send(mailAddress, title, body, HtmlUtil.readHtml(html), parameter, files, cc, bcc);
     }
 
     @Override
-    public void sendHtml(List<String> mailAddress, String title, String body, InputStream html, List<String> cc, List<String> bcc, Parameter parameter, Map<String, String> files) {
-        send(mailAddress,title,body,HtmlUtil.readHtml(html),ReflectUtil.getValues(parameter),files,cc,bcc);
+    public void sendHtml(List<String> mailAddress,
+                         String title,
+                         String body,
+                         InputStream html,
+                         List<String> cc,
+                         List<String> bcc,
+                         Parameter parameter,
+                         Map<String, String> files) {
+        send(mailAddress, title, body, HtmlUtil.readHtml(html), ReflectUtil.getValues(parameter), files, cc, bcc);
     }
 
     @Override
-    public void sendHtml(List<String> mailAddress, String title, String body, String html, List<String> cc, List<String> bcc, Map<String, String> parameter, Map<String, String> files) {
-        send(mailAddress,title,body,HtmlUtil.readHtml(html),parameter,files,cc,bcc);
+    public void sendHtml(List<String> mailAddress,
+                         String title,
+                         String body,
+                         String html,
+                         List<String> cc,
+                         List<String> bcc,
+                         Map<String, String> parameter,
+                         Map<String, String> files) {
+        send(mailAddress, title, body, HtmlUtil.readHtml(html), parameter, files, cc, bcc);
     }
 
     @Override
-    public void sendHtml(List<String> mailAddress, String title, String body, String html, List<String> cc, List<String> bcc, Parameter parameter, Map<String, String> files) {
-        send(mailAddress,title,body,HtmlUtil.readHtml(html),ReflectUtil.getValues(parameter),files,cc,bcc);
+    public void sendHtml(List<String> mailAddress,
+                         String title,
+                         String body,
+                         String html,
+                         List<String> cc,
+                         List<String> bcc,
+                         Parameter parameter,
+                         Map<String, String> files) {
+        send(mailAddress, title, body, HtmlUtil.readHtml(html), ReflectUtil.getValues(parameter), files, cc, bcc);
     }
 
     @Override
@@ -316,7 +344,14 @@ public class MailService implements MailClient {
         multipart.addBodyPart(messageBodyPart);
     }
 
-    private void send(List<String> mailAddress, String title, String body, List<String> html, Map<String, String> parameter, Map<String, String> files,List<String>cc,List<String>bcc) {
+    private void send(List<String> mailAddress,
+                      String title,
+                      String body,
+                      List<String> html,
+                      Map<String, String> parameter,
+                      Map<String, String> files,
+                      List<String> cc,
+                      List<String> bcc) {
         try {
             Message message = mailBuild.getMessage();
             message.setRecipients(Message.RecipientType.TO, mailBuild.eliminate(mailAddress));

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import java.util.Map;
+
 /**
  * <p>类名: SmsSpringUtil
  * <p>说明：spring bean工具
@@ -98,5 +100,9 @@ public class SmsSpringUtil implements ApplicationContextAware {
     */
     public static boolean interfaceExist(Class<?>interfaceType) {
         return !applicationContext.getBeansOfType(interfaceType).isEmpty();
+    }
+
+    public <T> Map<String, T> getBeansOfType(Class<T> interfaceType) {
+        return applicationContext.getBeansOfType(interfaceType);
     }
 }

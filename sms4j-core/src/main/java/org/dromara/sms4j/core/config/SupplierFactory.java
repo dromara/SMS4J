@@ -7,6 +7,7 @@ import org.dromara.sms4j.cloopen.config.CloopenConfig;
 import org.dromara.sms4j.cloopen.config.CloopenFactory;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.core.factory.SmsFactory;
+import org.dromara.sms4j.core.load.SmsLoad;
 import org.dromara.sms4j.ctyun.config.CtyunConfig;
 import org.dromara.sms4j.ctyun.config.CtyunFactory;
 import org.dromara.sms4j.emay.config.EmayConfig;
@@ -141,6 +142,8 @@ public class SupplierFactory {
             setCtyunConfig((CtyunConfig) t);
         } else if (t instanceof NeteaseConfig) {
             setNeteaseConfig((NeteaseConfig) t);
+        } else if (t instanceof ZhutongConfig) {
+            setZhuTongConfig((ZhutongConfig) t);
         } else {
             throw new SmsBlendException("Loading failure! Please check the configuration type.");
         }
@@ -152,6 +155,7 @@ public class SupplierFactory {
     public static void setAlibabaConfig(AlibabaConfig alibabaConfig) {
         AlibabaFactory.instance().setConfig(alibabaConfig);
         SmsFactory.refresh(SupplierType.ALIBABA);
+        SmsLoad.starConfig(alibabaConfig,SupplierType.ALIBABA);
     }
 
     /**
@@ -160,6 +164,7 @@ public class SupplierFactory {
     public static void setHuaweiConfig(HuaweiConfig huaweiConfig) {
         HuaweiFactory.instance().setConfig(huaweiConfig);
         SmsFactory.refresh(SupplierType.HUAWEI);
+        SmsLoad.starConfig(huaweiConfig,SupplierType.HUAWEI);
     }
 
     /**
@@ -168,6 +173,7 @@ public class SupplierFactory {
     public static void setUniConfig(UniConfig uniConfig) {
         UniFactory.instance().setConfig(uniConfig);
         SmsFactory.refresh(SupplierType.UNI_SMS);
+        SmsLoad.starConfig(uniConfig,SupplierType.UNI_SMS);
     }
 
     /**
@@ -176,6 +182,7 @@ public class SupplierFactory {
     public static void setTencentConfig(TencentConfig tencentConfig) {
         TencentFactory.instance().setConfig(tencentConfig);
         SmsFactory.refresh(SupplierType.TENCENT);
+        SmsLoad.starConfig(tencentConfig,SupplierType.TENCENT);
     }
 
     /**
@@ -184,6 +191,7 @@ public class SupplierFactory {
     public static void setYunpianConfig(YunpianConfig yunpianConfig) {
         YunPianFactory.instance().setConfig(yunpianConfig);
         SmsFactory.refresh(SupplierType.YUNPIAN);
+        SmsLoad.starConfig(yunpianConfig,SupplierType.YUNPIAN);
     }
 
     /**
@@ -192,6 +200,7 @@ public class SupplierFactory {
     public static void setJdCloudConfig(JdCloudConfig jdCloudConfig) {
         JdCloudFactory.instance().setConfig(jdCloudConfig);
         SmsFactory.refresh(SupplierType.JD_CLOUD);
+        SmsLoad.starConfig(jdCloudConfig,SupplierType.JD_CLOUD);
     }
 
     /**
@@ -200,6 +209,7 @@ public class SupplierFactory {
     public static void setCloopenConfig(CloopenConfig cloopenConfig) {
         CloopenFactory.instance().setConfig(cloopenConfig);
         SmsFactory.refresh(SupplierType.CLOOPEN);
+        SmsLoad.starConfig(cloopenConfig,SupplierType.CLOOPEN);
     }
 
     /**
@@ -208,6 +218,7 @@ public class SupplierFactory {
     public static void setEmayConfig(EmayConfig emayConfig) {
         EmayFactory.instance().setConfig(emayConfig);
         SmsFactory.refresh(SupplierType.EMAY);
+        SmsLoad.starConfig(emayConfig,SupplierType.EMAY);
     }
 
     /**
@@ -216,6 +227,7 @@ public class SupplierFactory {
     public static void setCtyunConfig(CtyunConfig ctyunConfig) {
         CtyunFactory.instance().setConfig(ctyunConfig);
         SmsFactory.refresh(SupplierType.CTYUN);
+        SmsLoad.starConfig(ctyunConfig,SupplierType.CTYUN);
     }
 
     /**
@@ -224,5 +236,12 @@ public class SupplierFactory {
     public static void setNeteaseConfig(NeteaseConfig neteaseConfig) {
         NeteaseFactory.instance().setConfig(neteaseConfig);
         SmsFactory.refresh(SupplierType.NETEASE);
+        SmsLoad.starConfig(neteaseConfig,SupplierType.NETEASE);
+    }
+
+    public static void setZhuTongConfig(ZhutongConfig zhutongConfig){
+        ZhutongFactory.instance().setConfig(zhutongConfig);
+        SmsFactory.refresh(SupplierType.ZHUTONG);
+        SmsLoad.starConfig(zhutongConfig,SupplierType.ZHUTONG);
     }
 }

@@ -1,5 +1,6 @@
 package org.dromara.sms4j.comm.config;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -34,4 +35,10 @@ public class BaseConfig {
      * 模板 ID
      */
     private String templateId;
+
+    /**
+     * 权重
+     * */
+    @Builder.Default
+    private Integer weight = 1;
 }

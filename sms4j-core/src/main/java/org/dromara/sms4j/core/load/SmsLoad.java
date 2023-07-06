@@ -1,9 +1,17 @@
 package org.dromara.sms4j.core.load;
 
 import org.dromara.sms4j.api.SmsBlend;
+import org.dromara.sms4j.api.universal.SupplierConfig;
+import org.dromara.sms4j.comm.config.BaseConfig;
+import org.dromara.sms4j.core.ReflectUtil;
+import org.dromara.sms4j.core.config.SupplierFactory;
+import org.dromara.sms4j.provider.base.BaseProviderFactory;
+import org.dromara.sms4j.provider.enumerate.SupplierType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * SmsLoad
@@ -14,6 +22,9 @@ import java.util.List;
 public class SmsLoad {
     // 服务器列表，每个服务器有一个权重和当前权重
     private static final List<LoadServer> LoadServers = new ArrayList<>();
+
+    // 实例列表
+    private static final Map<Object, SmsBlend> smsBlendMap = new HashMap<>();
 
     private SmsLoad() {
     }
@@ -51,7 +62,7 @@ public class SmsLoad {
      * @return SmsBlend 短信实现
      * @author :Wind
     */
-    public static SmsBlend getLoadServer() {
+    public synchronized static SmsBlend getLoadServer() {
         int totalWeight = 0;
         LoadServer selectedLoadServer = null;
         // 计算所有服务器的权重总和，并选择当前权重最大的服务器
@@ -71,6 +82,19 @@ public class SmsLoad {
         int i = selectedLoadServer.getCurrentWeight() - totalWeight;
         selectedLoadServer.setCurrentWeight(i);
         return selectedLoadServer.getSmsServer();
+    }
+
+    /**
+     *  starConfig
+     * <p> 创建smsBlend并加入到负载均衡器
+     * @param supplierConfig 厂商配置
+     * @param supplierType 厂商枚举
+     * @author :Wind
+    */
+    public static void starConfig(SupplierConfig supplierConfig, SupplierType supplierType){
+        BaseProviderFactory providerFactory = supplierType.getProviderFactory();
+        SmsBlend smsBlend = providerFactory.createMultitonSms(supplierConfig);
+        addLoadServer(smsBlend, Integer.parseInt(ReflectUtil.getValues(supplierConfig).get("weight")));
     }
 }
 

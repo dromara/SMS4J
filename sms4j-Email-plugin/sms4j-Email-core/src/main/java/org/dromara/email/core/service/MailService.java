@@ -5,8 +5,10 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpUtil;
 import org.dromara.email.api.MailClient;
 import org.dromara.email.api.Parameter;
+import org.dromara.email.comm.constants.FileConstants;
 import org.dromara.email.comm.entity.MailMessage;
 import org.dromara.email.comm.errors.MailException;
 import org.dromara.email.comm.utils.HtmlUtil;
@@ -325,7 +327,13 @@ public class MailService implements MailClient {
             String v = entry.getValue();
             // 设置附件消息部分
             MimeBodyPart messageBodyPart = new MimeBodyPart();
-            DataSource source = new FileDataSource(v);
+            DataSource source;
+            if (v.startsWith("http")) {
+                byte[] bytes = HttpUtil.downloadBytes(v);
+                source = new ByteArrayDataSource(bytes, FileConstants.IO_FILE_TYPE);
+            }else {
+                source = new FileDataSource(v);
+            }
             messageBodyPart.setDataHandler(new DataHandler(source));
             messageBodyPart.setFileName(k);
             multipart.addBodyPart(messageBodyPart);
@@ -338,7 +346,7 @@ public class MailService implements MailClient {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         ZipUtils.zipFilePip(files, os);
         ByteArrayInputStream stream = IoUtil.toStream(os);
-        DataSource source = new ByteArrayDataSource(stream, "application/octet-stream");
+        DataSource source = new ByteArrayDataSource(stream, FileConstants.IO_FILE_TYPE);
         messageBodyPart.setDataHandler(new DataHandler(source));
         messageBodyPart.setFileName(StrUtil.isNotBlank(zipName) ? zipName : UUID.fastUUID() + ".zip");
         multipart.addBodyPart(messageBodyPart);

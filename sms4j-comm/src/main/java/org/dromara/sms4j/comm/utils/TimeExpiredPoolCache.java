@@ -1,8 +1,6 @@
 package org.dromara.sms4j.comm.utils;
 
 import cn.hutool.json.JSONUtil;
-import com.sun.org.slf4j.internal.Logger;
-import com.sun.org.slf4j.internal.LoggerFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 

@@ -1,6 +1,9 @@
 package org.dromara.sms4j.yunpian.service;
 
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import org.dromara.sms4j.api.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
@@ -15,7 +18,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author wind
@@ -29,7 +31,7 @@ public class YunPianSmsImpl extends AbstractSmsBlend {
 
     private final YunpianConfig config;
 
-    private static SmsResponse getSmsResponse(JSONObject execute) {
+    private static SmsResponse getResponse(JSONObject execute) {
         SmsResponse smsResponse = new SmsResponse();
         if (execute == null) {
             smsResponse.setSuccess(false);
@@ -111,14 +113,12 @@ public class YunPianSmsImpl extends AbstractSmsBlend {
 
     private SmsResponse getSendResponse(Map<String, String> body) {
         Map<String, String> headers = getHeaders();
-        AtomicReference<SmsResponse> smsResponse = new AtomicReference<>();
-        http.post(Constant.YUNPIAN_URL + "/sms/tpl_single_send.json")
-                .addHeader(headers)
-                .addBody(body)
-                .onSuccess(((data, req, res) -> smsResponse.set(getSmsResponse(res.get(JSONObject.class)))))
-                .onError((ex, req, res) -> smsResponse.set(getSmsResponse(res.get(JSONObject.class))))
-                .execute();
-
-        return smsResponse.get();
+        try(HttpResponse response = HttpRequest.post(Constant.YUNPIAN_URL + "/sms/tpl_single_send.json")
+                .addHeaders(headers)
+                .body(JSONUtil.toJsonStr(body))
+                .execute()){
+            JSONObject res = JSONUtil.parseObj(response.body());
+            return getResponse(res);
+        }
     }
 }

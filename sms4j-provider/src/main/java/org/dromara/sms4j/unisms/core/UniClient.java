@@ -3,10 +3,10 @@ package org.dromara.sms4j.unisms.core;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.crypto.digest.HMac;
 import cn.hutool.crypto.digest.HmacAlgorithm;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
-import com.dtflys.forest.config.ForestConfiguration;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
-import org.dromara.sms4j.comm.factory.BeanFactory;
 
 import java.util.Comparator;
 import java.util.Date;
@@ -20,8 +20,6 @@ import java.util.UUID;
 public class UniClient {
 
     public static final String USER_AGENT = "uni-java-sdk" + "/" + Uni.VERSION;
-    private final ForestConfiguration http = BeanFactory.getForestConfiguration();
-
     private final String accessKeyId;
     private final String accessKeySecret;
     private final String endpoint;
@@ -81,27 +79,18 @@ public class UniClient {
      * @author :Wind
      */
     public UniResponse request(final String action, final Map<String, Object> data) throws SmsBlendException {
-        Map<String, Object> query = new HashMap<String, Object>();
-        query.put("action", action);
-        query.put("accessKeyId", this.accessKeyId);
-
         Map<String, String> headers = new HashMap<>();
         headers.put("User-Agent", USER_AGENT);
         headers.put("Content-Type", "application/json;charset=utf-8");
         headers.put("Accept", "application/json");
-        String str = http.post(this.endpoint)
-                .addHeader(headers)
-                .addQuery(this.sign(query))
-                .addBody(JSONUtil.toJsonStr(data))
-                .successWhen(((req, res) -> {
-                    return res.noException() &&   // 请求过程没有异常
-                            res.statusIsNot(500); // 不能是 500
-                }))
-                .onError((ex, req, res) -> {
-                    throw new SmsBlendException(ex.getMessage());
-                })
-                .executeAsString();
-        return new UniResponse(JSONUtil.parseObj(str));
+
+        String url = this.endpoint + "?action=" + action + "&accessKeyId=" + this.accessKeyId;
+        try(HttpResponse response = HttpRequest.post(url)
+                .addHeaders(headers)
+                .body(JSONUtil.toJsonStr(data))
+                .execute()){
+            return new UniResponse(JSONUtil.parseObj(response.body()));
+        }
     }
 
     public static class Builder {

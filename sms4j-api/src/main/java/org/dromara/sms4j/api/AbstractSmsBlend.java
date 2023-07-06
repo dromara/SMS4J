@@ -1,6 +1,5 @@
 package org.dromara.sms4j.api;
 
-import com.dtflys.forest.config.ForestConfiguration;
 import org.dromara.sms4j.api.callback.CallBack;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
@@ -18,7 +17,6 @@ public abstract class AbstractSmsBlend implements SmsBlend{
     protected final Executor pool;
     protected final DelayedTime delayed;
 
-    protected final ForestConfiguration http = BeanFactory.getForestConfiguration();
     protected AbstractSmsBlend(Executor pool, DelayedTime delayed) {
         this.pool = pool;
         this.delayed = delayed;

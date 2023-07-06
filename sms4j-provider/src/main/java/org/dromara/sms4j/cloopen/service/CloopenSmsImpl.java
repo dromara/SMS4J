@@ -2,11 +2,9 @@ package org.dromara.sms4j.cloopen.service;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.IdUtil;
-import com.dtflys.forest.Forest;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
-import org.dromara.sms4j.cloopen.api.CloopenRestApi;
 import org.dromara.sms4j.cloopen.config.CloopenConfig;
 import org.dromara.sms4j.cloopen.util.CloopenHelper;
 import org.dromara.sms4j.comm.annotation.Restricted;
@@ -27,14 +25,11 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class CloopenSmsImpl extends AbstractSmsBlend {
 
-    private final CloopenRestApi restApi;
-
     private final CloopenConfig config;
 
     public CloopenSmsImpl(CloopenConfig config, Executor pool, DelayedTime delayed) {
         super(pool,delayed);
         this.config = config;
-        restApi = Forest.client(CloopenRestApi.class);
     }
 
     @Override
@@ -66,6 +61,6 @@ public class CloopenSmsImpl extends AbstractSmsBlend {
         paramMap.put("appId", config.getAppId());
         paramMap.put("templateId", templateId);
         paramMap.put("datas", messages.keySet().stream().map(messages::get).toArray(String[]::new));
-        return helper.request(restApi::sendSms, paramMap);
+        return helper.smsResponse(paramMap);
     }
 }

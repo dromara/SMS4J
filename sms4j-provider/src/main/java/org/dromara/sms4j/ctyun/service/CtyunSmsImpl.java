@@ -1,5 +1,7 @@
 package org.dromara.sms4j.ctyun.service;
 
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +17,6 @@ import org.dromara.sms4j.ctyun.utils.CtyunUtils;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.Executor;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * <p>类名: CtyunSmsImpl
@@ -65,7 +66,6 @@ public class CtyunSmsImpl extends AbstractSmsBlend {
     }
 
     private SmsResponse getSmsResponse(String phone, String message, String templateId) {
-        AtomicReference<SmsResponse> smsResponse = new AtomicReference<>();
         String requestUrl;
         String paramStr;
         try {
@@ -76,13 +76,13 @@ public class CtyunSmsImpl extends AbstractSmsBlend {
             throw new SmsBlendException(e.getMessage());
         }
         log.debug("requestUrl {}", requestUrl);
-        http.post(requestUrl)
-                .addHeader(CtyunUtils.signHeader(paramStr, ctyunConfig.getAccessKeyId(), ctyunConfig.getAccessKeySecret()))
-                .addBody(paramStr)
-                .onSuccess(((data, req, res) -> smsResponse.set(this.getResponse(res.get(JSONObject.class)))))
-                .onError((ex, req, res) -> smsResponse.set(this.getResponse(res.get(JSONObject.class))))
-                .execute();
-        return smsResponse.get();
+        try(HttpResponse response = HttpRequest.post(requestUrl)
+                .addHeaders(CtyunUtils.signHeader(paramStr, ctyunConfig.getAccessKeyId(), ctyunConfig.getAccessKeySecret()))
+                .body(paramStr)
+                .execute()){
+            JSONObject body = JSONUtil.parseObj(response.body());
+            return this.getResponse(body);
+        }
     }
 
     private SmsResponse getResponse(JSONObject resJson) {

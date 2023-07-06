@@ -5,6 +5,8 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -22,7 +24,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * <p>助通短信发送
@@ -107,7 +108,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend {
         }
 
 
-        String urls = requestUrl + "v2/sendSms";
+        String url = requestUrl + "v2/sendSms";
         long tKey = System.currentTimeMillis() / 1000;
         Map<String, String> json = new HashMap<>(5);
         //账号
@@ -121,15 +122,13 @@ public class ZhutongSmsImpl extends AbstractSmsBlend {
         //内容
         json.put("content", content);
 
-        AtomicReference<SmsResponse> reference = new AtomicReference<>();
-        http.post(urls)
-                .addHeader("Content-Type", Constant.APPLICATION_JSON_UTF8)
-                .addBody(JSONUtil.toJsonStr(json))
-                .onSuccess(((data, req, res) -> reference.set(this.getResponse(res.get(JSONObject.class)))))
-                .onError((ex, req, res) -> reference.set(this.getResponse(res.get(JSONObject.class))))
-                .execute();
-        log.info("助通短信 URL={} json={} 响应值为={}", urls, json, reference.get());
-        return reference.get();
+        try(HttpResponse response = HttpRequest.post(url)
+                .header("Content-Type", Constant.APPLICATION_JSON_UTF8)
+                .body(JSONUtil.toJsonStr(json))
+                .execute()){
+            JSONObject body = JSONUtil.parseObj(response.body());
+            return this.getResponse(body);
+        }
     }
 
     protected SmsResponse getSmsResponse(String mobile, String content) {
@@ -161,49 +160,47 @@ public class ZhutongSmsImpl extends AbstractSmsBlend {
         }
 
         //地址
-        String urls = requestUrl + "v2/sendSmsTp";
+        String url = requestUrl + "v2/sendSmsTp";
         //请求入参
         JSONObject requestJson = new JSONObject();
         //账号
-        requestJson.put("username", username);
+        requestJson.set("username", username);
         //tKey
         long tKey = System.currentTimeMillis() / 1000;
-        requestJson.put("tKey", tKey);
+        requestJson.set("tKey", tKey);
         //明文密码
-        requestJson.put("password", SecureUtil.md5(SecureUtil.md5(password) + tKey));
+        requestJson.set("password", SecureUtil.md5(SecureUtil.md5(password) + tKey));
         //模板ID
-        requestJson.put("tpId", templateId);
+        requestJson.set("tpId", templateId);
         //签名
-        requestJson.put("signature", signature);
+        requestJson.set("signature", signature);
         //扩展号
-        requestJson.put("ext", "");
+        requestJson.set("ext", "");
         //自定义参数
-        requestJson.put("extend", "");
+        requestJson.set("extend", "");
         //发送记录集合
         JSONArray records = new JSONArray();
         {
             for (String mobile : phones) {
                 JSONObject record = new JSONObject();
                 //手机号
-                record.put("mobile", mobile);
+                record.set("mobile", mobile);
                 //替换变量
                 JSONObject param = new JSONObject();
                 param.putAll(messages);
-                record.put("tpContent", param);
+                record.set("tpContent", param);
                 records.add(record);
             }
         }
-        requestJson.put("records", records);
+        requestJson.set("records", records);
 
-        AtomicReference<SmsResponse> reference = new AtomicReference<>();
-        http.post(urls)
-                .addHeader("Content-Type", Constant.APPLICATION_JSON_UTF8)
-                .addBody(requestJson)
-                .onSuccess(((data, req, res) -> reference.set(this.getResponse(res.get(JSONObject.class)))))
-                .onError((ex, req, res) -> reference.set(this.getResponse(res.get(JSONObject.class))))
-                .execute();
-        log.info("助通短信 URL={} json={} 响应值为={}", urls, requestJson, reference.get());
-        return reference.get();
+        try(HttpResponse response = HttpRequest.post(url)
+                .header("Content-Type", Constant.APPLICATION_JSON_UTF8)
+                .body(requestJson.toString())
+                .execute()){
+            JSONObject body = JSONUtil.parseObj(response.body());
+            return this.getResponse(body);
+        }
     }
 
     protected SmsResponse getSmsResponseTemplate(String templateId, String mobile, LinkedHashMap<String, String> content) {

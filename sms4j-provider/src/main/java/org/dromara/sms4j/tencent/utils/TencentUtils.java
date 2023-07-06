@@ -92,9 +92,9 @@ public class TencentUtils {
      * @param territory     服务器地区
      * @param requestUrl    请求地址
      */
-    public static Map<String, Object> generateHeadsMap(String authorization, String timestamp, String action,
+    public static Map<String, String> generateHeadsMap(String authorization, String timestamp, String action,
                                                        String version, String territory, String requestUrl) {
-        Map<String, Object> headers = new HashMap<>();
+        Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", authorization);
         headers.put("Content-Type", CT_JSON);
         headers.put("Host", requestUrl);

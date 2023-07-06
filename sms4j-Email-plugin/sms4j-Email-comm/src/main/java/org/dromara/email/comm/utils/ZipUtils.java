@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.util.Map;
@@ -40,9 +41,9 @@ public class ZipUtils extends ZipUtil {
             try (ReadableByteChannel readableByteChannel = pipe.source()) {
                 ByteBuffer buffer = ByteBuffer.allocate(TEMP_SIZE);
                 while (readableByteChannel.read(buffer) >= 0) {
-                    buffer.flip();
+                    ((Buffer)buffer).flip();
                     out.write(buffer);
-                    buffer.clear();
+                    ((Buffer)buffer).clear();
                 }
             }
         }catch (Exception e){

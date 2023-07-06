@@ -5,6 +5,7 @@ import org.dromara.sms4j.api.smsProxy.SmsInvocationHandler;
 import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.comm.factory.BeanFactory;
 import org.dromara.sms4j.core.SupplierSqlConfig;
+import org.dromara.sms4j.core.load.SmsLoad;
 import org.dromara.sms4j.provider.base.BaseProviderFactory;
 import org.dromara.sms4j.provider.enumerate.SupplierType;
 
@@ -51,6 +52,15 @@ public abstract class SmsFactory {
     public static SmsBlend createSmsBlend(SupplierType supplierType,SupplierConfig config){
         BaseProviderFactory providerFactory = supplierType.getProviderFactory();
         return providerFactory.createMultitonSms(config);
+    }
+
+    /**
+     *  createSmsBlend
+     * <p>获取负载均衡器中的短信实例
+     * @author :Wind
+    */
+    public static SmsBlend createSmsBlend(){
+        return SmsLoad.getBeanLoad().getLoadServer();
     }
 
     /**

@@ -8,6 +8,7 @@ import org.dromara.sms4j.emay.config.EmayConfig;
 import org.dromara.sms4j.huawei.config.HuaweiConfig;
 import org.dromara.sms4j.jdcloud.config.JdCloudConfig;
 import org.dromara.sms4j.netease.config.NeteaseConfig;
+import org.dromara.sms4j.starter.utils.SmsSpringUtil;
 import org.dromara.sms4j.tencent.config.TencentConfig;
 import org.dromara.sms4j.unisms.config.UniConfig;
 import org.dromara.sms4j.yunpian.config.YunpianConfig;
@@ -17,6 +18,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
 import javax.annotation.PostConstruct;
+import java.util.Map;
 
 public class SupplierConfig {
 
@@ -116,10 +118,5 @@ public class SupplierConfig {
     @ConditionalOnProperty(prefix = "sms", name = "zhutong")
     protected ZhutongConfig zhutongConfig(){
         return SupplierFactory.getZhutongConfig();
-    }
-
-    @PostConstruct
-    protected void init(){
-
     }
 }

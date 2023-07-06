@@ -10,6 +10,7 @@ import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.factory.BeanFactory;
 import org.dromara.sms4j.core.SupplierSqlConfig;
+import org.dromara.sms4j.core.config.SupplierFactory;
 import org.dromara.sms4j.starter.aop.RestrictedProcessImpl;
 import org.dromara.sms4j.starter.utils.ConfigUtil;
 import org.dromara.sms4j.starter.utils.SmsRedisUtils;
@@ -25,6 +26,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 
@@ -94,6 +96,11 @@ public class SmsAutowiredConfig {
             }
             SmsInvocationHandler.setRestrictedProcess(new RestrictedProcessImpl());
             log.debug("The redis cache is enabled for sms4j");
+        }
+        // 将spring中存在的所有配置，设置到配置工厂，并添加至负载均衡器
+        Map<String, org.dromara.sms4j.api.universal.SupplierConfig> beansOfType = SmsSpringUtil.getBeansOfType(org.dromara.sms4j.api.universal.SupplierConfig.class);
+        for (org.dromara.sms4j.api.universal.SupplierConfig s : beansOfType.values()) {
+            SupplierFactory.setSupplierConfig(s);
         }
         //打印banner
         if (BeanFactory.getSmsConfig().getIsPrint()){

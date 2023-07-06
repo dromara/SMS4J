@@ -21,12 +21,18 @@ import java.util.Map;
  **/
 public class SmsLoad {
     // 服务器列表，每个服务器有一个权重和当前权重
-    private static final List<LoadServer> LoadServers = new ArrayList<>();
+    private final List<LoadServer> LoadServers = new ArrayList<>();
 
     // 实例列表
     private static final Map<Object, SmsBlend> smsBlendMap = new HashMap<>();
 
+    private static final SmsLoad smsLoad = new SmsLoad();
+
     private SmsLoad() {
+    }
+
+    public static SmsLoad newSmsLoad() {
+        return new SmsLoad();
     }
 
     /**
@@ -37,7 +43,7 @@ public class SmsLoad {
      * @param weight 权重
      * @author :Wind
     */
-    public static void addLoadServer(SmsBlend LoadServer, int weight) {
+    public void addLoadServer(SmsBlend LoadServer, int weight) {
         LoadServers.add(new LoadServer(LoadServer, weight, weight));
     }
 
@@ -47,7 +53,7 @@ public class SmsLoad {
      * @param  LoadServer 要移除的服务
      * @author :Wind
     */
-    public static void removeLoadServer(SmsBlend LoadServer) {
+    public void removeLoadServer(SmsBlend LoadServer) {
         for (int i = 0; i < LoadServers.size(); i++) {
             if (LoadServers.get(i).getSmsServer().equals(LoadServer)) {
                 LoadServers.remove(i);
@@ -62,7 +68,7 @@ public class SmsLoad {
      * @return SmsBlend 短信实现
      * @author :Wind
     */
-    public synchronized static SmsBlend getLoadServer() {
+    public synchronized SmsBlend getLoadServer() {
         int totalWeight = 0;
         LoadServer selectedLoadServer = null;
         // 计算所有服务器的权重总和，并选择当前权重最大的服务器
@@ -94,7 +100,11 @@ public class SmsLoad {
     public static void starConfig(SupplierConfig supplierConfig, SupplierType supplierType){
         BaseProviderFactory providerFactory = supplierType.getProviderFactory();
         SmsBlend smsBlend = providerFactory.createMultitonSms(supplierConfig);
-        addLoadServer(smsBlend, Integer.parseInt(ReflectUtil.getValues(supplierConfig).get("weight")));
+        smsLoad.addLoadServer(smsBlend, Integer.parseInt(ReflectUtil.getValues(supplierConfig).get("weight")));
+    }
+
+    public static SmsLoad getBeanLoad(){
+        return smsLoad;
     }
 }
 

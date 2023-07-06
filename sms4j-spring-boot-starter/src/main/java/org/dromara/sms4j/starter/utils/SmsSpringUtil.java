@@ -102,7 +102,7 @@ public class SmsSpringUtil implements ApplicationContextAware {
         return !applicationContext.getBeansOfType(interfaceType).isEmpty();
     }
 
-    public <T> Map<String, T> getBeansOfType(Class<T> interfaceType) {
+    public static  <T> Map<String, T> getBeansOfType(Class<T> interfaceType) {
         return applicationContext.getBeansOfType(interfaceType);
     }
 }

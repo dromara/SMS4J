@@ -100,7 +100,10 @@ public class MailMessage {
         }
 
         public MailsBuilder setFiles(Map<String, String> files){
-            mailMessage.files = files;
+            if (mailMessage.files == null){
+                mailMessage.files = new HashMap<>();
+            }
+            mailMessage.files.putAll(files);
             return this;
         }
 

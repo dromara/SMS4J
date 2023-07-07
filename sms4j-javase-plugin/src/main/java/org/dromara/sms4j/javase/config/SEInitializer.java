@@ -13,6 +13,7 @@ import org.dromara.sms4j.comm.config.SmsConfig;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.factory.BeanFactory;
 import org.dromara.sms4j.core.config.SupplierFactory;
+import org.dromara.sms4j.ctyun.config.CtyunConfig;
 import org.dromara.sms4j.emay.config.EmayConfig;
 import org.dromara.sms4j.huawei.config.HuaweiConfig;
 import org.dromara.sms4j.javase.util.YamlUtil;
@@ -159,6 +160,17 @@ public class SEInitializer {
     }
 
     /**
+     * 初始化天翼云配置
+     *
+     * @param ctyunConfig 云片配置
+     * @return 当前初始化类实例
+     */
+    public SEInitializer initCtyun(CtyunConfig ctyunConfig) {
+        BeanUtil.copyProperties(ctyunConfig, SupplierFactory.getCtyunConfig());
+        return this;
+    }
+
+    /**
      * 默认从sms-aggregation.yml文件中读取配置
      *
      * @return
@@ -216,7 +228,7 @@ public class SEInitializer {
         if (huaweiConfig != null) {
             this.initHuawei(huaweiConfig);
         }
-        JdCloudConfig jdCloudConfig = smsConfig.getJdCloud();
+        JdCloudConfig jdCloudConfig = smsConfig.getJdcloud();
         if (jdCloudConfig != null) {
             this.initJdCloud(jdCloudConfig);
         }
@@ -232,13 +244,17 @@ public class SEInitializer {
         if (yunpianConfig != null) {
             this.initYunpian(yunpianConfig);
         }
-        NeteaseConfig neteaseConfig = smsConfig.getNeteaseConfig();
+        NeteaseConfig neteaseConfig = smsConfig.getNetease();
         if (neteaseConfig != null){
             this.initNetase(neteaseConfig);
         }
-        ZhutongConfig zhutongConfig = smsConfig.getZhutongConfig();
+        ZhutongConfig zhutongConfig = smsConfig.getZhutong();
         if (zhutongConfig != null){
             this.initZhuTong(zhutongConfig);
+        }
+        CtyunConfig ctyunConfig = smsConfig.getCtyun();
+        if (ctyunConfig != null){
+            this.initCtyun(ctyunConfig);
         }
     }
 
@@ -263,12 +279,13 @@ public class SEInitializer {
         private CloopenConfig cloopen;
         private EmayConfig emay;
         private HuaweiConfig huawei;
-        private JdCloudConfig jdCloud;
+        private JdCloudConfig jdcloud;
         private TencentConfig tencent;
         private UniConfig uni;
         private YunpianConfig yunpian;
-        private NeteaseConfig neteaseConfig;
-        private ZhutongConfig zhutongConfig;
+        private NeteaseConfig netease;
+        private ZhutongConfig zhutong;
+        private CtyunConfig ctyun;
     }
 
 }

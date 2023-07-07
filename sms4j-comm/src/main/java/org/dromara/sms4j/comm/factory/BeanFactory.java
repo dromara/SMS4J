@@ -1,7 +1,5 @@
 package org.dromara.sms4j.comm.factory;
 
-import com.dtflys.forest.Forest;
-import com.dtflys.forest.config.ForestConfiguration;
 import org.dromara.sms4j.comm.config.SmsConfig;
 import org.dromara.sms4j.comm.config.SmsSqlConfig;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
@@ -36,21 +34,10 @@ public class BeanFactory {
     /** 数据库配置*/
     private static SmsSqlConfig smsSqlConfig;
 
-    /** 获取forest请求对象*/
-    private static ForestConfiguration forestConfiguration;
-
     /** 实例化自身对象防止被GC*/
     private static final BeanFactory beanFactory = new BeanFactory();
 
     private BeanFactory() {
-    }
-
-    /** 获取请求用的对象*/
-    public static ForestConfiguration getForestConfiguration() {
-        if (forestConfiguration == null){
-            forestConfiguration = Forest.config().setBackendName("httpclient").setLogEnabled(getSmsConfig().getHttpLog());
-        }
-        return forestConfiguration;
     }
 
     public static DelayedTime getDelayedTime() {

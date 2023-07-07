@@ -1,6 +1,9 @@
 package org.dromara.sms4j.tencent.service;
 
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.jdcloud.sdk.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.AbstractSmsBlend;
@@ -85,29 +88,26 @@ public class TencentSmsImpl extends AbstractSmsBlend {
             log.error("tencent send message error", e);
             throw new SmsBlendException(e.getMessage());
         }
-        Map<String, Object> headsMap = TencentUtils.generateHeadsMap(signature, timestamp, tencentSmsConfig.getAction(),
+        Map<String, String> headsMap = TencentUtils.generateHeadsMap(signature, timestamp, tencentSmsConfig.getAction(),
                 tencentSmsConfig.getVersion(), tencentSmsConfig.getTerritory(), tencentSmsConfig.getRequestUrl());
         Map<String, Object> requestBody = TencentUtils.generateRequestBody(phones, tencentSmsConfig.getSdkAppId(),
                 tencentSmsConfig.getSignature(), templateId, messages);
-        SmsResponse smsResponse = new SmsResponse();
         String url = Constant.HTTPS_PREFIX + tencentSmsConfig.getRequestUrl();
-        http.post(url)
-                .addHeader(headsMap)
-                .addBody(requestBody)
-                .onSuccess(((data, req, res) -> {
-                    JSONObject jsonBody = res.get(JSONObject.class);
-                    JSONObject response = jsonBody.getJSONObject("Response");
-                    String error = response.getStr("Error");
-                    smsResponse.setSuccess(StringUtils.isBlank(error));
-                    smsResponse.setData(jsonBody);
-                }))
-                .onError((ex, req, res) -> {
-                    JSONObject jsonBody = res.get(JSONObject.class);
-                    smsResponse.setSuccess(false);
-                    smsResponse.setData(jsonBody);
-                })
-                .execute();
-        return smsResponse;
+        try(HttpResponse response = HttpRequest.post(url)
+                .addHeaders(headsMap)
+                .body(JSONUtil.toJsonStr(requestBody))
+                .execute()){
+            JSONObject body = JSONUtil.parseObj(response.body());
+            return this.getResponse(body);
+        }
     }
 
+    private SmsResponse getResponse(JSONObject resJson) {
+        SmsResponse smsResponse = new SmsResponse();
+        JSONObject response = resJson.getJSONObject("Response");
+        String error = response.getStr("Error");
+        smsResponse.setSuccess(StringUtils.isBlank(error));
+        smsResponse.setData(resJson);
+        return smsResponse;
+    }
 }

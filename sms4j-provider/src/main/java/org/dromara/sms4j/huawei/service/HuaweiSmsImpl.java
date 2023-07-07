@@ -1,6 +1,9 @@
 package org.dromara.sms4j.huawei.service;
 
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
@@ -16,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Executor;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static org.dromara.sms4j.huawei.utils.HuaweiBuilder.listToString;
 
@@ -40,7 +42,6 @@ public class HuaweiSmsImpl extends AbstractSmsBlend {
     @Override
     @Restricted
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
-        AtomicReference<SmsResponse> reference = new AtomicReference<>();
         String url = config.getUrl() + Constant.HUAWEI_REQUEST_URL;
         List<String> list = new ArrayList<>();
         for (Map.Entry<String, String> entry : messages.entrySet()) {
@@ -52,13 +53,13 @@ public class HuaweiSmsImpl extends AbstractSmsBlend {
         headers.put("Authorization", Constant.HUAWEI_AUTH_HEADER_VALUE);
         headers.put("X-WSSE", HuaweiBuilder.buildWsseHeader(config.getAppKey(), config.getAppSecret()));
         headers.put("Content-Type", Constant.FROM_URLENCODED);
-        http.post(url)
-                .addHeader(headers)
-                .addBody(requestBody)
-                .onSuccess(((data, req, res) -> reference.set(this.getResponse(res.get(JSONObject.class)))))
-                .onError((ex, req, res) -> reference.set(this.getResponse(res.get(JSONObject.class))))
-                .execute();
-        return reference.get();
+        try(HttpResponse response = HttpRequest.post(url)
+                .addHeaders(headers)
+                .body(requestBody)
+                .execute()){
+            JSONObject body = JSONUtil.parseObj(response.body());
+            return this.getResponse(body);
+        }
     }
 
     @Override

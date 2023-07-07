@@ -2,9 +2,11 @@ package org.dromara.sms4j.netease.service;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
@@ -20,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Executor;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Created with IntelliJ IDEA.
@@ -93,31 +94,32 @@ public class NeteaseSmsImpl extends AbstractSmsBlend {
     }
 
     private SmsResponse getSmsResponse(String requestUrl, List<String> phones, String message, String templateId) {
-        AtomicReference<SmsResponse> reference = new AtomicReference<>();
         String nonce = IdUtil.fastSimpleUUID();
         String curTime = String.valueOf(DateUtil.currentSeconds());
         String checkSum = NeteaseUtils.getCheckSum(config.getAccessKeySecret(), nonce, curTime);
         Map<String, Object> body = new LinkedHashMap<>(4);
         body.put("templateid", templateId);
-        body.put("mobiles", JSONArray.parseArray(JSON.toJSONString(phones)).toJSONString());
+        JSONArray jsonArray = JSONUtil.createArray();
+        jsonArray.addAll(phones);
+        body.put("mobiles", jsonArray.toString());
         body.put("params", message);
         body.put("needUp", config.getNeedUp());
-        http.post(requestUrl)
-                .addHeader("Content-Type", "application/x-www-form-urlencoded")
-                .addHeader("AppKey", config.getAccessKeyId())
-                .addHeader("Nonce", nonce)
-                .addHeader("CurTime", curTime)
-                .addHeader("CheckSum", checkSum)
-                .addBody(body)
-                .onSuccess(((data, req, res) -> reference.set(this.getResponse(res.get(JSONObject.class)))))
-                .onError((ex, req, res) -> reference.set(this.getResponse(res.get(JSONObject.class))))
-                .execute();
-        return reference.get();
+        try(HttpResponse response = HttpRequest.post(requestUrl)
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .header("AppKey", config.getAccessKeyId())
+                .header("Nonce", nonce)
+                .header("CurTime", curTime)
+                .header("CheckSum", checkSum)
+                .body(JSONUtil.toJsonStr(body))
+                .execute()){
+            JSONObject res = JSONUtil.parseObj(response.body());
+            return this.getResponse(res);
+        }
     }
 
     private SmsResponse getResponse(JSONObject jsonObject) {
         SmsResponse response = new SmsResponse();
-        response.setSuccess(jsonObject.getInteger("code") <= 200);
+        response.setSuccess(jsonObject.getInt("code") <= 200);
         response.setData(jsonObject);
         return response;
     }

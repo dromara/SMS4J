@@ -1,5 +1,7 @@
 package org.dromara.sms4j.aliyun.service;
 
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +17,6 @@ import org.dromara.sms4j.comm.utils.SmsUtil;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.Executor;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * <p>类名: AlibabaSmsImpl
@@ -71,7 +72,6 @@ public class AlibabaSmsImpl extends AbstractSmsBlend {
     }
 
     private SmsResponse getSmsResponse(String phone, String message, String templateId) {
-        AtomicReference<SmsResponse> reference = new AtomicReference<>();
         String requestUrl;
         String paramStr;
         try {
@@ -82,13 +82,13 @@ public class AlibabaSmsImpl extends AbstractSmsBlend {
             throw new SmsBlendException(e.getMessage());
         }
         log.debug("requestUrl {}", requestUrl);
-        super.http.post(requestUrl)
-                .addHeader("Content-Type", "application/x-www-form-urlencoded")
-                .addBody(paramStr)
-                .onSuccess(((data, req, res) -> reference.set(this.getResponse(res.get(JSONObject.class)))))
-                .onError((ex, req, res) -> reference.set(this.getResponse(res.get(JSONObject.class))))
-                .execute();
-        return reference.get();
+        try(HttpResponse response = HttpRequest.post(requestUrl)
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .body(paramStr)
+                .execute()){
+            JSONObject body = JSONUtil.parseObj(response.body());
+            return this.getResponse(body);
+        }
     }
 
     private SmsResponse getResponse(JSONObject resJson) {

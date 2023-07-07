@@ -1,6 +1,9 @@
 package org.dromara.sms4j.emay.service;
 
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
@@ -16,7 +19,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author Richard
@@ -79,16 +81,16 @@ public class EmaySmsImpl extends AbstractSmsBlend {
     }
 
     private SmsResponse getSendResponse(Map<String, Object> body, String requestUrl) {
-        AtomicReference<SmsResponse> smsResponse = new AtomicReference<>();
-        http.post(requestUrl)
-                .addBody(body)
-                .onSuccess(((data, req, res) -> smsResponse.set(this.getSmsResponse(res.get(JSONObject.class)))))
-                .onError((ex, req, res) -> smsResponse.set(this.getSmsResponse(res.get(JSONObject.class))))
-                .execute();
-        return smsResponse.get();
+        try(HttpResponse response = HttpRequest.post(requestUrl)
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .body(JSONUtil.toJsonStr(body))
+                .execute()){
+            JSONObject res = JSONUtil.parseObj(response.body());
+            return this.getResponse(res);
+        }
     }
 
-    private SmsResponse getSmsResponse(JSONObject resJson) {
+    private SmsResponse getResponse(JSONObject resJson) {
         SmsResponse smsResponse = new SmsResponse();
         smsResponse.setSuccess("success".equalsIgnoreCase(resJson.getStr("code")));
         smsResponse.setData(resJson);

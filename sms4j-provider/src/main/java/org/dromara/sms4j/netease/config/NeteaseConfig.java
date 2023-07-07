@@ -2,6 +2,7 @@ package org.dromara.sms4j.netease.config;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.dromara.sms4j.api.universal.SupplierConfig;
@@ -10,6 +11,7 @@ import org.dromara.sms4j.comm.config.BaseConfig;
 /**
  * @author adam
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder
 @NoArgsConstructor

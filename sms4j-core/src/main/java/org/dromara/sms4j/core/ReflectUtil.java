@@ -23,10 +23,13 @@ public class ReflectUtil {
         try {
             Map<String ,String> map = new HashMap<>();
             Class<?> clazz = Class.forName(getObjectName(parameter));
-            Field[] declaredFields = clazz.getDeclaredFields();
-            for (Field declaredField : declaredFields) {
-                declaredField.setAccessible(true);
-                map.put(declaredField.getName(), (String) declaredField.get(parameter));
+            while(clazz != null) {
+                Field[] declaredFields = clazz.getDeclaredFields();
+                for(Field declaredField : declaredFields) {
+                    declaredField.setAccessible(true);
+                    map.put(declaredField.getName(), String.valueOf(declaredField.get(parameter)));
+                }
+                clazz = clazz.getSuperclass();
             }
             return map;
         } catch (Exception e) {

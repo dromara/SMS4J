@@ -11,7 +11,6 @@ import org.dromara.sms4j.unisms.core.Uni;
 import org.dromara.sms4j.unisms.core.UniResponse;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +47,7 @@ public class UniSmsImpl extends AbstractSmsBlend {
     @Override
     @Restricted
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
-        Map<String, Object> data = new HashMap<>();
+        Map<String, Object> data = new LinkedHashMap<>(4);
         data.put("to", Collections.singletonList(phone));
         data.put("signature", config.getSignature());
         data.put("templateId", templateId);
@@ -73,7 +72,7 @@ public class UniSmsImpl extends AbstractSmsBlend {
         if (phones.size() > 1000) {
             throw new SmsBlendException("单次发送超过最大发送上限，建议每次群发短信人数低于1000");
         }
-        Map<String, Object> data = new HashMap<>();
+        Map<String, Object> data = new LinkedHashMap<>(4);
         data.put("to", phones);
         data.put("signature", config.getSignature());
         data.put("templateId", templateId);

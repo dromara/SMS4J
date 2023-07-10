@@ -1,7 +1,9 @@
 package org.dromara.sms4j.cloopen.service;
 
-import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
@@ -9,6 +11,7 @@ import org.dromara.sms4j.cloopen.config.CloopenConfig;
 import org.dromara.sms4j.cloopen.util.CloopenHelper;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
+import org.dromara.sms4j.comm.utils.SmsHttpUtils;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -47,7 +50,7 @@ public class CloopenSmsImpl extends AbstractSmsBlend {
     @Override
     @Restricted
     public SmsResponse massTexting(List<String> phones, String message) {
-        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        LinkedHashMap<String, String> map = new LinkedHashMap<>(1);
         map.put(IdUtil.fastSimpleUUID(), message);
         return massTexting(phones, config.getTemplateId(), map);
     }
@@ -55,12 +58,29 @@ public class CloopenSmsImpl extends AbstractSmsBlend {
     @Override
     @Restricted
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
-        CloopenHelper helper = new CloopenHelper(config);
-        Map<String, Object> paramMap = MapUtil.newHashMap(4);
+        Map<String, Object> paramMap = new LinkedHashMap<>(4);
         paramMap.put("to", String.join(",", phones));
         paramMap.put("appId", config.getAppId());
         paramMap.put("templateId", templateId);
         paramMap.put("datas", messages.keySet().stream().map(messages::get).toArray(String[]::new));
-        return helper.smsResponse(paramMap);
+        String timestamp = DateUtil.format(DateUtil.date(), DatePattern.PURE_DATETIME_PATTERN);
+
+        String url = String.format("%s/Accounts/%s/SMS/TemplateSMS?sig=%s",
+                config.getBaseUrl(),
+                config.getAccessKeyId(),
+                CloopenHelper.generateSign(config.getAccessKeyId(), config.getAccessKeySecret(), timestamp));
+
+        Map<String, String> headers = new LinkedHashMap<>(3);
+        headers.put("Accept", "application/json");
+        headers.put("Content-Type", "application/json;charset=utf-8");
+        headers.put("Authorization", CloopenHelper.generateAuthorization(config.getAccessKeyId(), timestamp));
+        return this.getResponse(SmsHttpUtils.postJson(url, headers, paramMap));
+    }
+
+    private SmsResponse getResponse(JSONObject resJson) {
+        SmsResponse smsResponse = new SmsResponse();
+        smsResponse.setSuccess("000000".equals(resJson.getStr("statusCode")));
+        smsResponse.setData(resJson);
+        return smsResponse;
     }
 }

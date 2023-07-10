@@ -1,19 +1,16 @@
 package org.dromara.sms4j.yunpian.service;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import org.dromara.sms4j.api.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
+import org.dromara.sms4j.comm.utils.SmsHttpUtils;
 import org.dromara.sms4j.comm.utils.SmsUtil;
 import org.dromara.sms4j.yunpian.config.YunpianConfig;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,14 +42,14 @@ public class YunPianSmsImpl extends AbstractSmsBlend {
     @Override
     @Restricted
     public SmsResponse sendMessage(String phone, String message) {
-        Map<String, String> body = setBody(phone, message, null, config.getTemplateId());
+        Map<String, Object> body = setBody(phone, message, null, config.getTemplateId());
         return getSendResponse(body);
     }
 
     @Override
     @Restricted
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
-        Map<String, String> body = setBody(phone, "", messages, templateId);
+        Map<String, Object> body = setBody(phone, "", messages, templateId);
         return getSendResponse(body);
     }
 
@@ -87,14 +84,14 @@ public class YunPianSmsImpl extends AbstractSmsBlend {
         return str.toString();
     }
 
-    private Map<String, String> setBody(String phone, String mes, LinkedHashMap<String, String> messages, String tplId) {
+    private Map<String, Object> setBody(String phone, String mes, LinkedHashMap<String, String> messages, String tplId) {
         LinkedHashMap<String, String> message = new LinkedHashMap<>();
         if (mes.isEmpty()) {
             message = messages;
         } else {
             message.put(config.getTemplateName(), mes);
         }
-        Map<String, String> body = new HashMap<>();
+        Map<String, Object> body = new LinkedHashMap<>(4);
         body.put("apikey", config.getAccessKeyId());
         body.put("mobile", phone);
         body.put("tpl_id", tplId);
@@ -105,20 +102,18 @@ public class YunPianSmsImpl extends AbstractSmsBlend {
     }
 
     private Map<String, String> getHeaders() {
-        Map<String, String> headers = new HashMap<>();
+        Map<String, String> headers = new LinkedHashMap<>(2);
         headers.put("Accept", "application/json;charset=utf-8");
         headers.put("Content-Type", Constant.FROM_URLENCODED);
         return headers;
     }
 
-    private SmsResponse getSendResponse(Map<String, String> body) {
+    private SmsResponse getSendResponse(Map<String, Object> body) {
         Map<String, String> headers = getHeaders();
-        try(HttpResponse response = HttpRequest.post(Constant.YUNPIAN_URL + "/sms/tpl_single_send.json")
-                .addHeaders(headers)
-                .body(JSONUtil.toJsonStr(body))
-                .execute()){
-            JSONObject res = JSONUtil.parseObj(response.body());
-            return getResponse(res);
-        }
+        return getResponse(
+                SmsHttpUtils.postJson(Constant.YUNPIAN_URL + "/sms/tpl_single_send.json",
+                headers,
+                body)
+        );
     }
 }

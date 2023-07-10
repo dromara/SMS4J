@@ -94,7 +94,7 @@ public class TencentUtils {
      */
     public static Map<String, String> generateHeadsMap(String authorization, String timestamp, String action,
                                                        String version, String territory, String requestUrl) {
-        Map<String, String> headers = new HashMap<>();
+        Map<String, String> headers = new HashMap<>(7);
         headers.put("Authorization", authorization);
         headers.put("Content-Type", CT_JSON);
         headers.put("Host", requestUrl);

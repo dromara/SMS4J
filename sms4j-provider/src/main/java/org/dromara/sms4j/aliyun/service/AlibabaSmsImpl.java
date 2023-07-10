@@ -1,7 +1,5 @@
 package org.dromara.sms4j.aliyun.service;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -12,10 +10,13 @@ import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
+import org.dromara.sms4j.comm.utils.SmsHttpUtils;
 import org.dromara.sms4j.comm.utils.SmsUtil;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executor;
 
 /**
@@ -81,14 +82,9 @@ public class AlibabaSmsImpl extends AbstractSmsBlend {
             log.error("aliyun send message error", e);
             throw new SmsBlendException(e.getMessage());
         }
-        log.debug("requestUrl {}", requestUrl);
-        try(HttpResponse response = HttpRequest.post(requestUrl)
-                .header("Content-Type", "application/x-www-form-urlencoded")
-                .body(paramStr)
-                .execute()){
-            JSONObject body = JSONUtil.parseObj(response.body());
-            return this.getResponse(body);
-        }
+        Map<String, String> headers = new HashMap<>(1);
+        headers.put("Content-Type", "application/x-www-form-urlencoded");
+        return this.getResponse(SmsHttpUtils.postJson(requestUrl, headers, paramStr));
     }
 
     private SmsResponse getResponse(JSONObject resJson) {

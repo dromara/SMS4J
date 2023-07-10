@@ -1,18 +1,9 @@
 package org.dromara.sms4j.cloopen.util;
 
 import cn.hutool.core.codec.Base64;
-import cn.hutool.core.date.DatePattern;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.crypto.SecureUtil;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
-import org.dromara.sms4j.api.entity.SmsResponse;
-import org.dromara.sms4j.cloopen.config.CloopenConfig;
-
-import java.util.Date;
-import java.util.Map;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 /**
  * 容联云 Helper
@@ -20,39 +11,8 @@ import java.util.Map;
  * @author Charles7c
  * @since 2023/4/17 20:57
  */
-public class CloopenHelper {
-
-    private final CloopenConfig config;
-
-    public CloopenHelper(CloopenConfig config) {
-        this.config = config;
-    }
-
-    public SmsResponse smsResponse(Map<String, Object> paramMap){
-        String timestamp = DateUtil.format(new Date(), DatePattern.PURE_DATETIME_PATTERN);
-
-        String url = String.format("%s/Accounts/%s/SMS/TemplateSMS?sig=%s",
-                config.getBaseUrl(),
-                config.getAccessKeyId(),
-                this.generateSign(config.getAccessKeyId(), config.getAccessKeySecret(), timestamp));
-
-        try(HttpResponse response = HttpRequest.post(url)
-                .header("Accept", "application/json")
-                .header("Content-Type", "application/json;charset=utf-8")
-                .header("Authorization", this.generateAuthorization(config.getAccessKeyId(), timestamp))
-                .body(JSONUtil.toJsonStr(paramMap))
-                .execute()){
-            JSONObject body = JSONUtil.parseObj(response.body());
-            return this.getResponse(body);
-        }
-    }
-
-    private SmsResponse getResponse(JSONObject resJson) {
-        SmsResponse smsResponse = new SmsResponse();
-        smsResponse.setSuccess("000000".equals(resJson.getStr("statusCode")));
-        smsResponse.setData(resJson);
-        return smsResponse;
-    }
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class CloopenHelper {
 
     /**
      * 生成签名
@@ -67,7 +27,7 @@ public class CloopenHelper {
      * @param timestamp       时间戳
      * @return 签名
      */
-    private String generateSign(String accessKeyId, String accessKeySecret, String timestamp) {
+    public static String generateSign(String accessKeyId, String accessKeySecret, String timestamp) {
         return SecureUtil.md5(accessKeyId + accessKeySecret + timestamp).toUpperCase();
     }
 
@@ -83,7 +43,7 @@ public class CloopenHelper {
      * @param timestamp   时间戳
      * @return 验证信息
      */
-    private String generateAuthorization(String accessKeyId, String timestamp) {
+    public static String generateAuthorization(String accessKeyId, String timestamp) {
         return Base64.encode(accessKeyId + ":" + timestamp);
     }
 }

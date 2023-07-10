@@ -7,7 +7,6 @@ import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
-import org.dromara.sms4j.comm.utils.SmsHttpUtils;
 import org.dromara.sms4j.comm.utils.SmsUtil;
 import org.dromara.sms4j.yunpian.config.YunpianConfig;
 
@@ -111,7 +110,7 @@ public class YunPianSmsImpl extends AbstractSmsBlend {
     private SmsResponse getSendResponse(Map<String, Object> body) {
         Map<String, String> headers = getHeaders();
         return getResponse(
-                SmsHttpUtils.postJson(Constant.YUNPIAN_URL + "/sms/tpl_single_send.json",
+                http.postJson(Constant.YUNPIAN_URL + "/sms/tpl_single_send.json",
                 headers,
                 body)
         );

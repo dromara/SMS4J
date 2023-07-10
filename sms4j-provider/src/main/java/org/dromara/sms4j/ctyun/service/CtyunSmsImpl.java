@@ -8,7 +8,6 @@ import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
-import org.dromara.sms4j.comm.utils.SmsHttpUtils;
 import org.dromara.sms4j.comm.utils.SmsUtil;
 import org.dromara.sms4j.ctyun.config.CtyunConfig;
 import org.dromara.sms4j.ctyun.utils.CtyunUtils;
@@ -74,7 +73,7 @@ public class CtyunSmsImpl extends AbstractSmsBlend {
             log.error("ctyun send message error", e);
             throw new SmsBlendException(e.getMessage());
         }
-        return this.getResponse(SmsHttpUtils.postJson(requestUrl,
+        return this.getResponse(http.postJson(requestUrl,
                 CtyunUtils.signHeader(paramStr, ctyunConfig.getAccessKeyId(), ctyunConfig.getAccessKeySecret()),
                 paramStr));
     }

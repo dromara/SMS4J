@@ -11,7 +11,6 @@ import org.dromara.sms4j.cloopen.config.CloopenConfig;
 import org.dromara.sms4j.cloopen.util.CloopenHelper;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
-import org.dromara.sms4j.comm.utils.SmsHttpUtils;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -74,7 +73,7 @@ public class CloopenSmsImpl extends AbstractSmsBlend {
         headers.put("Accept", "application/json");
         headers.put("Content-Type", "application/json;charset=utf-8");
         headers.put("Authorization", CloopenHelper.generateAuthorization(config.getAccessKeyId(), timestamp));
-        return this.getResponse(SmsHttpUtils.postJson(url, headers, paramMap));
+        return this.getResponse(http.postJson(url, headers, paramMap));
     }
 
     private SmsResponse getResponse(JSONObject resJson) {

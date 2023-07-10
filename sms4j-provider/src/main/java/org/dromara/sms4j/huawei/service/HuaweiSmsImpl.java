@@ -7,7 +7,6 @@ import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
-import org.dromara.sms4j.comm.utils.SmsHttpUtils;
 import org.dromara.sms4j.huawei.config.HuaweiConfig;
 import org.dromara.sms4j.huawei.utils.HuaweiBuilder;
 
@@ -51,7 +50,7 @@ public class HuaweiSmsImpl extends AbstractSmsBlend {
         headers.put("Authorization", Constant.HUAWEI_AUTH_HEADER_VALUE);
         headers.put("X-WSSE", HuaweiBuilder.buildWsseHeader(config.getAppKey(), config.getAppSecret()));
         headers.put("Content-Type", Constant.FROM_URLENCODED);
-        return this.getResponse(SmsHttpUtils.postJson(url, headers, requestBody));
+        return this.getResponse(http.postJson(url, headers, requestBody));
     }
 
     @Override

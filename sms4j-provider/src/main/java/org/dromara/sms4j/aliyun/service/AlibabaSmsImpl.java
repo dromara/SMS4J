@@ -10,7 +10,6 @@ import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
-import org.dromara.sms4j.comm.utils.SmsHttpUtils;
 import org.dromara.sms4j.comm.utils.SmsUtil;
 
 import java.util.HashMap;
@@ -84,7 +83,7 @@ public class AlibabaSmsImpl extends AbstractSmsBlend {
         }
         Map<String, String> headers = new HashMap<>(1);
         headers.put("Content-Type", "application/x-www-form-urlencoded");
-        return this.getResponse(SmsHttpUtils.postJson(requestUrl, headers, paramStr));
+        return this.getResponse(http.postJson(requestUrl, headers, paramStr));
     }
 
     private SmsResponse getResponse(JSONObject resJson) {

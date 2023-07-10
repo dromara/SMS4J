@@ -7,7 +7,6 @@ import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
-import org.dromara.sms4j.comm.utils.SmsHttpUtils;
 import org.dromara.sms4j.comm.utils.SmsUtil;
 import org.dromara.sms4j.emay.config.EmayConfig;
 import org.dromara.sms4j.emay.util.EmayBuilder;
@@ -81,7 +80,7 @@ public class EmaySmsImpl extends AbstractSmsBlend {
     private SmsResponse getSendResponse(Map<String, Object> body, String requestUrl) {
         Map<String, String> headers = new LinkedHashMap<>(1);
         headers.put("Content-Type", "application/x-www-form-urlencoded");
-        return this.getResponse(SmsHttpUtils.postJson(requestUrl, headers, body));
+        return this.getResponse(http.postJson(requestUrl, headers, body));
     }
 
     private SmsResponse getResponse(JSONObject resJson) {

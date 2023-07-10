@@ -10,7 +10,6 @@ import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
-import org.dromara.sms4j.comm.utils.SmsHttpUtils;
 import org.dromara.sms4j.netease.config.NeteaseConfig;
 import org.dromara.sms4j.netease.utils.NeteaseUtils;
 
@@ -109,7 +108,7 @@ public class NeteaseSmsImpl extends AbstractSmsBlend {
         headers.put("Nonce", nonce);
         headers.put("CurTime", curTime);
         headers.put("CheckSum", checkSum);
-        return this.getResponse(SmsHttpUtils.postJson(requestUrl, headers, body));
+        return this.getResponse(http.postJson(requestUrl, headers, body));
     }
 
     private SmsResponse getResponse(JSONObject jsonObject) {

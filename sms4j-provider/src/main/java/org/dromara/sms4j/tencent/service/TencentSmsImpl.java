@@ -9,7 +9,6 @@ import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
-import org.dromara.sms4j.comm.utils.SmsHttpUtils;
 import org.dromara.sms4j.comm.utils.SmsUtil;
 import org.dromara.sms4j.tencent.config.TencentConfig;
 import org.dromara.sms4j.tencent.utils.TencentUtils;
@@ -91,7 +90,7 @@ public class TencentSmsImpl extends AbstractSmsBlend {
         Map<String, Object> requestBody = TencentUtils.generateRequestBody(phones, tencentSmsConfig.getSdkAppId(),
                 tencentSmsConfig.getSignature(), templateId, messages);
         String url = Constant.HTTPS_PREFIX + tencentSmsConfig.getRequestUrl();
-        return this.getResponse(SmsHttpUtils.postJson(url, headsMap, requestBody));
+        return this.getResponse(http.postJson(url, headsMap, requestBody));
     }
 
     private SmsResponse getResponse(JSONObject resJson) {

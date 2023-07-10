@@ -14,7 +14,6 @@ import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
-import org.dromara.sms4j.comm.utils.SmsHttpUtils;
 import org.dromara.sms4j.zhutong.config.ZhutongConfig;
 
 import java.util.LinkedHashMap;
@@ -121,7 +120,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend {
 
         Map<String, String> headers = new LinkedHashMap<>(1);
         headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
-        return this.getResponse(SmsHttpUtils.postJson(url, headers, json));
+        return this.getResponse(http.postJson(url, headers, json));
     }
 
     protected SmsResponse getSmsResponse(String mobile, String content) {
@@ -189,7 +188,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend {
 
         Map<String, String> headers = new LinkedHashMap<>(1);
         headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
-        return this.getResponse(SmsHttpUtils.postJson(url, headers, requestJson.toString()));
+        return this.getResponse(http.postJson(url, headers, requestJson.toString()));
     }
 
     protected SmsResponse getSmsResponseTemplate(String templateId, String mobile, LinkedHashMap<String, String> content) {

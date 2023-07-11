@@ -1,9 +1,6 @@
 package org.dromara.sms4j.huawei.service;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
@@ -49,17 +46,11 @@ public class HuaweiSmsImpl extends AbstractSmsBlend {
         }
         String mess = listToString(list);
         String requestBody = HuaweiBuilder.buildRequestBody(config.getSender(), phone, templateId, mess, config.getStatusCallBack(), config.getSignature());
-        Map<String, String> headers = new LinkedHashMap<>();
+        Map<String, String> headers = new LinkedHashMap<>(3);
         headers.put("Authorization", Constant.HUAWEI_AUTH_HEADER_VALUE);
         headers.put("X-WSSE", HuaweiBuilder.buildWsseHeader(config.getAppKey(), config.getAppSecret()));
         headers.put("Content-Type", Constant.FROM_URLENCODED);
-        try(HttpResponse response = HttpRequest.post(url)
-                .addHeaders(headers)
-                .body(requestBody)
-                .execute()){
-            JSONObject body = JSONUtil.parseObj(response.body());
-            return this.getResponse(body);
-        }
+        return this.getResponse(http.postJson(url, headers, requestBody));
     }
 
     @Override

@@ -3,10 +3,8 @@ package org.dromara.sms4j.unisms.core;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.crypto.digest.HMac;
 import cn.hutool.crypto.digest.HmacAlgorithm;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import cn.hutool.json.JSONUtil;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
+import org.dromara.sms4j.comm.utils.SmsHttp;
 
 import java.util.Comparator;
 import java.util.Date;
@@ -24,6 +22,8 @@ public class UniClient {
     private final String accessKeySecret;
     private final String endpoint;
     private final String signingAlgorithm;
+
+    private final SmsHttp http = SmsHttp.newInstance();
 
     protected UniClient(Builder b) {
         this.accessKeyId = b.accessKeyId;
@@ -79,18 +79,12 @@ public class UniClient {
      * @author :Wind
      */
     public UniResponse request(final String action, final Map<String, Object> data) throws SmsBlendException {
-        Map<String, String> headers = new HashMap<>();
+        Map<String, String> headers = new HashMap<>(3);
         headers.put("User-Agent", USER_AGENT);
         headers.put("Content-Type", "application/json;charset=utf-8");
         headers.put("Accept", "application/json");
-
         String url = this.endpoint + "?action=" + action + "&accessKeyId=" + this.accessKeyId;
-        try(HttpResponse response = HttpRequest.post(url)
-                .addHeaders(headers)
-                .body(JSONUtil.toJsonStr(data))
-                .execute()){
-            return new UniResponse(JSONUtil.parseObj(response.body()));
-        }
+        return new UniResponse(http.postJson(url, headers, data));
     }
 
     public static class Builder {

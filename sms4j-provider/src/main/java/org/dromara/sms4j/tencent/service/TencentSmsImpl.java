@@ -1,9 +1,6 @@
 package org.dromara.sms4j.tencent.service;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import com.jdcloud.sdk.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.AbstractSmsBlend;
@@ -93,13 +90,7 @@ public class TencentSmsImpl extends AbstractSmsBlend {
         Map<String, Object> requestBody = TencentUtils.generateRequestBody(phones, tencentSmsConfig.getSdkAppId(),
                 tencentSmsConfig.getSignature(), templateId, messages);
         String url = Constant.HTTPS_PREFIX + tencentSmsConfig.getRequestUrl();
-        try(HttpResponse response = HttpRequest.post(url)
-                .addHeaders(headsMap)
-                .body(JSONUtil.toJsonStr(requestBody))
-                .execute()){
-            JSONObject body = JSONUtil.parseObj(response.body());
-            return this.getResponse(body);
-        }
+        return this.getResponse(http.postJson(url, headsMap, requestBody));
     }
 
     private SmsResponse getResponse(JSONObject resJson) {

@@ -5,11 +5,8 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
@@ -19,7 +16,6 @@ import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.zhutong.config.ZhutongConfig;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -110,7 +106,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend {
 
         String url = requestUrl + "v2/sendSms";
         long tKey = System.currentTimeMillis() / 1000;
-        Map<String, String> json = new HashMap<>(5);
+        Map<String, Object> json = new LinkedHashMap<>(5);
         //账号
         json.put("username", username);
         //密码
@@ -122,13 +118,9 @@ public class ZhutongSmsImpl extends AbstractSmsBlend {
         //内容
         json.put("content", content);
 
-        try(HttpResponse response = HttpRequest.post(url)
-                .header("Content-Type", Constant.APPLICATION_JSON_UTF8)
-                .body(JSONUtil.toJsonStr(json))
-                .execute()){
-            JSONObject body = JSONUtil.parseObj(response.body());
-            return this.getResponse(body);
-        }
+        Map<String, String> headers = new LinkedHashMap<>(1);
+        headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
+        return this.getResponse(http.postJson(url, headers, json));
     }
 
     protected SmsResponse getSmsResponse(String mobile, String content) {
@@ -162,7 +154,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend {
         //地址
         String url = requestUrl + "v2/sendSmsTp";
         //请求入参
-        JSONObject requestJson = new JSONObject();
+        JSONObject requestJson = new JSONObject(7);
         //账号
         requestJson.set("username", username);
         //tKey
@@ -182,7 +174,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend {
         JSONArray records = new JSONArray();
         {
             for (String mobile : phones) {
-                JSONObject record = new JSONObject();
+                JSONObject record = new JSONObject(2);
                 //手机号
                 record.set("mobile", mobile);
                 //替换变量
@@ -194,13 +186,9 @@ public class ZhutongSmsImpl extends AbstractSmsBlend {
         }
         requestJson.set("records", records);
 
-        try(HttpResponse response = HttpRequest.post(url)
-                .header("Content-Type", Constant.APPLICATION_JSON_UTF8)
-                .body(requestJson.toString())
-                .execute()){
-            JSONObject body = JSONUtil.parseObj(response.body());
-            return this.getResponse(body);
-        }
+        Map<String, String> headers = new LinkedHashMap<>(1);
+        headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
+        return this.getResponse(http.postJson(url, headers, requestJson.toString()));
     }
 
     protected SmsResponse getSmsResponseTemplate(String templateId, String mobile, LinkedHashMap<String, String> content) {

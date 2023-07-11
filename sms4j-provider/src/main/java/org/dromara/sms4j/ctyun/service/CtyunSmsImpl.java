@@ -1,7 +1,5 @@
 package org.dromara.sms4j.ctyun.service;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -75,14 +73,9 @@ public class CtyunSmsImpl extends AbstractSmsBlend {
             log.error("ctyun send message error", e);
             throw new SmsBlendException(e.getMessage());
         }
-        log.debug("requestUrl {}", requestUrl);
-        try(HttpResponse response = HttpRequest.post(requestUrl)
-                .addHeaders(CtyunUtils.signHeader(paramStr, ctyunConfig.getAccessKeyId(), ctyunConfig.getAccessKeySecret()))
-                .body(paramStr)
-                .execute()){
-            JSONObject body = JSONUtil.parseObj(response.body());
-            return this.getResponse(body);
-        }
+        return this.getResponse(http.postJson(requestUrl,
+                CtyunUtils.signHeader(paramStr, ctyunConfig.getAccessKeyId(), ctyunConfig.getAccessKeySecret()),
+                paramStr));
     }
 
     private SmsResponse getResponse(JSONObject resJson) {

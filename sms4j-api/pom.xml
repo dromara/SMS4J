@@ -15,14 +15,11 @@
     <description>sms4j-api</description>
 
     <dependencies>
+
         <dependency>
             <groupId>org.dromara.sms4j</groupId>
             <artifactId>sms4j-comm</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-http</artifactId>
-        </dependency>
     </dependencies>
 </project>

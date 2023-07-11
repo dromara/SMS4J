@@ -1,9 +1,6 @@
 package org.dromara.sms4j.emay.service;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
@@ -81,13 +78,9 @@ public class EmaySmsImpl extends AbstractSmsBlend {
     }
 
     private SmsResponse getSendResponse(Map<String, Object> body, String requestUrl) {
-        try(HttpResponse response = HttpRequest.post(requestUrl)
-                .header("Content-Type", "application/x-www-form-urlencoded")
-                .body(JSONUtil.toJsonStr(body))
-                .execute()){
-            JSONObject res = JSONUtil.parseObj(response.body());
-            return this.getResponse(res);
-        }
+        Map<String, String> headers = new LinkedHashMap<>(1);
+        headers.put("Content-Type", "application/x-www-form-urlencoded");
+        return this.getResponse(http.postJson(requestUrl, headers, body));
     }
 
     private SmsResponse getResponse(JSONObject resJson) {

@@ -5,6 +5,7 @@ import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.factory.BeanFactory;
+import org.dromara.sms4j.comm.utils.SmsHttp;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -16,6 +17,8 @@ public abstract class AbstractSmsBlend implements SmsBlend{
 
     protected final Executor pool;
     protected final DelayedTime delayed;
+
+    protected final SmsHttp http = SmsHttp.newInstance();
 
     protected AbstractSmsBlend(Executor pool, DelayedTime delayed) {
         this.pool = pool;

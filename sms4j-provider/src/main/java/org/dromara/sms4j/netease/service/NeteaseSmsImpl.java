@@ -2,11 +2,8 @@ package org.dromara.sms4j.netease.service;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
@@ -99,22 +96,19 @@ public class NeteaseSmsImpl extends AbstractSmsBlend {
         String checkSum = NeteaseUtils.getCheckSum(config.getAccessKeySecret(), nonce, curTime);
         Map<String, Object> body = new LinkedHashMap<>(4);
         body.put("templateid", templateId);
-        JSONArray jsonArray = JSONUtil.createArray();
+        JSONArray jsonArray = new JSONArray();
         jsonArray.addAll(phones);
         body.put("mobiles", jsonArray.toString());
         body.put("params", message);
         body.put("needUp", config.getNeedUp());
-        try(HttpResponse response = HttpRequest.post(requestUrl)
-                .header("Content-Type", "application/x-www-form-urlencoded")
-                .header("AppKey", config.getAccessKeyId())
-                .header("Nonce", nonce)
-                .header("CurTime", curTime)
-                .header("CheckSum", checkSum)
-                .body(JSONUtil.toJsonStr(body))
-                .execute()){
-            JSONObject res = JSONUtil.parseObj(response.body());
-            return this.getResponse(res);
-        }
+
+        Map<String, String> headers = new LinkedHashMap<>(5);
+        headers.put("Content-Type", "application/x-www-form-urlencoded");
+        headers.put("AppKey", config.getAccessKeyId());
+        headers.put("Nonce", nonce);
+        headers.put("CurTime", curTime);
+        headers.put("CheckSum", checkSum);
+        return this.getResponse(http.postJson(requestUrl, headers, body));
     }
 
     private SmsResponse getResponse(JSONObject jsonObject) {

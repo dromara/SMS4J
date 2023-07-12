@@ -4,17 +4,12 @@ import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
-import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.huawei.config.HuaweiConfig;
 import org.dromara.sms4j.huawei.utils.HuaweiBuilder;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Executor;
 
 import static org.dromara.sms4j.huawei.utils.HuaweiBuilder.listToString;
@@ -29,7 +24,6 @@ public class HuaweiSmsImpl extends AbstractSmsBlend {
     private final HuaweiConfig config;
 
     @Override
-    @Restricted
     public SmsResponse sendMessage(String phone, String message) {
         LinkedHashMap<String, String> mes = new LinkedHashMap<>();
         mes.put(UUID.randomUUID().toString().replaceAll("-", ""), message);
@@ -37,7 +31,6 @@ public class HuaweiSmsImpl extends AbstractSmsBlend {
     }
 
     @Override
-    @Restricted
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
         String url = config.getUrl() + Constant.HUAWEI_REQUEST_URL;
         List<String> list = new ArrayList<>();
@@ -54,13 +47,11 @@ public class HuaweiSmsImpl extends AbstractSmsBlend {
     }
 
     @Override
-    @Restricted
     public SmsResponse massTexting(List<String> phones, String message) {
         return sendMessage(listToString(phones), message);
     }
 
     @Override
-    @Restricted
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
         return sendMessage(listToString(phones), templateId, messages);
     }

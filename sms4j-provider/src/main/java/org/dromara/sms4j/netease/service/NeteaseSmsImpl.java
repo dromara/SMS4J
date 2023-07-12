@@ -7,17 +7,12 @@ import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
-import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.netease.config.NeteaseConfig;
 import org.dromara.sms4j.netease.utils.NeteaseUtils;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.Executor;
 
 /**
@@ -43,7 +38,6 @@ public class NeteaseSmsImpl extends AbstractSmsBlend {
      * @return
      */
     @Override
-    @Restricted
     public SmsResponse sendMessage(String phone, String message) {
         Optional.ofNullable(phone).orElseThrow(() -> new SmsBlendException("手机号不能为空"));
         Optional.ofNullable(config.getTemplateId()).orElseThrow(() -> new SmsBlendException("模板ID不能为空"));
@@ -58,7 +52,6 @@ public class NeteaseSmsImpl extends AbstractSmsBlend {
      * @return
      */
     @Override
-    @Restricted
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
         Optional.ofNullable(phone).orElseThrow(() -> new SmsBlendException("手机号不能为空"));
         Optional.ofNullable(config.getTemplateId()).orElseThrow(() -> new SmsBlendException("模板ID不能为空"));
@@ -67,7 +60,6 @@ public class NeteaseSmsImpl extends AbstractSmsBlend {
     }
 
     @Override
-    @Restricted
     public SmsResponse massTexting(List<String> phones, String message) {
         if (phones.size() < 1) {
             throw new SmsBlendException("手机号不能为空");
@@ -80,7 +72,6 @@ public class NeteaseSmsImpl extends AbstractSmsBlend {
     }
 
     @Override
-    @Restricted
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
         if (phones.size() > 100) {
             throw new SmsBlendException("单次发送超过最大发送上限，建议每次群发短信人数低于100");

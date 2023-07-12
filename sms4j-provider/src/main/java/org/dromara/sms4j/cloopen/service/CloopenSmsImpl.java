@@ -9,7 +9,6 @@ import org.dromara.sms4j.api.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.cloopen.config.CloopenConfig;
 import org.dromara.sms4j.cloopen.util.CloopenHelper;
-import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 
 import java.util.Collections;
@@ -35,19 +34,16 @@ public class CloopenSmsImpl extends AbstractSmsBlend {
     }
 
     @Override
-    @Restricted
     public SmsResponse sendMessage(String phone, String message) {
         return massTexting(Collections.singletonList(phone), message);
     }
 
     @Override
-    @Restricted
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
         return massTexting(Collections.singletonList(phone), templateId, messages);
     }
 
     @Override
-    @Restricted
     public SmsResponse massTexting(List<String> phones, String message) {
         LinkedHashMap<String, String> map = new LinkedHashMap<>(1);
         map.put(IdUtil.fastSimpleUUID(), message);
@@ -55,7 +51,6 @@ public class CloopenSmsImpl extends AbstractSmsBlend {
     }
 
     @Override
-    @Restricted
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
         Map<String, Object> paramMap = new LinkedHashMap<>(4);
         paramMap.put("to", String.join(",", phones));

@@ -3,7 +3,6 @@ package org.dromara.sms4j.unisms.service;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
-import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.unisms.config.UniConfig;
@@ -34,7 +33,6 @@ public class UniSmsImpl extends AbstractSmsBlend {
     }
 
     @Override
-    @Restricted
     public SmsResponse sendMessage(String phone, String message) {
         if ("".equals(config.getTemplateId()) && "".equals(config.getTemplateName())) {
             throw new SmsBlendException("配置文件模板id和模板变量不能为空！");
@@ -45,7 +43,6 @@ public class UniSmsImpl extends AbstractSmsBlend {
     }
 
     @Override
-    @Restricted
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
         Map<String, Object> data = new LinkedHashMap<>(4);
         data.put("to", Collections.singletonList(phone));
@@ -56,7 +53,6 @@ public class UniSmsImpl extends AbstractSmsBlend {
     }
 
     @Override
-    @Restricted
     public SmsResponse massTexting(List<String> phones, String message) {
         if ("".equals(config.getTemplateId()) && "".equals(config.getTemplateName())) {
             throw new SmsBlendException("配置文件模板id和模板变量不能为空！");
@@ -67,7 +63,6 @@ public class UniSmsImpl extends AbstractSmsBlend {
     }
 
     @Override
-    @Restricted
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
         if (phones.size() > 1000) {
             throw new SmsBlendException("单次发送超过最大发送上限，建议每次群发短信人数低于1000");

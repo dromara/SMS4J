@@ -3,6 +3,7 @@ package org.dromara.sms4j.core.factory;
 import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.smsProxy.SmsInvocationHandler;
 import org.dromara.sms4j.api.universal.SupplierConfig;
+import org.dromara.sms4j.comm.config.BaseConfig;
 import org.dromara.sms4j.comm.factory.BeanFactory;
 import org.dromara.sms4j.core.SupplierSqlConfig;
 import org.dromara.sms4j.core.load.SmsLoad;
@@ -26,6 +27,8 @@ import java.util.Objects;
 public abstract class SmsFactory {
 
     private static final Map<SupplierType, SmsBlend> beans = new HashMap<>();
+
+    private static final Map<Object, BaseConfig> smsBlends = new HashMap<>();
 
     private SmsFactory() {
     }

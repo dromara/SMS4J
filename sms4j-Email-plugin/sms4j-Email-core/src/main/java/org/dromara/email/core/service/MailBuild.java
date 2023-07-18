@@ -27,6 +27,10 @@ public class MailBuild {
 
     private Blacklist blacklist;
 
+    private int retryInterval;
+
+    private int maxRetries;
+
     private MailBuild(MailSmtpConfig config) throws MessagingException {
         Properties props = new Properties();
         props.put("mail.smtp.host", config.getSmtpServer());
@@ -42,6 +46,8 @@ public class MailBuild {
         this.message = new MimeMessage(session);
         this.message.setFrom(new InternetAddress(config.getFromAddress()));
         this.config = config;
+        this.retryInterval = config.getRetryInterval();
+        this.maxRetries = config.getMaxRetries();
     }
 
     private MailBuild(MailSmtpConfig config,Blacklist blacklist)throws MessagingException{
@@ -61,6 +67,8 @@ public class MailBuild {
         this.message.setFrom(new InternetAddress(config.getFromAddress()));
         this.config = config;
         this.blacklist = blacklist;
+        this.retryInterval = config.getRetryInterval();
+        this.maxRetries = config.getMaxRetries();
     }
 
     public static MailClient build(MailSmtpConfig config) throws MessagingException {

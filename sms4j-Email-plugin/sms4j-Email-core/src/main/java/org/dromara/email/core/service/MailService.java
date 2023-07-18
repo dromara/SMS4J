@@ -32,6 +32,7 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class MailService implements MailClient {
 
@@ -361,34 +362,87 @@ public class MailService implements MailClient {
                       List<String> cc,
                       List<String> bcc) {
         try {
-            Message message = mailBuild.getMessage();
-            message.setRecipients(Message.RecipientType.TO, mailBuild.eliminate(mailAddress));
-            message.setSubject(title);
-
-            Multipart multipart = new MimeMultipart("alternative");
-            //读取模板并进行变量替换
-            List<String> strings = HtmlUtil.replacePlaceholder(html, parameter);
-            //拼合HTML数据
-            String htmlData = HtmlUtil.pieceHtml(strings);
-            if (!body.isEmpty()) {
-                // 创建文本正文部分
-                MimeBodyPart textPart = new MimeBodyPart();
-                textPart.setText(body);
-                multipart.addBodyPart(textPart);
-            }
-            //添加附件
-            if (files != null && files.size() != 0) {
-                forFiles(multipart, files);
-            }
-            MimeBodyPart htmlPart = new MimeBodyPart();
-            htmlPart.setContent(htmlData, "text/html;charset=UTF-8");
-            addCC(cc, bcc, message);
-            multipart.addBodyPart(htmlPart);
-            message.setContent(multipart);
+            Message message = messageBuild(mailAddress, title, body, html, parameter, files, cc, bcc);
             Transport.send(message);
         } catch (MessagingException e) {
-            throw new MailException(e);
+            ReSend(mailAddress,
+                    title,
+                    body,
+                    html,
+                    parameter,
+                    files,
+                    cc,
+                    bcc);
         }
+    }
+
+    private void ReSend(List<String> mailAddress,
+                      String title,
+                      String body,
+                      List<String> html,
+                      Map<String, String> parameter,
+                      Map<String, String> files,
+                      List<String> cc,
+                      List<String> bcc) {
+        int maxRetries = mailBuild.getMaxRetries();
+        int retryCount = 0;
+        boolean retryOnFailure = true;
+
+        while (retryOnFailure && retryCount < maxRetries) {
+            try {
+                Message message = messageBuild(mailAddress, title, body, html, parameter, files, cc, bcc);
+                Transport.send(message);
+                retryOnFailure = false; // 发送成功，停止重试
+            } catch (MessagingException e) {
+                retryCount++;
+                try {
+                    // 间隔秒数
+                    TimeUnit.SECONDS.sleep(mailBuild.getRetryInterval());
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+
+        if (retryCount >= maxRetries) {
+            throw new MailException(new MailException());
+        }
+    }
+
+    private Message messageBuild(List<String> mailAddress,
+                                 String title,
+                                 String body,
+                                 List<String> html,
+                                 Map<String, String> parameter,
+                                 Map<String, String> files,
+                                 List<String> cc,
+                                 List<String> bcc) throws MessagingException {
+        Message message = mailBuild.getMessage();
+        message.setRecipients(Message.RecipientType.TO, mailBuild.eliminate(mailAddress));
+        message.setSubject(title);
+
+        Multipart multipart = new MimeMultipart("alternative");
+        // 读取模板并进行变量替换
+        List<String> strings = HtmlUtil.replacePlaceholder(html, parameter);
+        // 拼合HTML数据
+        String htmlData = HtmlUtil.pieceHtml(strings);
+        if (!body.isEmpty()) {
+            // 创建文本正文部分
+            MimeBodyPart textPart = new MimeBodyPart();
+            textPart.setText(body);
+            multipart.addBodyPart(textPart);
+        }
+        // 添加附件
+        if (files != null && files.size() != 0) {
+            forFiles(multipart, files);
+        }
+
+        MimeBodyPart htmlPart = new MimeBodyPart();
+        htmlPart.setContent(htmlData, "text/html;charset=UTF-8");
+        addCC(cc, bcc, message);
+        multipart.addBodyPart(htmlPart);
+        message.setContent(multipart);
+        return  message;
     }
 
     private void addCC(List<String> cc, List<String> bcc, Message message) throws MessagingException {

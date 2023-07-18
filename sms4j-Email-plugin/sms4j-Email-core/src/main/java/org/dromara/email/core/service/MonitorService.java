@@ -13,13 +13,13 @@ import java.util.TimerTask;
 
 /**
  * MonitorService
- * <p> 监听邮件主程序
+ * <p> 监听器服务
  *
  * @author :Wind
  * 2023/7/18  16:10
  **/
 public class MonitorService{
-    private Store store;
+    private final Store store;
     private Monitor monitor;
     private MailImapConfig mailImapConfig;
     private Timer timer;
@@ -60,7 +60,7 @@ public class MonitorService{
                 monitorMessage.setMessageIndex(message.getMessageNumber());
                 monitorMessage.setSendDate(message.getSentDate());
                 monitorMessage.setAcceptTime(System.currentTimeMillis());
-                if (monitor.monitor(monitorMessage)) {
+                if (this.monitor.monitor(monitorMessage)) {
                     message.setFlag(Flags.Flag.SEEN, true);
                 }
             }

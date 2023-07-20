@@ -32,9 +32,12 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 public class MailService implements MailClient {
 
+    private static Logger logger = Logger.getLogger("mailLog");
     private MailBuild mailBuild;
 
     private MailService(MailBuild mailBuild) {
@@ -61,26 +64,6 @@ public class MailService implements MailClient {
     }
 
     @Override
-    public void sendEmail(String mailAddress, String title, String body, String zipName, Map<String, String> files) {
-        try {
-            Message message = mailBuild.getMessage();
-            message.setRecipients(Message.RecipientType.TO, mailBuild.eliminate(Convert.toList(String.class, mailAddress)));
-            message.setSubject(title);
-            if (StrUtil.isNotBlank(body)) {
-                message.setText(body);
-            }
-            if (files != null && files.size() != 0) {
-                Multipart multipart = new MimeMultipart();
-                zipFiles(multipart, zipName, files);
-                message.setContent(multipart);
-            }
-            Transport.send(message);
-        } catch (MessagingException | IOException e) {
-            throw new MailException(e);
-        }
-    }
-
-    @Override
     public void sendEmail(List<String> mailAddress, String title, String body, Map<String, String> files) {
         sendEmail(mailAddress, title, body, null, null, files);
     }
@@ -88,27 +71,6 @@ public class MailService implements MailClient {
     @Override
     public void sendEmail(String mailAddress, String title, String body, List<String> cc, List<String> bcc, Map<String, String> files) {
         sendEmail(Collections.singletonList(mailAddress), title, body, cc, bcc, files);
-    }
-
-    @Override
-    public void sendEmail(List<String> mailAddress, String title, String body, List<String> cc, List<String> bcc, Map<String, String> files) {
-        try {
-            Message message = mailBuild.getMessage();
-            message.setRecipients(Message.RecipientType.TO, mailBuild.eliminate(mailAddress));
-            message.setSubject(title);
-            if (StrUtil.isNotBlank(body)) {
-                message.setText(body);
-            }
-            if (files != null && files.size() != 0) {
-                Multipart multipart = new MimeMultipart();
-                forFiles(multipart, files);
-                message.setContent(multipart);
-            }
-            addCC(cc, bcc, message);
-            Transport.send(message);
-        } catch (MessagingException e) {
-            throw new MailException(e);
-        }
     }
 
     @Override
@@ -184,38 +146,6 @@ public class MailService implements MailClient {
     @Override
     public void sendHtml(String mailAddress, String title, String body, String htmlName, Map<String, String> parameter, Map<String, String> files) {
         sendHtml(Collections.singletonList(mailAddress), title, body, htmlName, parameter, files);
-    }
-
-    @Override
-    public void sendHtml(String mailAddress, String title, String body, String htmlName, Map<String, String> parameter, String zipName, Map<String, String> files) {
-        try {
-            Message message = mailBuild.getMessage();
-            message.setRecipients(Message.RecipientType.TO, mailBuild.eliminate(Convert.toList(String.class, mailAddress)));
-            message.setSubject(title);
-
-            Multipart multipart = new MimeMultipart("alternative");
-            //读取模板并进行变量替换
-            List<String> strings = HtmlUtil.replacePlaceholder(HtmlUtil.readHtml(htmlName), parameter);
-            //拼合HTML数据
-            String htmlData = HtmlUtil.pieceHtml(strings);
-            if (StrUtil.isNotBlank(body)) {
-                // 创建文本正文部分
-                MimeBodyPart textPart = new MimeBodyPart();
-                textPart.setText(body);
-                multipart.addBodyPart(textPart);
-            }
-            //添加附件
-            if (MapUtil.isNotEmpty(files)) {
-                zipFiles(multipart, zipName, files);
-            }
-            MimeBodyPart htmlPart = new MimeBodyPart();
-            htmlPart.setContent(htmlData, "text/html;charset=UTF-8");
-            multipart.addBodyPart(htmlPart);
-            message.setContent(multipart);
-            Transport.send(message);
-        } catch (MessagingException | IOException e) {
-            throw new MailException(e);
-        }
     }
 
     @Override
@@ -361,34 +291,301 @@ public class MailService implements MailClient {
                       List<String> cc,
                       List<String> bcc) {
         try {
-            Message message = mailBuild.getMessage();
-            message.setRecipients(Message.RecipientType.TO, mailBuild.eliminate(mailAddress));
-            message.setSubject(title);
-
-            Multipart multipart = new MimeMultipart("alternative");
-            //读取模板并进行变量替换
-            List<String> strings = HtmlUtil.replacePlaceholder(html, parameter);
-            //拼合HTML数据
-            String htmlData = HtmlUtil.pieceHtml(strings);
-            if (!body.isEmpty()) {
-                // 创建文本正文部分
-                MimeBodyPart textPart = new MimeBodyPart();
-                textPart.setText(body);
-                multipart.addBodyPart(textPart);
-            }
-            //添加附件
-            if (files != null && files.size() != 0) {
-                forFiles(multipart, files);
-            }
-            MimeBodyPart htmlPart = new MimeBodyPart();
-            htmlPart.setContent(htmlData, "text/html;charset=UTF-8");
-            addCC(cc, bcc, message);
-            multipart.addBodyPart(htmlPart);
-            message.setContent(multipart);
+            Message message = messageBuild(mailAddress, title, body, html, parameter, files, cc, bcc);
             Transport.send(message);
+            logger.info("邮件发送成功！^_^");
         } catch (MessagingException e) {
-            throw new MailException(e);
+            // 防止 maxRetries 数值小于0带来的其他问题
+            if (mailBuild.getMaxRetries() > 0){
+                ReSendList(mailAddress,
+                        title,
+                        body,
+                        html,
+                        parameter,
+                        files,
+                        cc,
+                        bcc);
+            } else {
+                logger.warning(e.getMessage());
+                throw new MailException(e);
+            }
         }
+    }
+
+    @Override
+    public void sendEmail(List<String> mailAddress, String title, String body, List<String> cc, List<String> bcc, Map<String, String> files) {
+        try {
+            Message message = messageBuild(mailAddress, title, body, cc, bcc, files);
+            Transport.send(message);
+            logger.info("邮件发送成功！^_^");
+        } catch (MessagingException e) {
+            if (mailBuild.getMaxRetries() > 0) {
+                ReSendList(mailAddress, title, body, cc, bcc, files);
+            } else {
+                logger.warning(e.getMessage());
+                throw new MailException(e);
+            }
+        }
+    }
+
+    @Override
+    public void sendEmail(String mailAddress, String title, String body, String zipName, Map<String, String> files) {
+        try {
+            Message message = messageBuild(mailAddress, title, body, zipName, files);
+            Transport.send(message);
+            logger.info("邮件发送成功！^_^");
+        } catch (MessagingException | IOException e) {
+            if (mailBuild.getMaxRetries() > 1) {
+                ReSend(mailAddress, title, body, zipName, files);
+            } else {
+                logger.warning(e.getMessage());
+                throw new MailException(e);
+            }
+        }
+    }
+
+    @Override
+    public void sendHtml(String mailAddress, String title, String body, String htmlName, Map<String, String> parameter, String zipName, Map<String, String> files) {
+        try {
+            Message message = messageBuild(mailAddress, title, body, htmlName, parameter, zipName, files);
+            Transport.send(message);
+            logger.info("邮件发送成功！^_^");
+        } catch (MessagingException | IOException e) {
+            if (mailBuild.getMaxRetries() > 1) {
+                ReSend(mailAddress, title, body, htmlName, parameter, zipName, files);
+            } else {
+                logger.warning(e.getMessage());
+                throw new MailException(e);
+            }
+        }
+    }
+
+    private void ReSendList(List<String> mailAddress,
+                      String title,
+                      String body,
+                      List<String> html,
+                      Map<String, String> parameter,
+                      Map<String, String> files,
+                      List<String> cc,
+                      List<String> bcc) {
+        int maxRetries = mailBuild.getMaxRetries();
+        int retryCount = 1; // 初始值为1；则while循环中少发送一次，最后一次发送在判断 retryCount >= maxRetries 这里。
+        boolean retryOnFailure = true;
+
+        while (retryOnFailure && retryCount < maxRetries) {
+            try {
+                logger.warning("邮件第 {" + retryCount + "} 次重新发送");
+                Message message;
+                if (html != null || parameter != null){
+                    message = messageBuild(mailAddress, title, body, html, parameter, files, cc, bcc);
+                } else {
+                    message = messageBuild(mailAddress, title, body, cc, bcc, files);
+                }
+                Transport.send(message);
+                retryOnFailure = false; // 发送成功，停止重试
+            } catch (MessagingException e) {
+                retryCount++;
+                try {
+                    // 间隔秒数
+                    TimeUnit.SECONDS.sleep(mailBuild.getRetryInterval());
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+
+        if (retryCount >= maxRetries && retryOnFailure) {
+            try {
+                Message message;
+                if (html != null || parameter != null){
+                    message = messageBuild(mailAddress, title, body, html, parameter, files, cc, bcc);
+                } else {
+                    message = messageBuild(mailAddress, title, body, cc, bcc, files);
+                }
+                Transport.send(message);
+            } catch (MessagingException e) {
+                throw new MailException(e);
+            }
+        }
+    }
+
+    public void  ReSendList(List<String> mailAddress,
+                        String title,
+                        String body,
+                        List<String> cc,
+                        List<String> bcc,
+                        Map<String, String> files) {
+        ReSendList(mailAddress, title, body, null, null, files, cc, bcc);
+    }
+
+    private void ReSend(String mailAddress,
+                        String title,
+                        String body,
+                        String htmlName,
+                        Map<String, String> parameter,
+                        String zipName,
+                        Map<String, String> files) {
+        int maxRetries = mailBuild.getMaxRetries();
+        int retryCount = 1; // 初始值为1；则while循环中少发送一次，最后一次发送在判断 retryCount >= maxRetries 这里。
+        boolean retryOnFailure = true;
+
+        while (retryOnFailure && retryCount < maxRetries) {
+            try {
+                logger.warning("邮件第 {" + retryCount + "} 次重新发送");
+                if (htmlName != null || parameter != null){
+                    Message    message = messageBuild(mailAddress, title, body, htmlName, parameter, zipName, files);
+                    Transport.send(message);
+                } else {
+                    Message message = messageBuild(mailAddress, title, body, zipName, files);
+                    Transport.send(message);
+                }
+                retryOnFailure = false; // 发送成功，停止重试
+            } catch (MessagingException e) {
+                retryCount++;
+                try {
+                    // 间隔秒数
+                    TimeUnit.SECONDS.sleep(mailBuild.getRetryInterval());
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        if (retryCount >= maxRetries && retryOnFailure) {
+            try {
+                if (htmlName != null || parameter != null){
+                    Message   message = messageBuild(mailAddress, title, body, htmlName, parameter, zipName, files);
+                    Transport.send(message);
+                } else {
+                    Message message = messageBuild(mailAddress, title, body, zipName, files);
+                    Transport.send(message);
+                }
+            } catch (MessagingException e) {
+                throw new MailException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private void  ReSend(String mailAddress,
+                         String title,
+                         String body,
+                         String zipName,
+                         Map<String, String> files) {
+        ReSend(mailAddress, title, body, null, null, zipName, files);
+    }
+
+    // messageBuild 方法重载
+    private Message messageBuild(List<String> mailAddress,
+                                 String title,
+                                 String body,
+                                 List<String> html,
+                                 Map<String, String> parameter,
+                                 Map<String, String> files,
+                                 List<String> cc,
+                                 List<String> bcc) throws MessagingException {
+        Message message = mailBuild.getMessage();
+        message.setRecipients(Message.RecipientType.TO, mailBuild.eliminate(mailAddress));
+        message.setSubject(title);
+
+        Multipart multipart = new MimeMultipart("alternative");
+        // 读取模板并进行变量替换
+        List<String> strings = HtmlUtil.replacePlaceholder(html, parameter);
+        // 拼合HTML数据
+        String htmlData = HtmlUtil.pieceHtml(strings);
+        if (!body.isEmpty()) {
+            // 创建文本正文部分
+            MimeBodyPart textPart = new MimeBodyPart();
+            textPart.setText(body);
+            multipart.addBodyPart(textPart);
+        }
+        // 添加附件
+        if (files != null && files.size() != 0) {
+            forFiles(multipart, files);
+        }
+
+        MimeBodyPart htmlPart = new MimeBodyPart();
+        htmlPart.setContent(htmlData, "text/html;charset=UTF-8");
+        addCC(cc, bcc, message);
+        multipart.addBodyPart(htmlPart);
+        message.setContent(multipart);
+        return  message;
+    }
+
+    public Message messageBuild(List<String> mailAddress,
+                                String title,
+                                String body,
+                                List<String> cc,
+                                List<String> bcc,
+                                Map<String, String> files) throws MessagingException {
+        Message message = mailBuild.getMessage();
+        message.setRecipients(Message.RecipientType.TO, mailBuild.eliminate(mailAddress));
+        message.setSubject(title);
+        if (StrUtil.isNotBlank(body)) {
+            message.setText(body);
+        }
+        if (files != null && files.size() != 0) {
+            Multipart multipart = new MimeMultipart();
+            forFiles(multipart, files);
+            message.setContent(multipart);
+        }
+        addCC(cc, bcc, message);
+        return message;
+    }
+
+    public Message messageBuild(String mailAddress,
+                                String title,
+                                String body,
+                                String zipName,
+                                Map<String, String> files) throws MessagingException, IOException {
+        Message message = mailBuild.getMessage();
+        message.setRecipients(Message.RecipientType.TO, mailBuild.eliminate(Convert.toList(String.class, mailAddress)));
+        message.setSubject(title);
+        if (StrUtil.isNotBlank(body)) {
+            message.setText(body);
+        }
+        if (files != null && files.size() != 0) {
+            Multipart multipart = new MimeMultipart();
+            zipFiles(multipart, zipName, files);
+            message.setContent(multipart);
+        }
+        return message;
+    }
+
+    public Message messageBuild(String mailAddress,
+                                String title,
+                                String body,
+                                String htmlName,
+                                Map<String, String> parameter,
+                                String zipName,
+                                Map<String, String> files) throws MessagingException, IOException {
+        Message message = mailBuild.getMessage();
+        message.setRecipients(Message.RecipientType.TO, mailBuild.eliminate(Convert.toList(String.class, mailAddress)));
+        message.setSubject(title);
+
+        Multipart multipart = new MimeMultipart("alternative");
+        //读取模板并进行变量替换
+        List<String> strings = HtmlUtil.replacePlaceholder(HtmlUtil.readHtml(htmlName), parameter);
+        //拼合HTML数据
+        String htmlData = HtmlUtil.pieceHtml(strings);
+        if (StrUtil.isNotBlank(body)) {
+            // 创建文本正文部分
+            MimeBodyPart textPart = new MimeBodyPart();
+            textPart.setText(body);
+            multipart.addBodyPart(textPart);
+        }
+        //添加附件
+        if (MapUtil.isNotEmpty(files)) {
+            zipFiles(multipart, zipName, files);
+        }
+        MimeBodyPart htmlPart = new MimeBodyPart();
+        htmlPart.setContent(htmlData, "text/html;charset=UTF-8");
+        multipart.addBodyPart(htmlPart);
+        message.setContent(multipart);
+        return message;
     }
 
     private void addCC(List<String> cc, List<String> bcc, Message message) throws MessagingException {

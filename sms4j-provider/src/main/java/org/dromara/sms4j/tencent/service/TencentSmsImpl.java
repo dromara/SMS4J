@@ -28,11 +28,11 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class TencentSmsImpl extends AbstractSmsBlend {
 
-    private final TencentConfig tencentSmsConfig;
+    private final TencentConfig config;
 
     public TencentSmsImpl(TencentConfig tencentSmsConfig, Executor pool, DelayedTime delayed) {
         super(pool, delayed);
-        this.tencentSmsConfig = tencentSmsConfig;
+        this.config = tencentSmsConfig;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class TencentSmsImpl extends AbstractSmsBlend {
         for (int i = 0; i < split.length; i++) {
             map.put(String.valueOf(i), split[i]);
         }
-        return sendMessage(phone, tencentSmsConfig.getTemplateId(), map);
+        return sendMessage(phone, config.getTemplateId(), map);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class TencentSmsImpl extends AbstractSmsBlend {
         for (int i = 0; i < split.length; i++) {
             map.put(String.valueOf(i), split[i]);
         }
-        return massTexting(phones, tencentSmsConfig.getTemplateId(), map);
+        return massTexting(phones, config.getTemplateId(), map);
     }
 
     @Override
@@ -83,16 +83,16 @@ public class TencentSmsImpl extends AbstractSmsBlend {
         String timestamp = String.valueOf(System.currentTimeMillis() / 1000);
         String signature;
         try {
-            signature = TencentUtils.generateSignature(this.tencentSmsConfig, templateId, messages, phones, timestamp);
+            signature = TencentUtils.generateSignature(this.config, templateId, messages, phones, timestamp);
         } catch (Exception e) {
             log.error("tencent send message error", e);
             throw new SmsBlendException(e.getMessage());
         }
-        Map<String, String> headsMap = TencentUtils.generateHeadsMap(signature, timestamp, tencentSmsConfig.getAction(),
-                tencentSmsConfig.getVersion(), tencentSmsConfig.getTerritory(), tencentSmsConfig.getRequestUrl());
-        Map<String, Object> requestBody = TencentUtils.generateRequestBody(phones, tencentSmsConfig.getSdkAppId(),
-                tencentSmsConfig.getSignature(), templateId, messages);
-        String url = Constant.HTTPS_PREFIX + tencentSmsConfig.getRequestUrl();
+        Map<String, String> headsMap = TencentUtils.generateHeadsMap(signature, timestamp, config.getAction(),
+                config.getVersion(), config.getTerritory(), config.getRequestUrl());
+        Map<String, Object> requestBody = TencentUtils.generateRequestBody(phones, config.getSdkAppId(),
+                config.getSignature(), templateId, messages);
+        String url = Constant.HTTPS_PREFIX + config.getRequestUrl();
         try(HttpResponse response = HttpRequest.post(url)
                 .addHeaders(headsMap)
                 .body(JSONUtil.toJsonStr(requestBody))
@@ -108,6 +108,7 @@ public class TencentSmsImpl extends AbstractSmsBlend {
         String error = response.getStr("Error");
         smsResponse.setSuccess(StringUtils.isBlank(error));
         smsResponse.setData(resJson);
+        smsResponse.setConfigId(this.config.getConfigId());
         return smsResponse;
     }
 }

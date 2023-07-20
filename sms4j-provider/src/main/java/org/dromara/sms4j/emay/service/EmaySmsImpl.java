@@ -94,6 +94,7 @@ public class EmaySmsImpl extends AbstractSmsBlend {
         SmsResponse smsResponse = new SmsResponse();
         smsResponse.setSuccess("success".equalsIgnoreCase(resJson.getStr("code")));
         smsResponse.setData(resJson);
+        smsResponse.setConfigId(this.config.getConfigId());
         return smsResponse;
     }
 

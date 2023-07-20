@@ -50,7 +50,7 @@
     </scm>
 
     <properties>
-        <revision>2.2.0</revision>
+        <revision>3.0.0</revision>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -58,7 +58,7 @@
         <solon.version>2.2.0</solon.version>
         <redisson.version>3.17.0</redisson.version>
         <jdcloud.version>1.3.3</jdcloud.version>
-        <hutool.version>5.8.18</hutool.version>
+        <hutool.version>5.8.20</hutool.version>
         <xmlblend.version>2.3.0</xmlblend.version>
         <activation.version>1.1.1</activation.version>
         <mail.version>1.6.2</mail.version>

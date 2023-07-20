@@ -38,7 +38,14 @@ public class BaseConfig {
 
     /**
      * 权重
-     * */
+     */
     @Builder.Default
     private Integer weight = 1;
+
+    /**
+     * 配置标识名 如未配置取对应渠道名例如 Alibaba
+     *
+     * @since 3.0.0
+     */
+    private String configId;
 }

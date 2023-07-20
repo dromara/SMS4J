@@ -1,9 +1,9 @@
-<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">sms4j v2.2.0</h1>
+<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">sms4j v3.0.0</h1>
 <h4 align="center" style="margin: 30px 0 30px; font-weight: bold;">sms4j -- 让发送短信变的更简单</h4>
 <p align="center">
 <a href="https://gitee.com/dromara/sms4j/stargazers"><img src="https://gitee.com/dromara/sms4j/badge/star.svg?theme=gvp"></a>
 <a href="https://gitee.com/dromara/sms4j/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-green"></a>
-<a href="https://gitee.com/dromara/sms4j"><img src="https://img.shields.io/badge/version-v2.2.0-blue"></a>
+<a href="https://gitee.com/dromara/sms4j"><img src="https://img.shields.io/badge/version-v3.0.0-blue"></a>
 </p>
 <img src="/public/logo.png">
 
@@ -135,7 +135,7 @@ sms:
 1.  Fork 本仓库
 2.  新建 Feat_xxx 分支
 3.  提交代码
-4.  新建 Pull Request 到 dev-2.x 分支
+4.  新建 Pull Request 到 dev-3.x 分支
 ```
 ## 贡献原则
 - 我们原则上欢迎任何人为sms4j添加加瓦贡献代码
@@ -146,4 +146,3 @@ sms:
 ### 分支介绍
 1. master 正式版分支，最终发布到maven中央仓库的版本
 2. dev 开发分支，贡献的代码将合并到这里，无误后合并至preview
-3. preview 预览版分支，新的版本和测试性功能将在这里发布

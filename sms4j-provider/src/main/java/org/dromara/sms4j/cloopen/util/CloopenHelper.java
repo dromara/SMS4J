@@ -51,6 +51,7 @@ public class CloopenHelper {
         SmsResponse smsResponse = new SmsResponse();
         smsResponse.setSuccess("000000".equals(resJson.getStr("statusCode")));
         smsResponse.setData(resJson);
+        smsResponse.setConfigId(this.config.getConfigId());
         return smsResponse;
     }
 

@@ -28,19 +28,19 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class CtyunSmsImpl extends AbstractSmsBlend {
 
-    private final CtyunConfig ctyunConfig;
+    private final CtyunConfig config;
 
-    public CtyunSmsImpl(CtyunConfig ctyunConfig, Executor pool, DelayedTime delayedTime) {
+    public CtyunSmsImpl(CtyunConfig config, Executor pool, DelayedTime delayedTime) {
         super(pool, delayedTime);
-        this.ctyunConfig = ctyunConfig;
+        this.config = config;
     }
 
     @Override
     @Restricted
     public SmsResponse sendMessage(String phone, String message) {
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
-        map.put(ctyunConfig.getTemplateName(), message);
-        return sendMessage(phone, ctyunConfig.getTemplateId(), map);
+        map.put(config.getTemplateName(), message);
+        return sendMessage(phone, config.getTemplateId(), map);
     }
 
     @Override
@@ -54,8 +54,8 @@ public class CtyunSmsImpl extends AbstractSmsBlend {
     @Restricted
     public SmsResponse massTexting(List<String> phones, String message) {
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
-        map.put(ctyunConfig.getTemplateName(), message);
-        return massTexting(phones, ctyunConfig.getTemplateId(), map);
+        map.put(config.getTemplateName(), message);
+        return massTexting(phones, config.getTemplateId(), map);
     }
 
     @Override
@@ -69,15 +69,15 @@ public class CtyunSmsImpl extends AbstractSmsBlend {
         String requestUrl;
         String paramStr;
         try {
-            requestUrl = ctyunConfig.getRequestUrl();
-            paramStr = CtyunUtils.generateParamJsonStr(ctyunConfig, phone, message, templateId);
+            requestUrl = config.getRequestUrl();
+            paramStr = CtyunUtils.generateParamJsonStr(config, phone, message, templateId);
         } catch (Exception e) {
             log.error("ctyun send message error", e);
             throw new SmsBlendException(e.getMessage());
         }
         log.debug("requestUrl {}", requestUrl);
         try(HttpResponse response = HttpRequest.post(requestUrl)
-                .addHeaders(CtyunUtils.signHeader(paramStr, ctyunConfig.getAccessKeyId(), ctyunConfig.getAccessKeySecret()))
+                .addHeaders(CtyunUtils.signHeader(paramStr, config.getAccessKeyId(), config.getAccessKeySecret()))
                 .body(paramStr)
                 .execute()){
             JSONObject body = JSONUtil.parseObj(response.body());
@@ -89,6 +89,7 @@ public class CtyunSmsImpl extends AbstractSmsBlend {
         SmsResponse smsResponse = new SmsResponse();
         smsResponse.setSuccess("OK".equals(resJson.getStr("code")));
         smsResponse.setData(resJson);
+        smsResponse.setConfigId(this.config.getConfigId());
         return smsResponse;
     }
 

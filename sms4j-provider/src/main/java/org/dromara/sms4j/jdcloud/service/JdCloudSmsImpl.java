@@ -87,6 +87,7 @@ public class JdCloudSmsImpl extends AbstractSmsBlend {
         SmsResponse smsResponse = new SmsResponse();
         smsResponse.setSuccess(res.getStatus() != null && res.getStatus());
         smsResponse.setData(res);
+        smsResponse.setConfigId(this.config.getConfigId());
         return smsResponse;
     }
 }

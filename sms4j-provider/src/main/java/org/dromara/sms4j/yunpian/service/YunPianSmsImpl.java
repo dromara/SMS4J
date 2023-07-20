@@ -31,7 +31,7 @@ public class YunPianSmsImpl extends AbstractSmsBlend {
 
     private final YunpianConfig config;
 
-    private static SmsResponse getResponse(JSONObject execute) {
+    private SmsResponse getResponse(JSONObject execute) {
         SmsResponse smsResponse = new SmsResponse();
         if (execute == null) {
             smsResponse.setSuccess(false);
@@ -39,6 +39,7 @@ public class YunPianSmsImpl extends AbstractSmsBlend {
         }
         smsResponse.setSuccess(execute.getInt("code") == 0);
         smsResponse.setData(execute);
+        smsResponse.setConfigId(this.config.getConfigId());
         return smsResponse;
     }
 

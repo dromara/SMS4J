@@ -23,4 +23,11 @@ public class EmayConfig implements SupplierConfig {
     private String secretKey ;
     /** APP接入地址*/
     private String requestUrl;
+
+    /**
+     * 配置标识名 如未配置取对应渠道名例如 Alibaba
+     *
+     * @since 3.0.0
+     */
+    private String configId;
 }

@@ -28,7 +28,7 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class AlibabaSmsImpl extends AbstractSmsBlend {
 
-    private final AlibabaConfig alibabaSmsConfig;
+    private final AlibabaConfig config;
 
     /**
      * AlibabaSmsImpl
@@ -36,17 +36,17 @@ public class AlibabaSmsImpl extends AbstractSmsBlend {
      *
      * @author :Wind
      */
-    public AlibabaSmsImpl(AlibabaConfig alibabaSmsConfig, Executor pool, DelayedTime delayedTime) {
+    public AlibabaSmsImpl(AlibabaConfig config, Executor pool, DelayedTime delayedTime) {
         super(pool, delayedTime);
-        this.alibabaSmsConfig = alibabaSmsConfig;
+        this.config = config;
     }
 
     @Override
     @Restricted
     public SmsResponse sendMessage(String phone, String message) {
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
-        map.put(alibabaSmsConfig.getTemplateName(), message);
-        return sendMessage(phone, alibabaSmsConfig.getTemplateId(), map);
+        map.put(config.getTemplateName(), message);
+        return sendMessage(phone, config.getTemplateId(), map);
     }
 
     @Override
@@ -60,8 +60,8 @@ public class AlibabaSmsImpl extends AbstractSmsBlend {
     @Restricted
     public SmsResponse massTexting(List<String> phones, String message) {
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
-        map.put(alibabaSmsConfig.getTemplateName(), message);
-        return massTexting(phones, alibabaSmsConfig.getTemplateId(), map);
+        map.put(config.getTemplateName(), message);
+        return massTexting(phones, config.getTemplateId(), map);
     }
 
     @Override
@@ -75,8 +75,8 @@ public class AlibabaSmsImpl extends AbstractSmsBlend {
         String requestUrl;
         String paramStr;
         try {
-            requestUrl = AliyunUtils.generateSendSmsRequestUrl(this.alibabaSmsConfig, message, phone, templateId);
-            paramStr = AliyunUtils.generateParamBody(alibabaSmsConfig, phone, message, templateId);
+            requestUrl = AliyunUtils.generateSendSmsRequestUrl(this.config, message, phone, templateId);
+            paramStr = AliyunUtils.generateParamBody(config, phone, message, templateId);
         } catch (Exception e) {
             log.error("aliyun send message error", e);
             throw new SmsBlendException(e.getMessage());
@@ -95,6 +95,7 @@ public class AlibabaSmsImpl extends AbstractSmsBlend {
         SmsResponse smsResponse = new SmsResponse();
         smsResponse.setSuccess("OK".equals(resJson.getStr("Code")));
         smsResponse.setData(resJson);
+        smsResponse.setConfigId(this.config.getConfigId());
         return smsResponse;
     }
 

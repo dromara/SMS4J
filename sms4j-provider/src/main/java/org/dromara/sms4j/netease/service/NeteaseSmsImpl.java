@@ -118,10 +118,11 @@ public class NeteaseSmsImpl extends AbstractSmsBlend {
     }
 
     private SmsResponse getResponse(JSONObject jsonObject) {
-        SmsResponse response = new SmsResponse();
-        response.setSuccess(jsonObject.getInt("code") <= 200);
-        response.setData(jsonObject);
-        return response;
+        SmsResponse smsResponse = new SmsResponse();
+        smsResponse.setSuccess(jsonObject.getInt("code") <= 200);
+        smsResponse.setData(jsonObject);
+        smsResponse.setConfigId(this.config.getConfigId());
+        return smsResponse;
     }
 
 }

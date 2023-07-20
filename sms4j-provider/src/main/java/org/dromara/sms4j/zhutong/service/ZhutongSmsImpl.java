@@ -33,7 +33,7 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class ZhutongSmsImpl extends AbstractSmsBlend {
 
-    private final ZhutongConfig zhutongConfig;
+    private final ZhutongConfig config;
 
     /**
      * ZhutongSmsImpl
@@ -41,20 +41,20 @@ public class ZhutongSmsImpl extends AbstractSmsBlend {
      */
     public ZhutongSmsImpl(ZhutongConfig zhutongConfig, Executor pool, DelayedTime delayedTime) {
         super(pool, delayedTime);
-        this.zhutongConfig = zhutongConfig;
+        this.config = zhutongConfig;
     }
 
     @Override
     @Restricted
     public SmsResponse sendMessage(String phone, String message) {
         //如果模板id为空 or 模板变量名称为空，使用无模板的自定义短信发送
-        if (StrUtil.hasBlank(zhutongConfig.getSignature(), zhutongConfig.getTemplateId(), zhutongConfig.getTemplateName())) {
+        if (StrUtil.hasBlank(config.getSignature(), config.getTemplateId(), config.getTemplateName())) {
             return getSmsResponse(phone, message);
         }
 
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
-        map.put(zhutongConfig.getTemplateName(), message);
-        return sendMessage(phone, zhutongConfig.getTemplateId(), map);
+        map.put(config.getTemplateName(), message);
+        return sendMessage(phone, config.getTemplateId(), map);
     }
 
     @Override
@@ -67,13 +67,13 @@ public class ZhutongSmsImpl extends AbstractSmsBlend {
     @Restricted
     public SmsResponse massTexting(List<String> phones, String message) {
         //如果模板id为空 or 模板变量名称为空，使用无模板的自定义短信发送
-        if (StrUtil.hasBlank(zhutongConfig.getSignature(), zhutongConfig.getTemplateId(), zhutongConfig.getTemplateName())) {
+        if (StrUtil.hasBlank(config.getSignature(), config.getTemplateId(), config.getTemplateName())) {
             return getSmsResponse(phones, message);
         }
 
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
-        map.put(zhutongConfig.getTemplateName(), message);
-        return massTexting(phones, zhutongConfig.getTemplateId(), map);
+        map.put(config.getTemplateName(), message);
+        return massTexting(phones, config.getTemplateId(), map);
     }
 
     @Override
@@ -86,9 +86,9 @@ public class ZhutongSmsImpl extends AbstractSmsBlend {
      * 发送 自定义短信：https://doc.zthysms.com/web/#/1/14
      */
     protected SmsResponse getSmsResponse(List<String> phones, String content) {
-        String requestUrl = zhutongConfig.getRequestUrl();
-        String username = zhutongConfig.getAccessKeyId();
-        String password = zhutongConfig.getAccessKeySecret();
+        String requestUrl = config.getRequestUrl();
+        String username = config.getAccessKeyId();
+        String password = config.getAccessKeySecret();
 
         validator(requestUrl, username, password);
         if (CollectionUtil.isEmpty(phones)) {
@@ -139,10 +139,10 @@ public class ZhutongSmsImpl extends AbstractSmsBlend {
      * 发送 模板短信：https://doc.zthysms.com/web/#/1/13
      */
     protected SmsResponse getSmsResponseTemplate(String templateId, List<String> phones, LinkedHashMap<String, String> messages) {
-        String requestUrl = zhutongConfig.getRequestUrl();
-        String username = zhutongConfig.getAccessKeyId();
-        String password = zhutongConfig.getAccessKeySecret();
-        String signature = zhutongConfig.getSignature();
+        String requestUrl = config.getRequestUrl();
+        String username = config.getAccessKeyId();
+        String password = config.getAccessKeySecret();
+        String signature = config.getSignature();
 
         validator(requestUrl, username, password);
         if (StrUtil.isBlank(signature)) {
@@ -208,10 +208,11 @@ public class ZhutongSmsImpl extends AbstractSmsBlend {
     }
 
     private SmsResponse getResponse(JSONObject jsonObject) {
-        SmsResponse response = new SmsResponse();
-        response.setSuccess(jsonObject.getInt("code", -1) <= 200);
-        response.setData(jsonObject);
-        return response;
+        SmsResponse smsResponse = new SmsResponse();
+        smsResponse.setSuccess(jsonObject.getInt("code", -1) <= 200);
+        smsResponse.setData(jsonObject);
+        smsResponse.setConfigId(this.config.getConfigId());
+        return smsResponse;
     }
 
     private void validator(String requestUrl, String username, String password) {

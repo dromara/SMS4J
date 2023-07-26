@@ -1,18 +1,9 @@
 package org.dromara.sms4j.core.factory;
 
 import org.dromara.sms4j.api.SmsBlend;
-import org.dromara.sms4j.api.smsProxy.SmsInvocationHandler;
 import org.dromara.sms4j.api.universal.SupplierConfig;
-import org.dromara.sms4j.comm.factory.BeanFactory;
-import org.dromara.sms4j.core.SupplierSqlConfig;
-import org.dromara.sms4j.core.load.SmsLoad;
-import org.dromara.sms4j.provider.base.BaseProviderFactory;
-import org.dromara.sms4j.provider.enumerate.SupplierType;
-
-import java.lang.reflect.Proxy;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import org.dromara.sms4j.provider.factory.BaseProviderFactory;
+import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 
 /**
  * SmsFactory
@@ -25,8 +16,6 @@ import java.util.Objects;
  **/
 public abstract class SmsFactory {
 
-    private static final Map<SupplierType, SmsBlend> beans = new HashMap<>();
-
     private SmsFactory() {
     }
 
@@ -34,33 +23,14 @@ public abstract class SmsFactory {
      * createSmsBlend
      * <p>获取各个厂商的实现类
      *
-     * @param supplierType 厂商枚举
-     * @author :Wind
-     */
-    public static SmsBlend createSmsBlend(SupplierType supplierType) {
-        BaseProviderFactory providerFactory = supplierType.getProviderFactory();
-        return providerFactory.createSms(providerFactory.getConfig());
-    }
-
-    /**
-     *  createSmsBlend
-     * <p>获取各个厂商的多例实现对象
-     * @param supplierType 厂商枚举
      * @param config 短信配置
      * @author :Wind
-    */
-    public static SmsBlend createSmsBlend(SupplierType supplierType,SupplierConfig config){
-        BaseProviderFactory providerFactory = supplierType.getProviderFactory();
-        return providerFactory.createMultitonSms(config);
-    }
-
-    /**
-     *  createSmsBlend
-     * <p>获取负载均衡器中的短信实例
-     * @author :Wind
-    */
-    public static SmsBlend createSmsBlend(){
-        return SmsLoad.getBeanLoad().getLoadServer();
+     */
+    public static SmsBlend createSmsBlend(SupplierConfig config) {
+        BaseProviderFactory factory = ProviderFactoryHolder.requireForConfig(config);
+        SmsBlend sms = factory.createSms(config);
+        SmsHolder.put(sms);
+        return sms;
     }
 
     /**
@@ -71,71 +41,46 @@ public abstract class SmsFactory {
      * @author :Wind
      */
     public static void refresh() {
-        for(SupplierType type : SupplierType.values()) {
-            refresh(type);
-        }
+        //TODO 去掉？
     }
 
-    /**
-     * refresh
-     * <p>根据厂商类型枚举刷新对应厂商的配置，此方法不会刷新全部厂商的配置对象，只会重构所选厂商的对象，性能损失相对较小
-     *
-     * @param supplierType 厂商类型枚举
-     * @author :Wind
-     */
-    public static void refresh(SupplierType supplierType) {
-        BaseProviderFactory providerFactory = supplierType.getProviderFactory();
-        providerFactory.refresh(providerFactory.getConfig());
-    }
-
-    /**
-     * refreshSqlConfig
-     * <p>重新读取sql配置
-     *
-     * @author :Wind
-     */
-    public static void refreshSqlConfig() {
-        SupplierSqlConfig.refreshSqlConfig();
-    }
-
-
-    /**
-     * getRestrictedSmsBlend
-     * <p>获取某个厂商的带有短信拦截的实现
-     *
-     * @param supplierType 厂商枚举
-     * @author :Wind
-     */
-    public static SmsBlend getRestrictedSmsBlend(SupplierType supplierType) {
-        SmsBlend smsBlend = beans.get(supplierType);
-        if (Objects.isNull(smsBlend)) {
-            smsBlend = getSmsBlend(supplierType);
-            beans.put(supplierType, smsBlend);
-        }
-        return smsBlend;
-    }
-
-    /**
-     *  refreshRestrictedSmsBlend
-     * <p>刷新带有短信拦截的对象实现
-     * @param supplierType 厂商枚举
-     * @author :Wind
-    */
-    public static void refreshRestrictedSmsBlend(SupplierType supplierType) {
-        refresh(supplierType);
-        beans.put(supplierType,getSmsBlend(supplierType));
-    }
-
-    private static SmsBlend getSmsBlend(SupplierType supplierType) {
-        SmsBlend sms = createSmsBlend(supplierType);
-        SmsInvocationHandler smsInvocationHandler = SmsInvocationHandler.newSmsInvocationHandler(
-                sms,
-                BeanFactory.getSmsConfig()
-        );
-        return (SmsBlend) Proxy.newProxyInstance(
-                sms.getClass().getClassLoader(),
-                new Class[]{SmsBlend.class},
-                smsInvocationHandler
-        );
-    }
+    // /**
+    //  * getRestrictedSmsBlend
+    //  * <p>获取某个厂商的带有短信拦截的实现
+    //  *
+    //  * @param supplierType 厂商枚举
+    //  * @author :Wind
+    //  */
+    // public static SmsBlend getRestrictedSmsBlend(SupplierType supplierType) {
+    //     SmsBlend smsBlend = beans.get(supplierType);
+    //     if (Objects.isNull(smsBlend)) {
+    //         smsBlend = getSmsBlend(supplierType);
+    //         beans.put(supplierType, smsBlend);
+    //     }
+    //     return smsBlend;
+    // }
+    //
+    // /**
+    //  *  refreshRestrictedSmsBlend
+    //  * <p>刷新带有短信拦截的对象实现
+    //  * @param supplierType 厂商枚举
+    //  * @author :Wind
+    // */
+    // public static void refreshRestrictedSmsBlend(SupplierType supplierType) {
+    //     refresh(supplierType);
+    //     beans.put(supplierType,getSmsBlend(supplierType));
+    // }
+    //
+    // private static SmsBlend getSmsBlend(SupplierType supplierType) {
+    //     SmsBlend sms = createSmsBlend(supplierType);
+    //     SmsInvocationHandler smsInvocationHandler = SmsInvocationHandler.newSmsInvocationHandler(
+    //             sms,
+    //             BeanFactory.getSmsConfig()
+    //     );
+    //     return (SmsBlend) Proxy.newProxyInstance(
+    //             sms.getClass().getClassLoader(),
+    //             new Class[]{SmsBlend.class},
+    //             smsInvocationHandler
+    //     );
+    // }
 }

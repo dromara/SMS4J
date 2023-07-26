@@ -2,7 +2,7 @@ package org.dromara.sms4j.netease.config;
 
 import org.dromara.sms4j.comm.factory.BeanFactory;
 import org.dromara.sms4j.netease.service.NeteaseSmsImpl;
-import org.dromara.sms4j.provider.base.BaseProviderFactory;
+import org.dromara.sms4j.provider.factory.BaseProviderFactory;
 
 /**
  * NeteaseSmsConfig

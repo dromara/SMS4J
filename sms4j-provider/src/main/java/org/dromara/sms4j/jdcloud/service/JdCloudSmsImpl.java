@@ -5,7 +5,7 @@ import com.jdcloud.sdk.service.sms.client.SmsClient;
 import com.jdcloud.sdk.service.sms.model.BatchSendRequest;
 import com.jdcloud.sdk.service.sms.model.BatchSendResult;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.sms4j.api.AbstractSmsBlend;
+import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;

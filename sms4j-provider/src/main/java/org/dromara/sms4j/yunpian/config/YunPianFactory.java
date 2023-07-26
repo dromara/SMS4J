@@ -1,7 +1,7 @@
 package org.dromara.sms4j.yunpian.config;
 
 import org.dromara.sms4j.comm.factory.BeanFactory;
-import org.dromara.sms4j.provider.base.BaseProviderFactory;
+import org.dromara.sms4j.provider.factory.BaseProviderFactory;
 import org.dromara.sms4j.yunpian.service.YunPianSmsImpl;
 
 public class YunPianFactory implements BaseProviderFactory<YunPianSmsImpl, YunpianConfig> {

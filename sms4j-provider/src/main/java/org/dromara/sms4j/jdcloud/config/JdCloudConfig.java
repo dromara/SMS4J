@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.dromara.sms4j.api.universal.SupplierConfig;
-import org.dromara.sms4j.comm.config.BaseConfig;
+import org.dromara.sms4j.provider.config.BaseConfig;
 
 /**
  * 京东云短信配置属性

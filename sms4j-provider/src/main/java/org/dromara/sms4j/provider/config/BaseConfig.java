@@ -1,9 +1,10 @@
-package org.dromara.sms4j.comm.config;
+package org.dromara.sms4j.provider.config;
 
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.dromara.sms4j.api.universal.SupplierConfig;
 
 /**
  * 短信配置属性基类
@@ -14,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @Data
 @SuperBuilder
 @NoArgsConstructor
-public class BaseConfig {
+public class BaseConfig implements SupplierConfig {
 
     /**
      * Access Key

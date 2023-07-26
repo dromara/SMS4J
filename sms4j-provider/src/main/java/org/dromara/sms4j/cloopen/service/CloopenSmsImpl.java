@@ -3,7 +3,7 @@ package org.dromara.sms4j.cloopen.service;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.IdUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.sms4j.api.AbstractSmsBlend;
+import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.cloopen.config.CloopenConfig;
 import org.dromara.sms4j.cloopen.util.CloopenHelper;

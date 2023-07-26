@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.dromara.sms4j.cloopen.service.CloopenSmsImpl;
 import org.dromara.sms4j.comm.factory.BeanFactory;
-import org.dromara.sms4j.provider.base.BaseProviderFactory;
+import org.dromara.sms4j.provider.factory.BaseProviderFactory;
 
 /**
  * 容联云短信配置

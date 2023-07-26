@@ -7,7 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.dromara.sms4j.api.universal.SupplierConfig;
-import org.dromara.sms4j.comm.config.BaseConfig;
+import org.dromara.sms4j.provider.config.BaseConfig;
 
 /**
  * 助通-自定义短信发送-配置

@@ -3,7 +3,7 @@ package org.dromara.sms4j.ctyun.config;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.comm.factory.BeanFactory;
 import org.dromara.sms4j.ctyun.service.CtyunSmsImpl;
-import org.dromara.sms4j.provider.base.BaseProviderFactory;
+import org.dromara.sms4j.provider.factory.BaseProviderFactory;
 
 /**
  * <p>类名: CtyunSmsConfig

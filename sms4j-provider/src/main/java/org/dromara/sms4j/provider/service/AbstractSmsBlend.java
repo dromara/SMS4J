@@ -1,5 +1,7 @@
-package org.dromara.sms4j.api;
+package org.dromara.sms4j.provider.service;
 
+import lombok.Getter;
+import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.callback.CallBack;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
@@ -12,17 +14,22 @@ import java.util.TimerTask;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-public abstract class AbstractSmsBlend implements SmsBlend{
+public abstract class AbstractSmsBlend implements SmsBlend {
+
+    @Getter
+    private final String configId;
 
     protected final Executor pool;
     protected final DelayedTime delayed;
 
-    protected AbstractSmsBlend(Executor pool, DelayedTime delayed) {
+    protected AbstractSmsBlend(String configId, Executor pool, DelayedTime delayed) {
+        this.configId = configId;
         this.pool = pool;
         this.delayed = delayed;
     }
 
-    protected AbstractSmsBlend() {
+    protected AbstractSmsBlend(String configId) {
+        this.configId = configId;
         this.pool = BeanFactory.getExecutor();
         this.delayed = BeanFactory.getDelayedTime();
     }

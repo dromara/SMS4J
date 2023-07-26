@@ -1,9 +1,12 @@
 package org.dromara.sms4j.aliyun.config;
 
+import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.aliyun.service.AlibabaSmsImpl;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.factory.BeanFactory;
-import org.dromara.sms4j.provider.base.BaseProviderFactory;
+import org.dromara.sms4j.provider.factory.BaseProviderFactory;
+import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 
 /**
  * AlibabaSmsConfig
@@ -15,12 +18,10 @@ import org.dromara.sms4j.provider.base.BaseProviderFactory;
 @Slf4j
 public class AlibabaFactory implements BaseProviderFactory<AlibabaSmsImpl, AlibabaConfig> {
 
-    private static AlibabaSmsImpl alibabaSms;
-
     private static final AlibabaFactory INSTANCE = new AlibabaFactory();
 
-    private static final class ConfigHolder {
-        private static AlibabaConfig config = AlibabaConfig.builder().build();
+    static {
+        ProviderFactoryHolder.registerFactory(INSTANCE);
     }
 
     private AlibabaFactory() {
@@ -41,45 +42,19 @@ public class AlibabaFactory implements BaseProviderFactory<AlibabaSmsImpl, Aliba
      */
     @Override
     public AlibabaSmsImpl createSms(AlibabaConfig alibabaConfig) {
-        if (alibabaSms == null) {
-            alibabaSms = createMultitonSms(alibabaConfig);
-        }
-        return alibabaSms;
-    }
-
-    @Override
-    public AlibabaSmsImpl createMultitonSms(AlibabaConfig alibabaConfig) {
-        return new AlibabaSmsImpl(alibabaConfig, BeanFactory.getExecutor(), BeanFactory.getDelayedTime());
+        String configId = StrUtil.isEmpty(alibabaConfig.getConfigId()) ? SupplierConstant.ALIBABA : alibabaConfig.getConfigId();
+        return new AlibabaSmsImpl(configId, alibabaConfig, BeanFactory.getExecutor(), BeanFactory.getDelayedTime());
     }
 
     /**
-     * 刷新短信实现对象
-     * @param alibabaConfig 短信配置对象
-     * @return 刷新后的短信实现对象
+     * 校验是否支持指定的config类
+     * @param config config类
+     * @return 是否支持
      */
     @Override
-    public AlibabaSmsImpl refresh(AlibabaConfig alibabaConfig) {
-        //重新构造一个实现对象
-        alibabaSms = new AlibabaSmsImpl(alibabaConfig, BeanFactory.getExecutor(), BeanFactory.getDelayedTime());
-        return alibabaSms;
+    public boolean supports(Class<?> config) {
+        return AlibabaConfig.class.isAssignableFrom(config);
     }
 
-    /**
-     * 获取配置
-     * @return 配置对象
-     */
-    @Override
-    public AlibabaConfig getConfig() {
-        return ConfigHolder.config;
-    }
-
-    /**
-     * 设置配置
-     * @param config 配置对象
-     */
-    @Override
-    public void setConfig(AlibabaConfig config) {
-        ConfigHolder.config = config;
-    }
 
 }

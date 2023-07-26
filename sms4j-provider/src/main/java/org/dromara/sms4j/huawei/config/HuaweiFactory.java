@@ -2,7 +2,7 @@ package org.dromara.sms4j.huawei.config;
 
 import org.dromara.sms4j.comm.factory.BeanFactory;
 import org.dromara.sms4j.huawei.service.HuaweiSmsImpl;
-import org.dromara.sms4j.provider.base.BaseProviderFactory;
+import org.dromara.sms4j.provider.factory.BaseProviderFactory;
 
 /**
  * HuaweiSmsConfig

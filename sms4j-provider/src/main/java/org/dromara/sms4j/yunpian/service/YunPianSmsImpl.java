@@ -4,7 +4,7 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import org.dromara.sms4j.api.AbstractSmsBlend;
+import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.constant.Constant;

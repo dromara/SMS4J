@@ -7,7 +7,7 @@ import com.jdcloud.sdk.http.Protocol;
 import com.jdcloud.sdk.service.sms.client.SmsClient;
 import org.dromara.sms4j.comm.factory.BeanFactory;
 import org.dromara.sms4j.jdcloud.service.JdCloudSmsImpl;
-import org.dromara.sms4j.provider.base.BaseProviderFactory;
+import org.dromara.sms4j.provider.factory.BaseProviderFactory;
 
 /**
  * 京东云短信配置

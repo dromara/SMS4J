@@ -6,7 +6,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.jdcloud.sdk.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.sms4j.api.AbstractSmsBlend;
+import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.constant.Constant;

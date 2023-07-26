@@ -7,7 +7,8 @@ import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.aliyun.config.AlibabaConfig;
 import org.dromara.sms4j.aliyun.utils.AliyunUtils;
-import org.dromara.sms4j.api.AbstractSmsBlend;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
+import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
@@ -36,9 +37,14 @@ public class AlibabaSmsImpl extends AbstractSmsBlend {
      *
      * @author :Wind
      */
-    public AlibabaSmsImpl(AlibabaConfig config, Executor pool, DelayedTime delayedTime) {
-        super(pool, delayedTime);
+    public AlibabaSmsImpl(String configId, AlibabaConfig config, Executor pool, DelayedTime delayedTime) {
+        super(configId, pool, delayedTime);
         this.config = config;
+    }
+
+    @Override
+    public String getSupplier() {
+        return SupplierConstant.ALIBABA;
     }
 
     @Override

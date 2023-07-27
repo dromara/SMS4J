@@ -1,9 +1,13 @@
 package org.dromara.sms4j.core.factory;
 
 import org.dromara.sms4j.api.SmsBlend;
+import org.dromara.sms4j.api.smsProxy.SmsInvocationHandler;
 import org.dromara.sms4j.api.universal.SupplierConfig;
+import org.dromara.sms4j.comm.factory.BeanFactory;
 import org.dromara.sms4j.provider.factory.BaseProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
+
+import java.lang.reflect.Proxy;
 
 /**
  * SmsFactory
@@ -34,14 +38,19 @@ public abstract class SmsFactory {
     }
 
     /**
-     * refresh
-     * <p>刷新配置，用于切换配置后的刷新，防止因厂商sdk内部的保存导致配置更新不及时
-     * 此方法会造成一定的性能损失，不建议经常性调用
-     *
+     *  createSmsBlend
+     * <p> 创建一个指定厂商开启短信拦截后的实例，isRestricted为true时，创建出来的实例带有短信拦截性质，拦截的参数取决于配置文件
+     * @param config 短信配置
+     * @param isRestricted 是否为开启了短信拦截的实例
      * @author :Wind
-     */
-    public static void refresh() {
-        //TODO 去掉？
+    */
+    public static SmsBlend createSmsBlend(SupplierConfig config,Boolean isRestricted){
+        if (isRestricted){
+            SmsBlend restrictedSmsBlend = getRestrictedSmsBlend(config);
+            SmsHolder.put(restrictedSmsBlend);
+            return restrictedSmsBlend;
+        }
+        return createSmsBlend(config);
     }
 
     // /**
@@ -66,21 +75,22 @@ public abstract class SmsFactory {
     //  * @param supplierType 厂商枚举
     //  * @author :Wind
     // */
-    // public static void refreshRestrictedSmsBlend(SupplierType supplierType) {
-    //     refresh(supplierType);
-    //     beans.put(supplierType,getSmsBlend(supplierType));
-    // }
-    //
-    // private static SmsBlend getSmsBlend(SupplierType supplierType) {
-    //     SmsBlend sms = createSmsBlend(supplierType);
-    //     SmsInvocationHandler smsInvocationHandler = SmsInvocationHandler.newSmsInvocationHandler(
-    //             sms,
-    //             BeanFactory.getSmsConfig()
-    //     );
-    //     return (SmsBlend) Proxy.newProxyInstance(
-    //             sms.getClass().getClassLoader(),
-    //             new Class[]{SmsBlend.class},
-    //             smsInvocationHandler
-    //     );
-    // }
+//     public static void refreshRestrictedSmsBlend(SupplierType supplierType) {
+//         refresh(supplierType);
+//         beans.put(supplierType,getSmsBlend(supplierType));
+//     }
+//
+     private static SmsBlend getRestrictedSmsBlend(SupplierConfig supplierType) {
+         BaseProviderFactory factory = ProviderFactoryHolder.requireForConfig(supplierType);
+         SmsBlend sms = factory.createSms(supplierType);
+         SmsInvocationHandler smsInvocationHandler = SmsInvocationHandler.newSmsInvocationHandler(
+                 sms,
+                 BeanFactory.getSmsConfig()
+         );
+         return (SmsBlend) Proxy.newProxyInstance(
+                 sms.getClass().getClassLoader(),
+                 new Class[]{SmsBlend.class},
+                 smsInvocationHandler
+         );
+     }
 }

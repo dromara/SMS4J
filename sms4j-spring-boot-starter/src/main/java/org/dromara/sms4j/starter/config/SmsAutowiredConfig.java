@@ -13,21 +13,15 @@ import org.dromara.sms4j.core.SupplierSqlConfig;
 import org.dromara.sms4j.core.config.SupplierFactory;
 import org.dromara.sms4j.starter.aop.RestrictedProcessImpl;
 import org.dromara.sms4j.starter.utils.ConfigUtil;
-import org.dromara.sms4j.starter.utils.SmsRedisUtils;
 import org.dromara.sms4j.starter.utils.SmsSpringUtil;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 
 import javax.annotation.PostConstruct;
-import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.Executor;
 
 
@@ -76,15 +70,15 @@ public class SmsAutowiredConfig {
         return new SupplierConfig();
     }
 
-    @Bean
-    @ConditionalOnProperty(prefix = "sms", name = "config-type", havingValue = "sql_config")
-    protected SupplierSqlConfig supplierSqlConfig(SmsSqlConfig smsSqlConfig) throws SQLException {
-        DataSource bean = SmsSpringUtil.getBean(DataSource.class);
-        if (!Objects.isNull(bean)){
-            BeanFactory.getJDBCTool().setConnection(bean.getConnection());
-        }
-        return new SupplierSqlConfig();
-    }
+//    @Bean
+//    @ConditionalOnProperty(prefix = "sms", name = "config-type", havingValue = "sql_config")
+//    protected SupplierSqlConfig supplierSqlConfig(SmsSqlConfig smsSqlConfig) throws SQLException {
+//        DataSource bean = SmsSpringUtil.getBean(DataSource.class);
+//        if (!Objects.isNull(bean)){
+//            BeanFactory.getJDBCTool().setConnection(bean.getConnection());
+//        }
+//        return new SupplierSqlConfig();
+//    }
 
     @PostConstruct
     void init(){

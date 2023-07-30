@@ -12,7 +12,7 @@ import org.dromara.sms4j.cloopen.config.CloopenConfig;
 import org.dromara.sms4j.comm.config.SmsConfig;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.factory.BeanFactory;
-import org.dromara.sms4j.core.config.SupplierFactory;
+import org.dromara.sms4j.core.factory.SmsFactory;
 import org.dromara.sms4j.emay.config.EmayConfig;
 import org.dromara.sms4j.huawei.config.HuaweiConfig;
 import org.dromara.sms4j.javase.util.YamlUtil;
@@ -43,118 +43,6 @@ public class SEInitializer {
      */
     public SEInitializer initSmsConfig(SmsConfig smsConfig) {
         BeanUtil.copyProperties(smsConfig, BeanFactory.getSmsConfig());
-        return this;
-    }
-
-    /**
-     * 初始化阿里配置
-     *
-     * @param alibabaConfig 阿里配置
-     * @return 当前初始化类实例
-     */
-    public SEInitializer initAlibaba(AlibabaConfig alibabaConfig) {
-        BeanUtil.copyProperties(alibabaConfig, SupplierFactory.getAlibabaConfig());
-        return this;
-    }
-
-    /**
-     * 初始化容连云配置
-     *
-     * @param cloopenConfig 容连云配置
-     * @return 当前初始化类实例
-     */
-    public SEInitializer initCloopen(CloopenConfig cloopenConfig) {
-        BeanUtil.copyProperties(cloopenConfig, SupplierFactory.getCloopenConfig());
-        return this;
-    }
-
-    /**
-     * 初始化亿美软通配置
-     *
-     * @param emayConfig 亿美软通配置
-     * @return 当前初始化类实例
-     */
-    public SEInitializer initEmay(EmayConfig emayConfig) {
-        BeanUtil.copyProperties(emayConfig, SupplierFactory.getEmayConfig());
-        return this;
-    }
-
-    /**
-     * 初始化华为配置
-     *
-     * @param huaweiConfig 华为配置
-     * @return 当前初始化类实例
-     */
-    public SEInitializer initHuawei(HuaweiConfig huaweiConfig) {
-        BeanUtil.copyProperties(huaweiConfig, SupplierFactory.getHuaweiConfig());
-        return this;
-    }
-
-    /**
-     * 初始化京东配置
-     *
-     * @param jdCloudConfig 京东配置
-     * @return 当前初始化类实例
-     */
-    public SEInitializer initJdCloud(JdCloudConfig jdCloudConfig) {
-        BeanUtil.copyProperties(jdCloudConfig, SupplierFactory.getJdCloudConfig());
-        return this;
-    }
-
-    /**
-     * 初始化腾讯配置
-     *
-     * @param tencentConfig 腾讯配置
-     * @return 当前初始化类实例
-     */
-    public SEInitializer initTencent(TencentConfig tencentConfig) {
-        BeanUtil.copyProperties(tencentConfig, SupplierFactory.getTencentConfig());
-        return this;
-    }
-
-    /**
-     * 初始化合一配置
-     *
-     * @param uniConfig 合一配置
-     * @return 当前初始化类实例
-     */
-    public SEInitializer initUniSms(UniConfig uniConfig) {
-        BeanUtil.copyProperties(uniConfig, SupplierFactory.getUniConfig());
-        return this;
-    }
-
-    /**
-     * 初始化云片配置
-     *
-     * @param yunpianConfig 云片配置
-     * @return 当前初始化类实例
-     */
-    public SEInitializer initYunpian(YunpianConfig yunpianConfig) {
-        BeanUtil.copyProperties(yunpianConfig, SupplierFactory.getYunpianConfig());
-        return this;
-    }
-
-    /**
-     * initializer
-     * <p>初始化网易云短信配置
-     *
-     * @return 当前初始化类实例
-     * @author :Wind
-     */
-    public SEInitializer initNetase(NeteaseConfig neteaseConfig) {
-        BeanUtil.copyProperties(neteaseConfig, SupplierFactory.getNeteaseConfig());
-        return this;
-    }
-
-    /**
-     * initZhuTong
-     * <p>初始化助通短信配置
-     *
-     * @return 当前初始化类实例
-     * @author :Wind
-     */
-    public SEInitializer initZhuTong(ZhutongConfig zhutongConfig) {
-        BeanUtil.copyProperties(zhutongConfig, SupplierFactory.getZhutongConfig());
         return this;
     }
 
@@ -202,43 +90,43 @@ public class SEInitializer {
         this.initSmsConfig(smsConfig);
         AlibabaConfig alibabaConfig = smsConfig.getAlibaba();
         if (alibabaConfig != null) {
-            this.initAlibaba(alibabaConfig);
+            SmsFactory.createSmsBlend(alibabaConfig);
         }
         CloopenConfig cloopenConfig = smsConfig.getCloopen();
         if (cloopenConfig != null) {
-            this.initCloopen(cloopenConfig);
+            SmsFactory.createSmsBlend(cloopenConfig);
         }
         EmayConfig emayConfig = smsConfig.getEmay();
         if (emayConfig != null) {
-            this.initEmay(emayConfig);
+            SmsFactory.createSmsBlend(emayConfig);
         }
         HuaweiConfig huaweiConfig = smsConfig.getHuawei();
         if (huaweiConfig != null) {
-            this.initHuawei(huaweiConfig);
+            SmsFactory.createSmsBlend(huaweiConfig);
         }
         JdCloudConfig jdCloudConfig = smsConfig.getJdCloud();
         if (jdCloudConfig != null) {
-            this.initJdCloud(jdCloudConfig);
+            SmsFactory.createSmsBlend(jdCloudConfig);
         }
         TencentConfig tencentConfig = smsConfig.getTencent();
         if (tencentConfig != null) {
-            this.initTencent(tencentConfig);
+            SmsFactory.createSmsBlend(tencentConfig);
         }
         UniConfig uniConfig = smsConfig.getUni();
         if (uniConfig != null) {
-            this.initUniSms(uniConfig);
+            SmsFactory.createSmsBlend(uniConfig);
         }
         YunpianConfig yunpianConfig = smsConfig.getYunpian();
         if (yunpianConfig != null) {
-            this.initYunpian(yunpianConfig);
+            SmsFactory.createSmsBlend(yunpianConfig);
         }
         NeteaseConfig neteaseConfig = smsConfig.getNeteaseConfig();
         if (neteaseConfig != null){
-            this.initNetase(neteaseConfig);
+            SmsFactory.createSmsBlend(neteaseConfig);
         }
         ZhutongConfig zhutongConfig = smsConfig.getZhutongConfig();
         if (zhutongConfig != null){
-            this.initZhuTong(zhutongConfig);
+            SmsFactory.createSmsBlend(zhutongConfig);
         }
     }
 

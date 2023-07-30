@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.dromara.sms4j.api.universal.SupplierConfig;
+import org.dromara.sms4j.netease.service.NeteaseSmsImpl;
 import org.dromara.sms4j.provider.config.BaseConfig;
 
 /**
@@ -15,7 +15,7 @@ import org.dromara.sms4j.provider.config.BaseConfig;
 @Data
 @SuperBuilder
 @NoArgsConstructor
-public class NeteaseConfig extends BaseConfig implements SupplierConfig {
+public class NeteaseConfig extends BaseConfig {
 
     /**
      * 模板变量名称
@@ -46,5 +46,15 @@ public class NeteaseConfig extends BaseConfig implements SupplierConfig {
      * 说明：如果开通了短信上行抄送功能，该参数需要设置为true，其它情况设置无效
      */
     private Boolean needUp;
+
+    /**
+     * 获取供应商
+     *
+     * @since 3.0.0
+     */
+    @Override
+    public String getSupplier() {
+        return NeteaseSmsImpl.SUPPLIER;
+    }
 
 }

@@ -1,17 +1,12 @@
 package org.dromara.sms4j.starter.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.sms4j.api.smsProxy.SmsInvocationHandler;
-import org.dromara.sms4j.api.universal.SmsRedisUtil;
 import org.dromara.sms4j.comm.config.SmsBanner;
 import org.dromara.sms4j.comm.config.SmsConfig;
 import org.dromara.sms4j.comm.config.SmsSqlConfig;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.factory.BeanFactory;
-import org.dromara.sms4j.core.SupplierSqlConfig;
-import org.dromara.sms4j.core.config.SupplierFactory;
-import org.dromara.sms4j.starter.aop.RestrictedProcessImpl;
 import org.dromara.sms4j.starter.utils.ConfigUtil;
 import org.dromara.sms4j.starter.utils.SmsSpringUtil;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -21,7 +16,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 
 import javax.annotation.PostConstruct;
-import java.util.Map;
 import java.util.concurrent.Executor;
 
 
@@ -82,20 +76,20 @@ public class SmsAutowiredConfig {
 
     @PostConstruct
     void init(){
-        /* 如果配置中启用了redis，则注入redis工具*/
-        if (BeanFactory.getSmsConfig().getRedisCache()){
-            //如果用户没有实现RedisUtil接口则注入默认的实现
-            if (!SmsSpringUtil.interfaceExist(SmsRedisUtil.class)){
-                smsSpringUtil.createBean(SmsRedisUtils.class);
-            }
-            SmsInvocationHandler.setRestrictedProcess(new RestrictedProcessImpl());
-            log.debug("The redis cache is enabled for sms4j");
-        }
-        // 将spring中存在的所有配置，设置到配置工厂，并添加至负载均衡器
-        Map<String, org.dromara.sms4j.api.universal.SupplierConfig> beansOfType = SmsSpringUtil.getBeansOfType(org.dromara.sms4j.api.universal.SupplierConfig.class);
-        for (org.dromara.sms4j.api.universal.SupplierConfig s : beansOfType.values()) {
-            SupplierFactory.setSupplierConfig(s);
-        }
+        // /* 如果配置中启用了redis，则注入redis工具*/
+        // if (BeanFactory.getSmsConfig().getRedisCache()){
+        //     //如果用户没有实现RedisUtil接口则注入默认的实现
+        //     if (!SmsSpringUtil.interfaceExist(SmsRedisUtil.class)){
+        //         smsSpringUtil.createBean(SmsRedisUtils.class);
+        //     }
+        //     SmsInvocationHandler.setRestrictedProcess(new RestrictedProcessImpl());
+        //     log.debug("The redis cache is enabled for sms4j");
+        // }
+        // // 将spring中存在的所有配置，设置到配置工厂，并添加至负载均衡器
+        // Map<String, org.dromara.sms4j.api.universal.SupplierConfig> beansOfType = SmsSpringUtil.getBeansOfType(org.dromara.sms4j.api.universal.SupplierConfig.class);
+        // for (org.dromara.sms4j.api.universal.SupplierConfig s : beansOfType.values()) {
+        //     SupplierFactory.setSupplierConfig(s);
+        // }
         //打印banner
         if (BeanFactory.getSmsConfig().getIsPrint()){
             SmsBanner.PrintBanner(Constant.VERSION);

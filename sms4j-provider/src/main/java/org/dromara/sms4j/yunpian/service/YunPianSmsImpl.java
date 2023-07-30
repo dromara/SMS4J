@@ -4,13 +4,13 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtil;
+import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import org.dromara.sms4j.yunpian.config.YunpianConfig;
 
 import java.util.HashMap;
@@ -22,14 +22,22 @@ import java.util.concurrent.Executor;
 /**
  * @author wind
  */
-public class YunPianSmsImpl extends AbstractSmsBlend {
+public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
+
+    public static final String SUPPLIER = "yunpian";
 
     public YunPianSmsImpl(YunpianConfig config, Executor pool, DelayedTime delayed) {
-        super(pool, delayed);
-        this.config = config;
+        super(config, pool, delayed);
     }
 
-    private final YunpianConfig config;
+    public YunPianSmsImpl(YunpianConfig config) {
+        super(config);
+    }
+
+    @Override
+    public String getSupplier() {
+        return SUPPLIER;
+    }
 
     private SmsResponse getResponse(JSONObject execute) {
         SmsResponse smsResponse = new SmsResponse();
@@ -39,14 +47,14 @@ public class YunPianSmsImpl extends AbstractSmsBlend {
         }
         smsResponse.setSuccess(execute.getInt("code") == 0);
         smsResponse.setData(execute);
-        smsResponse.setConfigId(this.config.getConfigId());
+        smsResponse.setConfigId(getConfigId());
         return smsResponse;
     }
 
     @Override
     @Restricted
     public SmsResponse sendMessage(String phone, String message) {
-        Map<String, String> body = setBody(phone, message, null, config.getTemplateId());
+        Map<String, String> body = setBody(phone, message, null, getConfig().getTemplateId());
         return getSendResponse(body);
     }
 
@@ -93,15 +101,15 @@ public class YunPianSmsImpl extends AbstractSmsBlend {
         if (mes.isEmpty()) {
             message = messages;
         } else {
-            message.put(config.getTemplateName(), mes);
+            message.put(getConfig().getTemplateName(), mes);
         }
         Map<String, String> body = new HashMap<>();
-        body.put("apikey", config.getAccessKeyId());
+        body.put("apikey", getConfig().getAccessKeyId());
         body.put("mobile", phone);
         body.put("tpl_id", tplId);
         body.put("tpl_value", formattingMap(message));
-        if (config.getCallbackUrl() != null && !config.getCallbackUrl().isEmpty())
-            body.put("callback_url", config.getCallbackUrl());
+        if (getConfig().getCallbackUrl() != null && !getConfig().getCallbackUrl().isEmpty())
+            body.put("callback_url", getConfig().getCallbackUrl());
         return body;
     }
 

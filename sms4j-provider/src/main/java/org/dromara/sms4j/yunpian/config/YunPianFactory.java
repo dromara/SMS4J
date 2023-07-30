@@ -1,20 +1,18 @@
 package org.dromara.sms4j.yunpian.config;
 
-import org.dromara.sms4j.comm.factory.BeanFactory;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.dromara.sms4j.provider.factory.BaseProviderFactory;
+import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 import org.dromara.sms4j.yunpian.service.YunPianSmsImpl;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class YunPianFactory implements BaseProviderFactory<YunPianSmsImpl, YunpianConfig> {
-
-    private static YunPianSmsImpl yunpianSmsImpl;
 
     private static final YunPianFactory INSTANCE = new YunPianFactory();
 
-    private static final class ConfigHolder {
-        private static YunpianConfig config = YunpianConfig.builder().build();
-    }
-
-    private YunPianFactory() {
+    static {
+        ProviderFactoryHolder.registerFactory(INSTANCE);
     }
 
     /**
@@ -30,40 +28,17 @@ public class YunPianFactory implements BaseProviderFactory<YunPianSmsImpl, Yunpi
      */
     @Override
     public YunPianSmsImpl createSms(YunpianConfig yunpianConfig){
-        if (yunpianSmsImpl == null){
-            yunpianSmsImpl = createMultitonSms(yunpianConfig);
-        }
-        return yunpianSmsImpl;
-    }
-
-    @Override
-    public YunPianSmsImpl createMultitonSms(YunpianConfig yunpianConfig) {
-        return new YunPianSmsImpl(yunpianConfig, BeanFactory.getExecutor(), BeanFactory.getDelayedTime());
-    }
-
-    /** 刷新对象*/
-    @Override
-    public YunPianSmsImpl refresh(YunpianConfig yunpianConfig){
-        yunpianSmsImpl = new YunPianSmsImpl(yunpianConfig, BeanFactory.getExecutor(), BeanFactory.getDelayedTime());
-        return yunpianSmsImpl;
+        return new YunPianSmsImpl(yunpianConfig);
     }
 
     /**
-     * 获取配置
-     * @return 配置对象
+     * 获取供应商
+     *
+     * @since 3.0.0
      */
     @Override
-    public YunpianConfig getConfig() {
-        return ConfigHolder.config;
-    }
-
-    /**
-     * 设置配置
-     * @param config 配置对象
-     */
-    @Override
-    public void setConfig(YunpianConfig config) {
-        ConfigHolder.config = config;
+    public String getSupplier() {
+        return YunPianSmsImpl.SUPPLIER;
     }
 
 }

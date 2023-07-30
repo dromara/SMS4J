@@ -1,19 +1,17 @@
 package org.dromara.sms4j.zhutong.config;
 
-import org.dromara.sms4j.comm.factory.BeanFactory;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.dromara.sms4j.provider.factory.BaseProviderFactory;
+import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 import org.dromara.sms4j.zhutong.service.ZhutongSmsImpl;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ZhutongFactory implements BaseProviderFactory<ZhutongSmsImpl, ZhutongConfig> {
-    private static ZhutongSmsImpl ZhutongSmsImpl;
-
     private static final ZhutongFactory INSTANCE = new ZhutongFactory();
 
-    private static final class ConfigHolder {
-        private static ZhutongConfig config = ZhutongConfig.builder().build();
-    }
-
-    private ZhutongFactory() {
+    static {
+        ProviderFactoryHolder.registerFactory(INSTANCE);
     }
 
     /**
@@ -28,40 +26,18 @@ public class ZhutongFactory implements BaseProviderFactory<ZhutongSmsImpl, Zhuto
      * 建造一个助通短信实现
      */
     @Override
-    public ZhutongSmsImpl createSms(ZhutongConfig ZhutongConfig){
-        if (ZhutongSmsImpl == null){
-            ZhutongSmsImpl = createMultitonSms(ZhutongConfig);
-        }
-        return ZhutongSmsImpl;
-    }
-
-    @Override
-    public ZhutongSmsImpl createMultitonSms(ZhutongConfig zhutongConfig) {
-        return new ZhutongSmsImpl(zhutongConfig, BeanFactory.getExecutor(), BeanFactory.getDelayedTime());
-    }
-
-    /** 刷新对象*/
-    @Override
-    public ZhutongSmsImpl refresh(ZhutongConfig zhutongConfig){
-        ZhutongSmsImpl = new ZhutongSmsImpl(zhutongConfig, BeanFactory.getExecutor(), BeanFactory.getDelayedTime());
-        return ZhutongSmsImpl;
+    public ZhutongSmsImpl createSms(ZhutongConfig zhutongConfig){
+        return new ZhutongSmsImpl(zhutongConfig);
     }
 
     /**
-     * 获取配置
-     * @return 配置对象
+     * 获取供应商
+     *
+     * @since 3.0.0
      */
     @Override
-    public ZhutongConfig getConfig() {
-        return ZhutongFactory.ConfigHolder.config;
+    public String getSupplier() {
+        return ZhutongSmsImpl.SUPPLIER;
     }
 
-    /**
-     * 设置配置
-     * @param config 配置对象
-     */
-    @Override
-    public void setConfig(ZhutongConfig config) {
-        ZhutongFactory.ConfigHolder.config = config;
-    }
 }

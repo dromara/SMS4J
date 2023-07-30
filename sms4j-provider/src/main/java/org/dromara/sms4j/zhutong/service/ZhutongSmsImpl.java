@@ -11,12 +11,12 @@ import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
+import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import org.dromara.sms4j.zhutong.config.ZhutongConfig;
 
 import java.util.HashMap;
@@ -31,22 +31,35 @@ import java.util.concurrent.Executor;
  * <p>2. 模板短信发送  需定义模板   https://doc.zthysms.com/web/#/1/13
  */
 @Slf4j
-public class ZhutongSmsImpl extends AbstractSmsBlend {
+public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
 
-    private final ZhutongConfig config;
+    public static final String SUPPLIER = "zhutong";
 
     /**
      * ZhutongSmsImpl
      * <p>构造器，用于构造短信实现模块
      */
     public ZhutongSmsImpl(ZhutongConfig zhutongConfig, Executor pool, DelayedTime delayedTime) {
-        super(pool, delayedTime);
-        this.config = zhutongConfig;
+        super(zhutongConfig, pool, delayedTime);
+    }
+
+    /**
+     * ZhutongSmsImpl
+     * <p>构造器，用于构造短信实现模块
+     */
+    public ZhutongSmsImpl(ZhutongConfig zhutongConfig) {
+        super(zhutongConfig);
+    }
+
+    @Override
+    public String getSupplier() {
+        return SUPPLIER;
     }
 
     @Override
     @Restricted
     public SmsResponse sendMessage(String phone, String message) {
+        ZhutongConfig config = getConfig();
         //如果模板id为空 or 模板变量名称为空，使用无模板的自定义短信发送
         if (StrUtil.hasBlank(config.getSignature(), config.getTemplateId(), config.getTemplateName())) {
             return getSmsResponse(phone, message);
@@ -66,6 +79,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend {
     @Override
     @Restricted
     public SmsResponse massTexting(List<String> phones, String message) {
+        ZhutongConfig config = getConfig();
         //如果模板id为空 or 模板变量名称为空，使用无模板的自定义短信发送
         if (StrUtil.hasBlank(config.getSignature(), config.getTemplateId(), config.getTemplateName())) {
             return getSmsResponse(phones, message);
@@ -86,6 +100,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend {
      * 发送 自定义短信：https://doc.zthysms.com/web/#/1/14
      */
     protected SmsResponse getSmsResponse(List<String> phones, String content) {
+        ZhutongConfig config = getConfig();
         String requestUrl = config.getRequestUrl();
         String username = config.getAccessKeyId();
         String password = config.getAccessKeySecret();
@@ -139,6 +154,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend {
      * 发送 模板短信：https://doc.zthysms.com/web/#/1/13
      */
     protected SmsResponse getSmsResponseTemplate(String templateId, List<String> phones, LinkedHashMap<String, String> messages) {
+        ZhutongConfig config = getConfig();
         String requestUrl = config.getRequestUrl();
         String username = config.getAccessKeyId();
         String password = config.getAccessKeySecret();
@@ -211,7 +227,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend {
         SmsResponse smsResponse = new SmsResponse();
         smsResponse.setSuccess(jsonObject.getInt("code", -1) <= 200);
         smsResponse.setData(jsonObject);
-        smsResponse.setConfigId(this.config.getConfigId());
+        smsResponse.setConfigId(getConfigId());
         return smsResponse;
     }
 

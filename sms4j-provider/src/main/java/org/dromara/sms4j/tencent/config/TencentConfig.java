@@ -6,15 +6,15 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.provider.config.BaseConfig;
+import org.dromara.sms4j.tencent.service.TencentSmsImpl;
 
 @Data
 @SuperBuilder
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class TencentConfig extends BaseConfig implements SupplierConfig {
+public class TencentConfig extends BaseConfig {
 
     /**
      * 短信sdkAppId
@@ -52,4 +52,15 @@ public class TencentConfig extends BaseConfig implements SupplierConfig {
      */
     @Builder.Default
     private String service = "sms";
+
+    /**
+     * 获取供应商
+     *
+     * @since 3.0.0
+     */
+    @Override
+    public String getSupplier() {
+        return TencentSmsImpl.SUPPLIER;
+    }
+
 }

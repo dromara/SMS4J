@@ -19,39 +19,15 @@ public interface BaseProviderFactory<S extends SmsBlend, C extends SupplierConfi
     S createSms(C c);
 
     /**
-     * 校验是否支持指定的config类
-     * @param config config类
-     * @return 是否支持
+     * 创建配置对象
+     * @return
      */
-    boolean supports(Class<?> config);
+    C createConfig();
 
-    // /**
-    //  *  createMultitonSms
-    //  * <p> 创建多例的短信实现对象
-    //  * 在此方法中创建的短信实现对象框架将不再持有单例，故而JVM中可以同时存在多个，如果更改配置后需要重新调用该方法
-    //  * @param c 短信配置对象
-    //  * @return 短信实现对象
-    //  * @author :Wind
-    // */
-    // S createMultitonSms(C c);
-    //
-    // /**
-    //  * 刷新短信实现对象
-    //  * @param c 短信配置对象
-    //  * @return 刷新后的短信实现对象
-    //  */
-    // S refresh(C c);
-    //
-    // /**
-    //  * 获取配置
-    //  * @return 配置对象
-    //  */
-    // C getConfig();
-    //
-    // /**
-    //  * 设置配置
-    //  * @param config 配置对象
-    //  */
-    // void setConfig(C config);
+    /**
+     * 获取供应商
+     * @return 供应商
+     */
+    String getSupplier();
 
 }

@@ -2,7 +2,6 @@ package org.dromara.sms4j.starter.config;
 
 import org.dromara.sms4j.aliyun.config.AlibabaConfig;
 import org.dromara.sms4j.cloopen.config.CloopenConfig;
-import org.dromara.sms4j.core.config.SupplierFactory;
 import org.dromara.sms4j.ctyun.config.CtyunConfig;
 import org.dromara.sms4j.emay.config.EmayConfig;
 import org.dromara.sms4j.huawei.config.HuaweiConfig;
@@ -24,7 +23,7 @@ public class SupplierConfig {
     @Bean
     @ConfigurationProperties(prefix = "sms.alibaba")
     protected AlibabaConfig alibabaConfig() {
-        return SupplierFactory.getAlibabaConfig();
+        return AlibabaConfig.builder().build();
     }
 
     /**
@@ -33,7 +32,7 @@ public class SupplierConfig {
     @Bean
     @ConfigurationProperties(prefix = "sms.huawei")
     protected HuaweiConfig huaweiConfig() {
-        return SupplierFactory.getHuaweiConfig();
+        return HuaweiConfig.builder().build();
     }
 
     /**
@@ -42,7 +41,7 @@ public class SupplierConfig {
     @Bean
     @ConfigurationProperties(prefix = "sms.yunpian")
     protected YunpianConfig yunpianConfig() {
-        return SupplierFactory.getYunpianConfig();
+        return YunpianConfig.builder().build();
     }
 
     /**
@@ -51,7 +50,7 @@ public class SupplierConfig {
     @Bean
     @ConfigurationProperties(prefix = "sms.uni")
     protected UniConfig uniConfig() {
-        return SupplierFactory.getUniConfig();
+        return UniConfig.builder().build();
     }
 
     /**
@@ -60,7 +59,7 @@ public class SupplierConfig {
     @Bean
     @ConfigurationProperties(prefix = "sms.tencent")
     protected TencentConfig tencentConfig() {
-        return SupplierFactory.getTencentConfig();
+        return TencentConfig.builder().build();
     }
 
     /**
@@ -69,7 +68,7 @@ public class SupplierConfig {
     @Bean
     @ConfigurationProperties(prefix = "sms.jdcloud")
     protected JdCloudConfig jdCloudConfig() {
-        return SupplierFactory.getJdCloudConfig();
+        return JdCloudConfig.builder().build();
     }
 
     /**
@@ -78,7 +77,7 @@ public class SupplierConfig {
     @Bean
     @ConfigurationProperties(prefix = "sms.cloopen")
     protected CloopenConfig cloopenConfig() {
-        return SupplierFactory.getCloopenConfig();
+        return CloopenConfig.builder().build();
     }
 
     /**
@@ -87,7 +86,7 @@ public class SupplierConfig {
     @Bean
     @ConfigurationProperties(prefix = "sms.emay")
     protected EmayConfig emayConfig() {
-        return SupplierFactory.getEmayConfig();
+        return EmayConfig.builder().build();
     }
 
     /**
@@ -96,7 +95,7 @@ public class SupplierConfig {
     @Bean
     @ConfigurationProperties(prefix = "sms.ctyun")
     protected CtyunConfig ctyunConfig() {
-        return SupplierFactory.getCtyunConfig();
+        return CtyunConfig.builder().build();
     }
 
 
@@ -106,7 +105,7 @@ public class SupplierConfig {
     @Bean
     @ConfigurationProperties(prefix = "sms.netease")
     protected NeteaseConfig neteaseConfig() {
-        return SupplierFactory.getNeteaseConfig();
+        return NeteaseConfig.builder().build();
     }
 
     /**
@@ -115,6 +114,6 @@ public class SupplierConfig {
     @Bean
     @ConfigurationProperties(prefix = "sms.zhutong")
     protected ZhutongConfig zhutongConfig() {
-        return SupplierFactory.getZhutongConfig();
+        return ZhutongConfig.builder().build();
     }
 }

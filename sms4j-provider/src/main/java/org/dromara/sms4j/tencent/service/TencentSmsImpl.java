@@ -6,13 +6,13 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.jdcloud.sdk.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtil;
+import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import org.dromara.sms4j.tencent.config.TencentConfig;
 import org.dromara.sms4j.tencent.utils.TencentUtils;
 
@@ -26,13 +26,21 @@ import java.util.concurrent.Executor;
  * @author wind
  */
 @Slf4j
-public class TencentSmsImpl extends AbstractSmsBlend {
+public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
 
-    private final TencentConfig config;
+    public static final String SUPPLIER = "alibaba";
 
     public TencentSmsImpl(TencentConfig tencentSmsConfig, Executor pool, DelayedTime delayed) {
-        super(pool, delayed);
-        this.config = tencentSmsConfig;
+        super(tencentSmsConfig, pool, delayed);
+    }
+
+    public TencentSmsImpl(TencentConfig tencentSmsConfig) {
+        super(tencentSmsConfig);
+    }
+
+    @Override
+    public String getSupplier() {
+        return SUPPLIER;
     }
 
     @Override
@@ -43,7 +51,7 @@ public class TencentSmsImpl extends AbstractSmsBlend {
         for (int i = 0; i < split.length; i++) {
             map.put(String.valueOf(i), split[i]);
         }
-        return sendMessage(phone, config.getTemplateId(), map);
+        return sendMessage(phone, getConfig().getTemplateId(), map);
     }
 
     @Override
@@ -65,7 +73,7 @@ public class TencentSmsImpl extends AbstractSmsBlend {
         for (int i = 0; i < split.length; i++) {
             map.put(String.valueOf(i), split[i]);
         }
-        return massTexting(phones, config.getTemplateId(), map);
+        return massTexting(phones, getConfig().getTemplateId(), map);
     }
 
     @Override
@@ -83,16 +91,16 @@ public class TencentSmsImpl extends AbstractSmsBlend {
         String timestamp = String.valueOf(System.currentTimeMillis() / 1000);
         String signature;
         try {
-            signature = TencentUtils.generateSignature(this.config, templateId, messages, phones, timestamp);
+            signature = TencentUtils.generateSignature(this.getConfig(), templateId, messages, phones, timestamp);
         } catch (Exception e) {
             log.error("tencent send message error", e);
             throw new SmsBlendException(e.getMessage());
         }
-        Map<String, String> headsMap = TencentUtils.generateHeadsMap(signature, timestamp, config.getAction(),
-                config.getVersion(), config.getTerritory(), config.getRequestUrl());
-        Map<String, Object> requestBody = TencentUtils.generateRequestBody(phones, config.getSdkAppId(),
-                config.getSignature(), templateId, messages);
-        String url = Constant.HTTPS_PREFIX + config.getRequestUrl();
+        Map<String, String> headsMap = TencentUtils.generateHeadsMap(signature, timestamp, getConfig().getAction(),
+                getConfig().getVersion(), getConfig().getTerritory(), getConfig().getRequestUrl());
+        Map<String, Object> requestBody = TencentUtils.generateRequestBody(phones, getConfig().getSdkAppId(),
+                getConfig().getSignature(), templateId, messages);
+        String url = Constant.HTTPS_PREFIX + getConfig().getRequestUrl();
         try(HttpResponse response = HttpRequest.post(url)
                 .addHeaders(headsMap)
                 .body(JSONUtil.toJsonStr(requestBody))
@@ -108,7 +116,7 @@ public class TencentSmsImpl extends AbstractSmsBlend {
         String error = response.getStr("Error");
         smsResponse.setSuccess(StringUtils.isBlank(error));
         smsResponse.setData(resJson);
-        smsResponse.setConfigId(this.config.getConfigId());
+        smsResponse.setConfigId(getConfigId());
         return smsResponse;
     }
 }

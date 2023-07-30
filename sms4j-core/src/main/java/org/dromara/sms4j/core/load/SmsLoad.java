@@ -3,11 +3,8 @@ package org.dromara.sms4j.core.load;
 import cn.hutool.core.bean.BeanUtil;
 import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.universal.SupplierConfig;
-import org.dromara.sms4j.provider.enumerate.SupplierType;
-import org.dromara.sms4j.provider.factory.BaseProviderFactory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,9 +18,6 @@ import java.util.Map;
 public class SmsLoad {
     // 服务器列表，每个服务器有一个权重和当前权重
     private final List<LoadServer> LoadServers = new ArrayList<>();
-
-    // 实例列表
-    private static final Map<Object, SmsBlend> smsBlendMap = new HashMap<>();
 
     private static final SmsLoad smsLoad = new SmsLoad();
 
@@ -96,13 +90,11 @@ public class SmsLoad {
      * starConfig
      * <p> 创建smsBlend并加入到负载均衡器
      *
+     * @param smsBlend 短信服务
      * @param supplierConfig 厂商配置
-     * @param supplierType   厂商枚举
      * @author :Wind
      */
-    public static void starConfig(SupplierConfig supplierConfig, SupplierType supplierType) {
-        BaseProviderFactory providerFactory = supplierType.getProviderFactory();
-        SmsBlend smsBlend = providerFactory.createMultitonSms(supplierConfig);
+    public static void starConfig(SmsBlend smsBlend, SupplierConfig supplierConfig) {
         Map<String, Object> supplierConfigMap = BeanUtil.beanToMap(supplierConfig);
         Object weight = supplierConfigMap.getOrDefault("weight", 1);
         smsLoad.addLoadServer(smsBlend, Integer.parseInt(weight.toString()));

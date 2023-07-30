@@ -21,7 +21,10 @@ public class ProviderFactoryHolder {
     }
 
     public static BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig> requireForConfig(SupplierConfig config) {
-        return factories.stream().filter(f -> f.supports(config.getClass())).findFirst().orElse(null);
+        return factories.stream()
+                .filter(f -> f.getSupplier().equals(config.getSupplier()))
+                .findFirst()
+                .orElse(null);
     }
 
 }

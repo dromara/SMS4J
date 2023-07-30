@@ -7,13 +7,12 @@ import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.aliyun.config.AlibabaConfig;
 import org.dromara.sms4j.aliyun.utils.AliyunUtils;
-import org.dromara.sms4j.comm.constant.SupplierConstant;
-import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtil;
+import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -27,9 +26,9 @@ import java.util.concurrent.Executor;
  * 2023/3/26  17:16
  **/
 @Slf4j
-public class AlibabaSmsImpl extends AbstractSmsBlend {
+public class AlibabaSmsImpl extends AbstractSmsBlend<AlibabaConfig> {
 
-    private final AlibabaConfig config;
+    public static final String SUPPLIER = "alibaba";
 
     /**
      * AlibabaSmsImpl
@@ -37,22 +36,29 @@ public class AlibabaSmsImpl extends AbstractSmsBlend {
      *
      * @author :Wind
      */
-    public AlibabaSmsImpl(String configId, AlibabaConfig config, Executor pool, DelayedTime delayedTime) {
-        super(configId, pool, delayedTime);
-        this.config = config;
+    public AlibabaSmsImpl(AlibabaConfig config, Executor pool, DelayedTime delayedTime) {
+        super(config, pool, delayedTime);
+    }
+
+    /**
+     * AlibabaSmsImpl
+     * <p>构造器，用于构造短信实现模块
+     */
+    public AlibabaSmsImpl(AlibabaConfig config) {
+        super(config);
     }
 
     @Override
     public String getSupplier() {
-        return SupplierConstant.ALIBABA;
+        return SUPPLIER;
     }
 
     @Override
     @Restricted
     public SmsResponse sendMessage(String phone, String message) {
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
-        map.put(config.getTemplateName(), message);
-        return sendMessage(phone, config.getTemplateId(), map);
+        map.put(getConfig().getTemplateName(), message);
+        return sendMessage(phone, getConfig().getTemplateId(), map);
     }
 
     @Override
@@ -66,8 +72,8 @@ public class AlibabaSmsImpl extends AbstractSmsBlend {
     @Restricted
     public SmsResponse massTexting(List<String> phones, String message) {
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
-        map.put(config.getTemplateName(), message);
-        return massTexting(phones, config.getTemplateId(), map);
+        map.put(getConfig().getTemplateName(), message);
+        return massTexting(phones, getConfig().getTemplateId(), map);
     }
 
     @Override
@@ -81,8 +87,8 @@ public class AlibabaSmsImpl extends AbstractSmsBlend {
         String requestUrl;
         String paramStr;
         try {
-            requestUrl = AliyunUtils.generateSendSmsRequestUrl(this.config, message, phone, templateId);
-            paramStr = AliyunUtils.generateParamBody(config, phone, message, templateId);
+            requestUrl = AliyunUtils.generateSendSmsRequestUrl(getConfig(), message, phone, templateId);
+            paramStr = AliyunUtils.generateParamBody(getConfig(), phone, message, templateId);
         } catch (Exception e) {
             log.error("aliyun send message error", e);
             throw new SmsBlendException(e.getMessage());
@@ -101,7 +107,7 @@ public class AlibabaSmsImpl extends AbstractSmsBlend {
         SmsResponse smsResponse = new SmsResponse();
         smsResponse.setSuccess("OK".equals(resJson.getStr("Code")));
         smsResponse.setData(resJson);
-        smsResponse.setConfigId(this.config.getConfigId());
+        smsResponse.setConfigId(getConfigId());
         return smsResponse;
     }
 

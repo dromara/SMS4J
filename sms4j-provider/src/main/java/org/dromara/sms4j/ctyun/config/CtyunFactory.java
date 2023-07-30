@@ -1,9 +1,10 @@
 package org.dromara.sms4j.ctyun.config;
 
-import lombok.extern.slf4j.Slf4j;
-import org.dromara.sms4j.comm.factory.BeanFactory;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.dromara.sms4j.ctyun.service.CtyunSmsImpl;
 import org.dromara.sms4j.provider.factory.BaseProviderFactory;
+import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 
 /**
  * <p>类名: CtyunSmsConfig
@@ -12,18 +13,13 @@ import org.dromara.sms4j.provider.factory.BaseProviderFactory;
  * @author :bleachhtred
  * 2023/5/12  15:06
  **/
-@Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CtyunFactory implements BaseProviderFactory<CtyunSmsImpl, CtyunConfig> {
-
-    private static CtyunSmsImpl ctyunSms;
 
     private static final CtyunFactory INSTANCE = new CtyunFactory();
 
-    private static final class ConfigHolder {
-        private static CtyunConfig config = CtyunConfig.builder().build();
-    }
-
-    private CtyunFactory() {
+    static {
+        ProviderFactoryHolder.registerFactory(INSTANCE);
     }
 
     /**
@@ -42,45 +38,16 @@ public class CtyunFactory implements BaseProviderFactory<CtyunSmsImpl, CtyunConf
      */
     @Override
     public CtyunSmsImpl createSms(CtyunConfig ctyunConfig) {
-        if (ctyunSms == null) {
-            ctyunSms = createMultitonSms(ctyunConfig);
-        }
-        return ctyunSms;
-    }
-
-    @Override
-    public CtyunSmsImpl createMultitonSms(CtyunConfig ctyunConfig) {
-        return new CtyunSmsImpl(ctyunConfig, BeanFactory.getExecutor(), BeanFactory.getDelayedTime());
+        return new CtyunSmsImpl(ctyunConfig);
     }
 
     /**
-     * refresh
-     * <p> 刷新对象
-     *
-     * @author :bleachhtred
+     * 获取供应商
+     * @return 供应商
      */
     @Override
-    public CtyunSmsImpl refresh(CtyunConfig ctyunConfig) {
-        //重新构造一个实现对象
-        ctyunSms = new CtyunSmsImpl( ctyunConfig, BeanFactory.getExecutor(), BeanFactory.getDelayedTime());
-        return ctyunSms;
+    public String getSupplier() {
+        return CtyunSmsImpl.SUPPLIER;
     }
 
-    /**
-     * 获取配置
-     * @return 配置对象
-     */
-    @Override
-    public CtyunConfig getConfig() {
-        return ConfigHolder.config;
-    }
-
-    /**
-     * 设置配置
-     * @param config 配置对象
-     */
-    @Override
-    public void setConfig(CtyunConfig config) {
-        ConfigHolder.config = config;
-    }
 }

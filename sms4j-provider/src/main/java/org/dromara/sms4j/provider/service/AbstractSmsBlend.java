@@ -1,12 +1,15 @@
 package org.dromara.sms4j.provider.service;
 
+import cn.hutool.core.util.StrUtil;
 import lombok.Getter;
 import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.callback.CallBack;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.factory.BeanFactory;
+import org.dromara.sms4j.provider.config.BaseConfig;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -14,24 +17,32 @@ import java.util.TimerTask;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-public abstract class AbstractSmsBlend implements SmsBlend {
+public abstract class AbstractSmsBlend<C extends SupplierConfig> implements SmsBlend {
 
     @Getter
     private final String configId;
 
+    private final C config;
+
     protected final Executor pool;
     protected final DelayedTime delayed;
 
-    protected AbstractSmsBlend(String configId, Executor pool, DelayedTime delayed) {
-        this.configId = configId;
+    protected AbstractSmsBlend(C config, Executor pool, DelayedTime delayed) {
+        this.configId = StrUtil.isEmpty(config.getConfigId()) ? getSupplier() : config.getConfigId();
+        this.config = config;
         this.pool = pool;
         this.delayed = delayed;
     }
 
-    protected AbstractSmsBlend(String configId) {
-        this.configId = configId;
+    protected AbstractSmsBlend(C config) {
+        this.configId = StrUtil.isEmpty(config.getConfigId()) ? getSupplier() : config.getConfigId();
+        this.config = config;
         this.pool = BeanFactory.getExecutor();
         this.delayed = BeanFactory.getDelayedTime();
+    }
+
+    protected C getConfig() {
+        return config;
     }
 
     /**

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.dromara.sms4j.api.universal.SupplierConfig;
+import org.dromara.sms4j.emay.service.EmaySmsImpl;
 
 /**
  * @author Richard
@@ -17,6 +18,7 @@ import org.dromara.sms4j.api.universal.SupplierConfig;
 @EqualsAndHashCode
 @NoArgsConstructor
 public class EmayConfig implements SupplierConfig {
+
     /** appKey*/
     private String appId ;
     /** appSecret */
@@ -30,4 +32,15 @@ public class EmayConfig implements SupplierConfig {
      * @since 3.0.0
      */
     private String configId;
+
+    /**
+     * 获取供应商
+     *
+     * @since 3.0.0
+     */
+    @Override
+    public String getSupplier() {
+        return EmaySmsImpl.SUPPLIER;
+    }
+
 }

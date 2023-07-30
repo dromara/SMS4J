@@ -6,8 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.provider.config.BaseConfig;
+import org.dromara.sms4j.zhutong.service.ZhutongSmsImpl;
 
 /**
  * 助通-自定义短信发送-配置
@@ -24,7 +24,7 @@ import org.dromara.sms4j.provider.config.BaseConfig;
 @SuperBuilder
 @ToString(callSuper = true)
 @NoArgsConstructor
-public class ZhutongConfig extends BaseConfig implements SupplierConfig  {
+public class ZhutongConfig extends BaseConfig  {
     /**
      * 模板变量名称
      * 查看地址：https://mix2.zthysms.com/index.html#/TemplateManagement
@@ -37,4 +37,15 @@ public class ZhutongConfig extends BaseConfig implements SupplierConfig  {
      */
     @Builder.Default
     private String requestUrl = "https://api.mix2.zthysms.com/";
+
+    /**
+     * 获取供应商
+     *
+     * @since 3.0.0
+     */
+    @Override
+    public String getSupplier() {
+        return ZhutongSmsImpl.SUPPLIER;
+    }
+
 }

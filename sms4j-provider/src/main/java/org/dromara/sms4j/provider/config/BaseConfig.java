@@ -15,7 +15,7 @@ import org.dromara.sms4j.api.universal.SupplierConfig;
 @Data
 @SuperBuilder
 @NoArgsConstructor
-public class BaseConfig implements SupplierConfig {
+public abstract class BaseConfig implements SupplierConfig {
 
     /**
      * Access Key
@@ -49,4 +49,5 @@ public class BaseConfig implements SupplierConfig {
      * @since 3.0.0
      */
     private String configId;
+
 }

@@ -1,8 +1,11 @@
 package org.dromara.sms4j.huawei.config;
 
-import org.dromara.sms4j.comm.factory.BeanFactory;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.dromara.sms4j.aliyun.service.AlibabaSmsImpl;
 import org.dromara.sms4j.huawei.service.HuaweiSmsImpl;
 import org.dromara.sms4j.provider.factory.BaseProviderFactory;
+import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 
 /**
  * HuaweiSmsConfig
@@ -11,15 +14,13 @@ import org.dromara.sms4j.provider.factory.BaseProviderFactory;
  * @author :Wind
  * 2023/4/8  15:27
  **/
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class HuaweiFactory implements BaseProviderFactory<HuaweiSmsImpl, HuaweiConfig> {
-    private static HuaweiSmsImpl huaweiSms;
+
     private static final HuaweiFactory INSTANCE = new HuaweiFactory();
 
-    private static final class ConfigHolder {
-        private static HuaweiConfig config = HuaweiConfig.builder().build();
-    }
-
-    private HuaweiFactory() {
+    static {
+        ProviderFactoryHolder.registerFactory(INSTANCE);
     }
 
     /**
@@ -33,40 +34,16 @@ public class HuaweiFactory implements BaseProviderFactory<HuaweiSmsImpl, HuaweiC
     /** 建造一个华为短信实现*/
     @Override
     public HuaweiSmsImpl createSms(HuaweiConfig huaweiConfig) {
-        if (huaweiSms == null){
-            huaweiSms = createMultitonSms(huaweiConfig);
-        }
-        return huaweiSms;
-    }
-
-    @Override
-    public HuaweiSmsImpl createMultitonSms(HuaweiConfig huaweiConfig) {
-        return new HuaweiSmsImpl(huaweiConfig, BeanFactory.getExecutor(),BeanFactory.getDelayedTime());
-    }
-
-    /** 刷新对象*/
-    @Override
-    public HuaweiSmsImpl refresh(HuaweiConfig huaweiConfig){
-        huaweiSms = new HuaweiSmsImpl(huaweiConfig, BeanFactory.getExecutor(),BeanFactory.getDelayedTime());
-        return huaweiSms;
+        return new HuaweiSmsImpl(huaweiConfig);
     }
 
     /**
-     * 获取配置
-     * @return 配置对象
+     * 获取供应商
+     * @return 供应商
      */
     @Override
-    public HuaweiConfig getConfig() {
-        return ConfigHolder.config;
-    }
-
-    /**
-     * 设置配置
-     * @param config 配置对象
-     */
-    @Override
-    public void setConfig(HuaweiConfig config) {
-        ConfigHolder.config = config;
+    public String getSupplier() {
+        return AlibabaSmsImpl.SUPPLIER;
     }
 
 }

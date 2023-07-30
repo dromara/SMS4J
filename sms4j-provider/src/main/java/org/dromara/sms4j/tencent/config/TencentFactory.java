@@ -1,7 +1,7 @@
 package org.dromara.sms4j.tencent.config;
 
-import org.dromara.sms4j.comm.factory.BeanFactory;
 import org.dromara.sms4j.provider.factory.BaseProviderFactory;
+import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 import org.dromara.sms4j.tencent.service.TencentSmsImpl;
 
 /**
@@ -13,15 +13,10 @@ import org.dromara.sms4j.tencent.service.TencentSmsImpl;
  **/
 public class TencentFactory implements BaseProviderFactory<TencentSmsImpl, TencentConfig> {
 
-    private static TencentSmsImpl tencentSms;
-
     private static final TencentFactory INSTANCE = new TencentFactory();
 
-    private static final class ConfigHolder {
-        private static TencentConfig config = TencentConfig.builder().build();
-    }
-
-    private TencentFactory() {
+    static {
+        ProviderFactoryHolder.registerFactory(INSTANCE);
     }
 
     /**
@@ -37,44 +32,17 @@ public class TencentFactory implements BaseProviderFactory<TencentSmsImpl, Tence
      */
     @Override
     public TencentSmsImpl createSms(TencentConfig tencentConfig) {
-        if (tencentSms == null) {
-            tencentSms = createMultitonSms(tencentConfig);
-        }
-        return tencentSms;
-    }
-
-    @Override
-    public TencentSmsImpl createMultitonSms(TencentConfig tencentConfig) {
-        return new TencentSmsImpl(tencentConfig, BeanFactory.getExecutor(), BeanFactory.getDelayedTime()
-        );
+        return new TencentSmsImpl(tencentConfig);
     }
 
     /**
-     * 刷新对象
+     * 获取供应商
+     *
+     * @since 3.0.0
      */
     @Override
-    public TencentSmsImpl refresh(TencentConfig tencentConfig) {
-        tencentSms = new TencentSmsImpl(tencentConfig, BeanFactory.getExecutor(), BeanFactory.getDelayedTime()
-        );
-        return tencentSms;
-    }
-
-    /**
-     * 获取配置
-     * @return 配置对象
-     */
-    @Override
-    public TencentConfig getConfig() {
-        return ConfigHolder.config;
-    }
-
-    /**
-     * 设置配置
-     * @param config 配置对象
-     */
-    @Override
-    public void setConfig(TencentConfig config) {
-        ConfigHolder.config = config;
+    public String getSupplier() {
+        return TencentSmsImpl.SUPPLIER;
     }
 
 }

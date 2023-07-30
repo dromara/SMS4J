@@ -5,7 +5,6 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
@@ -13,6 +12,7 @@ import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtil;
 import org.dromara.sms4j.emay.config.EmayConfig;
 import org.dromara.sms4j.emay.util.EmayBuilder;
+import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -25,21 +25,30 @@ import java.util.concurrent.Executor;
  * @date 2023-04-11 12:00
  */
 @Slf4j
-public class EmaySmsImpl extends AbstractSmsBlend {
+public class EmaySmsImpl extends AbstractSmsBlend<EmayConfig> {
+
+    public static final String SUPPLIER = "emay";
+
     public EmaySmsImpl(EmayConfig config, Executor pool, DelayedTime delayed) {
-        super(pool, delayed);
-        this.config = config;
+        super(config, pool, delayed);
     }
 
-    private final EmayConfig config;
+    public EmaySmsImpl(EmayConfig config) {
+        super(config);
+    }
+
+    @Override
+    public String getSupplier() {
+        return SUPPLIER;
+    }
 
     @Override
     @Restricted
     public SmsResponse sendMessage(String phone, String message) {
-        String url = config.getRequestUrl();
+        String url = getConfig().getRequestUrl();
         Map<String, Object> params;
         try {
-            params = EmayBuilder.buildRequestBody(config.getAppId(), config.getSecretKey(), phone, message);
+            params = EmayBuilder.buildRequestBody(getConfig().getAppId(), getConfig().getSecretKey(), phone, message);
         } catch (SmsBlendException e) {
             SmsResponse smsResponse = new SmsResponse();
             smsResponse.setSuccess(false);
@@ -94,7 +103,7 @@ public class EmaySmsImpl extends AbstractSmsBlend {
         SmsResponse smsResponse = new SmsResponse();
         smsResponse.setSuccess("success".equalsIgnoreCase(resJson.getStr("code")));
         smsResponse.setData(resJson);
-        smsResponse.setConfigId(this.config.getConfigId());
+        smsResponse.setConfigId(getConfigId());
         return smsResponse;
     }
 

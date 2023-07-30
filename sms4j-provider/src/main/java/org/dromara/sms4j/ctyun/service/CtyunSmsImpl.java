@@ -5,7 +5,6 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
@@ -13,6 +12,7 @@ import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtil;
 import org.dromara.sms4j.ctyun.config.CtyunConfig;
 import org.dromara.sms4j.ctyun.utils.CtyunUtils;
+import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -26,21 +26,29 @@ import java.util.concurrent.Executor;
  * 2023/5/12  15:06
  **/
 @Slf4j
-public class CtyunSmsImpl extends AbstractSmsBlend {
+public class CtyunSmsImpl extends AbstractSmsBlend<CtyunConfig> {
 
-    private final CtyunConfig config;
+    public static final String SUPPLIER = "ctyun";
 
     public CtyunSmsImpl(CtyunConfig config, Executor pool, DelayedTime delayedTime) {
-        super(pool, delayedTime);
-        this.config = config;
+        super(config, pool, delayedTime);
+    }
+
+    public CtyunSmsImpl(CtyunConfig config) {
+        super(config);
+    }
+
+    @Override
+    public String getSupplier() {
+        return SUPPLIER;
     }
 
     @Override
     @Restricted
     public SmsResponse sendMessage(String phone, String message) {
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
-        map.put(config.getTemplateName(), message);
-        return sendMessage(phone, config.getTemplateId(), map);
+        map.put(getConfig().getTemplateName(), message);
+        return sendMessage(phone, getConfig().getTemplateId(), map);
     }
 
     @Override
@@ -54,8 +62,8 @@ public class CtyunSmsImpl extends AbstractSmsBlend {
     @Restricted
     public SmsResponse massTexting(List<String> phones, String message) {
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
-        map.put(config.getTemplateName(), message);
-        return massTexting(phones, config.getTemplateId(), map);
+        map.put(getConfig().getTemplateName(), message);
+        return massTexting(phones, getConfig().getTemplateId(), map);
     }
 
     @Override
@@ -69,15 +77,15 @@ public class CtyunSmsImpl extends AbstractSmsBlend {
         String requestUrl;
         String paramStr;
         try {
-            requestUrl = config.getRequestUrl();
-            paramStr = CtyunUtils.generateParamJsonStr(config, phone, message, templateId);
+            requestUrl = getConfig().getRequestUrl();
+            paramStr = CtyunUtils.generateParamJsonStr(getConfig(), phone, message, templateId);
         } catch (Exception e) {
             log.error("ctyun send message error", e);
             throw new SmsBlendException(e.getMessage());
         }
         log.debug("requestUrl {}", requestUrl);
         try(HttpResponse response = HttpRequest.post(requestUrl)
-                .addHeaders(CtyunUtils.signHeader(paramStr, config.getAccessKeyId(), config.getAccessKeySecret()))
+                .addHeaders(CtyunUtils.signHeader(paramStr, getConfig().getAccessKeyId(), getConfig().getAccessKeySecret()))
                 .body(paramStr)
                 .execute()){
             JSONObject body = JSONUtil.parseObj(response.body());
@@ -89,7 +97,7 @@ public class CtyunSmsImpl extends AbstractSmsBlend {
         SmsResponse smsResponse = new SmsResponse();
         smsResponse.setSuccess("OK".equals(resJson.getStr("code")));
         smsResponse.setData(resJson);
-        smsResponse.setConfigId(this.config.getConfigId());
+        smsResponse.setConfigId(getConfigId());
         return smsResponse;
     }
 

@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.dromara.sms4j.api.universal.SupplierConfig;
+import org.dromara.sms4j.ctyun.service.CtyunSmsImpl;
 import org.dromara.sms4j.provider.config.BaseConfig;
 
 /**
@@ -21,7 +21,7 @@ import org.dromara.sms4j.provider.config.BaseConfig;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class CtyunConfig extends BaseConfig implements SupplierConfig {
+public class CtyunConfig extends BaseConfig {
 
     /**
      * 模板变量名称
@@ -39,4 +39,14 @@ public class CtyunConfig extends BaseConfig implements SupplierConfig {
      */
     @Builder.Default
     private String action = "SendSms";
+
+    /**
+     * 获取供应商
+     *
+     * @since 3.0.0
+     */
+    @Override
+    public String getSupplier() {
+        return CtyunSmsImpl.SUPPLIER;
+    }
 }

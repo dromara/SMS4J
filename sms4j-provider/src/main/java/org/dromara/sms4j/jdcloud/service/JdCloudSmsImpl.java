@@ -5,12 +5,12 @@ import com.jdcloud.sdk.service.sms.client.SmsClient;
 import com.jdcloud.sdk.service.sms.model.BatchSendRequest;
 import com.jdcloud.sdk.service.sms.model.BatchSendResult;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.jdcloud.config.JdCloudConfig;
+import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -25,16 +25,25 @@ import java.util.stream.Collectors;
  * @since 2023/4/10 20:01
  */
 @Slf4j
-public class JdCloudSmsImpl extends AbstractSmsBlend {
+public class JdCloudSmsImpl extends AbstractSmsBlend<JdCloudConfig> {
+
+    public static final String SUPPLIER = "jdCloud";
 
     private final SmsClient client;
 
-    private final JdCloudConfig config;
-
     public JdCloudSmsImpl(SmsClient client, JdCloudConfig config, Executor pool, DelayedTime delayed) {
-        super(pool, delayed);
+        super(config, pool, delayed);
         this.client = client;
-        this.config = config;
+    }
+
+    public JdCloudSmsImpl(SmsClient client, JdCloudConfig config) {
+        super(config);
+        this.client = client;
+    }
+
+    @Override
+    public String getSupplier() {
+        return SUPPLIER;
     }
 
     @Override
@@ -54,7 +63,7 @@ public class JdCloudSmsImpl extends AbstractSmsBlend {
     public SmsResponse massTexting(List<String> phones, String message) {
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
         map.put(IdUtil.fastSimpleUUID(), message);
-        return massTexting(phones, config.getTemplateId(), map);
+        return massTexting(phones, getConfig().getTemplateId(), map);
     }
 
     @Override
@@ -63,9 +72,9 @@ public class JdCloudSmsImpl extends AbstractSmsBlend {
         try {
             BatchSendRequest request = new BatchSendRequest();
             request.setPhoneList(phones);
-            request.setRegionId(config.getRegion());
+            request.setRegionId(getConfig().getRegion());
             request.setTemplateId(templateId);
-            request.setSignId(config.getSignature());
+            request.setSignId(getConfig().getSignature());
             List<String> params = messages.keySet().stream().map(messages::get)
                     .collect(Collectors.toList());
             request.setParams(params);
@@ -87,7 +96,7 @@ public class JdCloudSmsImpl extends AbstractSmsBlend {
         SmsResponse smsResponse = new SmsResponse();
         smsResponse.setSuccess(res.getStatus() != null && res.getStatus());
         smsResponse.setData(res);
-        smsResponse.setConfigId(this.config.getConfigId());
+        smsResponse.setConfigId(getConfigId());
         return smsResponse;
     }
 }

@@ -8,13 +8,13 @@ import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.netease.config.NeteaseConfig;
 import org.dromara.sms4j.netease.utils.NeteaseUtils;
+import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -31,13 +31,21 @@ import java.util.concurrent.Executor;
  */
 
 @Slf4j
-public class NeteaseSmsImpl extends AbstractSmsBlend {
+public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
 
-    private NeteaseConfig config;
+    public static final String SUPPLIER = "netease";
 
     public NeteaseSmsImpl(NeteaseConfig config, Executor pool, DelayedTime delayed) {
-        super(pool, delayed);
-        this.config = config;
+        super(config, pool, delayed);
+    }
+
+    public NeteaseSmsImpl(NeteaseConfig config) {
+        super(config);
+    }
+
+    @Override
+    public String getSupplier() {
+        return SUPPLIER;
     }
 
     /**
@@ -49,8 +57,8 @@ public class NeteaseSmsImpl extends AbstractSmsBlend {
     @Restricted
     public SmsResponse sendMessage(String phone, String message) {
         Optional.ofNullable(phone).orElseThrow(() -> new SmsBlendException("手机号不能为空"));
-        Optional.ofNullable(config.getTemplateId()).orElseThrow(() -> new SmsBlendException("模板ID不能为空"));
-        return getSmsResponse(config.getTemplateUrl(), Collections.singletonList(phone), message, config.getTemplateId());
+        Optional.ofNullable(getConfig().getTemplateId()).orElseThrow(() -> new SmsBlendException("模板ID不能为空"));
+        return getSmsResponse(getConfig().getTemplateUrl(), Collections.singletonList(phone), message, getConfig().getTemplateId());
     }
 
 
@@ -64,9 +72,9 @@ public class NeteaseSmsImpl extends AbstractSmsBlend {
     @Restricted
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
         Optional.ofNullable(phone).orElseThrow(() -> new SmsBlendException("手机号不能为空"));
-        Optional.ofNullable(config.getTemplateId()).orElseThrow(() -> new SmsBlendException("模板ID不能为空"));
+        Optional.ofNullable(getConfig().getTemplateId()).orElseThrow(() -> new SmsBlendException("模板ID不能为空"));
         String messageStr = messages.get("params");
-        return getSmsResponse(config.getTemplateUrl(), Collections.singletonList(phone), messageStr, templateId);
+        return getSmsResponse(getConfig().getTemplateUrl(), Collections.singletonList(phone), messageStr, templateId);
     }
 
     @Override
@@ -78,8 +86,8 @@ public class NeteaseSmsImpl extends AbstractSmsBlend {
         if (phones.size() > 100) {
             throw new SmsBlendException("单次发送超过最大发送上限，建议每次群发短信人数低于100");
         }
-        Optional.ofNullable(config.getTemplateId()).orElseThrow(() -> new SmsBlendException("模板ID不能为空"));
-        return getSmsResponse(config.getTemplateUrl(), phones, config.getTemplateId(), message);
+        Optional.ofNullable(getConfig().getTemplateId()).orElseThrow(() -> new SmsBlendException("模板ID不能为空"));
+        return getSmsResponse(getConfig().getTemplateUrl(), phones, getConfig().getTemplateId(), message);
     }
 
     @Override
@@ -88,25 +96,25 @@ public class NeteaseSmsImpl extends AbstractSmsBlend {
         if (phones.size() > 100) {
             throw new SmsBlendException("单次发送超过最大发送上限，建议每次群发短信人数低于100");
         }
-        Optional.ofNullable(config.getTemplateId()).orElseThrow(() -> new SmsBlendException("模板ID不能为空"));
+        Optional.ofNullable(getConfig().getTemplateId()).orElseThrow(() -> new SmsBlendException("模板ID不能为空"));
         String messageStr = messages.get("message");
-        return getSmsResponse(config.getTemplateUrl(), phones, messageStr, templateId);
+        return getSmsResponse(getConfig().getTemplateUrl(), phones, messageStr, templateId);
     }
 
     private SmsResponse getSmsResponse(String requestUrl, List<String> phones, String message, String templateId) {
         String nonce = IdUtil.fastSimpleUUID();
         String curTime = String.valueOf(DateUtil.currentSeconds());
-        String checkSum = NeteaseUtils.getCheckSum(config.getAccessKeySecret(), nonce, curTime);
+        String checkSum = NeteaseUtils.getCheckSum(getConfig().getAccessKeySecret(), nonce, curTime);
         Map<String, Object> body = new LinkedHashMap<>(4);
         body.put("templateid", templateId);
         JSONArray jsonArray = JSONUtil.createArray();
         jsonArray.addAll(phones);
         body.put("mobiles", jsonArray.toString());
         body.put("params", message);
-        body.put("needUp", config.getNeedUp());
+        body.put("needUp", getConfig().getNeedUp());
         try(HttpResponse response = HttpRequest.post(requestUrl)
                 .header("Content-Type", "application/x-www-form-urlencoded")
-                .header("AppKey", config.getAccessKeyId())
+                .header("AppKey", getConfig().getAccessKeyId())
                 .header("Nonce", nonce)
                 .header("CurTime", curTime)
                 .header("CheckSum", checkSum)
@@ -121,7 +129,7 @@ public class NeteaseSmsImpl extends AbstractSmsBlend {
         SmsResponse smsResponse = new SmsResponse();
         smsResponse.setSuccess(jsonObject.getInt("code") <= 200);
         smsResponse.setData(jsonObject);
-        smsResponse.setConfigId(this.config.getConfigId());
+        smsResponse.setConfigId(getConfigId());
         return smsResponse;
     }
 

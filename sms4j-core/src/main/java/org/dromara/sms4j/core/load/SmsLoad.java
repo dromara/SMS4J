@@ -100,6 +100,10 @@ public class SmsLoad {
         smsLoad.addLoadServer(smsBlend, Integer.parseInt(weight.toString()));
     }
 
+    public static void starConfig(SmsBlend smsBlend,Integer weight) {
+        smsLoad.addLoadServer(smsBlend,weight);
+    }
+
     public static SmsLoad getBeanLoad() {
         return smsLoad;
     }

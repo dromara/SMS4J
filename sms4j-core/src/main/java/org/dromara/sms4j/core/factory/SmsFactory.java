@@ -40,7 +40,7 @@ public abstract class SmsFactory {
 
     /**
      * createSmsBlend
-     * <p>获取各个厂商的实现类
+     * <p>创建各个厂商的实现类
      *
      * @param config 短信配置
      * @author :Wind
@@ -55,13 +55,14 @@ public abstract class SmsFactory {
     /**
      * createSmsBlend
      * <p> 创建一个指定厂商开启短信拦截后的实例，isRestricted为true时，创建出来的实例带有短信拦截性质，拦截的参数取决于配置文件
-     * @param config 短信配置
+     *
+     * @param config       短信配置
      * @param isRestricted 是否为开启了短信拦截的实例
      * @author :Wind
-    */
+     */
     public static SmsBlend createSmsBlend(SupplierConfig config, Boolean isRestricted) {
         SmsBlend sms = create(config);
-        if(isRestricted){
+        if (isRestricted) {
             sms = renderWithRestricted(sms);
         }
         register(sms);
@@ -71,26 +72,25 @@ public abstract class SmsFactory {
 
     private static SmsBlend create(SupplierConfig config) {
         BaseProviderFactory factory = ProviderFactoryHolder.requireForConfig(config);
-        if(factory == null) {
+        if (factory == null) {
             throw new SmsBlendException("不支持当前供应商配置");
         }
         return factory.createSms(config);
     }
 
+    /**
+     *  renderWithRestricted
+     * <p>  构建smsBlend对象的代理对象
+     * @author :Wind
+    */
     private static SmsBlend renderWithRestricted(SmsBlend sms) {
-        SmsInvocationHandler smsInvocationHandler = SmsInvocationHandler.newSmsInvocationHandler(
-                sms,
-                BeanFactory.getSmsConfig()
-        );
-        return (SmsBlend) Proxy.newProxyInstance(
-                sms.getClass().getClassLoader(),
-                new Class[]{SmsBlend.class},
-                smsInvocationHandler
-        );
+        SmsInvocationHandler smsInvocationHandler = SmsInvocationHandler.newSmsInvocationHandler(sms, BeanFactory.getSmsConfig());
+        return (SmsBlend) Proxy.newProxyInstance(sms.getClass().getClassLoader(), new Class[]{SmsBlend.class}, smsInvocationHandler);
     }
 
     /**
      * 通过configId获取短信服务对象
+     *
      * @param configId 唯一标识
      * @return 返回短信服务对象。如果未找到则返回null
      */
@@ -100,37 +100,35 @@ public abstract class SmsFactory {
 
     /**
      * 通过供应商标识获取首个短信服务对象
+     *
      * @param supplier 供应商标识
      * @return 返回短信服务对象。如果未找到则返回null
      */
     public static SmsBlend getFirstBySupplier(String supplier) {
-        if(StrUtil.isEmpty(supplier)) {
+        if (StrUtil.isEmpty(supplier)) {
             throw new SmsBlendException("供应商标识不能为空");
         }
-        return blends.values().stream()
-                .filter(smsBlend -> supplier.equals(smsBlend.getSupplier()))
-                .findFirst()
-                .orElse(null);
+        return blends.values().stream().filter(smsBlend -> supplier.equals(smsBlend.getSupplier())).findFirst().orElse(null);
     }
 
     /**
      * 通过供应商标识获取短信服务对象列表
+     *
      * @param supplier 供应商标识
      * @return 返回短信服务对象列表。如果未找到则返回空列表
      */
     public static List<SmsBlend> getListBySupplier(String supplier) {
         List<SmsBlend> list = new ArrayList<>();
-        if(StrUtil.isEmpty(supplier)) {
+        if (StrUtil.isEmpty(supplier)) {
             throw new SmsBlendException("供应商标识不能为空");
         }
-        list = blends.values().stream()
-                .filter(smsBlend -> supplier.equals(smsBlend.getSupplier()))
-                .collect(Collectors.toList());
+        list = blends.values().stream().filter(smsBlend -> supplier.equals(smsBlend.getSupplier())).collect(Collectors.toList());
         return list;
     }
 
     /**
      * 通过负载均衡服务获取短信服务对象
+     *
      * @return 返回短信服务列表
      */
     public static SmsBlend getByLoad() {
@@ -139,6 +137,7 @@ public abstract class SmsFactory {
 
     /**
      * 获取全部短信服务对象
+     *
      * @return 短信服务对象列表
      */
     public static List<SmsBlend> getAll() {
@@ -147,10 +146,11 @@ public abstract class SmsFactory {
 
     /**
      * 注册短信服务对象
+     *
      * @param smsBlend 短信服务对象
      */
     public static void register(SmsBlend smsBlend) {
-        if(smsBlend == null) {
+        if (smsBlend == null) {
             throw new SmsBlendException("短信服务对象不能为空");
         }
         blends.put(smsBlend.getConfigId(), smsBlend);
@@ -158,17 +158,18 @@ public abstract class SmsFactory {
 
     /**
      * 以configId为标识，当短信服务对象不存在时，进行注册
+     *
      * @param smsBlend 短信服务对象
      * @return 是否注册成功
      * <p>当对象不存在时，进行注册并返回true</p>
      * <p>当对象已存在时，返回false</p>
      */
     public static boolean registerIfAbsent(SmsBlend smsBlend) {
-        if(smsBlend == null) {
+        if (smsBlend == null) {
             throw new SmsBlendException("短信服务对象不能为空");
         }
         String configId = smsBlend.getConfigId();
-        if(blends.containsKey(configId)) {
+        if (blends.containsKey(configId)) {
             return false;
         }
         blends.put(configId, smsBlend);
@@ -176,7 +177,31 @@ public abstract class SmsFactory {
     }
 
     /**
+     *  registerIfAbsent
+     * <p> 以configId为标识，当短信服务对象不存在时，进行注册。并添加至系统的负载均衡器
+     * @param smsBlend 短信服务对象
+     * @param weight 权重
+     * @return 是否注册成功
+     * <p>当对象不存在时，进行注册并返回true</p>
+     * <p>当对象已存在时，返回false</p>
+     * @author :Wind
+    */
+    public static boolean registerIfAbsent(SmsBlend smsBlend,Integer weight) {
+        if (smsBlend == null) {
+            throw new SmsBlendException("短信服务对象不能为空");
+        }
+        String configId = smsBlend.getConfigId();
+        if (blends.containsKey(configId)) {
+            return false;
+        }
+        blends.put(configId, smsBlend);
+        SmsLoad.starConfig(smsBlend,weight);
+        return true;
+    }
+
+    /**
      * 注销短信服务对象
+     *<p>与此同时会注销掉负载均衡器中已经存在的对象</p>
      * @param configId 标识
      * @return 是否注销成功
      * <p>当configId存在时，进行注销并返回true</p>
@@ -184,6 +209,7 @@ public abstract class SmsFactory {
      */
     public static boolean unregister(String configId) {
         SmsBlend blend = blends.remove(configId);
+        SmsLoad.getBeanLoad().removeLoadServer(blend);
         return blend != null;
     }
 

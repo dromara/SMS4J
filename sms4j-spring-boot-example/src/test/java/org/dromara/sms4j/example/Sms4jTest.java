@@ -39,7 +39,7 @@ class Sms4jTest {
             return;
         }
         // 通过负载均衡服务获取短信服务对象
-        SmsResponse smsResponse = SmsFactory.getByLoad().sendMessage(PHONE, SmsUtil.getRandomInt(6));
+        SmsResponse smsResponse = SmsFactory.getSmsBlend().sendMessage(PHONE, SmsUtil.getRandomInt(6));
         Assert.isTrue(smsResponse.isSuccess());
     }
 

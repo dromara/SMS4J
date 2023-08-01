@@ -87,16 +87,6 @@ public abstract class SmsFactory {
     }
 
     /**
-     * 通过configId获取短信服务对象
-     *
-     * @param configId 唯一标识
-     * @return 返回短信服务对象。如果未找到则返回null
-     */
-    public static SmsBlend getByConfigId(String configId) {
-        return blends.get(configId);
-    }
-
-    /**
      * 通过供应商标识获取首个短信服务对象
      *
      * @param supplier 供应商标识
@@ -129,8 +119,18 @@ public abstract class SmsFactory {
      *
      * @return 返回短信服务列表
      */
-    public static SmsBlend getByLoad() {
+    public static SmsBlend getSmsBlend() {
         return SmsLoad.getBeanLoad().getLoadServer();
+    }
+
+    /**
+     * 通过configId获取短信服务对象
+     *
+     * @param configId 唯一标识
+     * @return 返回短信服务对象。如果未找到则返回null
+     */
+    public static SmsBlend getSmsBlend(String configId) {
+        return blends.get(configId);
     }
 
     /**

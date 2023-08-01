@@ -28,43 +28,43 @@ public class SupplierConfig {
     /** 阿里差异化配置*/
     @Bean
     public AlibabaConfig alibabaConfig(){
-        return injectObj("sms.alibaba", AlibabaConfig.builder().build());
+        return injectObj("sms.alibaba", new AlibabaConfig());
     }
 
     /** 华为差异化配置*/
     @Bean
     public HuaweiConfig huaweiConfig(){
-        return injectObj("sms.huawei", HuaweiConfig.builder().build());
+        return injectObj("sms.huawei", new HuaweiConfig());
     }
 
     /** 云片短信差异化配置*/
     @Bean
     public YunpianConfig yunpianConfig(){
-        return injectObj("sms.yunpian", YunpianConfig.builder().build());
+        return injectObj("sms.yunpian", new YunpianConfig());
     }
 
     /** 合一短信差异化配置*/
     @Bean
     public UniConfig uniConfig(){
-        return injectObj("sms.uni", UniConfig.builder().build());
+        return injectObj("sms.uni", new UniConfig());
     }
 
     /** 腾讯短信差异化配置*/
     @Bean
     public TencentConfig tencentConfig(){
-        return injectObj("sms.tencent", TencentConfig.builder().build());
+        return injectObj("sms.tencent", new TencentConfig());
     }
 
     /** 京东云短信差异化配置 */
     @Bean
     public JdCloudConfig jdCloudConfig(){
-        return injectObj("sms.jdcloud", JdCloudConfig.builder().build());
+        return injectObj("sms.jdcloud", new JdCloudConfig());
     }
 
     /** 容联云短信差异化配置 */
     @Bean
     public CloopenConfig cloopenConfig(){
-        return injectObj("sms.cloopen", CloopenConfig.builder().build());
+        return injectObj("sms.cloopen", new CloopenConfig());
     }
 
     /**
@@ -72,12 +72,12 @@ public class SupplierConfig {
      */
     @Bean
     public EmayConfig emayConfig(){
-        return injectObj("sms.emay", EmayConfig.builder().build());
+        return injectObj("sms.emay", new EmayConfig());
     }
 
     /** 天翼云短信差异化配置 */
     @Bean
     public CtyunConfig ctyunConfig(){
-        return injectObj("sms.ctyun", CtyunConfig.builder().build());
+        return injectObj("sms.ctyun", new CtyunConfig());
     }
 }

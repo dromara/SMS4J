@@ -13,8 +13,6 @@ import org.dromara.sms4j.api.universal.SupplierConfig;
  * @since 2023/4/20 23:03
  */
 @Data
-@SuperBuilder
-@NoArgsConstructor
 public abstract class BaseConfig implements SupplierConfig {
 
     /**
@@ -41,7 +39,6 @@ public abstract class BaseConfig implements SupplierConfig {
      * 权重
      * @since 3.0.0
      */
-    @Builder.Default
     private Integer weight = 1;
 
     /**

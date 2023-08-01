@@ -16,16 +16,12 @@ import org.dromara.sms4j.provider.config.BaseConfig;
  * @since 2023/4/10 20:01
  */
 @Data
-@SuperBuilder
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
 public class JdCloudConfig extends BaseConfig {
 
     /**
      * 地域信息
      */
-    @Builder.Default
     private String region = "cn-north-1";
 
     /**

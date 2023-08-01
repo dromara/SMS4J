@@ -9,10 +9,7 @@ import org.dromara.sms4j.provider.config.BaseConfig;
 import org.dromara.sms4j.yunpian.service.YunPianSmsImpl;
 
 @Data
-@SuperBuilder
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
 public class YunpianConfig extends BaseConfig {
 
     /**

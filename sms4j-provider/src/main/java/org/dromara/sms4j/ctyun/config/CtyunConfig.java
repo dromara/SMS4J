@@ -17,10 +17,7 @@ import org.dromara.sms4j.provider.config.BaseConfig;
  * 2023/5/12  15:06
  **/
 @Data
-@SuperBuilder
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
 public class CtyunConfig extends BaseConfig {
 
     /**
@@ -31,13 +28,11 @@ public class CtyunConfig extends BaseConfig {
     /**
      * 请求地址
      */
-    @Builder.Default
     private String requestUrl = "https://sms-global.ctapi.ctyun.cn/sms/api/v1";
 
     /**
      * 接口名称
      */
-    @Builder.Default
     private String action = "SendSms";
 
     /**

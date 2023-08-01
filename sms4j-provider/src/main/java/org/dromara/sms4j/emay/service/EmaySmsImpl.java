@@ -48,7 +48,7 @@ public class EmaySmsImpl extends AbstractSmsBlend<EmayConfig> {
         String url = getConfig().getRequestUrl();
         Map<String, Object> params;
         try {
-            params = EmayBuilder.buildRequestBody(getConfig().getAppId(), getConfig().getSecretKey(), phone, message);
+            params = EmayBuilder.buildRequestBody(getConfig().getAccessKeyId(), getConfig().getAccessKeySecret(), phone, message);
         } catch (SmsBlendException e) {
             SmsResponse smsResponse = new SmsResponse();
             smsResponse.setSuccess(false);

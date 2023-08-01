@@ -10,16 +10,12 @@ import org.dromara.sms4j.provider.config.BaseConfig;
 import org.dromara.sms4j.unisms.service.UniSmsImpl;
 
 @Data
-@SuperBuilder
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
 public class UniConfig extends BaseConfig {
 
     /**
      * 是否为简易模式
      */
-    @Builder.Default
     private Boolean isSimple = true;
 
     /**

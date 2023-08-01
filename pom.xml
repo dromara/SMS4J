@@ -131,6 +131,7 @@
                 <groupId>com.jdcloud.sdk</groupId>
                 <artifactId>sms</artifactId>
                 <version>${jdcloud.version}</version>
+                <scope>provided</scope>
             </dependency>
 
             <dependency>

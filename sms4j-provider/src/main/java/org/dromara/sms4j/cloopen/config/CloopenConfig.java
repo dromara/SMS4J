@@ -16,10 +16,7 @@ import org.dromara.sms4j.provider.config.BaseConfig;
  * @since 2023/4/10 22:10
  */
 @Data
-@SuperBuilder
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
 public class CloopenConfig extends BaseConfig {
 
     /**
@@ -30,7 +27,6 @@ public class CloopenConfig extends BaseConfig {
     /**
      * REST API Base URL
      */
-    @Builder.Default
     private String baseUrl = "https://app.cloopen.com:8883/2013-12-26";
 
     /**

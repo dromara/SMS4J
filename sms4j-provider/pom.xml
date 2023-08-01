@@ -24,6 +24,7 @@
         <dependency>
             <groupId>com.jdcloud.sdk</groupId>
             <artifactId>sms</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

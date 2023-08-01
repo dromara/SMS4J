@@ -1,10 +1,6 @@
 package org.dromara.sms4j.zhutong.config;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.dromara.sms4j.provider.config.BaseConfig;
 import org.dromara.sms4j.zhutong.service.ZhutongSmsImpl;
@@ -19,11 +15,8 @@ import org.dromara.sms4j.zhutong.service.ZhutongSmsImpl;
  * 说明4：templateId      ====> 模板id可以为空，为空发送【自定义短信】无需要提前创建短信模板; 不为空发送:【模板短信】
  * 说明4：templateName    ====> 模板变量名称可以为空，为空发送【自定义短信】无需要提前创建短信模板; 不为空发送:【模板短信】
  */
-@Getter
-@Setter
-@SuperBuilder
-@ToString(callSuper = true)
-@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class ZhutongConfig extends BaseConfig  {
     /**
      * 模板变量名称
@@ -35,7 +28,6 @@ public class ZhutongConfig extends BaseConfig  {
      * 默认请求地址
      * 不同区域，可切换请求地址，也可以不修改，请参考官方文档：https://doc.zthysms.com/web/#/1/236
      */
-    @Builder.Default
     private String requestUrl = "https://api.mix2.zthysms.com/";
 
     /**

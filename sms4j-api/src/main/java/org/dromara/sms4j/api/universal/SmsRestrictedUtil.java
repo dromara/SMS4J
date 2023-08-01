@@ -2,7 +2,7 @@ package org.dromara.sms4j.api.universal;
 
 /**
  * SmsRedisUtil
- * <p> redis工具接口，用户可自主实现以更换redis的来源
+ * <p> 缓存工具接口
  *@since 2.2.0
  * @author :Wind
  * 2023/6/6  22:21
@@ -30,7 +30,7 @@ public interface SmsRestrictedUtil {
 
     /**
      *  getByKey
-     * <p>根据key获取redis中缓存的数据
+     * <p>根据key获取缓存的数据
      * @param key redis的key
      * @author :Wind
     */

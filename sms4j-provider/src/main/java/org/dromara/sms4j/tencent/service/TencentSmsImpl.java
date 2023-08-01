@@ -7,7 +7,6 @@ import cn.hutool.json.JSONUtil;
 import com.jdcloud.sdk.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
-import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
@@ -44,7 +43,6 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
     }
 
     @Override
-    @Restricted
     public SmsResponse sendMessage(String phone, String message) {
         String[] split = message.split("&");
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
@@ -55,7 +53,6 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
     }
 
     @Override
-    @Restricted
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
         List<String> list = new ArrayList<>();
         for (Map.Entry<String, String> entry : messages.entrySet()) {
@@ -66,7 +63,6 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
     }
 
     @Override
-    @Restricted
     public SmsResponse massTexting(List<String> phones, String message) {
         String[] split = message.split("&");
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
@@ -77,7 +73,6 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
     }
 
     @Override
-    @Restricted
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
         List<String> list = new ArrayList<>();
         for (Map.Entry<String, String> entry : messages.entrySet()) {

@@ -6,18 +6,13 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
-import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.huawei.config.HuaweiConfig;
 import org.dromara.sms4j.huawei.utils.HuaweiBuilder;
 import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Executor;
 
 import static org.dromara.sms4j.huawei.utils.HuaweiBuilder.listToString;
@@ -41,7 +36,6 @@ public class HuaweiSmsImpl extends AbstractSmsBlend<HuaweiConfig> {
     }
 
     @Override
-    @Restricted
     public SmsResponse sendMessage(String phone, String message) {
         LinkedHashMap<String, String> mes = new LinkedHashMap<>();
         mes.put(UUID.randomUUID().toString().replaceAll("-", ""), message);
@@ -49,7 +43,6 @@ public class HuaweiSmsImpl extends AbstractSmsBlend<HuaweiConfig> {
     }
 
     @Override
-    @Restricted
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
         String url = getConfig().getUrl() + Constant.HUAWEI_REQUEST_URL;
         List<String> list = new ArrayList<>();
@@ -60,7 +53,7 @@ public class HuaweiSmsImpl extends AbstractSmsBlend<HuaweiConfig> {
         String requestBody = HuaweiBuilder.buildRequestBody(getConfig().getSender(), phone, templateId, mess, getConfig().getStatusCallBack(), getConfig().getSignature());
         Map<String, String> headers = new LinkedHashMap<>();
         headers.put("Authorization", Constant.HUAWEI_AUTH_HEADER_VALUE);
-        headers.put("X-WSSE", HuaweiBuilder.buildWsseHeader(getConfig().getAppKey(), getConfig().getAppSecret()));
+        headers.put("X-WSSE", HuaweiBuilder.buildWsseHeader(getConfig().getAccessKeyId(), getConfig().getAccessKeySecret()));
         headers.put("Content-Type", Constant.FROM_URLENCODED);
         try(HttpResponse response = HttpRequest.post(url)
                 .addHeaders(headers)
@@ -72,13 +65,11 @@ public class HuaweiSmsImpl extends AbstractSmsBlend<HuaweiConfig> {
     }
 
     @Override
-    @Restricted
     public SmsResponse massTexting(List<String> phones, String message) {
         return sendMessage(listToString(phones), message);
     }
 
     @Override
-    @Restricted
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
         return sendMessage(listToString(phones), templateId, messages);
     }

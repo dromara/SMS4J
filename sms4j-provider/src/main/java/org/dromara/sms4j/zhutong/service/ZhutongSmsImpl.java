@@ -12,7 +12,6 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
-import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
@@ -57,7 +56,6 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
     }
 
     @Override
-    @Restricted
     public SmsResponse sendMessage(String phone, String message) {
         ZhutongConfig config = getConfig();
         //如果模板id为空 or 模板变量名称为空，使用无模板的自定义短信发送
@@ -71,13 +69,11 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
     }
 
     @Override
-    @Restricted
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
         return getSmsResponseTemplate(templateId, phone, messages);
     }
 
     @Override
-    @Restricted
     public SmsResponse massTexting(List<String> phones, String message) {
         ZhutongConfig config = getConfig();
         //如果模板id为空 or 模板变量名称为空，使用无模板的自定义短信发送
@@ -91,7 +87,6 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
     }
 
     @Override
-    @Restricted
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
         return getSmsResponseTemplate(templateId, phones, messages);
     }

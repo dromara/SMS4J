@@ -5,7 +5,6 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import org.dromara.sms4j.api.entity.SmsResponse;
-import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
@@ -52,21 +51,18 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
     }
 
     @Override
-    @Restricted
     public SmsResponse sendMessage(String phone, String message) {
         Map<String, String> body = setBody(phone, message, null, getConfig().getTemplateId());
         return getSendResponse(body);
     }
 
     @Override
-    @Restricted
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
         Map<String, String> body = setBody(phone, "", messages, templateId);
         return getSendResponse(body);
     }
 
     @Override
-    @Restricted
     public SmsResponse massTexting(List<String> phones, String message) {
         if (phones.size() > 1000) {
             throw new SmsBlendException("单次发送超过最大发送上限，建议每次群发短信人数低于1000");
@@ -75,7 +71,6 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
     }
 
     @Override
-    @Restricted
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
         if (phones.size() > 1000) {
             throw new SmsBlendException("单次发送超过最大发送上限，建议每次群发短信人数低于1000");

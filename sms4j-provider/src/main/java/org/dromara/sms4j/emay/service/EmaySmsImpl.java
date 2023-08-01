@@ -6,7 +6,6 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
-import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtil;
@@ -43,7 +42,6 @@ public class EmaySmsImpl extends AbstractSmsBlend<EmayConfig> {
     }
 
     @Override
-    @Restricted
     public SmsResponse sendMessage(String phone, String message) {
         String url = getConfig().getRequestUrl();
         Map<String, Object> params;
@@ -58,7 +56,6 @@ public class EmaySmsImpl extends AbstractSmsBlend<EmayConfig> {
     }
 
     @Override
-    @Restricted
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
         List<String> list = new ArrayList<>();
         for (Map.Entry<String, String> entry : messages.entrySet()) {
@@ -68,7 +65,6 @@ public class EmaySmsImpl extends AbstractSmsBlend<EmayConfig> {
     }
 
     @Override
-    @Restricted
     public SmsResponse massTexting(List<String> phones, String message) {
         if (phones.size() > 500) {
             throw new SmsBlendException("单次发送超过最大发送上限，建议每次群发短信人数低于500");
@@ -77,7 +73,6 @@ public class EmaySmsImpl extends AbstractSmsBlend<EmayConfig> {
     }
 
     @Override
-    @Restricted
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
         if (phones.size() > 500) {
             throw new SmsBlendException("单次发送超过最大发送上限，建议每次群发短信人数低于500");

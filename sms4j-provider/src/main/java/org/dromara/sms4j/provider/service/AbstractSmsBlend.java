@@ -6,10 +6,8 @@ import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.callback.CallBack;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.api.universal.SupplierConfig;
-import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.factory.BeanFactory;
-import org.dromara.sms4j.provider.config.BaseConfig;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -25,6 +23,7 @@ public abstract class AbstractSmsBlend<C extends SupplierConfig> implements SmsB
     private final C config;
 
     protected final Executor pool;
+
     protected final DelayedTime delayed;
 
     protected AbstractSmsBlend(C config, Executor pool, DelayedTime delayed) {
@@ -97,7 +96,6 @@ public abstract class AbstractSmsBlend<C extends SupplierConfig> implements SmsB
      * @param callBack 回调
      * @author :Wind
      */
-    @Restricted
     public final void sendMessageAsync(String phone, String message, CallBack callBack){
         CompletableFuture<SmsResponse> smsResponseCompletableFuture = CompletableFuture.supplyAsync(() -> sendMessage(phone, message), pool);
         smsResponseCompletableFuture.thenAcceptAsync(callBack::callBack);
@@ -111,7 +109,6 @@ public abstract class AbstractSmsBlend<C extends SupplierConfig> implements SmsB
      * @param message 发送内容
      * @author :Wind
      */
-    @Restricted
     public final void sendMessageAsync(String phone, String message){
         pool.execute(() -> {
             sendMessage(phone, message);
@@ -128,7 +125,6 @@ public abstract class AbstractSmsBlend<C extends SupplierConfig> implements SmsB
      * @author :Wind
      */
 
-    @Restricted
     public final void sendMessageAsync(String phone, String templateId, LinkedHashMap<String, String> messages, CallBack callBack){
         CompletableFuture<SmsResponse> smsResponseCompletableFuture = CompletableFuture.supplyAsync(() -> sendMessage(phone,templateId, messages), pool);
         smsResponseCompletableFuture.thenAcceptAsync(callBack::callBack);
@@ -142,7 +138,6 @@ public abstract class AbstractSmsBlend<C extends SupplierConfig> implements SmsB
      * @param messages   key为模板变量名称 value为模板变量值
      * @author :Wind
      */
-    @Restricted
     public final void sendMessageAsync(String phone, String templateId, LinkedHashMap<String, String> messages){
         pool.execute(() -> {
             sendMessage(phone, templateId, messages);
@@ -158,7 +153,6 @@ public abstract class AbstractSmsBlend<C extends SupplierConfig> implements SmsB
      * @param delayedTime 延迟时间
      * @author :Wind
      */
-    @Restricted
     public final void delayedMessage(String phone, String message, Long delayedTime){
         this.delayed.schedule(new TimerTask() {
             @Override
@@ -178,7 +172,6 @@ public abstract class AbstractSmsBlend<C extends SupplierConfig> implements SmsB
      * @param delayedTime 延迟的时间
      * @author :Wind
      */
-    @Restricted
     public final void delayedMessage(String phone, String templateId, LinkedHashMap<String, String> messages, Long delayedTime){
         this.delayed.schedule(new TimerTask() {
             @Override
@@ -195,7 +188,6 @@ public abstract class AbstractSmsBlend<C extends SupplierConfig> implements SmsB
      * @param phones 要群体发送的手机号码
      * @author :Wind
      */
-    @Restricted
     public final void delayMassTexting(List<String> phones, String message, Long delayedTime){
         this.delayed.schedule(new TimerTask() {
             @Override
@@ -215,7 +207,6 @@ public abstract class AbstractSmsBlend<C extends SupplierConfig> implements SmsB
      * @param delayedTime 延迟的时间
      * @author :Wind
      */
-    @Restricted
     public final void delayMassTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages, Long delayedTime){
         this.delayed.schedule(new TimerTask() {
             @Override

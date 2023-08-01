@@ -1,7 +1,8 @@
-package org.dromara.sms4j.comm.utils;
+package org.dromara.sms4j.api.smsProxy;
 
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.sms4j.api.universal.SmsRestrictedUtil;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 
 import java.io.File;
@@ -21,7 +22,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * 2023/3/25  18:26
  **/
 @Slf4j
-public class TimeExpiredPoolCache {
+public class TimeExpiredPoolCache implements SmsRestrictedUtil {
+
+    private TimeExpiredPoolCache poolCache = TimeExpiredPoolCache.getInstance();
 
     /**
      * 持久化文件格式
@@ -198,6 +201,31 @@ public class TimeExpiredPoolCache {
      */
     public void remove(String key) {
         dataPool.remove(key);
+    }
+
+    @Override
+    public boolean setOrTime(String key, Object value, Long time) {
+        try {
+            poolCache.put(key,value,time);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean set(String key, Object value) {
+        try {
+            poolCache.put(key,value,defaultCachedMillis);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return true;
+    }
+
+    @Override
+    public Object getByKey(String key) {
+        return null;
     }
 
     /**

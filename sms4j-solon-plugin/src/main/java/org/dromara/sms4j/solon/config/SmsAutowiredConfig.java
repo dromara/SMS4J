@@ -83,10 +83,6 @@ public class SmsAutowiredConfig implements LifecycleBean {
     public void start() throws Throwable {
         /* 如果配置中启用了redis，则注入redis工具*/
         if (BeanFactory.getSmsConfig().getRedisCache()) {
-            //如果容器中不存在一个已经实现的redisUtil则自己注入一个
-            if (!Solon.context().hasWrap(SmsRedisUtil.class)) {
-                Solon.context().wrapAndPut(SmsRedisUtils.class);
-            }
             SmsInvocationHandler.setRestrictedProcess(new SolonRestrictedProcess(aopContext));
             log.debug("The redis cache is enabled for sms4j");
         }

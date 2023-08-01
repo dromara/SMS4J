@@ -45,11 +45,10 @@ public abstract class SmsFactory {
      * @param config 短信配置
      * @author :Wind
      */
-    public static SmsBlend createSmsBlend(SupplierConfig config) {
+    public static void createSmsBlend(SupplierConfig config) {
         SmsBlend sms = create(config);
         register(sms);
         SmsLoad.starConfig(sms, config);
-        return sms;
     }
 
     /**
@@ -60,14 +59,13 @@ public abstract class SmsFactory {
      * @param isRestricted 是否为开启了短信拦截的实例
      * @author :Wind
      */
-    public static SmsBlend createSmsBlend(SupplierConfig config, Boolean isRestricted) {
+    public static void createSmsBlend(SupplierConfig config, Boolean isRestricted) {
         SmsBlend sms = create(config);
         if (isRestricted) {
             sms = renderWithRestricted(sms);
         }
         register(sms);
         SmsLoad.starConfig(sms, config);
-        return sms;
     }
 
     private static SmsBlend create(SupplierConfig config) {

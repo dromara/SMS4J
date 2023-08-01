@@ -39,6 +39,7 @@ public abstract class BaseConfig implements SupplierConfig {
 
     /**
      * 权重
+     * @since 3.0.0
      */
     @Builder.Default
     private Integer weight = 1;

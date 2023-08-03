@@ -49,9 +49,8 @@ public class EmayBuilder {
         params.put("appId", appId);
         params.put("timestamp", timestamp);
         params.put("sign", sign);
-        params.put("mobiles", phone);
         try {
-            params.put("content", URLEncoder.encode(message, "utf-8"));
+            params.put(phone, URLEncoder.encode(message, "utf-8"));
         } catch (Exception e) {
             log.error("EmaySmsImpl urlEncode content error", e);
             throw new SmsBlendException(e.getMessage());

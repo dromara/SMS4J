@@ -1,12 +1,9 @@
 package org.dromara.sms4j.api.smsProxy;
 
-import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.universal.SmsRestrictedUtil;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -25,62 +22,47 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TimeExpiredPoolCache implements SmsRestrictedUtil {
 
     private TimeExpiredPoolCache poolCache = TimeExpiredPoolCache.getInstance();
-
     /**
-     * 持久化文件格式
+     * 过期时间（默认 24 小时）
      */
-    private static final String FILE_TYPE = "persistence.data";
-    private static final long defaultCachedMillis = 24 * 60 * 60 * 1000L;//过期时间默认24小时
-    private static final long timerMillis = 30 * 1000L;//定时清理默认1分钟
+    private static final long DEFAULT_CACHED_MILLIS = 24 * 60 * 60 * 1000L;
+    /**
+     * 定时清理（默认 1 分钟）
+     */
+    private static final long TIMER_MILLIS = 30 * 1000L;
     /**
      * 对象池
      */
-    private static ConcurrentHashMap<String, DataWrapper<?>> dataPool = null;
+    private static ConcurrentHashMap<String, DataWrapper<?>> DATA_POOL = null;
     /**
      * 对象单例
      */
-    private static TimeExpiredPoolCache instance = null;
+    private static TimeExpiredPoolCache INSTANCE = null;
     /**
      * 定时器定时清理过期缓存
      */
-    private static final Timer timer = new Timer();
+    private static final Timer TIMER = new Timer();
 
     private TimeExpiredPoolCache() {
     }
 
     private static synchronized void syncInit() {
-        if (instance == null) {
-            instance = new TimeExpiredPoolCache();
-            dataPool = new ConcurrentHashMap<>();
+        if (INSTANCE == null) {
+            INSTANCE = new TimeExpiredPoolCache();
+            DATA_POOL = new ConcurrentHashMap<>();
             initTimer();
         }
     }
 
     public static TimeExpiredPoolCache getInstance() {
-        if (instance == null) {
+        if (INSTANCE == null) {
             syncInit();
         }
-        return instance;
+        return INSTANCE;
     }
 
-    /**
-     * 读取持久化文件
-     */
-    // private static boolean persistenceInit() {
-    //     String path = FileTool.getPath() + FILE_TYPE;
-    //     try {
-    //         DataWrapper d = JSONUtil.toBean(FileTool.readFile(path), DataWrapper.class);
-    //         if (dataPool != null) {
-    //             return true;
-    //         }
-    //     } catch (IOException e) {
-    //         log.error(e.getMessage());
-    //     }
-    //     return false;
-    // }
-
     private static void initTimer() {
-        timer.scheduleAtFixedRate(new TimerTask() {
+        TIMER.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 try {
@@ -90,29 +72,21 @@ public class TimeExpiredPoolCache implements SmsRestrictedUtil {
                     throw new SmsBlendException(e.getMessage());
                 }
             }
-        }, timerMillis, timerMillis);
+        }, TIMER_MILLIS, TIMER_MILLIS);
     }
-
-    /** 写入持久化文件*/
-    // private static void persistence() {
-    //     String path = FileTool.getPath() + FILE_TYPE;
-    //     FileTool.createFile(path);
-    //     FileTool.writeFile(new File(path), JSONUtil.toJsonStr(dataPool), false);
-    // }
 
     /**
      * 清除过期的缓存
      */
     private static void clearExpiredCaches() {
         List<String> expiredKeyList = new LinkedList<>();
-
-        for (Entry<String, DataWrapper<?>> entry : dataPool.entrySet()) {
+        for (Entry<String, DataWrapper<?>> entry : DATA_POOL.entrySet()) {
             if (entry.getValue().isExpired()) {
                 expiredKeyList.add(entry.getKey());
             }
         }
         for (String key : expiredKeyList) {
-            dataPool.remove(key);
+            DATA_POOL.remove(key);
         }
     }
 
@@ -126,7 +100,7 @@ public class TimeExpiredPoolCache implements SmsRestrictedUtil {
      */
     @SuppressWarnings("unchecked")
     public <T> T put(String key, T data, long cachedMillis, DataRenewer<T> dataRenewer) throws Exception {
-        DataWrapper<T> dataWrapper = (DataWrapper<T>) dataPool.get(key);
+        DataWrapper<T> dataWrapper = (DataWrapper<T>) DATA_POOL.get(key);
         if (data == null && dataRenewer != null) {
             data = dataRenewer.renewData();
         }
@@ -139,7 +113,7 @@ public class TimeExpiredPoolCache implements SmsRestrictedUtil {
             dataWrapper.update(data, cachedMillis);
         } else {
             dataWrapper = new DataWrapper<>(data, cachedMillis);
-            dataPool.put(key, dataWrapper);
+            DATA_POOL.put(key, dataWrapper);
         }
         return data;
     }
@@ -149,13 +123,13 @@ public class TimeExpiredPoolCache implements SmsRestrictedUtil {
      */
     @SuppressWarnings("unchecked")
     public <T> T put(String key, T data, long cachedMillis) throws Exception {
-        DataWrapper<T> dataWrapper = (DataWrapper<T>) dataPool.get(key);
+        DataWrapper<T> dataWrapper = (DataWrapper<T>) DATA_POOL.get(key);
         if (dataWrapper != null) {
             //更新
             dataWrapper.update(data, cachedMillis);
         } else {
             dataWrapper = new DataWrapper<T>(data, cachedMillis);
-            dataPool.put(key, dataWrapper);
+            DATA_POOL.put(key, dataWrapper);
         }
         return data;
     }
@@ -165,7 +139,7 @@ public class TimeExpiredPoolCache implements SmsRestrictedUtil {
      */
     @Deprecated
     public <T> T put(String key, T data, DataRenewer<T> dataRenewer) throws Exception {
-        return put(key, data, defaultCachedMillis, dataRenewer);
+        return put(key, data, DEFAULT_CACHED_MILLIS, dataRenewer);
     }
 
     /**
@@ -173,7 +147,7 @@ public class TimeExpiredPoolCache implements SmsRestrictedUtil {
      */
     @SuppressWarnings("unchecked")
     public <T> T get(String key, long cachedMillis, DataRenewer<T> dataRenewer) throws Exception {
-        DataWrapper<T> dataWrapper = (DataWrapper<T>) dataPool.get(key);
+        DataWrapper<T> dataWrapper = (DataWrapper<T>) DATA_POOL.get(key);
         if (dataWrapper != null && !dataWrapper.isExpired()) {
             return dataWrapper.data;
         }
@@ -182,31 +156,29 @@ public class TimeExpiredPoolCache implements SmsRestrictedUtil {
 
     @SuppressWarnings("unchecked")
     public <T> T get(String key) {
-        DataWrapper<T> dataWrapper = (DataWrapper<T>) dataPool.get(key);
+        DataWrapper<T> dataWrapper = (DataWrapper<T>) DATA_POOL.get(key);
         if (dataWrapper != null && !dataWrapper.isExpired()) {
             return dataWrapper.data;
         }
         return null;
     }
 
-    /**
-     * 清除缓存
-     */
-    public void clear() {
-        dataPool.clear();
+    @Override
+    public void clean() throws RuntimeException {
+        DATA_POOL.clear();
     }
 
     /**
      * 删除指定key的value
      */
     public void remove(String key) {
-        dataPool.remove(key);
+        DATA_POOL.remove(key);
     }
 
     @Override
     public boolean setOrTime(String key, Object value, Long time) {
         try {
-            poolCache.put(key,value,time);
+            poolCache.put(key, value, time);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -216,7 +188,7 @@ public class TimeExpiredPoolCache implements SmsRestrictedUtil {
     @Override
     public boolean set(String key, Object value) {
         try {
-            poolCache.put(key,value,defaultCachedMillis);
+            poolCache.put(key, value, DEFAULT_CACHED_MILLIS);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -226,11 +198,6 @@ public class TimeExpiredPoolCache implements SmsRestrictedUtil {
     @Override
     public Object getByKey(String key) {
         return null;
-    }
-
-    @Override
-    public void clean() throws RuntimeException {
-        //TODO
     }
 
     /**
@@ -281,5 +248,4 @@ public class TimeExpiredPoolCache implements SmsRestrictedUtil {
             return true;
         }
     }
-
 }

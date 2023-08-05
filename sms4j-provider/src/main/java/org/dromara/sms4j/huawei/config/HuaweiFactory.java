@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.dromara.sms4j.aliyun.service.AlibabaSmsImpl;
 import org.dromara.sms4j.huawei.service.HuaweiSmsImpl;
-import org.dromara.sms4j.provider.factory.BaseProviderFactory;
+import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 
 /**
@@ -15,7 +15,7 @@ import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
  * 2023/4/8  15:27
  **/
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class HuaweiFactory implements BaseProviderFactory<HuaweiSmsImpl, HuaweiConfig> {
+public class HuaweiFactory extends AbstractProviderFactory<HuaweiSmsImpl, HuaweiConfig> {
 
     private static final HuaweiFactory INSTANCE = new HuaweiFactory();
 

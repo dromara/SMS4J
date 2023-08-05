@@ -17,7 +17,7 @@ public interface SmsRestrictedUtil {
      * @param time 过期时间（秒级单位）
      * @author :Wind
     */
-    public boolean setOrTime(String key, Object value, Long time) throws RuntimeException;
+    boolean setOrTime(String key, Object value, Long time) throws RuntimeException;
 
     /**
      *  set
@@ -26,7 +26,7 @@ public interface SmsRestrictedUtil {
      * @param value 缓存value值
      * @author :Wind
     */
-    public boolean set(String key, Object value) throws RuntimeException;
+    boolean set(String key, Object value) throws RuntimeException;
 
     /**
      *  getByKey
@@ -34,12 +34,12 @@ public interface SmsRestrictedUtil {
      * @param key redis的key
      * @author :Wind
     */
-    public Object getByKey(String key) throws RuntimeException;
+    Object getByKey(String key) throws RuntimeException;
 
     /**
      *  clear
      * <p>清除缓存</p>
      * @author :Wind
     */
-    public void clean() throws RuntimeException;
+    void clean() throws RuntimeException;
 }

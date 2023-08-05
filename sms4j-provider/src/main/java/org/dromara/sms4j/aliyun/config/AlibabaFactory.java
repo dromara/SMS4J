@@ -3,7 +3,7 @@ package org.dromara.sms4j.aliyun.config;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.dromara.sms4j.aliyun.service.AlibabaSmsImpl;
-import org.dromara.sms4j.provider.factory.BaseProviderFactory;
+import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 
 /**
@@ -14,7 +14,7 @@ import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
  * 2023/4/8  14:54
  **/
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class AlibabaFactory implements BaseProviderFactory<AlibabaSmsImpl, AlibabaConfig> {
+public class AlibabaFactory extends AbstractProviderFactory<AlibabaSmsImpl, AlibabaConfig> {
 
     private static final AlibabaFactory INSTANCE = new AlibabaFactory();
 

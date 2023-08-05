@@ -3,7 +3,7 @@ package org.dromara.sms4j.ctyun.config;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.dromara.sms4j.ctyun.service.CtyunSmsImpl;
-import org.dromara.sms4j.provider.factory.BaseProviderFactory;
+import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 
 /**
@@ -14,7 +14,7 @@ import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
  * 2023/5/12  15:06
  **/
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class CtyunFactory implements BaseProviderFactory<CtyunSmsImpl, CtyunConfig> {
+public class CtyunFactory extends AbstractProviderFactory<CtyunSmsImpl, CtyunConfig> {
 
     private static final CtyunFactory INSTANCE = new CtyunFactory();
 

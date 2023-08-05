@@ -2,12 +2,12 @@ package org.dromara.sms4j.zhutong.config;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.dromara.sms4j.provider.factory.BaseProviderFactory;
+import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 import org.dromara.sms4j.zhutong.service.ZhutongSmsImpl;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ZhutongFactory implements BaseProviderFactory<ZhutongSmsImpl, ZhutongConfig> {
+public class ZhutongFactory extends AbstractProviderFactory<ZhutongSmsImpl, ZhutongConfig> {
     private static final ZhutongFactory INSTANCE = new ZhutongFactory();
 
     static {

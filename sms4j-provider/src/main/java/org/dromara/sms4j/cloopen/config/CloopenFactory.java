@@ -3,7 +3,7 @@ package org.dromara.sms4j.cloopen.config;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.dromara.sms4j.cloopen.service.CloopenSmsImpl;
-import org.dromara.sms4j.provider.factory.BaseProviderFactory;
+import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 
 /**
@@ -13,7 +13,7 @@ import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
  * @since 2023/4/10 22:10
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class CloopenFactory implements BaseProviderFactory<CloopenSmsImpl, CloopenConfig> {
+public class CloopenFactory extends AbstractProviderFactory<CloopenSmsImpl, CloopenConfig> {
 
     private static final CloopenFactory INSTANCE = new CloopenFactory();
 

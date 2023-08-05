@@ -2,7 +2,7 @@ package org.dromara.sms4j.unisms.config;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.dromara.sms4j.provider.factory.BaseProviderFactory;
+import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 import org.dromara.sms4j.unisms.core.Uni;
 import org.dromara.sms4j.unisms.service.UniSmsImpl;
@@ -14,7 +14,7 @@ import org.dromara.sms4j.unisms.service.UniSmsImpl;
  * 2023/4/8  15:46
  **/
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class UniFactory implements BaseProviderFactory<UniSmsImpl, UniConfig> {
+public class UniFactory extends AbstractProviderFactory<UniSmsImpl, UniConfig> {
 
     private static final UniFactory INSTANCE = new UniFactory();
 

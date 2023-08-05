@@ -8,7 +8,7 @@ import com.jdcloud.sdk.service.sms.client.SmsClient;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.dromara.sms4j.jdcloud.service.JdCloudSmsImpl;
-import org.dromara.sms4j.provider.factory.BaseProviderFactory;
+import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 
 /**
@@ -18,7 +18,7 @@ import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
  * @since 2023/4/10 20:01
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class JdCloudFactory implements BaseProviderFactory<JdCloudSmsImpl, JdCloudConfig> {
+public class JdCloudFactory extends AbstractProviderFactory<JdCloudSmsImpl, JdCloudConfig> {
 
     private static final JdCloudFactory INSTANCE = new JdCloudFactory();
 

@@ -4,11 +4,13 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author wind
@@ -137,6 +139,28 @@ public class SmsUtil {
             toStr.add("+86" + s);
         }
         return toStr.toArray(new String[list.size()]);
+    }
+
+    /**
+     * 将Map中所有key的分隔符转换为新的分隔符
+     * @param map map对象
+     * @param seperator 旧分隔符
+     * @param newSeperator 新分隔符
+     */
+    public static void replaceKeysSeperator(Map<String, String> map, String seperator, String newSeperator) {
+        if(CollUtil.isEmpty(map)) {
+            return;
+        }
+        List<String> keySet = new ArrayList<>(map.keySet());
+        for(String key : keySet) {
+            if(StrUtil.isEmpty(key) || !key.contains(seperator)) {
+                continue;
+            }
+            String value = map.get(key);
+            String newKey = key.replaceAll(seperator, newSeperator);
+            map.putIfAbsent(newKey, value);
+            map.remove(key);
+        }
     }
 
 }

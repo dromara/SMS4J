@@ -43,6 +43,11 @@ public abstract class Constant {
      */
     public static final String HTTPS_PREFIX = "https://";
 
+    /**
+     * 供应商配置键名
+     */
+    public static final String SUPPLIER_KEY = "supplier";
+
     private Constant() {
     }
 }

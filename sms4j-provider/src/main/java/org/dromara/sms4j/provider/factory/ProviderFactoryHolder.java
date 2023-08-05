@@ -20,9 +20,9 @@ public class ProviderFactoryHolder {
         factories.add(factory);
     }
 
-    public static BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig> requireForConfig(SupplierConfig config) {
+    public static BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig> requireForSupplier(String supplier) {
         return factories.stream()
-                .filter(f -> f.getSupplier().equals(config.getSupplier()))
+                .filter(f -> f.getSupplier().equals(supplier))
                 .findFirst()
                 .orElse(null);
     }

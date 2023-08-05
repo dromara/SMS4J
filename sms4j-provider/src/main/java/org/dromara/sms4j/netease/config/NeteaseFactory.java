@@ -3,7 +3,7 @@ package org.dromara.sms4j.netease.config;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.dromara.sms4j.netease.service.NeteaseSmsImpl;
-import org.dromara.sms4j.provider.factory.BaseProviderFactory;
+import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 
 /**
@@ -14,7 +14,7 @@ import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
  * 2023-05-30
  **/
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class NeteaseFactory implements BaseProviderFactory<NeteaseSmsImpl, NeteaseConfig> {
+public class NeteaseFactory extends AbstractProviderFactory<NeteaseSmsImpl, NeteaseConfig> {
 
     private static final NeteaseFactory INSTANCE = new NeteaseFactory();
 

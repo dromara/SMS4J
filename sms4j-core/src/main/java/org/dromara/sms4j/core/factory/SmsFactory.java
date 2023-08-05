@@ -69,7 +69,7 @@ public abstract class SmsFactory {
     }
 
     private static SmsBlend create(SupplierConfig config) {
-        BaseProviderFactory factory = ProviderFactoryHolder.requireForConfig(config);
+        BaseProviderFactory factory = ProviderFactoryHolder.requireForSupplier(config.getSupplier());
         if (factory == null) {
             throw new SmsBlendException("不支持当前供应商配置");
         }

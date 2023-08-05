@@ -2,12 +2,12 @@ package org.dromara.sms4j.yunpian.config;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.dromara.sms4j.provider.factory.BaseProviderFactory;
+import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 import org.dromara.sms4j.yunpian.service.YunPianSmsImpl;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class YunPianFactory implements BaseProviderFactory<YunPianSmsImpl, YunpianConfig> {
+public class YunPianFactory extends AbstractProviderFactory<YunPianSmsImpl, YunpianConfig> {
 
     private static final YunPianFactory INSTANCE = new YunPianFactory();
 

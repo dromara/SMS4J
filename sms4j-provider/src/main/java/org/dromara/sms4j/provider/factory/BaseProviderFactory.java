@@ -19,10 +19,10 @@ public interface BaseProviderFactory<S extends SmsBlend, C extends SupplierConfi
     S createSms(C c);
 
     /**
-     * 创建配置对象
-     * @return
+     * 获取配置类
+     * @return 配置类
      */
-    C createConfig();
+    Class<C> getConfigClass();
 
     /**
      * 获取供应商

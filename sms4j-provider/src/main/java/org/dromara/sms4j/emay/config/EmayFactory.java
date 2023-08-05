@@ -3,7 +3,7 @@ package org.dromara.sms4j.emay.config;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.dromara.sms4j.emay.service.EmaySmsImpl;
-import org.dromara.sms4j.provider.factory.BaseProviderFactory;
+import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 
 /**
@@ -14,7 +14,7 @@ import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
  * @date 2023/04/11 12:00
  * */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class EmayFactory implements BaseProviderFactory<EmaySmsImpl, EmayConfig> {
+public class EmayFactory extends AbstractProviderFactory<EmaySmsImpl, EmayConfig> {
 
     private static final EmayFactory INSTANCE = new EmayFactory();
 

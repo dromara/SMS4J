@@ -2,26 +2,37 @@ package org.dromara.sms4j.javase.config;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.io.resource.ClassPathResource;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.aliyun.config.AlibabaConfig;
+import org.dromara.sms4j.api.SmsBlend;
+import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.cloopen.config.CloopenConfig;
 import org.dromara.sms4j.comm.config.SmsConfig;
+import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.factory.BeanFactory;
+import org.dromara.sms4j.comm.utils.SmsUtil;
 import org.dromara.sms4j.core.factory.SmsFactory;
 import org.dromara.sms4j.emay.config.EmayConfig;
 import org.dromara.sms4j.huawei.config.HuaweiConfig;
 import org.dromara.sms4j.javase.util.YamlUtil;
 import org.dromara.sms4j.jdcloud.config.JdCloudConfig;
 import org.dromara.sms4j.netease.config.NeteaseConfig;
+import org.dromara.sms4j.provider.config.BaseConfig;
+import org.dromara.sms4j.provider.factory.BaseProviderFactory;
+import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 import org.dromara.sms4j.tencent.config.TencentConfig;
 import org.dromara.sms4j.unisms.config.UniConfig;
 import org.dromara.sms4j.yunpian.config.YunpianConfig;
 import org.dromara.sms4j.zhutong.config.ZhutongConfig;
+
+import java.util.Map;
 
 /**
  * 初始化类
@@ -88,45 +99,20 @@ public class SEInitializer {
         }
 
         this.initSmsConfig(smsConfig);
-        AlibabaConfig alibabaConfig = smsConfig.getAlibaba();
-        if (alibabaConfig != null) {
-            SmsFactory.createSmsBlend(alibabaConfig);
-        }
-        CloopenConfig cloopenConfig = smsConfig.getCloopen();
-        if (cloopenConfig != null) {
-            SmsFactory.createSmsBlend(cloopenConfig);
-        }
-        EmayConfig emayConfig = smsConfig.getEmay();
-        if (emayConfig != null) {
-            SmsFactory.createSmsBlend(emayConfig);
-        }
-        HuaweiConfig huaweiConfig = smsConfig.getHuawei();
-        if (huaweiConfig != null) {
-            SmsFactory.createSmsBlend(huaweiConfig);
-        }
-        JdCloudConfig jdCloudConfig = smsConfig.getJdCloud();
-        if (jdCloudConfig != null) {
-            SmsFactory.createSmsBlend(jdCloudConfig);
-        }
-        TencentConfig tencentConfig = smsConfig.getTencent();
-        if (tencentConfig != null) {
-            SmsFactory.createSmsBlend(tencentConfig);
-        }
-        UniConfig uniConfig = smsConfig.getUni();
-        if (uniConfig != null) {
-            SmsFactory.createSmsBlend(uniConfig);
-        }
-        YunpianConfig yunpianConfig = smsConfig.getYunpian();
-        if (yunpianConfig != null) {
-            SmsFactory.createSmsBlend(yunpianConfig);
-        }
-        NeteaseConfig neteaseConfig = smsConfig.getNeteaseConfig();
-        if (neteaseConfig != null){
-            SmsFactory.createSmsBlend(neteaseConfig);
-        }
-        ZhutongConfig zhutongConfig = smsConfig.getZhutongConfig();
-        if (zhutongConfig != null){
-            SmsFactory.createSmsBlend(zhutongConfig);
+        // 解析供应商配置
+        Map<String, Map<String, String>> blends = smsConfig.getBlends();
+        for(String configId : blends.keySet()) {
+            Map<String, String> configMap = blends.get(configId);
+            String supplier = configMap.get(Constant.SUPPLIER_KEY);
+            supplier = StrUtil.isEmpty(supplier) ? configId : supplier;
+            BaseProviderFactory<SmsBlend, SupplierConfig> providerFactory = (BaseProviderFactory<SmsBlend, SupplierConfig>) ProviderFactoryHolder.requireForSupplier(supplier);
+            if(providerFactory == null) {
+                log.warn("创建\"{}\"的短信服务失败，未找到供应商为\"{}\"的服务", configId, supplier);
+            }
+            SmsUtil.replaceKeysSeperator(configMap, "-", "_");
+            JSONObject configJson = new JSONObject(configMap);
+            SupplierConfig supplierConfig = JSONUtil.toBean(configJson, providerFactory.getConfigClass());
+            providerFactory.createSms(supplierConfig);
         }
     }
 
@@ -147,16 +133,7 @@ public class SEInitializer {
     @EqualsAndHashCode(callSuper = true)
     @ToString(callSuper = true)
     public static class InitSmsConfig extends SmsConfig {
-        private AlibabaConfig alibaba;
-        private CloopenConfig cloopen;
-        private EmayConfig emay;
-        private HuaweiConfig huawei;
-        private JdCloudConfig jdCloud;
-        private TencentConfig tencent;
-        private UniConfig uni;
-        private YunpianConfig yunpian;
-        private NeteaseConfig neteaseConfig;
-        private ZhutongConfig zhutongConfig;
+        private Map<String, Map<String, String>> blends;
     }
 
 }

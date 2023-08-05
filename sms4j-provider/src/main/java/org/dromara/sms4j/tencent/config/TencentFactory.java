@@ -1,6 +1,6 @@
 package org.dromara.sms4j.tencent.config;
 
-import org.dromara.sms4j.provider.factory.BaseProviderFactory;
+import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 import org.dromara.sms4j.tencent.service.TencentSmsImpl;
 
@@ -11,7 +11,7 @@ import org.dromara.sms4j.tencent.service.TencentSmsImpl;
  * @author :Wind
  * 2023/4/8  16:05
  **/
-public class TencentFactory implements BaseProviderFactory<TencentSmsImpl, TencentConfig> {
+public class TencentFactory extends AbstractProviderFactory<TencentSmsImpl, TencentConfig> {
 
     private static final TencentFactory INSTANCE = new TencentFactory();
 

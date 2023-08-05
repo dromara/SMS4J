@@ -34,9 +34,6 @@ public class BeanFactory {
     /** 数据库配置*/
     private static SmsSqlConfig smsSqlConfig;
 
-    /** 实例化自身对象防止被GC*/
-    private static final BeanFactory beanFactory = new BeanFactory();
-
     private BeanFactory() {
     }
 

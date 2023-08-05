@@ -2,7 +2,6 @@ package org.dromara.sms4j.solon.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.smsProxy.SmsInvocationHandler;
-import org.dromara.sms4j.api.universal.SmsRedisUtil;
 import org.dromara.sms4j.comm.config.SmsBanner;
 import org.dromara.sms4j.comm.config.SmsConfig;
 import org.dromara.sms4j.comm.config.SmsSqlConfig;
@@ -10,7 +9,6 @@ import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.factory.BeanFactory;
 import org.dromara.sms4j.solon.aop.SolonRestrictedProcess;
-import org.dromara.sms4j.solon.utils.SmsRedisUtils;
 import org.noear.solon.Solon;
 import org.noear.solon.Utils;
 import org.noear.solon.annotation.Bean;

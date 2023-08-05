@@ -66,18 +66,18 @@ public class TimeExpiredPoolCache implements SmsRestrictedUtil {
     /**
      * 读取持久化文件
      */
-    private static boolean persistenceInit() {
-        String path = FileTool.getPath() + FILE_TYPE;
-        try {
-            DataWrapper d = JSONUtil.toBean(FileTool.readFile(path), DataWrapper.class);
-            if (dataPool != null) {
-                return true;
-            }
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
-        return false;
-    }
+    // private static boolean persistenceInit() {
+    //     String path = FileTool.getPath() + FILE_TYPE;
+    //     try {
+    //         DataWrapper d = JSONUtil.toBean(FileTool.readFile(path), DataWrapper.class);
+    //         if (dataPool != null) {
+    //             return true;
+    //         }
+    //     } catch (IOException e) {
+    //         log.error(e.getMessage());
+    //     }
+    //     return false;
+    // }
 
     private static void initTimer() {
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -94,11 +94,11 @@ public class TimeExpiredPoolCache implements SmsRestrictedUtil {
     }
 
     /** 写入持久化文件*/
-    private static void persistence() {
-        String path = FileTool.getPath() + FILE_TYPE;
-        FileTool.createFile(path);
-        FileTool.writeFile(new File(path), JSONUtil.toJsonStr(dataPool), false);
-    }
+    // private static void persistence() {
+    //     String path = FileTool.getPath() + FILE_TYPE;
+    //     FileTool.createFile(path);
+    //     FileTool.writeFile(new File(path), JSONUtil.toJsonStr(dataPool), false);
+    // }
 
     /**
      * 清除过期的缓存
@@ -226,6 +226,11 @@ public class TimeExpiredPoolCache implements SmsRestrictedUtil {
     @Override
     public Object getByKey(String key) {
         return null;
+    }
+
+    @Override
+    public void clean() throws RuntimeException {
+        //TODO
     }
 
     /**

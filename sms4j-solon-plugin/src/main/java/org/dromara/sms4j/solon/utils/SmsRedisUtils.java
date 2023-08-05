@@ -1,7 +1,7 @@
 package org.dromara.sms4j.solon.utils;
 
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.sms4j.api.universal.SmsRedisUtil;
+import org.dromara.sms4j.api.universal.SmsRestrictedUtil;
 import org.noear.solon.Solon;
 import org.redisson.api.RedissonClient;
 
@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-public class SmsRedisUtils implements SmsRedisUtil {
+public class SmsRedisUtils implements SmsRestrictedUtil {
 
     private RedissonClient redisTemplate;
 
@@ -114,6 +114,11 @@ public class SmsRedisUtils implements SmsRedisUtil {
      */
     public Object getByKey(String key) {
         return redisTemplate.getBucket(key).get();
+    }
+
+    @Override
+    public void clean() throws RuntimeException {
+        //TODO
     }
 
     /**

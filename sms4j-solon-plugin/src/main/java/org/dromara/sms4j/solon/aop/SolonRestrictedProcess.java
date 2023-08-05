@@ -2,7 +2,7 @@ package org.dromara.sms4j.solon.aop;
 
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.smsProxy.RestrictedProcess;
-import org.dromara.sms4j.api.universal.SmsRedisUtil;
+import org.dromara.sms4j.api.universal.SmsRestrictedUtil;
 import org.dromara.sms4j.comm.config.SmsConfig;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtil;
@@ -11,13 +11,13 @@ import org.noear.solon.core.AopContext;
 @Slf4j
 public class SolonRestrictedProcess extends RestrictedProcess {
 
-    private SmsRedisUtil redis;
+    private SmsRestrictedUtil redis;
     private static final Long minTimer = 60 * 1000L;
     private static final Long accTimer = 24 * 60 * 60 * 1000L;
     private static final String REDIS_KEY = "sms:restricted:";
 
     public SolonRestrictedProcess(AopContext context){
-        context.getBeanAsync(SmsRedisUtil.class, bean->{
+        context.getBeanAsync(SmsRestrictedUtil.class, bean->{
             redis = bean;
         });
     }

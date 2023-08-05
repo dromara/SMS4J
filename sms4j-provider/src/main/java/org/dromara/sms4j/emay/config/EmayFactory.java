@@ -40,11 +40,6 @@ public class EmayFactory extends AbstractProviderFactory<EmaySmsImpl, EmayConfig
         return new EmaySmsImpl(emayConfig);
     }
 
-    @Override
-    public EmayConfig createConfig() {
-        return null;
-    }
-
     /**
      * 获取供应商
      * @return 供应商

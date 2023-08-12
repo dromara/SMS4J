@@ -8,6 +8,7 @@ import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.factory.BeanFactory;
+import org.dromara.sms4j.comm.utils.SmsHttpUtil;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -25,6 +26,8 @@ public abstract class AbstractSmsBlend<C extends SupplierConfig> implements SmsB
     protected final Executor pool;
 
     protected final DelayedTime delayed;
+
+    protected final SmsHttpUtil http = SmsHttpUtil.instance();
 
     protected AbstractSmsBlend(C config, Executor pool, DelayedTime delayed) {
         this.configId = StrUtil.isEmpty(config.getConfigId()) ? getSupplier() : config.getConfigId();

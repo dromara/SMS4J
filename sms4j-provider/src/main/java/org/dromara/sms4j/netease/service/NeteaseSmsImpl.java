@@ -2,13 +2,11 @@ package org.dromara.sms4j.netease.service;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.netease.config.NeteaseConfig;
@@ -29,6 +27,7 @@ import java.util.concurrent.Executor;
 public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
 
     public static final String SUPPLIER = "netease";
+    private int retry = 0;
 
     public NeteaseSmsImpl(NeteaseConfig config, Executor pool, DelayedTime delayed) {
         super(config, pool, delayed);
@@ -98,22 +97,35 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
         String checkSum = NeteaseUtils.getCheckSum(getConfig().getAccessKeySecret(), nonce, curTime);
         Map<String, Object> body = new LinkedHashMap<>(4);
         body.put("templateid", templateId);
-        JSONArray jsonArray = JSONUtil.createArray();
+        JSONArray jsonArray = new JSONArray();
         jsonArray.addAll(phones);
         body.put("mobiles", jsonArray.toString());
         body.put("params", message);
         body.put("needUp", getConfig().getNeedUp());
-        try(HttpResponse response = HttpRequest.post(requestUrl)
-                .header("Content-Type", "application/x-www-form-urlencoded")
-                .header("AppKey", getConfig().getAccessKeyId())
-                .header("Nonce", nonce)
-                .header("CurTime", curTime)
-                .header("CheckSum", checkSum)
-                .body(JSONUtil.toJsonStr(body))
-                .execute()){
-            JSONObject res = JSONUtil.parseObj(response.body());
-            return this.getResponse(res);
+
+        try {
+            Map<String, String> headers = new LinkedHashMap<>(5);
+            headers.put("Content-Type", Constant.FROM_URLENCODED);
+            headers.put("AppKey", getConfig().getAccessKeyId());
+            headers.put("Nonce", nonce);
+            headers.put("CurTime", curTime);
+            headers.put("CheckSum", checkSum);
+            SmsResponse smsResponse = getResponse(http.postJson(requestUrl, headers, body));
+            if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
+                retry = 0;
+                return smsResponse;
+            }
+            return requestRetry(requestUrl, phones, message, templateId);
+        }catch (SmsBlendException e){
+            return requestRetry(requestUrl, phones, message, templateId);
         }
+    }
+
+    private SmsResponse requestRetry(String requestUrl, List<String> phones, String message, String templateId) {
+        http.safeSleep(getConfig().getRetryInterval());
+        retry++;
+        log.warn("短信第 {" + retry + "} 次重新发送");
+        return getSmsResponse(requestUrl, phones, message, templateId);
     }
 
     private SmsResponse getResponse(JSONObject jsonObject) {

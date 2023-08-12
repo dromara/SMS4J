@@ -1,9 +1,7 @@
 package org.dromara.sms4j.yunpian.service;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
@@ -21,9 +19,11 @@ import java.util.concurrent.Executor;
 /**
  * @author wind
  */
+@Slf4j
 public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
 
     public static final String SUPPLIER = "yunpian";
+    private int retry = 0;
 
     public YunPianSmsImpl(YunpianConfig config, Executor pool, DelayedTime delayed) {
         super(config, pool, delayed);
@@ -52,14 +52,50 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
 
     @Override
     public SmsResponse sendMessage(String phone, String message) {
-        Map<String, String> body = setBody(phone, message, null, getConfig().getTemplateId());
-        return getSendResponse(body);
+        Map<String, Object> body = setBody(phone, message, null, getConfig().getTemplateId());
+        Map<String, String> headers = getHeaders();
+
+        try {
+            SmsResponse smsResponse = getResponse(http.postJson(Constant.YUNPIAN_URL + "/sms/tpl_single_send.json", headers, body));
+            if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
+                retry = 0;
+                return smsResponse;
+            }
+            return requestRetry(phone, message);
+        }catch (SmsBlendException e){
+            return requestRetry(phone, message);
+        }
+    }
+
+    private SmsResponse requestRetry(String phone, String message) {
+        http.safeSleep(getConfig().getRetryInterval());
+        retry++;
+        log.warn("短信第 {" + retry + "} 次重新发送");
+        return sendMessage(phone, message);
     }
 
     @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
-        Map<String, String> body = setBody(phone, "", messages, templateId);
-        return getSendResponse(body);
+        Map<String, Object> body = setBody(phone, "", messages, templateId);
+        Map<String, String> headers = getHeaders();
+
+        try {
+            SmsResponse smsResponse = getResponse(http.postJson(Constant.YUNPIAN_URL + "/sms/tpl_single_send.json", headers, body));
+            if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
+                retry = 0;
+                return smsResponse;
+            }
+            return requestRetry(phone, templateId, messages);
+        }catch (SmsBlendException e){
+            return requestRetry(phone, templateId, messages);
+        }
+    }
+
+    private SmsResponse requestRetry(String phone, String templateId, LinkedHashMap<String, String> messages) {
+        http.safeSleep(getConfig().getRetryInterval());
+        retry++;
+        log.warn("短信第 {" + retry + "} 次重新发送");
+        return sendMessage(phone, templateId, messages);
     }
 
     @Override
@@ -91,14 +127,14 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
         return str.toString();
     }
 
-    private Map<String, String> setBody(String phone, String mes, LinkedHashMap<String, String> messages, String tplId) {
+    private Map<String, Object> setBody(String phone, String mes, LinkedHashMap<String, String> messages, String tplId) {
         LinkedHashMap<String, String> message = new LinkedHashMap<>();
         if (mes.isEmpty()) {
             message = messages;
         } else {
             message.put(getConfig().getTemplateName(), mes);
         }
-        Map<String, String> body = new HashMap<>();
+        Map<String, Object> body = new HashMap<>();
         body.put("apikey", getConfig().getAccessKeyId());
         body.put("mobile", phone);
         body.put("tpl_id", tplId);
@@ -110,19 +146,8 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
 
     private Map<String, String> getHeaders() {
         Map<String, String> headers = new HashMap<>();
-        headers.put("Accept", "application/json;charset=utf-8");
+        headers.put("Accept", Constant.APPLICATION_JSON_UTF8);
         headers.put("Content-Type", Constant.FROM_URLENCODED);
         return headers;
-    }
-
-    private SmsResponse getSendResponse(Map<String, String> body) {
-        Map<String, String> headers = getHeaders();
-        try(HttpResponse response = HttpRequest.post(Constant.YUNPIAN_URL + "/sms/tpl_single_send.json")
-                .addHeaders(headers)
-                .body(JSONUtil.toJsonStr(body))
-                .execute()){
-            JSONObject res = JSONUtil.parseObj(response.body());
-            return getResponse(res);
-        }
     }
 }

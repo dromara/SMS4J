@@ -3,10 +3,10 @@ package org.dromara.sms4j.unisms.core;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.crypto.digest.HMac;
 import cn.hutool.crypto.digest.HmacAlgorithm;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import cn.hutool.json.JSONUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
+import org.dromara.sms4j.comm.utils.SmsHttpUtil;
 
 import java.util.Comparator;
 import java.util.Date;
@@ -17,6 +17,7 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.UUID;
 
+@Slf4j
 public class UniClient {
 
     public static final String USER_AGENT = "uni-java-sdk" + "/" + Uni.VERSION;
@@ -24,12 +25,18 @@ public class UniClient {
     private final String accessKeySecret;
     private final String endpoint;
     private final String signingAlgorithm;
+    private final int retryInterval;
+    private final int maxRetries;
+    private int retry = 0;
+    private final SmsHttpUtil http = SmsHttpUtil.instance();
 
     protected UniClient(Builder b) {
         this.accessKeyId = b.accessKeyId;
         this.accessKeySecret = b.accessKeySecret;
         this.endpoint = b.endpoint;
         this.signingAlgorithm = b.signingAlgorithm;
+        this.retryInterval = b.retryInterval;
+        this.maxRetries = b.maxRetries;
     }
 
     private static String getSignature(final String message, final String secretKey) {
@@ -81,16 +88,28 @@ public class UniClient {
     public UniResponse request(final String action, final Map<String, Object> data) throws SmsBlendException {
         Map<String, String> headers = new HashMap<>();
         headers.put("User-Agent", USER_AGENT);
-        headers.put("Content-Type", "application/json;charset=utf-8");
-        headers.put("Accept", "application/json");
+        headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
+        headers.put("Accept", Constant.ACCEPT);
 
         String url = this.endpoint + "?action=" + action + "&accessKeyId=" + this.accessKeyId;
-        try(HttpResponse response = HttpRequest.post(url)
-                .addHeaders(headers)
-                .body(JSONUtil.toJsonStr(data))
-                .execute()){
-            return new UniResponse(JSONUtil.parseObj(response.body()));
+
+        try {
+            UniResponse smsResponse = new UniResponse(http.postJson(url, headers, data));
+            if("Success".equals(smsResponse.message) || retry == maxRetries){
+                retry = 0;
+                return smsResponse;
+            }
+            return requestRetry(action, data);
+        }catch (SmsBlendException e){
+            return requestRetry(action, data);
         }
+    }
+
+    private UniResponse requestRetry(String action, Map<String, Object> data) {
+        http.safeSleep(retryInterval);
+        retry++;
+        log.warn("短信第 {" + retry + "} 次重新发送");
+        return request(action, data);
     }
 
     public static class Builder {
@@ -98,6 +117,8 @@ public class UniClient {
         private String accessKeySecret;
         private String endpoint;
         private String signingAlgorithm;
+        private int retryInterval;
+        private int maxRetries;
 
         public Builder(final String accessKeyId) {
             this.accessKeyId = accessKeyId;
@@ -120,6 +141,16 @@ public class UniClient {
 
         public Builder signingAlgorithm(final String signingAlgorithm) {
             this.signingAlgorithm = signingAlgorithm;
+            return this;
+        }
+
+        public Builder setRetryInterval(int retryInterval) {
+            this.retryInterval = retryInterval;
+            return this;
+        }
+
+        public Builder setMaxRetries(int maxRetries) {
+            this.maxRetries = maxRetries;
             return this;
         }
 

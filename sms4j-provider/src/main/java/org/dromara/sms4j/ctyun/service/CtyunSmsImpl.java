@@ -1,7 +1,5 @@
 package org.dromara.sms4j.ctyun.service;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +27,8 @@ public class CtyunSmsImpl extends AbstractSmsBlend<CtyunConfig> {
 
     public static final String SUPPLIER = "ctyun";
 
+    private int retry = 0;
+
     public CtyunSmsImpl(CtyunConfig config, Executor pool, DelayedTime delayedTime) {
         super(config, pool, delayedTime);
     }
@@ -44,7 +44,7 @@ public class CtyunSmsImpl extends AbstractSmsBlend<CtyunConfig> {
 
     @Override
     public SmsResponse sendMessage(String phone, String message) {
-        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        LinkedHashMap<String, String> map = new LinkedHashMap<>(1);
         map.put(getConfig().getTemplateName(), message);
         return sendMessage(phone, getConfig().getTemplateId(), map);
     }
@@ -57,7 +57,7 @@ public class CtyunSmsImpl extends AbstractSmsBlend<CtyunConfig> {
 
     @Override
     public SmsResponse massTexting(List<String> phones, String message) {
-        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        LinkedHashMap<String, String> map = new LinkedHashMap<>(1);
         map.put(getConfig().getTemplateName(), message);
         return massTexting(phones, getConfig().getTemplateId(), map);
     }
@@ -79,13 +79,25 @@ public class CtyunSmsImpl extends AbstractSmsBlend<CtyunConfig> {
             throw new SmsBlendException(e.getMessage());
         }
         log.debug("requestUrl {}", requestUrl);
-        try(HttpResponse response = HttpRequest.post(requestUrl)
-                .addHeaders(CtyunUtils.signHeader(paramStr, getConfig().getAccessKeyId(), getConfig().getAccessKeySecret()))
-                .body(paramStr)
-                .execute()){
-            JSONObject body = JSONUtil.parseObj(response.body());
-            return this.getResponse(body);
+        try {
+            SmsResponse smsResponse = getResponse(http.postJson(requestUrl,
+                    CtyunUtils.signHeader(paramStr, getConfig().getAccessKeyId(), getConfig().getAccessKeySecret()),
+                    paramStr));
+            if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
+                retry = 0;
+                return smsResponse;
+            }
+            return requestRetry(phone, message, templateId);
+        }catch (SmsBlendException e){
+            return requestRetry(phone, message, templateId);
         }
+    }
+
+    private SmsResponse requestRetry(String phone, String message, String templateId) {
+        http.safeSleep(getConfig().getRetryInterval());
+        retry ++;
+        log.warn("短信第 {" + retry + "} 次重新发送");
+        return getSmsResponse(phone, message, templateId);
     }
 
     private SmsResponse getResponse(JSONObject resJson) {

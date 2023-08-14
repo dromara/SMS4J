@@ -42,14 +42,14 @@ public class UniSmsImpl extends AbstractSmsBlend<UniConfig> {
         if ("".equals(getConfig().getTemplateId()) && "".equals(getConfig().getTemplateName())) {
             throw new SmsBlendException("配置文件模板id和模板变量不能为空！");
         }
-        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        LinkedHashMap<String, String> map = new LinkedHashMap<>(1);
         map.put(getConfig().getTemplateName(), message);
         return sendMessage(phone, getConfig().getTemplateId(), map);
     }
 
     @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
-        Map<String, Object> data = new HashMap<>();
+        Map<String, Object> data = new LinkedHashMap<>(4);
         data.put("to", Collections.singletonList(phone));
         data.put("signature", getConfig().getSignature());
         data.put("templateId", templateId);
@@ -62,7 +62,7 @@ public class UniSmsImpl extends AbstractSmsBlend<UniConfig> {
         if ("".equals(getConfig().getTemplateId()) && "".equals(getConfig().getTemplateName())) {
             throw new SmsBlendException("配置文件模板id和模板变量不能为空！");
         }
-        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        LinkedHashMap<String, String> map = new LinkedHashMap<>(1);
         map.put(getConfig().getTemplateName(), message);
         return massTexting(phones, getConfig().getTemplateId(), map);
     }
@@ -72,7 +72,7 @@ public class UniSmsImpl extends AbstractSmsBlend<UniConfig> {
         if (phones.size() > 1000) {
             throw new SmsBlendException("单次发送超过最大发送上限，建议每次群发短信人数低于1000");
         }
-        Map<String, Object> data = new HashMap<>();
+        Map<String, Object> data = new LinkedHashMap<>(4);
         data.put("to", phones);
         data.put("signature", getConfig().getSignature());
         data.put("templateId", templateId);
@@ -83,7 +83,7 @@ public class UniSmsImpl extends AbstractSmsBlend<UniConfig> {
     private SmsResponse getSmsResponse(Map<String, Object> data) {
         SmsResponse smsResponse = new SmsResponse();
         try {
-            UniResponse send = Uni.getClient().request("sms.message.send", data);
+            UniResponse send = Uni.getClient(getConfig().getRetryInterval(), getConfig().getMaxRetries()).request("sms.message.send", data);
             smsResponse.setSuccess("Success".equals(send.message));
             smsResponse.setData(send);
             smsResponse.setConfigId(getConfigId());

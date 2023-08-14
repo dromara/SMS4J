@@ -1,13 +1,12 @@
 package org.dromara.sms4j.aliyun.service;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.aliyun.config.AlibabaConfig;
 import org.dromara.sms4j.aliyun.utils.AliyunUtils;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtil;
@@ -15,6 +14,7 @@ import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executor;
 
 /**
@@ -28,6 +28,7 @@ import java.util.concurrent.Executor;
 public class AlibabaSmsImpl extends AbstractSmsBlend<AlibabaConfig> {
 
     public static final String SUPPLIER = "alibaba";
+    private int retry = 0;
 
     /**
      * AlibabaSmsImpl
@@ -89,13 +90,25 @@ public class AlibabaSmsImpl extends AbstractSmsBlend<AlibabaConfig> {
             throw new SmsBlendException(e.getMessage());
         }
         log.debug("requestUrl {}", requestUrl);
-        try(HttpResponse response = HttpRequest.post(requestUrl)
-                .header("Content-Type", "application/x-www-form-urlencoded")
-                .body(paramStr)
-                .execute()){
-            JSONObject body = JSONUtil.parseObj(response.body());
-            return this.getResponse(body);
+        try {
+            Map<String, String> headers = new LinkedHashMap<>(1);
+            headers.put("Content-Type", Constant.FROM_URLENCODED);
+            SmsResponse smsResponse = getResponse(http.postJson(requestUrl, headers, paramStr));
+            if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
+                retry = 0;
+                return smsResponse;
+            }
+            return requestRetry(phone, message, templateId);
+        }catch (SmsBlendException e){
+            return requestRetry(phone, message, templateId);
         }
+    }
+
+    private SmsResponse requestRetry(String phone, String message, String templateId) {
+        http.safeSleep(getConfig().getRetryInterval());
+        retry++;
+        log.warn("短信第 {" + retry + "} 次重新发送");
+        return getSmsResponse(phone, message, templateId);
     }
 
     private SmsResponse getResponse(JSONObject resJson) {

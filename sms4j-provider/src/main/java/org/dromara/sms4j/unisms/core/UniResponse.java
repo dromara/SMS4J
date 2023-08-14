@@ -27,7 +27,7 @@ public class UniResponse {
             this.raw = body;
             this.data = body;
         }
-        if (this.status != "400") {
+        if (!"400".equals(this.status)) {
             String code = response.getStr("code");
             if (!"0".equals(code)) {
                 this.message = response.getStr("message");

@@ -1,10 +1,8 @@
 package org.dromara.sms4j.provider.config;
 
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import org.dromara.sms4j.api.universal.SupplierConfig;
+import org.dromara.sms4j.comm.exception.SmsBlendException;
 
 /**
  * 短信配置属性基类
@@ -48,4 +46,27 @@ public abstract class BaseConfig implements SupplierConfig {
      */
     private String configId;
 
+    /**
+     * 重试间隔（单位：秒），默认为5秒
+     */
+    private int retryInterval = 5;
+
+    public void setRetryInterval(int retryInterval) {
+        if (retryInterval <= 0){
+            throw new SmsBlendException("重试间隔必须大于0秒");
+        }
+        this.retryInterval = retryInterval;
+    }
+
+    /**
+     * 重试次数，默认为0次
+     */
+    private int maxRetries = 0;
+
+    public void setMaxRetries(int maxRetries) {
+        if (maxRetries < 0){
+            throw new SmsBlendException("重试次数不能小于0次");
+        }
+        this.maxRetries = maxRetries;
+    }
 }

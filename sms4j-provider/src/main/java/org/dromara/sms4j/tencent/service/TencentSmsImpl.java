@@ -1,9 +1,6 @@
 package org.dromara.sms4j.tencent.service;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import com.jdcloud.sdk.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
@@ -28,6 +25,7 @@ import java.util.concurrent.Executor;
 public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
 
     public static final String SUPPLIER = "alibaba";
+    private int retry = 0;
 
     public TencentSmsImpl(TencentConfig tencentSmsConfig, Executor pool, DelayedTime delayed) {
         super(tencentSmsConfig, pool, delayed);
@@ -96,13 +94,24 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
         Map<String, Object> requestBody = TencentUtils.generateRequestBody(phones, getConfig().getSdkAppId(),
                 getConfig().getSignature(), templateId, messages);
         String url = Constant.HTTPS_PREFIX + getConfig().getRequestUrl();
-        try(HttpResponse response = HttpRequest.post(url)
-                .addHeaders(headsMap)
-                .body(JSONUtil.toJsonStr(requestBody))
-                .execute()){
-            JSONObject body = JSONUtil.parseObj(response.body());
-            return this.getResponse(body);
+
+        try {
+            SmsResponse smsResponse = getResponse(http.postJson(url, headsMap, requestBody));
+            if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
+                retry = 0;
+                return smsResponse;
+            }
+            return requestRetry(phones, messages, templateId);
+        }catch (SmsBlendException e){
+            return requestRetry(phones, messages, templateId);
         }
+    }
+
+    private SmsResponse requestRetry(String[] phones, String[] messages, String templateId) {
+        http.safeSleep(getConfig().getRetryInterval());
+        retry++;
+        log.warn("短信第 {" + retry + "} 次重新发送");
+        return getSmsResponse(phones, messages, templateId);
     }
 
     private SmsResponse getResponse(JSONObject resJson) {

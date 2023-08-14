@@ -1,13 +1,11 @@
 package org.dromara.sms4j.huawei.service;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
+import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.huawei.config.HuaweiConfig;
 import org.dromara.sms4j.huawei.utils.HuaweiBuilder;
 import org.dromara.sms4j.provider.service.AbstractSmsBlend;
@@ -21,6 +19,7 @@ import static org.dromara.sms4j.huawei.utils.HuaweiBuilder.listToString;
 public class HuaweiSmsImpl extends AbstractSmsBlend<HuaweiConfig> {
 
     public static final String SUPPLIER = "huawei";
+    private int retry = 0;
 
     public HuaweiSmsImpl(HuaweiConfig config, Executor pool, DelayedTime delayed) {
         super(config, pool, delayed);
@@ -51,17 +50,27 @@ public class HuaweiSmsImpl extends AbstractSmsBlend<HuaweiConfig> {
         }
         String mess = listToString(list);
         String requestBody = HuaweiBuilder.buildRequestBody(getConfig().getSender(), phone, templateId, mess, getConfig().getStatusCallBack(), getConfig().getSignature());
-        Map<String, String> headers = new LinkedHashMap<>();
-        headers.put("Authorization", Constant.HUAWEI_AUTH_HEADER_VALUE);
-        headers.put("X-WSSE", HuaweiBuilder.buildWsseHeader(getConfig().getAccessKeyId(), getConfig().getAccessKeySecret()));
-        headers.put("Content-Type", Constant.FROM_URLENCODED);
-        try(HttpResponse response = HttpRequest.post(url)
-                .addHeaders(headers)
-                .body(requestBody)
-                .execute()){
-            JSONObject body = JSONUtil.parseObj(response.body());
-            return this.getResponse(body);
+        try {
+            Map<String, String> headers = new LinkedHashMap<>(3);
+            headers.put("Authorization", Constant.HUAWEI_AUTH_HEADER_VALUE);
+            headers.put("X-WSSE", HuaweiBuilder.buildWsseHeader(getConfig().getAccessKeyId(), getConfig().getAccessKeySecret()));
+            headers.put("Content-Type", Constant.FROM_URLENCODED);
+            SmsResponse smsResponse = getResponse(http.postJson(url, headers, requestBody));
+            if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
+                retry = 0;
+                return smsResponse;
+            }
+            return requestRetry(phone, templateId, messages);
+        }catch (SmsBlendException e){
+            return requestRetry(phone, templateId, messages);
         }
+    }
+
+    private SmsResponse requestRetry(String phone, String templateId, LinkedHashMap<String, String> messages) {
+        http.safeSleep(getConfig().getRetryInterval());
+        retry++;
+        log.warn("短信第 {" + retry + "} 次重新发送");
+        return sendMessage(phone, templateId, messages);
     }
 
     @Override

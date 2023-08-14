@@ -5,11 +5,8 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.constant.Constant;
@@ -33,6 +30,7 @@ import java.util.concurrent.Executor;
 public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
 
     public static final String SUPPLIER = "zhutong";
+    private int retry = 0;
 
     /**
      * ZhutongSmsImpl
@@ -63,7 +61,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
             return getSmsResponse(phone, message);
         }
 
-        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        LinkedHashMap<String, String> map = new LinkedHashMap<>(1);
         map.put(config.getTemplateName(), message);
         return sendMessage(phone, config.getTemplateId(), map);
     }
@@ -81,7 +79,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
             return getSmsResponse(phones, message);
         }
 
-        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        LinkedHashMap<String, String> map = new LinkedHashMap<>(1);
         map.put(config.getTemplateName(), message);
         return massTexting(phones, config.getTemplateId(), map);
     }
@@ -120,7 +118,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
 
         String url = requestUrl + "v2/sendSms";
         long tKey = System.currentTimeMillis() / 1000;
-        Map<String, String> json = new HashMap<>(5);
+        Map<String, Object> json = new HashMap<>(5);
         //账号
         json.put("username", username);
         //密码
@@ -132,13 +130,25 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
         //内容
         json.put("content", content);
 
-        try(HttpResponse response = HttpRequest.post(url)
-                .header("Content-Type", Constant.APPLICATION_JSON_UTF8)
-                .body(JSONUtil.toJsonStr(json))
-                .execute()){
-            JSONObject body = JSONUtil.parseObj(response.body());
-            return this.getResponse(body);
+        try {
+            Map<String, String> headers = new LinkedHashMap<>(1);
+            headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
+            SmsResponse smsResponse = getResponse(http.postJson(requestUrl, headers, json));
+            if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
+                retry = 0;
+                return smsResponse;
+            }
+            return requestRetry(phones, content);
+        }catch (SmsBlendException e){
+            return requestRetry(phones, content);
         }
+    }
+
+    private SmsResponse requestRetry(List<String> phones, String content) {
+        http.safeSleep(getConfig().getRetryInterval());
+        retry++;
+        log.warn("短信第 {" + retry + "} 次重新发送");
+        return getSmsResponse(phones, content);
     }
 
     protected SmsResponse getSmsResponse(String mobile, String content) {
@@ -205,13 +215,25 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
         }
         requestJson.set("records", records);
 
-        try(HttpResponse response = HttpRequest.post(url)
-                .header("Content-Type", Constant.APPLICATION_JSON_UTF8)
-                .body(requestJson.toString())
-                .execute()){
-            JSONObject body = JSONUtil.parseObj(response.body());
-            return this.getResponse(body);
+        try {
+            Map<String, String> headers = new LinkedHashMap<>(1);
+            headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
+            SmsResponse smsResponse = getResponse(http.postJson(requestUrl, headers, requestJson.toString()));
+            if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
+                retry = 0;
+                return smsResponse;
+            }
+            return requestRetry(templateId, phones, messages);
+        }catch (SmsBlendException e){
+            return requestRetry(templateId, phones, messages);
         }
+    }
+
+    private SmsResponse requestRetry(String templateId, List<String> phones, LinkedHashMap<String, String> messages) {
+        http.safeSleep(getConfig().getRetryInterval());
+        retry++;
+        log.warn("短信第 {" + retry + "} 次重新发送");
+        return getSmsResponseTemplate(templateId, phones, messages);
     }
 
     protected SmsResponse getSmsResponseTemplate(String templateId, String mobile, LinkedHashMap<String, String> content) {

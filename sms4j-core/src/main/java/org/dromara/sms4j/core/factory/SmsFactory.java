@@ -6,7 +6,9 @@ import org.dromara.sms4j.api.smsProxy.SmsInvocationHandler;
 import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.factory.BeanFactory;
+import org.dromara.sms4j.core.datainterface.SmsReadConfig;
 import org.dromara.sms4j.core.load.SmsLoad;
+import org.dromara.sms4j.provider.config.BaseConfig;
 import org.dromara.sms4j.provider.factory.BaseProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 
@@ -66,6 +68,36 @@ public abstract class SmsFactory {
         }
         register(sms);
         SmsLoad.starConfig(sms, config);
+    }
+
+    /**
+     *  createSmsBlend
+     * <p>通过配置读取接口创建某个短信实例
+     * <p>该方法创建的短信实例将会交给框架进行托管，后续可以通过getSmsBlend获取
+     * <p>该方法会直接调用接口实现
+     * @param smsReadConfig 读取额外配置接口
+     * @param configId 配置ID
+     * @author :Wind
+     */
+    public static void createSmsBlend(SmsReadConfig smsReadConfig,String configId){
+        BaseConfig supplierConfig = smsReadConfig.getSupplierConfig(configId);
+        SmsBlend smsBlend = create(supplierConfig);
+        register(smsBlend);
+    }
+
+    /**
+     *  createSmsBlend
+     * <p>通过配置读取接口创建全部短信实例
+     * <p>该方法创建的短信实例将会交给框架进行托管，后续可以通过getSmsBlend获取
+     * <p>该方法会直接调用接口实现
+     * @param smsReadConfig 读取额外配置接口
+     * @author :Wind
+    */
+    public static void createSmsBlend(SmsReadConfig smsReadConfig){
+        List<BaseConfig> supplierConfigList = smsReadConfig.getSupplierConfigList();
+        supplierConfigList.forEach(f->{
+            register(create(f));
+        });
     }
 
     private static SmsBlend create(SupplierConfig config) {

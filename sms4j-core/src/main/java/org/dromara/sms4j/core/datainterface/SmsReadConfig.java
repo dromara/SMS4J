@@ -16,10 +16,11 @@ public interface SmsReadConfig {
 
     /**
      *  getSupplierConfig
-     * <p> 获取一个厂商的配置
+     * <p> 通过配置ID获取一个厂商的配置
+     * @param configId 配置id
      * @author :Wind
     */
-    BaseConfig getSupplierConfig();
+    BaseConfig getSupplierConfig(String configId);
 
     /**
      *  getSupplierConfigList

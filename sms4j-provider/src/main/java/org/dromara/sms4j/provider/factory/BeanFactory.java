@@ -1,9 +1,11 @@
-package org.dromara.sms4j.comm.factory;
+package org.dromara.sms4j.provider.factory;
 
-import org.dromara.sms4j.comm.config.SmsConfig;
-import org.dromara.sms4j.comm.config.SmsSqlConfig;
+import org.dromara.sms4j.api.dao.SmsDao;
+import org.dromara.sms4j.api.dao.SmsDaoDefaultImpl;
+import org.dromara.sms4j.comm.enumerate.ConfigType;
+import org.dromara.sms4j.provider.config.SmsConfig;
+import org.dromara.sms4j.provider.config.SmsSqlConfig;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
-import org.dromara.sms4j.comm.utils.JDBCTool;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executor;
@@ -29,7 +31,7 @@ public class BeanFactory {
     private static SmsConfig smsConfig;
 
     /** jdbc工具*/
-    private static JDBCTool jdbcTool;
+    // private static JDBCTool jdbcTool;
 
     /** 数据库配置*/
     private static SmsSqlConfig smsSqlConfig;
@@ -79,10 +81,10 @@ public class BeanFactory {
         return smsSqlConfig;
     }
 
-    public static JDBCTool getJDBCTool(){
-        if (jdbcTool == null){
-            jdbcTool = new JDBCTool(getSmsSqlConfig());
-        }
-        return jdbcTool;
-    }
+    // public static JDBCTool getJDBCTool(){
+    //     if (jdbcTool == null){
+    //         jdbcTool = new JDBCTool(getSmsSqlConfig());
+    //     }
+    //     return jdbcTool;
+    // }
 }

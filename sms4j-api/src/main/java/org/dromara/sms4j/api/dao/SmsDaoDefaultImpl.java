@@ -38,7 +38,7 @@ public class SmsDaoDefaultImpl implements SmsDao {
      *
      * @return 唯一实例
      */
-    public SmsDaoDefaultImpl getInstance() {
+    public static SmsDaoDefaultImpl getInstance() {
         if (null == INSTANCE) {
             synchronized (SmsDaoDefaultImpl.class) {
                 if (null == INSTANCE) {

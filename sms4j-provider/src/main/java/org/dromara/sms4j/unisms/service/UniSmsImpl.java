@@ -22,7 +22,7 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class UniSmsImpl extends AbstractSmsBlend<UniConfig> {
 
-    public static final String SUPPLIER = "uniSms";
+    public static final String SUPPLIER = "unisms";
 
     public UniSmsImpl(UniConfig config, Executor pool, DelayedTime delayed) {
         super(config, pool, delayed);

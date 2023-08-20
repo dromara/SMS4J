@@ -9,28 +9,17 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.sms4j.aliyun.config.AlibabaConfig;
 import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.universal.SupplierConfig;
-import org.dromara.sms4j.cloopen.config.CloopenConfig;
-import org.dromara.sms4j.comm.config.SmsConfig;
+import org.dromara.sms4j.core.factory.SmsFactory;
+import org.dromara.sms4j.provider.config.SmsConfig;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
-import org.dromara.sms4j.comm.factory.BeanFactory;
+import org.dromara.sms4j.provider.factory.BeanFactory;
 import org.dromara.sms4j.comm.utils.SmsUtil;
-import org.dromara.sms4j.core.factory.SmsFactory;
-import org.dromara.sms4j.emay.config.EmayConfig;
-import org.dromara.sms4j.huawei.config.HuaweiConfig;
 import org.dromara.sms4j.javase.util.YamlUtil;
-import org.dromara.sms4j.jdcloud.config.JdCloudConfig;
-import org.dromara.sms4j.netease.config.NeteaseConfig;
-import org.dromara.sms4j.provider.config.BaseConfig;
 import org.dromara.sms4j.provider.factory.BaseProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
-import org.dromara.sms4j.tencent.config.TencentConfig;
-import org.dromara.sms4j.unisms.config.UniConfig;
-import org.dromara.sms4j.yunpian.config.YunpianConfig;
-import org.dromara.sms4j.zhutong.config.ZhutongConfig;
 
 import java.util.Map;
 
@@ -98,6 +87,7 @@ public class SEInitializer {
             throw new SmsBlendException("初始化配置失败");
         }
 
+        //初始化SmsConfig整体配置文件
         this.initSmsConfig(smsConfig);
         // 解析供应商配置
         Map<String, Map<String, String>> blends = smsConfig.getBlends();
@@ -108,11 +98,16 @@ public class SEInitializer {
             BaseProviderFactory<SmsBlend, SupplierConfig> providerFactory = (BaseProviderFactory<SmsBlend, SupplierConfig>) ProviderFactoryHolder.requireForSupplier(supplier);
             if(providerFactory == null) {
                 log.warn("创建\"{}\"的短信服务失败，未找到供应商为\"{}\"的服务", configId, supplier);
+                continue;
             }
             SmsUtil.replaceKeysSeperator(configMap, "-", "_");
             JSONObject configJson = new JSONObject(configMap);
             SupplierConfig supplierConfig = JSONUtil.toBean(configJson, providerFactory.getConfigClass());
-            providerFactory.createSms(supplierConfig);
+            if(Boolean.TRUE.equals(smsConfig.getRestricted())) {
+                SmsFactory.createRestrictedSmsBlend(supplierConfig);
+            } else {
+                SmsFactory.createSmsBlend(supplierConfig);
+            }
         }
     }
 

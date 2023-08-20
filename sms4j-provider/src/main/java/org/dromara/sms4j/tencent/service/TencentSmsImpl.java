@@ -24,7 +24,7 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
 
-    public static final String SUPPLIER = "alibaba";
+    public static final String SUPPLIER = "tencent";
     private int retry = 0;
 
     public TencentSmsImpl(TencentConfig tencentSmsConfig, Executor pool, DelayedTime delayed) {

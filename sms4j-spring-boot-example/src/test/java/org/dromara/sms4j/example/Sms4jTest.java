@@ -46,7 +46,7 @@ class Sms4jTest {
     @Test
     public void alibabaSmsTest() {
         // 阿里
-        SmsResponse smsResponse = SmsFactory.getFirstBySupplier(AlibabaSmsImpl.SUPPLIER).sendMessage(PHONE, SmsUtil.getRandomInt(6));
+        SmsResponse smsResponse = SmsFactory.getBySupplier(AlibabaSmsImpl.SUPPLIER).sendMessage(PHONE, SmsUtil.getRandomInt(6));
         Assert.isTrue(smsResponse.isSuccess());
     }
 
@@ -56,7 +56,7 @@ class Sms4jTest {
             return;
         }
         // 华为
-        SmsResponse smsResponse = SmsFactory.getFirstBySupplier(HuaweiSmsImpl.SUPPLIER).sendMessage(PHONE, SmsUtil.getRandomInt(6));
+        SmsResponse smsResponse = SmsFactory.getBySupplier(HuaweiSmsImpl.SUPPLIER).sendMessage(PHONE, SmsUtil.getRandomInt(6));
         log.info(JSONUtil.toJsonStr(smsResponse));
         Assert.isTrue(smsResponse.isSuccess());
     }
@@ -67,7 +67,7 @@ class Sms4jTest {
             return;
         }
         // 容联云
-        SmsResponse smsResponse = SmsFactory.getFirstBySupplier(CloopenSmsImpl.SUPPLIER).sendMessage(PHONE, SmsUtil.getRandomInt(6));
+        SmsResponse smsResponse = SmsFactory.getBySupplier(CloopenSmsImpl.SUPPLIER).sendMessage(PHONE, SmsUtil.getRandomInt(6));
         log.info(JSONUtil.toJsonStr(smsResponse));
         Assert.isTrue(smsResponse.isSuccess());
     }
@@ -78,7 +78,7 @@ class Sms4jTest {
             return;
         }
         // 亿美软通
-        SmsResponse smsResponse = SmsFactory.getFirstBySupplier(EmaySmsImpl.SUPPLIER).sendMessage(PHONE, SmsUtil.getRandomInt(6));
+        SmsResponse smsResponse = SmsFactory.getBySupplier(EmaySmsImpl.SUPPLIER).sendMessage(PHONE, SmsUtil.getRandomInt(6));
         log.info(JSONUtil.toJsonStr(smsResponse));
         Assert.isTrue(smsResponse.isSuccess());
     }
@@ -89,7 +89,7 @@ class Sms4jTest {
             return;
         }
         // 京东云
-        SmsResponse smsResponse = SmsFactory.getFirstBySupplier(JdCloudSmsImpl.SUPPLIER).sendMessage(PHONE, SmsUtil.getRandomInt(6));
+        SmsResponse smsResponse = SmsFactory.getBySupplier(JdCloudSmsImpl.SUPPLIER).sendMessage(PHONE, SmsUtil.getRandomInt(6));
         log.info(JSONUtil.toJsonStr(smsResponse));
         Assert.isTrue(smsResponse.isSuccess());
     }
@@ -100,7 +100,7 @@ class Sms4jTest {
             return;
         }
         // 云片
-        SmsResponse smsResponse = SmsFactory.getFirstBySupplier(YunPianSmsImpl.SUPPLIER).sendMessage(PHONE, SmsUtil.getRandomInt(6));
+        SmsResponse smsResponse = SmsFactory.getBySupplier(YunPianSmsImpl.SUPPLIER).sendMessage(PHONE, SmsUtil.getRandomInt(6));
         log.info(JSONUtil.toJsonStr(smsResponse));
         Assert.isTrue(smsResponse.isSuccess());
     }
@@ -111,7 +111,7 @@ class Sms4jTest {
             return;
         }
         // 腾讯
-        SmsResponse smsResponse = SmsFactory.getFirstBySupplier(TencentSmsImpl.SUPPLIER).sendMessage(PHONE, SmsUtil.getRandomInt(6));
+        SmsResponse smsResponse = SmsFactory.getBySupplier(TencentSmsImpl.SUPPLIER).sendMessage(PHONE, SmsUtil.getRandomInt(6));
         log.info(JSONUtil.toJsonStr(smsResponse));
         Assert.isTrue(smsResponse.isSuccess());
     }
@@ -122,7 +122,7 @@ class Sms4jTest {
             return;
         }
         // 合一
-        SmsResponse smsResponse = SmsFactory.getFirstBySupplier(UniSmsImpl.SUPPLIER).sendMessage(PHONE, SmsUtil.getRandomInt(6));
+        SmsResponse smsResponse = SmsFactory.getBySupplier(UniSmsImpl.SUPPLIER).sendMessage(PHONE, SmsUtil.getRandomInt(6));
         log.info(JSONUtil.toJsonStr(smsResponse));
         Assert.isTrue(smsResponse.isSuccess());
     }
@@ -133,7 +133,7 @@ class Sms4jTest {
             return;
         }
         // 天翼云
-        SmsResponse smsResponse = SmsFactory.getFirstBySupplier(CtyunSmsImpl.SUPPLIER).sendMessage(PHONE, SmsUtil.getRandomInt(6));
+        SmsResponse smsResponse = SmsFactory.getBySupplier(CtyunSmsImpl.SUPPLIER).sendMessage(PHONE, SmsUtil.getRandomInt(6));
         log.info(JSONUtil.toJsonStr(smsResponse));
         Assert.isTrue(smsResponse.isSuccess());
     }
@@ -144,7 +144,7 @@ class Sms4jTest {
             return;
         }
         // 网易云短信
-        SmsResponse smsResponse = SmsFactory.getFirstBySupplier(NeteaseSmsImpl.SUPPLIER).sendMessage(PHONE, SmsUtil.getRandomInt(6));
+        SmsResponse smsResponse = SmsFactory.getBySupplier(NeteaseSmsImpl.SUPPLIER).sendMessage(PHONE, SmsUtil.getRandomInt(6));
         log.info(JSONUtil.toJsonStr(smsResponse));
         Assert.isTrue(smsResponse.isSuccess());
     }
@@ -159,7 +159,7 @@ class Sms4jTest {
         }
         // 助通短信短信
         String msg = StrUtil.format("【图书商城】您好，你的验证码是{}：（5分钟失效）", SmsUtil.getRandomInt(6));
-        SmsResponse smsResponse = SmsFactory.getFirstBySupplier(ZhutongSmsImpl.SUPPLIER).sendMessage(PHONE, msg);
+        SmsResponse smsResponse = SmsFactory.getBySupplier(ZhutongSmsImpl.SUPPLIER).sendMessage(PHONE, msg);
         log.info(JSONUtil.toJsonStr(smsResponse));
         Assert.isTrue(smsResponse.isSuccess());
     }
@@ -175,7 +175,7 @@ class Sms4jTest {
         // 助通短信短信
         LinkedHashMap<String, String> messages = new LinkedHashMap<>(1);
         messages.put("code", SmsUtil.getRandomInt(6));
-        SmsResponse smsResponse = SmsFactory.getFirstBySupplier(ZhutongSmsImpl.SUPPLIER).sendMessage(PHONE, "59264", messages);
+        SmsResponse smsResponse = SmsFactory.getBySupplier(ZhutongSmsImpl.SUPPLIER).sendMessage(PHONE, "59264", messages);
         log.info(JSONUtil.toJsonStr(smsResponse));
         Assert.isTrue(smsResponse.isSuccess());
     }
@@ -190,7 +190,7 @@ class Sms4jTest {
         }
         // 助通短信短信
         String msg = StrUtil.format("【图书商城】您好，你的验证码是{}：（5分钟失效）", SmsUtil.getRandomInt(6));
-        SmsResponse smsResponse = SmsFactory.getFirstBySupplier(ZhutongSmsImpl.SUPPLIER).massTexting(ListUtil.of(PHONE, "180****1111"), msg);
+        SmsResponse smsResponse = SmsFactory.getBySupplier(ZhutongSmsImpl.SUPPLIER).massTexting(ListUtil.of(PHONE, "180****1111"), msg);
         log.info(JSONUtil.toJsonStr(smsResponse));
         Assert.isTrue(smsResponse.isSuccess());
     }
@@ -206,7 +206,7 @@ class Sms4jTest {
         // 助通短信短信
         LinkedHashMap<String, String> messages = new LinkedHashMap<>(1);
         messages.put("code", SmsUtil.getRandomInt(6));
-        SmsResponse smsResponse = SmsFactory.getFirstBySupplier(ZhutongSmsImpl.SUPPLIER).massTexting(ListUtil.of(PHONE, "180****1111"), "59264", messages);
+        SmsResponse smsResponse = SmsFactory.getBySupplier(ZhutongSmsImpl.SUPPLIER).massTexting(ListUtil.of(PHONE, "180****1111"), "59264", messages);
         log.info(JSONUtil.toJsonStr(smsResponse));
         Assert.isTrue(smsResponse.isSuccess());
     }

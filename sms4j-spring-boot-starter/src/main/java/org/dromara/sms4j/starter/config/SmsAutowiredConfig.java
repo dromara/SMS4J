@@ -1,12 +1,12 @@
 package org.dromara.sms4j.starter.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.sms4j.comm.config.SmsBanner;
-import org.dromara.sms4j.comm.config.SmsConfig;
-import org.dromara.sms4j.comm.config.SmsSqlConfig;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
-import org.dromara.sms4j.comm.factory.BeanFactory;
+import org.dromara.sms4j.provider.config.SmsBanner;
+import org.dromara.sms4j.provider.config.SmsConfig;
+import org.dromara.sms4j.provider.config.SmsSqlConfig;
+import org.dromara.sms4j.provider.factory.BeanFactory;
 import org.dromara.sms4j.starter.utils.ConfigUtil;
 import org.dromara.sms4j.starter.utils.SmsSpringUtil;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -42,13 +42,13 @@ public class SmsAutowiredConfig {
     /** 注入一个定时器*/
     @Bean
     protected DelayedTime delayedTime(){
-      return BeanFactory.getDelayedTime();
+        return BeanFactory.getDelayedTime();
     }
 
     /** 注入线程池*/
     @Bean("smsExecutor")
     protected Executor taskExecutor(SmsConfig config){
-       return BeanFactory.setExecutor(config);
+        return BeanFactory.setExecutor(config);
     }
 
     /** 注入一个配置文件读取工具*/
@@ -59,7 +59,7 @@ public class SmsAutowiredConfig {
 
     /** smsConfig参数意义为确保注入时smsConfig已经存在*/
     @Bean
-    @ConditionalOnProperty(prefix = "sms", name = "config-type", havingValue = "config_file")
+    @ConditionalOnProperty(prefix = "sms", name = "config-type", havingValue = "yaml")
     protected SupplierConfig supplierConfig(SmsConfig smsConfig){
         return new SupplierConfig();
     }
@@ -90,6 +90,7 @@ public class SmsAutowiredConfig {
         // for (org.dromara.sms4j.api.universal.SupplierConfig s : beansOfType.values()) {
         //     SupplierFactory.setSupplierConfig(s);
         // }
+
         //打印banner
         if (BeanFactory.getSmsConfig().getIsPrint()){
             SmsBanner.PrintBanner(Constant.VERSION);

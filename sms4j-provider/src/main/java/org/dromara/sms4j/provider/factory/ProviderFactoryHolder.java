@@ -3,7 +3,9 @@ package org.dromara.sms4j.provider.factory;
 import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.universal.SupplierConfig;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -14,17 +16,14 @@ import java.util.Set;
  */
 public class ProviderFactoryHolder {
 
-    private static final Set<BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig>> factories = new HashSet<>();
+    private static final Map<String, BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig>> factories = new HashMap<>();
 
     public static void registerFactory(BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig> factory) {
-        factories.add(factory);
+        factories.put(factory.getSupplier(), factory);
     }
 
     public static BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig> requireForSupplier(String supplier) {
-        return factories.stream()
-                .filter(f -> f.getSupplier().equals(supplier))
-                .findFirst()
-                .orElse(null);
+        return factories.getOrDefault(supplier, null);
     }
 
 }

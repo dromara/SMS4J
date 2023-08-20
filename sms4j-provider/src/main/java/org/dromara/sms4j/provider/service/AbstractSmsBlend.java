@@ -7,7 +7,7 @@ import org.dromara.sms4j.api.callback.CallBack;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
-import org.dromara.sms4j.comm.factory.BeanFactory;
+import org.dromara.sms4j.provider.factory.BeanFactory;
 import org.dromara.sms4j.comm.utils.SmsHttpUtil;
 
 import java.util.LinkedHashMap;

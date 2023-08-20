@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class JdCloudSmsImpl extends AbstractSmsBlend<JdCloudConfig> {
 
-    public static final String SUPPLIER = "jdCloud";
+    public static final String SUPPLIER = "jdcloud";
 
     private final SmsClient client;
 

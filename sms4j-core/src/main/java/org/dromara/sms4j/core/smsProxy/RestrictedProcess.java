@@ -1,9 +1,9 @@
-package org.dromara.sms4j.api.smsProxy;
+package org.dromara.sms4j.core.smsProxy;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.dao.SmsDao;
-import org.dromara.sms4j.comm.config.SmsConfig;
+import org.dromara.sms4j.provider.config.SmsConfig;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtil;
 

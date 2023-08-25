@@ -15,10 +15,6 @@ public class TencentFactory extends AbstractProviderFactory<TencentSmsImpl, Tenc
 
     private static final TencentFactory INSTANCE = new TencentFactory();
 
-    static {
-        ProviderFactoryHolder.registerFactory(INSTANCE);
-    }
-
     /**
      * 获取建造者实例
      * @return 建造者实例

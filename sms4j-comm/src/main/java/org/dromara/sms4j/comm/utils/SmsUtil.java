@@ -147,7 +147,7 @@ public class SmsUtil {
      * @param seperator 旧分隔符
      * @param newSeperator 新分隔符
      */
-    public static void replaceKeysSeperator(Map<String, String> map, String seperator, String newSeperator) {
+    public static void replaceKeysSeperator(Map<String, Object> map, String seperator, String newSeperator) {
         if(CollUtil.isEmpty(map)) {
             return;
         }
@@ -156,7 +156,7 @@ public class SmsUtil {
             if(StrUtil.isEmpty(key) || !key.contains(seperator)) {
                 continue;
             }
-            String value = map.get(key);
+            String value = String.valueOf(map.get(key));
             String newKey = key.replaceAll(seperator, newSeperator);
             map.putIfAbsent(newKey, value);
             map.remove(key);

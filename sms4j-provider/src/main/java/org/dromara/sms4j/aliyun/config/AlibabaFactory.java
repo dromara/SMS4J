@@ -18,10 +18,6 @@ public class AlibabaFactory extends AbstractProviderFactory<AlibabaSmsImpl, Alib
 
     private static final AlibabaFactory INSTANCE = new AlibabaFactory();
 
-    static {
-        ProviderFactoryHolder.registerFactory(INSTANCE);
-    }
-
     /**
      * 获取建造者实例
      * @return 建造者实例

@@ -18,10 +18,6 @@ public class EmayFactory extends AbstractProviderFactory<EmaySmsImpl, EmayConfig
 
     private static final EmayFactory INSTANCE = new EmayFactory();
 
-    static {
-        ProviderFactoryHolder.registerFactory(INSTANCE);
-    }
-
     /**
      * 获取建造者实例
      * @return 建造者实例

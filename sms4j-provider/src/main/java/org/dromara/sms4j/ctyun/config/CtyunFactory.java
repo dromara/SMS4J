@@ -18,10 +18,6 @@ public class CtyunFactory extends AbstractProviderFactory<CtyunSmsImpl, CtyunCon
 
     private static final CtyunFactory INSTANCE = new CtyunFactory();
 
-    static {
-        ProviderFactoryHolder.registerFactory(INSTANCE);
-    }
-
     /**
      * 获取建造者实例
      * @return 建造者实例

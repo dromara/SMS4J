@@ -19,10 +19,6 @@ public class HuaweiFactory extends AbstractProviderFactory<HuaweiSmsImpl, Huawei
 
     private static final HuaweiFactory INSTANCE = new HuaweiFactory();
 
-    static {
-        ProviderFactoryHolder.registerFactory(INSTANCE);
-    }
-
     /**
      * 获取建造者实例
      * @return 建造者实例
@@ -43,7 +39,7 @@ public class HuaweiFactory extends AbstractProviderFactory<HuaweiSmsImpl, Huawei
      */
     @Override
     public String getSupplier() {
-        return AlibabaSmsImpl.SUPPLIER;
+        return HuaweiSmsImpl.SUPPLIER;
     }
 
 }

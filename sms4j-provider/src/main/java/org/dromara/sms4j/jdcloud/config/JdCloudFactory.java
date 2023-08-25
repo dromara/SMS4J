@@ -9,7 +9,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.dromara.sms4j.jdcloud.service.JdCloudSmsImpl;
 import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
-import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 
 /**
  * 京东云短信配置
@@ -21,10 +20,6 @@ import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 public class JdCloudFactory extends AbstractProviderFactory<JdCloudSmsImpl, JdCloudConfig> {
 
     private static final JdCloudFactory INSTANCE = new JdCloudFactory();
-
-    static {
-        ProviderFactoryHolder.registerFactory(INSTANCE);
-    }
 
     /**
      * 获取建造者实例

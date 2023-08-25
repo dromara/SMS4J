@@ -10,10 +10,6 @@ import org.dromara.sms4j.zhutong.service.ZhutongSmsImpl;
 public class ZhutongFactory extends AbstractProviderFactory<ZhutongSmsImpl, ZhutongConfig> {
     private static final ZhutongFactory INSTANCE = new ZhutongFactory();
 
-    static {
-        ProviderFactoryHolder.registerFactory(INSTANCE);
-    }
-
     /**
      * 获取建造者实例
      * @return 建造者实例

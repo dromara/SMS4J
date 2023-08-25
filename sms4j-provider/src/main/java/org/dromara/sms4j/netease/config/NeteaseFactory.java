@@ -18,10 +18,6 @@ public class NeteaseFactory extends AbstractProviderFactory<NeteaseSmsImpl, Nete
 
     private static final NeteaseFactory INSTANCE = new NeteaseFactory();
 
-    static {
-        ProviderFactoryHolder.registerFactory(INSTANCE);
-    }
-
     /**
      * 获取建造者实例
      * @return 建造者实例

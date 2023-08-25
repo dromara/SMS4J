@@ -17,10 +17,6 @@ public class CloopenFactory extends AbstractProviderFactory<CloopenSmsImpl, Cloo
 
     private static final CloopenFactory INSTANCE = new CloopenFactory();
 
-    static {
-        ProviderFactoryHolder.registerFactory(INSTANCE);
-    }
-
     /**
      * 获取建造者实例
      * @return 建造者实例

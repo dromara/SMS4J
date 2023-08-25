@@ -11,7 +11,7 @@ public class SupplierConfig {
     /** smsConfig参数意义为确保注入时smsConfig已经存在*/
     @Bean
     @ConfigurationProperties(prefix = "sms.blends")
-    protected Map<String, Map<String, String>> blends(){
+    protected Map<String, Map<String, Object>> blends(){
         return new LinkedHashMap<>();
     }
 

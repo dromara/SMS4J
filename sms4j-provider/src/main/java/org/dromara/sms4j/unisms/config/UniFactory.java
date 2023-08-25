@@ -18,10 +18,6 @@ public class UniFactory extends AbstractProviderFactory<UniSmsImpl, UniConfig> {
 
     private static final UniFactory INSTANCE = new UniFactory();
 
-    static {
-        ProviderFactoryHolder.registerFactory(INSTANCE);
-    }
-
     /**
      * 获取建造者实例
      * @return 建造者实例

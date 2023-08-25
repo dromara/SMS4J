@@ -11,10 +11,6 @@ public class YunPianFactory extends AbstractProviderFactory<YunPianSmsImpl, Yunp
 
     private static final YunPianFactory INSTANCE = new YunPianFactory();
 
-    static {
-        ProviderFactoryHolder.registerFactory(INSTANCE);
-    }
-
     /**
      * 获取建造者实例
      * @return 建造者实例

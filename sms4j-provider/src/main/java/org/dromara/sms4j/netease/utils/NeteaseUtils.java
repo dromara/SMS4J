@@ -78,14 +78,13 @@ public class NeteaseUtils {
         return sortQueryString.substring(1);
     }
 
-    private static Map<String, String> generateParamMap(NeteaseConfig neteaseConfig, List<String> phone, String message, String templateId) {
-        Map<String, String> paramMap = new HashMap<>();
+    public static Map<String, String> generateParamMap(NeteaseConfig neteaseConfig, List<String> phone, String message, String templateId) {
+        Map<String, String> paramMap = new HashMap<>(4);
         JSONArray messageArray = JSONUtil.createArray();
         messageArray.add(message);
         JSONArray phoneArray = JSONUtil.createArray();
-        phoneArray.add(phone);
+        phoneArray.addAll(phone);
         paramMap.put("mobiles", phoneArray.toString());
-        paramMap.put("SignName", neteaseConfig.getSignature());
         paramMap.put("params", messageArray.toString());
         paramMap.put("templateid", templateId);
         paramMap.put("needUp", neteaseConfig.getNeedUp().toString());

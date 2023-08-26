@@ -97,15 +97,7 @@ public class NeteaseSmsImpl extends AbstractSmsBlend {
         String nonce = IdUtil.fastSimpleUUID();
         String curTime = String.valueOf(DateUtil.currentSeconds());
         String checkSum = NeteaseUtils.getCheckSum(config.getAccessKeySecret(), nonce, curTime);
-        Map<String, String> body = new LinkedHashMap<>(4);
-        body.put("templateid", templateId);
-        JSONArray jsonArray = JSONUtil.createArray();
-        JSONArray messageArray = JSONUtil.createArray();
-        messageArray.add(message);
-        jsonArray.addAll(phones);
-        body.put("mobiles", jsonArray.toString());
-        body.put("params", messageArray.toString());
-        body.put("needUp", config.getNeedUp().toString());
+        Map<String, String> body = NeteaseUtils.generateParamMap(config, phones, message, templateId);
         String paramStr = NeteaseUtils.generateParamBody(body);
         try(HttpResponse response = HttpRequest.post(requestUrl)
                 .header("Content-Type", "application/x-www-form-urlencoded")

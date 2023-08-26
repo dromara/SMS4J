@@ -93,24 +93,27 @@ public class NeteaseSmsImpl extends AbstractSmsBlend {
         return getSmsResponse(config.getTemplateUrl(), phones, messageStr, templateId);
     }
 
-    private SmsResponse getSmsResponse(String requestUrl, List<String> phones, String message, String templateId) {
+    private SmsResponse getSmsResponse(String requestUrl, List<String> phones, String message, String templateId)  {
         String nonce = IdUtil.fastSimpleUUID();
         String curTime = String.valueOf(DateUtil.currentSeconds());
         String checkSum = NeteaseUtils.getCheckSum(config.getAccessKeySecret(), nonce, curTime);
-        Map<String, Object> body = new LinkedHashMap<>(4);
+        Map<String, String> body = new LinkedHashMap<>(4);
         body.put("templateid", templateId);
         JSONArray jsonArray = JSONUtil.createArray();
+        JSONArray messageArray = JSONUtil.createArray();
+        messageArray.add(message);
         jsonArray.addAll(phones);
         body.put("mobiles", jsonArray.toString());
-        body.put("params", message);
-        body.put("needUp", config.getNeedUp());
+        body.put("params", messageArray.toString());
+        body.put("needUp", config.getNeedUp().toString());
+        String paramStr = NeteaseUtils.generateParamBody(body);
         try(HttpResponse response = HttpRequest.post(requestUrl)
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .header("AppKey", config.getAccessKeyId())
                 .header("Nonce", nonce)
                 .header("CurTime", curTime)
                 .header("CheckSum", checkSum)
-                .body(JSONUtil.toJsonStr(body))
+                .body(paramStr)
                 .execute()){
             JSONObject res = JSONUtil.parseObj(response.body());
             return this.getResponse(res);

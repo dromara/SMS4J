@@ -1,10 +1,6 @@
 package org.dromara.sms4j.provider.factory;
 
-import org.dromara.sms4j.api.dao.SmsDao;
-import org.dromara.sms4j.api.dao.SmsDaoDefaultImpl;
-import org.dromara.sms4j.comm.enumerate.ConfigType;
 import org.dromara.sms4j.provider.config.SmsConfig;
-import org.dromara.sms4j.provider.config.SmsSqlConfig;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 
 import java.util.concurrent.ArrayBlockingQueue;
@@ -29,12 +25,6 @@ public class BeanFactory {
 
     /** 核心配置信息*/
     private static SmsConfig smsConfig;
-
-    /** jdbc工具*/
-    // private static JDBCTool jdbcTool;
-
-    /** 数据库配置*/
-    private static SmsSqlConfig smsSqlConfig;
 
     private BeanFactory() {
     }
@@ -72,13 +62,6 @@ public class BeanFactory {
             smsConfig = new SmsConfig();
         }
         return smsConfig;
-    }
-
-    public static SmsSqlConfig getSmsSqlConfig(){
-        if (smsSqlConfig == null){
-            smsSqlConfig = new SmsSqlConfig();
-        }
-        return smsSqlConfig;
     }
 
     // public static JDBCTool getJDBCTool(){

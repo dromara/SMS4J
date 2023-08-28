@@ -5,7 +5,6 @@ import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.provider.config.SmsBanner;
 import org.dromara.sms4j.provider.config.SmsConfig;
-import org.dromara.sms4j.provider.config.SmsSqlConfig;
 import org.dromara.sms4j.provider.factory.BeanFactory;
 import org.dromara.sms4j.starter.utils.ConfigUtil;
 import org.dromara.sms4j.starter.utils.SmsSpringUtil;
@@ -27,10 +26,6 @@ public class SmsAutowiredConfig {
     public SmsAutowiredConfig(SmsSpringUtil smsSpringUtil) {
         this.smsSpringUtil = smsSpringUtil;
     }
-
-    @Bean
-    @ConfigurationProperties(prefix = "sms.sql")
-    protected SmsSqlConfig smsSqlConfig(){return BeanFactory.getSmsSqlConfig();}
 
     @Bean
     @Primary

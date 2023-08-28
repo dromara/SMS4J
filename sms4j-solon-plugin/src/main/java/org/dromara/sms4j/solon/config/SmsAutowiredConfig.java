@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.core.smsProxy.SmsInvocationHandler;
 import org.dromara.sms4j.provider.config.SmsBanner;
 import org.dromara.sms4j.provider.config.SmsConfig;
-import org.dromara.sms4j.provider.config.SmsSqlConfig;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.provider.factory.BeanFactory;
@@ -32,11 +31,6 @@ public class SmsAutowiredConfig implements LifecycleBean {
         Props props = Solon.cfg().getProp(prefix);
         Utils.injectProperties(obj, props);
         return obj;
-    }
-
-    @Bean
-    public SmsSqlConfig smsSqlConfig() {
-        return injectObj("sms.sql", BeanFactory.getSmsSqlConfig());
     }
 
     @Bean

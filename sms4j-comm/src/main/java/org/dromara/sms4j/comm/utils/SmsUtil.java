@@ -124,7 +124,7 @@ public class SmsUtil {
      * @return 结果字符串
      */
     public static String arrayToString(List<String> list) {
-        return CollUtil.join(list, ",", "+86", "");
+        return CollUtil.join(list, ",", str -> StrUtil.addPrefixIfNot(str, "+86"));
     }
 
     /**
@@ -136,7 +136,7 @@ public class SmsUtil {
     public static String[] listToArray(List<String> list) {
         List<String> toStr = new ArrayList<>();
         for (String s : list) {
-            toStr.add("+86" + s);
+            toStr.add(StrUtil.addPrefixIfNot(s, "+86"));
         }
         return toStr.toArray(new String[list.size()]);
     }

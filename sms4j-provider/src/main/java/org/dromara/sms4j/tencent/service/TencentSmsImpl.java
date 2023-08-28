@@ -1,5 +1,6 @@
 package org.dromara.sms4j.tencent.service;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import com.jdcloud.sdk.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +58,7 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
             list.add(entry.getValue());
         }
         String[] s = new String[list.size()];
-        return getSmsResponse(new String[]{"+86" + phone}, list.toArray(s), templateId);
+        return getSmsResponse(new String[]{StrUtil.addPrefixIfNot(phone, "+86")}, list.toArray(s), templateId);
     }
 
     @Override

@@ -90,7 +90,8 @@ public final class HtmlUtil {
             for (Map.Entry<String, String> s : parameter.entrySet()) {
                 String piece = piece(s.getKey());
                 if (data.get(i).contains(piece)){
-                    data.set(i,s.getValue());
+                    String replace = data.get(i).replace(piece, s.getValue());
+                    data.set(i,replace);
                 }
             }
         }

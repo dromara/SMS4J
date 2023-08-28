@@ -47,7 +47,7 @@ public class EmaySmsImpl extends AbstractSmsBlend<EmayConfig> {
         try {
             Map<String, String> headers = new LinkedHashMap<>(1);
             headers.put("Content-Type", Constant.FROM_URLENCODED);
-            SmsResponse smsResponse = getResponse(http.postJson(url, headers, params));
+            SmsResponse smsResponse = getResponse(http.postFrom(url, headers, params));
             if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
                 retry = 0;
                 return smsResponse;

@@ -56,7 +56,7 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
         Map<String, String> headers = getHeaders();
 
         try {
-            SmsResponse smsResponse = getResponse(http.postJson(Constant.YUNPIAN_URL + "/sms/tpl_single_send.json", headers, body));
+            SmsResponse smsResponse = getResponse(http.postFrom(Constant.YUNPIAN_URL + "/sms/tpl_single_send.json", headers, body));
             if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
                 retry = 0;
                 return smsResponse;
@@ -80,7 +80,7 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
         Map<String, String> headers = getHeaders();
 
         try {
-            SmsResponse smsResponse = getResponse(http.postJson(Constant.YUNPIAN_URL + "/sms/tpl_single_send.json", headers, body));
+            SmsResponse smsResponse = getResponse(http.postFrom(Constant.YUNPIAN_URL + "/sms/tpl_single_send.json", headers, body));
             if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
                 retry = 0;
                 return smsResponse;

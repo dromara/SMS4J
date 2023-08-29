@@ -6,13 +6,18 @@ import cn.hutool.json.JSONUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.SmsBlend;
+import org.dromara.sms4j.api.dao.SmsDao;
+import org.dromara.sms4j.api.dao.SmsDaoDefaultImpl;
+import org.dromara.sms4j.api.proxy.RestrictedProcess;
 import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.utils.SmsUtil;
 import org.dromara.sms4j.core.factory.SmsFactory;
+import org.dromara.sms4j.core.proxy.SmsInvocationHandler;
 import org.dromara.sms4j.provider.config.SmsConfig;
 import org.dromara.sms4j.provider.factory.BaseProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
+import org.dromara.sms4j.starter.aop.SpringRestrictedProcess;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -54,6 +59,9 @@ public class SmsBlendsInitializer {
                 SmsFactory.createSmsBlend(supplierConfig);
             }
         }
+
+        //注册短信拦截实现
+        SmsInvocationHandler.setRestrictedProcess(new SpringRestrictedProcess());
     }
 
 }

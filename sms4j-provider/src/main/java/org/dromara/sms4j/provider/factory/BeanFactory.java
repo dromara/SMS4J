@@ -64,10 +64,4 @@ public class BeanFactory {
         return smsConfig;
     }
 
-    // public static JDBCTool getJDBCTool(){
-    //     if (jdbcTool == null){
-    //         jdbcTool = new JDBCTool(getSmsSqlConfig());
-    //     }
-    //     return jdbcTool;
-    // }
 }

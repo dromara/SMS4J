@@ -6,7 +6,7 @@ import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.core.datainterface.SmsReadConfig;
 import org.dromara.sms4j.core.load.SmsLoad;
-import org.dromara.sms4j.core.smsProxy.SmsInvocationHandler;
+import org.dromara.sms4j.core.proxy.SmsInvocationHandler;
 import org.dromara.sms4j.provider.config.BaseConfig;
 import org.dromara.sms4j.provider.factory.BaseProviderFactory;
 import org.dromara.sms4j.provider.factory.BeanFactory;
@@ -149,7 +149,7 @@ public abstract class SmsFactory {
      * @author :Wind
      */
     private static SmsBlend renderWithRestricted(SmsBlend sms) {
-        SmsInvocationHandler smsInvocationHandler = SmsInvocationHandler.newSmsInvocationHandler(sms, BeanFactory.getSmsConfig());
+        SmsInvocationHandler smsInvocationHandler = SmsInvocationHandler.newSmsInvocationHandler(sms);
         return (SmsBlend) Proxy.newProxyInstance(sms.getClass().getClassLoader(), new Class[]{SmsBlend.class}, smsInvocationHandler);
     }
 

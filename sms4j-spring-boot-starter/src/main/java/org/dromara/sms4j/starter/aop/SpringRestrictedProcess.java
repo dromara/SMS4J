@@ -1,4 +1,4 @@
-package org.dromara.sms4j.solon.aop;
+package org.dromara.sms4j.starter.aop;
 
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.dao.SmsDao;
@@ -7,25 +7,24 @@ import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtil;
 import org.dromara.sms4j.provider.config.SmsConfig;
 import org.dromara.sms4j.provider.factory.BeanFactory;
-import org.noear.solon.core.AopContext;
+import org.dromara.sms4j.starter.utils.SmsSpringUtil;
+
+import java.util.Objects;
 
 @Slf4j
-public class SolonRestrictedProcess implements RestrictedProcess {
-
+public class SpringRestrictedProcess implements RestrictedProcess {
     private static final Long minTimer = 60 * 1000L;
     private static final Long accTimer = 24 * 60 * 60 * 1000L;
     private static final String REDIS_KEY = "sms:restricted:";
-    private SmsDao smsDao;
 
-    public SolonRestrictedProcess(AopContext context) {
-        context.getBeanAsync(SmsDao.class, bean -> {
-            smsDao = bean;
-        });
-    }
 
     @Override
-    public SmsBlendException process(String phone) {
+    public SmsBlendException process(String phone) throws Exception {
         SmsConfig config = BeanFactory.getSmsConfig();
+        SmsDao smsDao = SmsSpringUtil.getBean(SmsDao.class);
+        if (Objects.isNull(smsDao)) {
+            throw new SmsBlendException("The dao tool could not be found");
+        }
         Integer accountMax = config.getAccountMax(); // 每日最大发送量
         Integer minuteMax = config.getMinuteMax(); // 每分钟最大发送量
         if (SmsUtil.isNotEmpty(accountMax)) {   // 是否配置了每日限制

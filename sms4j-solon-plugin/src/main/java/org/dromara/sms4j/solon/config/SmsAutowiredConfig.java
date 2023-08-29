@@ -1,7 +1,7 @@
 package org.dromara.sms4j.solon.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.sms4j.core.smsProxy.SmsInvocationHandler;
+import org.dromara.sms4j.core.proxy.SmsInvocationHandler;
 import org.dromara.sms4j.provider.config.SmsBanner;
 import org.dromara.sms4j.provider.config.SmsConfig;
 import org.dromara.sms4j.comm.constant.Constant;

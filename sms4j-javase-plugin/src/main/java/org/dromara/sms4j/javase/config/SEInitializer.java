@@ -11,9 +11,12 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.aliyun.config.AlibabaFactory;
 import org.dromara.sms4j.api.SmsBlend;
+import org.dromara.sms4j.api.dao.SmsDao;
 import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.cloopen.config.CloopenFactory;
 import org.dromara.sms4j.core.factory.SmsFactory;
+import org.dromara.sms4j.core.proxy.RestrictedProcessDefaultImpl;
+import org.dromara.sms4j.core.proxy.SmsInvocationHandler;
 import org.dromara.sms4j.ctyun.config.CtyunFactory;
 import org.dromara.sms4j.emay.config.EmayFactory;
 import org.dromara.sms4j.huawei.config.HuaweiFactory;
@@ -62,9 +65,10 @@ public class SEInitializer {
      *
      * @return
      */
-    public void fromYaml() {
+    public SEInitializer fromYaml() {
         ClassPathResource yamlResouce = new ClassPathResource("sms4j.yml");
         this.fromYaml(yamlResouce.readUtf8Str());
+        return this;
     }
 
     /**
@@ -72,9 +76,10 @@ public class SEInitializer {
      *
      * @param yaml yaml配置字符串
      */
-    public void fromYaml(String yaml) {
+    public SEInitializer fromYaml(String yaml) {
         InitConfig config = YamlUtil.toBean(yaml, InitConfig.class);
         this.initConfig(config);
+        return this;
     }
 
     /**
@@ -82,17 +87,33 @@ public class SEInitializer {
      *
      * @param json json配置字符串
      */
-    public void fromJson(String json) {
+    public SEInitializer fromJson(String json) {
         InitConfig config = JSONUtil.toBean(json, InitConfig.class);
         this.initConfig(config);
+        return this;
     }
 
     /**
      * 注册供应商工厂
      * @param factory
      */
-    public void registerFactory(BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig> factory) {
+    public SEInitializer registerFactory(BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig> factory) {
         ProviderFactoryHolder.registerFactory(factory);
+        return this;
+    }
+
+    /**
+     * 注册DAO实例
+     * @param smsDao
+     */
+    public SEInitializer registerSmsDao(SmsDao smsDao) {
+        if(smsDao == null) {
+            throw new SmsBlendException("注册DAO实例失败，实例不能为空");
+        }
+        RestrictedProcessDefaultImpl process = new RestrictedProcessDefaultImpl();
+        process.setSmsDao(smsDao);
+        SmsInvocationHandler.setRestrictedProcess(process);
+        return this;
     }
 
     private void initConfig(InitConfig config) {

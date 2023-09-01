@@ -1,5 +1,7 @@
 package org.dromara.email.comm.entity;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -16,7 +18,7 @@ public class MailMessage {
     /**
      * 收件人地址
      */
-    private List<String> mailAddress;
+    private String mailAddress;
 
     /**
      * 邮件主题
@@ -63,5 +65,7 @@ public class MailMessage {
      */
     private Map<String, String> files;
 
-
+    public List<String> getMailAddressList() {
+        return Convert.toList(String.class, mailAddress);
+    }
 }

@@ -53,7 +53,7 @@ public class MailService implements MailClient {
         } else {
             html = HtmlUtil.readHtml(mailMessage.getHtmlInputStream());
         }
-        send(mailMessage.getMailAddress(),
+        send(mailMessage.getMailAddressList(),
                 mailMessage.getTitle(),
                 mailMessage.getBody(),
                 html,

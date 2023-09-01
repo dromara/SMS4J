@@ -53,7 +53,16 @@ public class MailService implements MailClient {
         } else {
             html = HtmlUtil.readHtml(mailMessage.getHtmlInputStream());
         }
-        send(mailMessage.getMailAddressList(),
+        List<String> address;
+        if (CollUtil.isEmpty(mailMessage.getMailAddressList())) {
+            if (StrUtil.isBlank(mailMessage.getMailAddress())) {
+                throw new MailException("收件人地址");
+            }
+            address = CollUtil.newArrayList(mailMessage.getMailAddress());
+        } else {
+            address = mailMessage.getMailAddressList();
+        }
+        send(address,
                 mailMessage.getTitle(),
                 mailMessage.getBody(),
                 html,

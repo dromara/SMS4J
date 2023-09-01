@@ -21,6 +21,11 @@ public class MailMessage {
     private String mailAddress;
 
     /**
+     * 收件人地址多人(优先使用)
+     */
+    private List<String> mailAddressList;
+
+    /**
      * 邮件主题
      */
     private String title;
@@ -65,7 +70,4 @@ public class MailMessage {
      */
     private Map<String, String> files;
 
-    public List<String> getMailAddressList() {
-        return Convert.toList(String.class, mailAddress);
-    }
 }

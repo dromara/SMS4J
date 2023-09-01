@@ -72,10 +72,10 @@ public class MailBuild {
     }
 
     public static MailClient build(MailSmtpConfig config) throws MessagingException {
-        return MailService.NewMailService(new MailBuild(config));
+        return MailService.instance(new MailBuild(config));
     }
     public static MailClient build(MailSmtpConfig config,Blacklist blacklist)throws MessagingException {
-       return MailService.NewMailService(new MailBuild(config,blacklist));
+       return MailService.instance(new MailBuild(config,blacklist));
     }
 
     /**

@@ -11,6 +11,7 @@ import org.dromara.sms4j.starter.utils.SmsSpringUtil;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 
@@ -36,18 +37,21 @@ public class SmsAutowiredConfig {
 
     /** 注入一个定时器*/
     @Bean
+    @Lazy
     protected DelayedTime delayedTime(){
         return BeanFactory.getDelayedTime();
     }
 
     /** 注入线程池*/
     @Bean("smsExecutor")
+    @Lazy
     protected Executor taskExecutor(SmsConfig config){
         return BeanFactory.setExecutor(config);
     }
 
     /** 注入一个配置文件读取工具*/
-    @Bean
+    @Bean("smsConfigUtil")
+    @Lazy
     protected ConfigUtil configUtil(Environment environment){
         return new ConfigUtil(environment);
     }

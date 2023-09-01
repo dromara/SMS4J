@@ -56,7 +56,7 @@ public class MailService implements MailClient {
         List<String> address;
         if (CollUtil.isEmpty(mailMessage.getMailAddressList())) {
             if (StrUtil.isBlank(mailMessage.getMailAddress())) {
-                throw new MailException("收件人地址");
+                throw new MailException("收件人地址不能为空!");
             }
             address = CollUtil.newArrayList(mailMessage.getMailAddress());
         } else {

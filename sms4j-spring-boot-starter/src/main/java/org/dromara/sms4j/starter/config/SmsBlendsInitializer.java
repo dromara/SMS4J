@@ -7,9 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.aliyun.config.AlibabaFactory;
 import org.dromara.sms4j.api.SmsBlend;
-import org.dromara.sms4j.api.dao.SmsDao;
-import org.dromara.sms4j.api.dao.SmsDaoDefaultImpl;
-import org.dromara.sms4j.api.proxy.RestrictedProcess;
 import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.cloopen.config.CloopenFactory;
 import org.dromara.sms4j.comm.constant.Constant;
@@ -29,24 +26,27 @@ import org.dromara.sms4j.tencent.config.TencentFactory;
 import org.dromara.sms4j.unisms.config.UniFactory;
 import org.dromara.sms4j.yunpian.config.YunPianFactory;
 import org.dromara.sms4j.zhutong.config.ZhutongFactory;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class SmsBlendsInitializer {
+public class SmsBlendsInitializer implements ApplicationListener<ContextRefreshedEvent> {
 
     private final List<BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig>> factoryList;
 
     private final SmsConfig smsConfig;
     private final Map<String, Map<String, Object>> blends;
 
-    @PostConstruct
-    public void initBlends() {
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        if (event.getApplicationContext().getParent() != null) {
+            return;
+        }
         this.registerDefaultFactory();
         // 注册短信对象工厂
         ProviderFactoryHolder.registerFactory(factoryList);

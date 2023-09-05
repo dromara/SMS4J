@@ -1,8 +1,10 @@
 package org.dromara.sms4j.emay.config;
 
-import org.dromara.sms4j.comm.factory.BeanFactory;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.dromara.sms4j.emay.service.EmaySmsImpl;
-import org.dromara.sms4j.provider.base.BaseProviderFactory;
+import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
+import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 
 /**
  * EmaySmsConfig
@@ -11,16 +13,10 @@ import org.dromara.sms4j.provider.base.BaseProviderFactory;
  * @author Richard
  * @date 2023/04/11 12:00
  * */
-public class EmayFactory implements BaseProviderFactory<EmaySmsImpl, EmayConfig> {
-    private static EmaySmsImpl emaySms;
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class EmayFactory extends AbstractProviderFactory<EmaySmsImpl, EmayConfig> {
+
     private static final EmayFactory INSTANCE = new EmayFactory();
-
-    private static final class ConfigHolder {
-        private static EmayConfig config = EmayConfig.builder().build();
-    }
-
-    private EmayFactory() {
-    }
 
     /**
      * 获取建造者实例
@@ -37,44 +33,16 @@ public class EmayFactory implements BaseProviderFactory<EmaySmsImpl, EmayConfig>
      */
     @Override
     public EmaySmsImpl createSms(EmayConfig emayConfig) {
-        if (emaySms == null){
-            emaySms = createMultitonSms(emayConfig);
-        }
-        return emaySms;
-    }
-
-    @Override
-    public EmaySmsImpl createMultitonSms(EmayConfig emayConfig) {
-        return new EmaySmsImpl(emayConfig, BeanFactory.getExecutor(),BeanFactory.getDelayedTime());
+        return new EmaySmsImpl(emayConfig);
     }
 
     /**
-     * 刷新短信实现对象
-     * @param emayConfig 短信配置对象
-     * @return 刷新后的短信实现对象
+     * 获取供应商
+     * @return 供应商
      */
     @Override
-    public EmaySmsImpl refresh(EmayConfig emayConfig){
-        emaySms = new EmaySmsImpl(emayConfig, BeanFactory.getExecutor(),BeanFactory.getDelayedTime());
-        return emaySms;
-    }
-
-    /**
-     * 获取配置
-     * @return 配置对象
-     */
-    @Override
-    public EmayConfig getConfig() {
-        return ConfigHolder.config;
-    }
-
-    /**
-     * 设置配置
-     * @param config 配置对象
-     */
-    @Override
-    public void setConfig(EmayConfig config) {
-        ConfigHolder.config = config;
+    public String getSupplier() {
+        return EmaySmsImpl.SUPPLIER;
     }
 
 }

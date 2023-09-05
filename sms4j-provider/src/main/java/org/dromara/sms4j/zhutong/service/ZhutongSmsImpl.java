@@ -5,18 +5,14 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.sms4j.api.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
-import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
+import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import org.dromara.sms4j.zhutong.config.ZhutongConfig;
 
 import java.util.HashMap;
@@ -31,53 +27,64 @@ import java.util.concurrent.Executor;
  * <p>2. 模板短信发送  需定义模板   https://doc.zthysms.com/web/#/1/13
  */
 @Slf4j
-public class ZhutongSmsImpl extends AbstractSmsBlend {
+public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
 
-    private final ZhutongConfig config;
+    public static final String SUPPLIER = "zhutong";
+    private int retry = 0;
 
     /**
      * ZhutongSmsImpl
      * <p>构造器，用于构造短信实现模块
      */
     public ZhutongSmsImpl(ZhutongConfig zhutongConfig, Executor pool, DelayedTime delayedTime) {
-        super(pool, delayedTime);
-        this.config = zhutongConfig;
+        super(zhutongConfig, pool, delayedTime);
+    }
+
+    /**
+     * ZhutongSmsImpl
+     * <p>构造器，用于构造短信实现模块
+     */
+    public ZhutongSmsImpl(ZhutongConfig zhutongConfig) {
+        super(zhutongConfig);
     }
 
     @Override
-    @Restricted
+    public String getSupplier() {
+        return SUPPLIER;
+    }
+
+    @Override
     public SmsResponse sendMessage(String phone, String message) {
+        ZhutongConfig config = getConfig();
         //如果模板id为空 or 模板变量名称为空，使用无模板的自定义短信发送
         if (StrUtil.hasBlank(config.getSignature(), config.getTemplateId(), config.getTemplateName())) {
             return getSmsResponse(phone, message);
         }
 
-        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        LinkedHashMap<String, String> map = new LinkedHashMap<>(1);
         map.put(config.getTemplateName(), message);
         return sendMessage(phone, config.getTemplateId(), map);
     }
 
     @Override
-    @Restricted
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
         return getSmsResponseTemplate(templateId, phone, messages);
     }
 
     @Override
-    @Restricted
     public SmsResponse massTexting(List<String> phones, String message) {
+        ZhutongConfig config = getConfig();
         //如果模板id为空 or 模板变量名称为空，使用无模板的自定义短信发送
         if (StrUtil.hasBlank(config.getSignature(), config.getTemplateId(), config.getTemplateName())) {
             return getSmsResponse(phones, message);
         }
 
-        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        LinkedHashMap<String, String> map = new LinkedHashMap<>(1);
         map.put(config.getTemplateName(), message);
         return massTexting(phones, config.getTemplateId(), map);
     }
 
     @Override
-    @Restricted
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
         return getSmsResponseTemplate(templateId, phones, messages);
     }
@@ -86,6 +93,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend {
      * 发送 自定义短信：https://doc.zthysms.com/web/#/1/14
      */
     protected SmsResponse getSmsResponse(List<String> phones, String content) {
+        ZhutongConfig config = getConfig();
         String requestUrl = config.getRequestUrl();
         String username = config.getAccessKeyId();
         String password = config.getAccessKeySecret();
@@ -110,7 +118,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend {
 
         String url = requestUrl + "v2/sendSms";
         long tKey = System.currentTimeMillis() / 1000;
-        Map<String, String> json = new HashMap<>(5);
+        Map<String, Object> json = new HashMap<>(5);
         //账号
         json.put("username", username);
         //密码
@@ -122,13 +130,25 @@ public class ZhutongSmsImpl extends AbstractSmsBlend {
         //内容
         json.put("content", content);
 
-        try(HttpResponse response = HttpRequest.post(url)
-                .header("Content-Type", Constant.APPLICATION_JSON_UTF8)
-                .body(JSONUtil.toJsonStr(json))
-                .execute()){
-            JSONObject body = JSONUtil.parseObj(response.body());
-            return this.getResponse(body);
+        try {
+            Map<String, String> headers = new LinkedHashMap<>(1);
+            headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
+            SmsResponse smsResponse = getResponse(http.postJson(requestUrl, headers, json));
+            if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
+                retry = 0;
+                return smsResponse;
+            }
+            return requestRetry(phones, content);
+        }catch (SmsBlendException e){
+            return requestRetry(phones, content);
         }
+    }
+
+    private SmsResponse requestRetry(List<String> phones, String content) {
+        http.safeSleep(getConfig().getRetryInterval());
+        retry++;
+        log.warn("短信第 {" + retry + "} 次重新发送");
+        return getSmsResponse(phones, content);
     }
 
     protected SmsResponse getSmsResponse(String mobile, String content) {
@@ -139,6 +159,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend {
      * 发送 模板短信：https://doc.zthysms.com/web/#/1/13
      */
     protected SmsResponse getSmsResponseTemplate(String templateId, List<String> phones, LinkedHashMap<String, String> messages) {
+        ZhutongConfig config = getConfig();
         String requestUrl = config.getRequestUrl();
         String username = config.getAccessKeyId();
         String password = config.getAccessKeySecret();
@@ -194,13 +215,25 @@ public class ZhutongSmsImpl extends AbstractSmsBlend {
         }
         requestJson.set("records", records);
 
-        try(HttpResponse response = HttpRequest.post(url)
-                .header("Content-Type", Constant.APPLICATION_JSON_UTF8)
-                .body(requestJson.toString())
-                .execute()){
-            JSONObject body = JSONUtil.parseObj(response.body());
-            return this.getResponse(body);
+        try {
+            Map<String, String> headers = new LinkedHashMap<>(1);
+            headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
+            SmsResponse smsResponse = getResponse(http.postJson(requestUrl, headers, requestJson.toString()));
+            if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
+                retry = 0;
+                return smsResponse;
+            }
+            return requestRetry(templateId, phones, messages);
+        }catch (SmsBlendException e){
+            return requestRetry(templateId, phones, messages);
         }
+    }
+
+    private SmsResponse requestRetry(String templateId, List<String> phones, LinkedHashMap<String, String> messages) {
+        http.safeSleep(getConfig().getRetryInterval());
+        retry++;
+        log.warn("短信第 {" + retry + "} 次重新发送");
+        return getSmsResponseTemplate(templateId, phones, messages);
     }
 
     protected SmsResponse getSmsResponseTemplate(String templateId, String mobile, LinkedHashMap<String, String> content) {
@@ -211,7 +244,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend {
         SmsResponse smsResponse = new SmsResponse();
         smsResponse.setSuccess(jsonObject.getInt("code", -1) <= 200);
         smsResponse.setData(jsonObject);
-        smsResponse.setConfigId(this.config.getConfigId());
+        smsResponse.setConfigId(getConfigId());
         return smsResponse;
     }
 

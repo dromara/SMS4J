@@ -6,28 +6,28 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.dromara.sms4j.api.universal.SupplierConfig;
+import org.dromara.sms4j.emay.service.EmaySmsImpl;
+import org.dromara.sms4j.provider.config.BaseConfig;
 
 /**
  * @author Richard
  * @date 2023-04-11 12:00
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-@SuperBuilder
-@ToString
-@EqualsAndHashCode
-@NoArgsConstructor
-public class EmayConfig implements SupplierConfig {
-    /** appKey*/
-    private String appId ;
-    /** appSecret */
-    private String secretKey ;
+public class EmayConfig extends BaseConfig {
+
     /** APP接入地址*/
     private String requestUrl;
 
     /**
-     * 配置标识名 如未配置取对应渠道名例如 Alibaba
+     * 获取供应商
      *
      * @since 3.0.0
      */
-    private String configId;
+    @Override
+    public String getSupplier() {
+        return EmaySmsImpl.SUPPLIER;
+    }
+
 }

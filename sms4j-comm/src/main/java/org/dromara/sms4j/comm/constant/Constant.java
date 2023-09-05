@@ -28,6 +28,8 @@ public abstract class Constant {
      */
     public static final String FROM_URLENCODED = "application/x-www-form-urlencoded";
 
+    public static final String ACCEPT = "application/json";
+
     public static final String APPLICATION_JSON_UTF8 = "application/json; charset=utf-8";
 
     /**
@@ -42,6 +44,11 @@ public abstract class Constant {
      * https请求前缀
      */
     public static final String HTTPS_PREFIX = "https://";
+
+    /**
+     * 供应商配置键名
+     */
+    public static final String SUPPLIER_KEY = "supplier";
 
     private Constant() {
     }

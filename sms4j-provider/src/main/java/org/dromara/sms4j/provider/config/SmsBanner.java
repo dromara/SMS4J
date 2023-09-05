@@ -1,4 +1,4 @@
-package org.dromara.sms4j.comm.config;
+package org.dromara.sms4j.provider.config;
 
 public class SmsBanner {
     private static final String banner =

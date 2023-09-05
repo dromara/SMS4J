@@ -1,4 +1,4 @@
-package org.dromara.sms4j.comm.config;
+package org.dromara.sms4j.provider.config;
 
 
 import lombok.Data;
@@ -8,7 +8,7 @@ import org.dromara.sms4j.comm.enumerate.ConfigType;
 public class SmsConfig {
 
     /** 配置源类型*/
-    private ConfigType configType = ConfigType.CONFIG_FILE;
+    private ConfigType configType = ConfigType.YAML;
 
     /**
      * 打印banner

@@ -1,13 +1,9 @@
 package org.dromara.sms4j.zhutong.config;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.dromara.sms4j.api.universal.SupplierConfig;
-import org.dromara.sms4j.comm.config.BaseConfig;
+import org.dromara.sms4j.provider.config.BaseConfig;
+import org.dromara.sms4j.zhutong.service.ZhutongSmsImpl;
 
 /**
  * 助通-自定义短信发送-配置
@@ -19,12 +15,9 @@ import org.dromara.sms4j.comm.config.BaseConfig;
  * 说明4：templateId      ====> 模板id可以为空，为空发送【自定义短信】无需要提前创建短信模板; 不为空发送:【模板短信】
  * 说明4：templateName    ====> 模板变量名称可以为空，为空发送【自定义短信】无需要提前创建短信模板; 不为空发送:【模板短信】
  */
-@Getter
-@Setter
-@SuperBuilder
-@ToString(callSuper = true)
-@NoArgsConstructor
-public class ZhutongConfig extends BaseConfig implements SupplierConfig  {
+@EqualsAndHashCode(callSuper = true)
+@Data
+public class ZhutongConfig extends BaseConfig  {
     /**
      * 模板变量名称
      * 查看地址：https://mix2.zthysms.com/index.html#/TemplateManagement
@@ -35,6 +28,16 @@ public class ZhutongConfig extends BaseConfig implements SupplierConfig  {
      * 默认请求地址
      * 不同区域，可切换请求地址，也可以不修改，请参考官方文档：https://doc.zthysms.com/web/#/1/236
      */
-    @Builder.Default
     private String requestUrl = "https://api.mix2.zthysms.com/";
+
+    /**
+     * 获取供应商
+     *
+     * @since 3.0.0
+     */
+    @Override
+    public String getSupplier() {
+        return ZhutongSmsImpl.SUPPLIER;
+    }
+
 }

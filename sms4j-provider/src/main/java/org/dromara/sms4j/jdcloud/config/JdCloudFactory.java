@@ -5,9 +5,10 @@ import com.jdcloud.sdk.auth.StaticCredentialsProvider;
 import com.jdcloud.sdk.http.HttpRequestConfig;
 import com.jdcloud.sdk.http.Protocol;
 import com.jdcloud.sdk.service.sms.client.SmsClient;
-import org.dromara.sms4j.comm.factory.BeanFactory;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.dromara.sms4j.jdcloud.service.JdCloudSmsImpl;
-import org.dromara.sms4j.provider.base.BaseProviderFactory;
+import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
 
 /**
  * 京东云短信配置
@@ -15,18 +16,10 @@ import org.dromara.sms4j.provider.base.BaseProviderFactory;
  * @author Charles7c
  * @since 2023/4/10 20:01
  */
-public class JdCloudFactory implements BaseProviderFactory<JdCloudSmsImpl, JdCloudConfig> {
-
-    private static JdCloudSmsImpl jdCloudSms;
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class JdCloudFactory extends AbstractProviderFactory<JdCloudSmsImpl, JdCloudConfig> {
 
     private static final JdCloudFactory INSTANCE = new JdCloudFactory();
-
-    private static final class ConfigHolder {
-        private static JdCloudConfig config = JdCloudConfig.builder().build();
-    }
-
-    private JdCloudFactory() {
-    }
 
     /**
      * 获取建造者实例
@@ -54,52 +47,19 @@ public class JdCloudFactory implements BaseProviderFactory<JdCloudSmsImpl, JdClo
      */
     @Override
     public JdCloudSmsImpl createSms(JdCloudConfig jdCloudConfig) {
-        if (jdCloudSms == null) {
-            jdCloudSms = createMultitonSms(jdCloudConfig);
-        }
-        return jdCloudSms;
-    }
-
-    @Override
-    public JdCloudSmsImpl createMultitonSms(JdCloudConfig jdCloudConfig) {
         return new JdCloudSmsImpl(
                 this.client(jdCloudConfig),
-                jdCloudConfig,
-                BeanFactory.getExecutor(),
-                BeanFactory.getDelayedTime()
+                jdCloudConfig
         );
     }
 
     /**
-     * 刷新对象
+     * 获取供应商
+     * @return 供应商
      */
     @Override
-    public JdCloudSmsImpl refresh(JdCloudConfig jdCloudConfig) {
-        jdCloudSms = new JdCloudSmsImpl(
-                this.client(jdCloudConfig),
-                jdCloudConfig,
-                BeanFactory.getExecutor(),
-                BeanFactory.getDelayedTime()
-        );
-        return jdCloudSms;
-    }
-
-    /**
-     * 获取配置
-     * @return 配置对象
-     */
-    @Override
-    public JdCloudConfig getConfig() {
-        return ConfigHolder.config;
-    }
-
-    /**
-     * 设置配置
-     * @param config 配置对象
-     */
-    @Override
-    public void setConfig(JdCloudConfig config) {
-        ConfigHolder.config = config;
+    public String getSupplier() {
+        return JdCloudSmsImpl.SUPPLIER;
     }
 
 }

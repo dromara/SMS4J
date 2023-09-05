@@ -1,8 +1,8 @@
-package org.dromara.sms4j.api.smsProxy;
+package org.dromara.sms4j.core.proxy;
 
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.SmsBlend;
-import org.dromara.sms4j.comm.config.SmsConfig;
+import org.dromara.sms4j.api.proxy.RestrictedProcess;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 
 import java.lang.reflect.InvocationHandler;
@@ -12,16 +12,14 @@ import java.util.Objects;
 @Slf4j
 public class SmsInvocationHandler implements InvocationHandler {
     private final SmsBlend smsBlend;
-    private final SmsConfig config;
-    private static RestrictedProcess restrictedProcess = new RestrictedProcess();
+    private static RestrictedProcess restrictedProcess = new RestrictedProcessDefaultImpl();
 
-    private SmsInvocationHandler(SmsBlend smsBlend, SmsConfig config) {
+    private SmsInvocationHandler(SmsBlend smsBlend) {
         this.smsBlend = smsBlend;
-        this.config = config;
     }
 
-    public static SmsInvocationHandler newSmsInvocationHandler(SmsBlend smsBlend, SmsConfig config){
-        return new SmsInvocationHandler(smsBlend,config);
+    public static SmsInvocationHandler newSmsInvocationHandler(SmsBlend smsBlend) {
+        return new SmsInvocationHandler(smsBlend);
     }
 
     @Override
@@ -30,7 +28,7 @@ public class SmsInvocationHandler implements InvocationHandler {
         if ("sendMessage".equals(method.getName()) || "massTexting".equals(method.getName())) {
             //取手机号作为参数
             String phone = (String) objects[0];
-            SmsBlendException smsBlendException = restrictedProcess.process(config,phone);
+            SmsBlendException smsBlendException = restrictedProcess.process(phone);
             if (!Objects.isNull(smsBlendException)) {
                 throw smsBlendException;
             }

@@ -1,5 +1,4 @@
 org.dromara.sms4j.starter.config.SmsMainConfig
 org.dromara.sms4j.starter.config.SmsAutowiredConfig
 org.dromara.sms4j.starter.config.SupplierConfig
-org.dromara.sms4j.comm.config.SmsConfig
-org.dromara.sms4j.comm.config.SmsSqlConfig
+org.dromara.sms4j.provider.config.SmsConfig

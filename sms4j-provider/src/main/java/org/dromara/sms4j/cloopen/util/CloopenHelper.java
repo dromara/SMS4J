@@ -4,14 +4,16 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.crypto.SecureUtil;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.cloopen.config.CloopenConfig;
+import org.dromara.sms4j.comm.constant.Constant;
+import org.dromara.sms4j.comm.exception.SmsBlendException;
+import org.dromara.sms4j.comm.utils.SmsHttpUtil;
 
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -20,31 +22,46 @@ import java.util.Map;
  * @author Charles7c
  * @since 2023/4/17 20:57
  */
+@Slf4j
 public class CloopenHelper {
 
     private final CloopenConfig config;
+    private final SmsHttpUtil http;
+    private int retry = 0;
 
-    public CloopenHelper(CloopenConfig config) {
+    public CloopenHelper(CloopenConfig config, SmsHttpUtil http) {
         this.config = config;
+        this.http = http;
     }
 
     public SmsResponse smsResponse(Map<String, Object> paramMap){
-        String timestamp = DateUtil.format(new Date(), DatePattern.PURE_DATETIME_PATTERN);
+        try {
+            String timestamp = DateUtil.format(new Date(), DatePattern.PURE_DATETIME_PATTERN);
 
-        String url = String.format("%s/Accounts/%s/SMS/TemplateSMS?sig=%s",
-                config.getBaseUrl(),
-                config.getAccessKeyId(),
-                this.generateSign(config.getAccessKeyId(), config.getAccessKeySecret(), timestamp));
-
-        try(HttpResponse response = HttpRequest.post(url)
-                .header("Accept", "application/json")
-                .header("Content-Type", "application/json;charset=utf-8")
-                .header("Authorization", this.generateAuthorization(config.getAccessKeyId(), timestamp))
-                .body(JSONUtil.toJsonStr(paramMap))
-                .execute()){
-            JSONObject body = JSONUtil.parseObj(response.body());
-            return this.getResponse(body);
+            String url = String.format("%s/Accounts/%s/SMS/TemplateSMS?sig=%s",
+                    config.getBaseUrl(),
+                    config.getAccessKeyId(),
+                    this.generateSign(config.getAccessKeyId(), config.getAccessKeySecret(), timestamp));
+            Map<String, String> headers = new LinkedHashMap<>(3);
+            headers.put("Accept", Constant.ACCEPT);
+            headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
+            headers.put("Authorization", this.generateAuthorization(config.getAccessKeyId(), timestamp));
+            SmsResponse smsResponse = getResponse(http.postJson(url, headers, paramMap));
+            if(smsResponse.isSuccess() || retry == config.getMaxRetries()){
+                retry = 0;
+                return smsResponse;
+            }
+            return requestRetry(paramMap);
+        }catch (SmsBlendException e){
+            return requestRetry(paramMap);
         }
+    }
+
+    private SmsResponse requestRetry(Map<String, Object> paramMap) {
+        http.safeSleep(config.getRetryInterval());
+        retry++;
+        log.warn("短信第 {" + retry + "} 次重新发送");
+        return smsResponse(paramMap);
     }
 
     private SmsResponse getResponse(JSONObject resJson) {

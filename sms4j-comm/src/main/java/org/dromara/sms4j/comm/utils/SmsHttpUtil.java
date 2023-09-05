@@ -1,0 +1,79 @@
+package org.dromara.sms4j.comm.utils;
+
+import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
+import org.dromara.sms4j.comm.exception.SmsBlendException;
+
+import java.util.Map;
+
+public class SmsHttpUtil {
+
+    private SmsHttpUtil() {
+    }
+
+    private static class SmsHttpHolder {
+        private static final SmsHttpUtil INSTANCE = new SmsHttpUtil();
+    }
+
+    public static SmsHttpUtil instance() {
+        return SmsHttpHolder.INSTANCE;
+    }
+
+    /**
+     * 发送post json请求
+     * @param url 请求地址
+     * @param headers 请求头
+     * @param body 请求体(json格式字符串)
+     * @return 返回体
+     */
+    public JSONObject postJson(String url, Map<String, String> headers, String body){
+        try(HttpResponse response = HttpRequest.post(url)
+                .addHeaders(headers)
+                .body(body)
+                .execute()){
+            return JSONUtil.parseObj(response.body());
+        }catch (Exception e){
+            throw new SmsBlendException(e.getMessage());
+        }
+    }
+
+    /**
+     * 发送post json请求
+     * @param url 请求地址
+     * @param headers 请求头
+     * @param body 请求体(map格式请求体)
+     * @return 返回体
+     */
+    public JSONObject postJson(String url, Map<String, String> headers, Map<String, Object> body){
+        return postJson(url, headers, JSONUtil.toJsonStr(body));
+    }
+
+    /**
+     * 发送post form 请求
+     * @param url 请求地址
+     * @param headers 请求头
+     * @param body 请求体(map格式请求体)
+     * @return 返回体
+     */
+    public JSONObject postFrom(String url, Map<String, String> headers, Map<String, Object> body){
+        try(HttpResponse response = HttpRequest.post(url)
+                .addHeaders(headers)
+                .form(body)
+                .execute()){
+            return JSONUtil.parseObj(response.body());
+        }catch (Exception e){
+            throw new SmsBlendException(e.getMessage());
+        }
+    }
+
+    /**
+     * 线程睡眠
+     * @param retryInterval 秒
+     */
+    public void safeSleep(int retryInterval){
+        ThreadUtil.safeSleep(retryInterval * 1000L);
+    }
+}

@@ -14,6 +14,10 @@ import java.util.List;
  **/
 public interface SmsBlend {
 
+    String getConfigId();
+
+    String getSupplier();
+
     SmsResponse sendMessage(String phone, String message);
 
     SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages);
@@ -37,4 +41,5 @@ public interface SmsBlend {
     void delayMassTexting(List<String> phones, String message, Long delayedTime);
 
     void delayMassTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages, Long delayedTime);
+
 }

@@ -4,9 +4,8 @@ import lombok.Data;
 import org.dromara.sms4j.starter.utils.SmsSpringUtil;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
+
 @Data
 public class SmsMainConfig {
 

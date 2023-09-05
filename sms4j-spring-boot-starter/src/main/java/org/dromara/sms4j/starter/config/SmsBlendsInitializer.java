@@ -4,7 +4,6 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.aliyun.config.AlibabaFactory;
 import org.dromara.sms4j.api.SmsBlend;
@@ -29,10 +28,12 @@ import org.dromara.sms4j.yunpian.config.YunPianFactory;
 import org.dromara.sms4j.zhutong.config.ZhutongFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.stereotype.Component;
+
 import java.util.List;
 import java.util.Map;
 
-@Data
+@Component
 @Slf4j
 @AllArgsConstructor
 public class SmsBlendsInitializer implements ApplicationListener<ContextRefreshedEvent> {

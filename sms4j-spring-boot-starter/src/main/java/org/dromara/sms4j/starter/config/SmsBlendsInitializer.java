@@ -1,6 +1,5 @@
 package org.dromara.sms4j.starter.config;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -20,7 +19,6 @@ import org.dromara.sms4j.emay.config.EmayFactory;
 import org.dromara.sms4j.huawei.config.HuaweiFactory;
 import org.dromara.sms4j.jdcloud.config.JdCloudFactory;
 import org.dromara.sms4j.netease.config.NeteaseFactory;
-import org.dromara.sms4j.provider.config.BaseConfig;
 import org.dromara.sms4j.provider.config.SmsConfig;
 import org.dromara.sms4j.provider.factory.BaseProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
@@ -29,24 +27,24 @@ import org.dromara.sms4j.tencent.config.TencentFactory;
 import org.dromara.sms4j.unisms.config.UniFactory;
 import org.dromara.sms4j.yunpian.config.YunPianFactory;
 import org.dromara.sms4j.zhutong.config.ZhutongFactory;
-
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import java.util.List;
 import java.util.Map;
 
 @Data
 @Slf4j
 @AllArgsConstructor
-public class SmsBlendsInitializer {
-
+public class SmsBlendsInitializer implements ApplicationListener<ContextRefreshedEvent> {
     private List<BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig>> factoryList;
 
     private final SmsConfig smsConfig;
     private final Map<String, Map<String, Object>> blends;
 
-    @PostConstruct
-    public void initBlends() {
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        if (event.getApplicationContext().getParent() != null) {
+            return;
+        }
         this.registerDefaultFactory();
         // 注册短信对象工厂
         ProviderFactoryHolder.registerFactory(factoryList);
@@ -91,29 +89,6 @@ public class SmsBlendsInitializer {
         ProviderFactoryHolder.registerFactory(UniFactory.instance());
         ProviderFactoryHolder.registerFactory(YunPianFactory.instance());
         ProviderFactoryHolder.registerFactory(ZhutongFactory.instance());
-    }
-
-    /**
-     * 将Map中所有key的分隔符转换为新的分隔符
-     * @param map map对象
-     * @param seperator 旧分隔符
-     * @param newSeperator 新分隔符
-     */
-    public static void replaceKeysSeperator(Map<String, BaseConfig> map, String seperator, String newSeperator) {
-        if(CollUtil.isEmpty(map)) {
-            return;
-        }
-        List<String> keySet = new ArrayList<>(map.keySet());
-        for(String key : keySet) {
-            if(StrUtil.isEmpty(key) || !key.contains(seperator)) {
-                continue;
-            }
-//            String value = String.valueOf(map.get(key));
-            String newKey = key.replaceAll(seperator, newSeperator);
-            newKey = StrUtil.toCamelCase(newKey);
-            map.putIfAbsent(newKey, map.get(key));
-            map.remove(key);
-        }
     }
 
 }

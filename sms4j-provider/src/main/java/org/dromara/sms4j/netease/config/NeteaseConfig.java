@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.netease.service.NeteaseSmsImpl;
 import org.dromara.sms4j.provider.config.BaseConfig;
 
@@ -49,7 +50,7 @@ public class NeteaseConfig extends BaseConfig {
      */
     @Override
     public String getSupplier() {
-        return NeteaseSmsImpl.SUPPLIER;
+        return SupplierConstant.NETEASE;
     }
 
 }

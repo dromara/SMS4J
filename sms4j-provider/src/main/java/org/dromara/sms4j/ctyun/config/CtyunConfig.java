@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.ctyun.service.CtyunSmsImpl;
 import org.dromara.sms4j.provider.config.BaseConfig;
 
@@ -42,6 +43,6 @@ public class CtyunConfig extends BaseConfig {
      */
     @Override
     public String getSupplier() {
-        return CtyunSmsImpl.SUPPLIER;
+        return SupplierConstant.CTYUN;
     }
 }

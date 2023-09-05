@@ -4,6 +4,7 @@ import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.constant.Constant;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.huawei.config.HuaweiConfig;
@@ -18,7 +19,6 @@ import static org.dromara.sms4j.huawei.utils.HuaweiBuilder.listToString;
 @Slf4j
 public class HuaweiSmsImpl extends AbstractSmsBlend<HuaweiConfig> {
 
-    public static final String SUPPLIER = "huawei";
     private int retry = 0;
 
     public HuaweiSmsImpl(HuaweiConfig config, Executor pool, DelayedTime delayed) {
@@ -31,7 +31,7 @@ public class HuaweiSmsImpl extends AbstractSmsBlend<HuaweiConfig> {
 
     @Override
     public String getSupplier() {
-        return SUPPLIER;
+        return SupplierConstant.HUAWEI;
     }
 
     @Override

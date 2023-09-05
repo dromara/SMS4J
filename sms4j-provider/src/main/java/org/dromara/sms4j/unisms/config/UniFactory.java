@@ -2,6 +2,7 @@ package org.dromara.sms4j.unisms.config;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 import org.dromara.sms4j.unisms.core.Uni;
@@ -54,7 +55,7 @@ public class UniFactory extends AbstractProviderFactory<UniSmsImpl, UniConfig> {
      */
     @Override
     public String getSupplier() {
-        return UniSmsImpl.SUPPLIER;
+        return SupplierConstant.UNISMS;
     }
 
 }

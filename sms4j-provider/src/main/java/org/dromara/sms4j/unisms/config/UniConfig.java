@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.provider.config.BaseConfig;
 import org.dromara.sms4j.unisms.service.UniSmsImpl;
 
@@ -30,7 +31,7 @@ public class UniConfig extends BaseConfig {
      */
     @Override
     public String getSupplier() {
-        return UniSmsImpl.SUPPLIER;
+        return SupplierConstant.UNISMS;
     }
 
 }

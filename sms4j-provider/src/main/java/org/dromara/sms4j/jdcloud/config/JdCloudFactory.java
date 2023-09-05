@@ -7,6 +7,7 @@ import com.jdcloud.sdk.http.Protocol;
 import com.jdcloud.sdk.service.sms.client.SmsClient;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.jdcloud.service.JdCloudSmsImpl;
 import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
 
@@ -59,7 +60,7 @@ public class JdCloudFactory extends AbstractProviderFactory<JdCloudSmsImpl, JdCl
      */
     @Override
     public String getSupplier() {
-        return JdCloudSmsImpl.SUPPLIER;
+        return SupplierConstant.JDCLOUD;
     }
 
 }

@@ -2,6 +2,7 @@ package org.dromara.sms4j.unisms.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.provider.service.AbstractSmsBlend;
@@ -22,8 +23,6 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class UniSmsImpl extends AbstractSmsBlend<UniConfig> {
 
-    public static final String SUPPLIER = "unisms";
-
     public UniSmsImpl(UniConfig config, Executor pool, DelayedTime delayed) {
         super(config, pool, delayed);
     }
@@ -34,7 +33,7 @@ public class UniSmsImpl extends AbstractSmsBlend<UniConfig> {
 
     @Override
     public String getSupplier() {
-        return SUPPLIER;
+        return SupplierConstant.UNISMS;
     }
 
     @Override

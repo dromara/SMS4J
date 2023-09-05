@@ -6,6 +6,7 @@ import com.jdcloud.sdk.service.sms.model.BatchSendRequest;
 import com.jdcloud.sdk.service.sms.model.BatchSendResult;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.jdcloud.config.JdCloudConfig;
@@ -26,8 +27,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class JdCloudSmsImpl extends AbstractSmsBlend<JdCloudConfig> {
 
-    public static final String SUPPLIER = "jdcloud";
-
     private final SmsClient client;
 
     private int retry = 0;
@@ -44,7 +43,7 @@ public class JdCloudSmsImpl extends AbstractSmsBlend<JdCloudConfig> {
 
     @Override
     public String getSupplier() {
-        return SUPPLIER;
+        return SupplierConstant.JDCLOUD;
     }
 
     @Override

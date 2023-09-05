@@ -2,6 +2,7 @@ package org.dromara.sms4j.zhutong.config;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.provider.config.BaseConfig;
 import org.dromara.sms4j.zhutong.service.ZhutongSmsImpl;
 
@@ -37,7 +38,7 @@ public class ZhutongConfig extends BaseConfig  {
      */
     @Override
     public String getSupplier() {
-        return ZhutongSmsImpl.SUPPLIER;
+        return SupplierConstant.ZHUTONG;
     }
 
 }

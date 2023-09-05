@@ -8,6 +8,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.dromara.sms4j.aliyun.service.AlibabaSmsImpl;
 import org.dromara.sms4j.api.universal.SupplierConfig;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.provider.config.BaseConfig;
 
 /**
@@ -49,7 +50,7 @@ public class AlibabaConfig extends BaseConfig {
      */
     @Override
     public String getSupplier() {
-        return AlibabaSmsImpl.SUPPLIER;
+        return SupplierConstant.ALIBABA;
     }
 
 }

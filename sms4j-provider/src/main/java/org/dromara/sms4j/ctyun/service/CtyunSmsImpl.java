@@ -4,6 +4,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtil;
@@ -25,8 +26,6 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class CtyunSmsImpl extends AbstractSmsBlend<CtyunConfig> {
 
-    public static final String SUPPLIER = "ctyun";
-
     private int retry = 0;
 
     public CtyunSmsImpl(CtyunConfig config, Executor pool, DelayedTime delayedTime) {
@@ -39,7 +38,7 @@ public class CtyunSmsImpl extends AbstractSmsBlend<CtyunConfig> {
 
     @Override
     public String getSupplier() {
-        return SUPPLIER;
+        return SupplierConstant.CTYUN;
     }
 
     @Override

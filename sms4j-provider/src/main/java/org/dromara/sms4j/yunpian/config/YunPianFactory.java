@@ -2,6 +2,7 @@ package org.dromara.sms4j.yunpian.config;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 import org.dromara.sms4j.yunpian.service.YunPianSmsImpl;
@@ -34,7 +35,7 @@ public class YunPianFactory extends AbstractProviderFactory<YunPianSmsImpl, Yunp
      */
     @Override
     public String getSupplier() {
-        return YunPianSmsImpl.SUPPLIER;
+        return SupplierConstant.YUNPIAN;
     }
 
 }

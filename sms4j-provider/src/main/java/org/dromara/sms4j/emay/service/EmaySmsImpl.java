@@ -4,6 +4,7 @@ import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.constant.Constant;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtil;
@@ -24,7 +25,6 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class EmaySmsImpl extends AbstractSmsBlend<EmayConfig> {
 
-    public static final String SUPPLIER = "emay";
     private int retry = 0;
 
     public EmaySmsImpl(EmayConfig config, Executor pool, DelayedTime delayed) {
@@ -37,7 +37,7 @@ public class EmaySmsImpl extends AbstractSmsBlend<EmayConfig> {
 
     @Override
     public String getSupplier() {
-        return SUPPLIER;
+        return SupplierConstant.EMAY;
     }
 
     @Override

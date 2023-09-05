@@ -3,6 +3,7 @@ package org.dromara.sms4j.huawei.config;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.dromara.sms4j.aliyun.service.AlibabaSmsImpl;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.huawei.service.HuaweiSmsImpl;
 import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
@@ -39,7 +40,7 @@ public class HuaweiFactory extends AbstractProviderFactory<HuaweiSmsImpl, Huawei
      */
     @Override
     public String getSupplier() {
-        return HuaweiSmsImpl.SUPPLIER;
+        return SupplierConstant.HUAWEI;
     }
 
 }

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.dromara.sms4j.cloopen.service.CloopenSmsImpl;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.provider.config.BaseConfig;
 
 /**
@@ -54,6 +55,6 @@ public class CloopenConfig extends BaseConfig {
      */
     @Override
     public String getSupplier() {
-        return CloopenSmsImpl.SUPPLIER;
+        return SupplierConstant.CLOOPEN;
     }
 }

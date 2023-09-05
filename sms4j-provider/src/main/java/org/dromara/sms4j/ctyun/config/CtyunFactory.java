@@ -2,6 +2,7 @@ package org.dromara.sms4j.ctyun.config;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.ctyun.service.CtyunSmsImpl;
 import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
@@ -43,7 +44,7 @@ public class CtyunFactory extends AbstractProviderFactory<CtyunSmsImpl, CtyunCon
      */
     @Override
     public String getSupplier() {
-        return CtyunSmsImpl.SUPPLIER;
+        return SupplierConstant.CTYUN;
     }
 
 }

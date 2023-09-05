@@ -7,6 +7,7 @@ import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.constant.Constant;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.netease.config.NeteaseConfig;
@@ -26,7 +27,6 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
 
-    public static final String SUPPLIER = "netease";
     private int retry = 0;
 
     public NeteaseSmsImpl(NeteaseConfig config, Executor pool, DelayedTime delayed) {
@@ -39,7 +39,7 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
 
     @Override
     public String getSupplier() {
-        return SUPPLIER;
+        return SupplierConstant.NETEASE;
     }
 
     /**

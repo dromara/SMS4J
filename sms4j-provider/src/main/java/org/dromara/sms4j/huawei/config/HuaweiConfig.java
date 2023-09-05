@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.dromara.sms4j.api.universal.SupplierConfig;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.huawei.service.HuaweiSmsImpl;
 import org.dromara.sms4j.provider.config.BaseConfig;
 
@@ -26,7 +27,7 @@ public class HuaweiConfig extends BaseConfig {
      */
     @Override
     public String getSupplier() {
-        return HuaweiSmsImpl.SUPPLIER;
+        return SupplierConstant.HUAWEI;
     }
 
 }

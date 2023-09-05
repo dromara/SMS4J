@@ -5,6 +5,7 @@ import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.constant.Constant;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtil;
@@ -24,7 +25,6 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
 
-    public static final String SUPPLIER = "tencent";
     private int retry = 0;
 
     public TencentSmsImpl(TencentConfig tencentSmsConfig, Executor pool, DelayedTime delayed) {
@@ -37,7 +37,7 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
 
     @Override
     public String getSupplier() {
-        return SUPPLIER;
+        return SupplierConstant.TENCENT;
     }
 
     @Override

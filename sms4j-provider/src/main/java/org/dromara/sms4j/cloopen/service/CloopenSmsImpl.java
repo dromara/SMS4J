@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.cloopen.config.CloopenConfig;
 import org.dromara.sms4j.cloopen.util.CloopenHelper;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 
@@ -23,8 +24,6 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class CloopenSmsImpl extends AbstractSmsBlend<CloopenConfig> {
 
-    public static final String SUPPLIER = "cloopen";
-
     public CloopenSmsImpl(CloopenConfig config, Executor pool, DelayedTime delayed) {
         super(config, pool, delayed);
     }
@@ -35,7 +34,7 @@ public class CloopenSmsImpl extends AbstractSmsBlend<CloopenConfig> {
 
     @Override
     public String getSupplier() {
-        return SUPPLIER;
+        return SupplierConstant.CLOOPEN;
     }
 
     @Override

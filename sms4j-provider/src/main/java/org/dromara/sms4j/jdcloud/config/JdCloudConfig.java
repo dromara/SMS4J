@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.jdcloud.service.JdCloudSmsImpl;
 import org.dromara.sms4j.provider.config.BaseConfig;
 
@@ -31,7 +32,7 @@ public class JdCloudConfig extends BaseConfig {
      */
     @Override
     public String getSupplier() {
-        return JdCloudSmsImpl.SUPPLIER;
+        return SupplierConstant.JDCLOUD;
     }
 
 }

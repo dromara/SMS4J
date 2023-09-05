@@ -4,6 +4,7 @@ import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.constant.Constant;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtil;
@@ -22,7 +23,6 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
 
-    public static final String SUPPLIER = "yunpian";
     private int retry = 0;
 
     public YunPianSmsImpl(YunpianConfig config, Executor pool, DelayedTime delayed) {
@@ -35,7 +35,7 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
 
     @Override
     public String getSupplier() {
-        return SUPPLIER;
+        return SupplierConstant.YUNPIAN;
     }
 
     private SmsResponse getResponse(JSONObject execute) {

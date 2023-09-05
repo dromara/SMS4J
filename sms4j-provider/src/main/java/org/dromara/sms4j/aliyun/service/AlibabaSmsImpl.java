@@ -7,6 +7,7 @@ import org.dromara.sms4j.aliyun.config.AlibabaConfig;
 import org.dromara.sms4j.aliyun.utils.AliyunUtils;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.constant.Constant;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtil;
@@ -27,7 +28,6 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class AlibabaSmsImpl extends AbstractSmsBlend<AlibabaConfig> {
 
-    public static final String SUPPLIER = "alibaba";
     private int retry = 0;
 
     /**
@@ -50,7 +50,7 @@ public class AlibabaSmsImpl extends AbstractSmsBlend<AlibabaConfig> {
 
     @Override
     public String getSupplier() {
-        return SUPPLIER;
+        return SupplierConstant.ALIBABA;
     }
 
     @Override

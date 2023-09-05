@@ -2,6 +2,7 @@ package org.dromara.sms4j.emay.config;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.emay.service.EmaySmsImpl;
 import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
@@ -42,7 +43,7 @@ public class EmayFactory extends AbstractProviderFactory<EmaySmsImpl, EmayConfig
      */
     @Override
     public String getSupplier() {
-        return EmaySmsImpl.SUPPLIER;
+        return SupplierConstant.EMAY;
     }
 
 }

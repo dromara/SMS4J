@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.provider.config.BaseConfig;
 import org.dromara.sms4j.tencent.service.TencentSmsImpl;
 
@@ -51,7 +52,7 @@ public class TencentConfig extends BaseConfig {
      */
     @Override
     public String getSupplier() {
-        return TencentSmsImpl.SUPPLIER;
+        return SupplierConstant.TENCENT;
     }
 
 }

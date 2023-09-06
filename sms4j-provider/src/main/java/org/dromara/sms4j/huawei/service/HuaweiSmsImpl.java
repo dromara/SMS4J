@@ -14,6 +14,7 @@ import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import java.util.*;
 import java.util.concurrent.Executor;
 
+import static org.dromara.sms4j.huawei.utils.HuaweiBuilder.generatePhoneParam;
 import static org.dromara.sms4j.huawei.utils.HuaweiBuilder.listToString;
 
 @Slf4j
@@ -75,17 +76,17 @@ public class HuaweiSmsImpl extends AbstractSmsBlend<HuaweiConfig> {
 
     @Override
     public SmsResponse massTexting(List<String> phones, String message) {
-        return sendMessage(listToString(phones), message);
+        return sendMessage(generatePhoneParam(phones), message);
     }
 
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
-        return sendMessage(listToString(phones), templateId, messages);
+        return sendMessage(generatePhoneParam(phones), templateId, messages);
     }
 
     private SmsResponse getResponse(JSONObject resJson) {
         SmsResponse smsResponse = new SmsResponse();
-        smsResponse.setSuccess("000000".equals(resJson.getStr("Code")));
+        smsResponse.setSuccess("000000".equals(resJson.getStr("code")));
         smsResponse.setData(resJson);
         smsResponse.setConfigId(getConfigId());
         return smsResponse;

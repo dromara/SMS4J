@@ -18,9 +18,7 @@ public class SolonRestrictedProcess implements RestrictedProcess {
     private SmsDao smsDao;
 
     public SolonRestrictedProcess(AopContext context) {
-        context.getBeanAsync(SmsDao.class, bean -> {
-            smsDao = bean;
-        });
+        context.getBeanAsync(SmsDao.class, bean -> smsDao = bean);
     }
 
     @Override

@@ -11,8 +11,7 @@ public interface RestrictedProcess {
      * 拦截校验过程
      * @param phone
      * @return
-     * @throws Exception
      */
-    SmsBlendException process(String phone) throws Exception;
+    SmsBlendException process(String phone);
 
 }

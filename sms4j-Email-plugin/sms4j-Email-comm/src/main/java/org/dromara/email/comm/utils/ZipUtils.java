@@ -45,9 +45,9 @@ public class ZipUtils extends ZipUtil {
             try (ReadableByteChannel readableByteChannel = pipe.source()) {
                 ByteBuffer buffer = ByteBuffer.allocate(TEMP_SIZE);
                 while (readableByteChannel.read(buffer) >= 0) {
-                    ((Buffer)buffer).flip();
+                    buffer.flip();
                     out.write(buffer);
-                    ((Buffer)buffer).clear();
+                    buffer.clear();
                 }
             }
         }catch (Exception e){

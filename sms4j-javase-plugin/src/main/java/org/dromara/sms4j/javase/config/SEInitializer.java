@@ -1,6 +1,7 @@
 package org.dromara.sms4j.javase.config;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.resource.ClassPathResource;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
@@ -35,6 +36,7 @@ import org.dromara.sms4j.unisms.config.UniFactory;
 import org.dromara.sms4j.yunpian.config.YunPianFactory;
 import org.dromara.sms4j.zhutong.config.ZhutongFactory;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -50,25 +52,11 @@ public class SEInitializer {
     }
 
     /**
-     * 初始化短信公共配置
-     *
-     * @param smsConfig 短信公共配置
-     * @return 当前初始化类实例
+     * 默认从sms4j.yml文件中读取配置
      */
-    public SEInitializer initSmsConfig(SmsConfig smsConfig) {
-        BeanUtil.copyProperties(smsConfig, BeanFactory.getSmsConfig());
-        return this;
-    }
-
-    /**
-     * 默认从sms-aggregation.yml文件中读取配置
-     *
-     * @return
-     */
-    public SEInitializer fromYaml() {
+    public void fromYaml() {
         ClassPathResource yamlResouce = new ClassPathResource("sms4j.yml");
         this.fromYaml(yamlResouce.readUtf8Str());
-        return this;
     }
 
     /**
@@ -76,10 +64,9 @@ public class SEInitializer {
      *
      * @param yaml yaml配置字符串
      */
-    public SEInitializer fromYaml(String yaml) {
+    public void fromYaml(String yaml) {
         InitConfig config = YamlUtil.toBean(yaml, InitConfig.class);
         this.initConfig(config);
-        return this;
     }
 
     /**
@@ -87,15 +74,38 @@ public class SEInitializer {
      *
      * @param json json配置字符串
      */
-    public SEInitializer fromJson(String json) {
+    public void fromJson(String json) {
         InitConfig config = JSONUtil.toBean(json, InitConfig.class);
         this.initConfig(config);
-        return this;
     }
 
     /**
-     * 注册供应商工厂
-     * @param factory
+     * 从配置bean对象中加载配置
+     *
+     * @param smsConfig 短信公共配置
+     * @param configList 各短信服务商配置列表
+     */
+    public void fromConfig(SmsConfig smsConfig, List<SupplierConfig> configList) {
+        // 注册默认工厂
+        registerDefaultFactory();
+        // 初始化SmsConfig整体配置文件
+        BeanUtil.copyProperties(smsConfig, BeanFactory.getSmsConfig());
+        // 创建短信服务对象
+        if(CollUtil.isEmpty(configList)) {
+            return ;
+        }
+        for(SupplierConfig supplierConfig : configList) {
+            if(Boolean.TRUE.equals(smsConfig.getRestricted())) {
+                SmsFactory.createRestrictedSmsBlend(supplierConfig);
+            } else {
+                SmsFactory.createSmsBlend(supplierConfig);
+            }
+        }
+    }
+
+    /**
+     * 注册服务商工厂
+     * @param factory 服务商工厂
      */
     public SEInitializer registerFactory(BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig> factory) {
         ProviderFactoryHolder.registerFactory(factory);
@@ -104,7 +114,7 @@ public class SEInitializer {
 
     /**
      * 注册DAO实例
-     * @param smsDao
+     * @param smsDao DAO实例
      */
     public SEInitializer registerSmsDao(SmsDao smsDao) {
         if(smsDao == null) {
@@ -131,8 +141,8 @@ public class SEInitializer {
         registerDefaultFactory();
 
         //初始化SmsConfig整体配置文件
-        this.initSmsConfig(smsConfig);
-        // 解析供应商配置
+        BeanUtil.copyProperties(smsConfig, BeanFactory.getSmsConfig());
+        // 解析服务商配置
         Map<String, Map<String, Object>> blends = smsConfig.getBlends();
         for(String configId : blends.keySet()) {
             Map<String, Object> configMap = blends.get(configId);
@@ -141,7 +151,7 @@ public class SEInitializer {
             supplier = StrUtil.isEmpty(supplier) ? configId : supplier;
             BaseProviderFactory<SmsBlend, SupplierConfig> providerFactory = (BaseProviderFactory<SmsBlend, SupplierConfig>) ProviderFactoryHolder.requireForSupplier(supplier);
             if(providerFactory == null) {
-                log.warn("创建\"{}\"的短信服务失败，未找到供应商为\"{}\"的服务", configId, supplier);
+                log.warn("创建\"{}\"的短信服务失败，未找到服务商为\"{}\"的服务", configId, supplier);
                 continue;
             }
             configMap.put("config-id", configId);

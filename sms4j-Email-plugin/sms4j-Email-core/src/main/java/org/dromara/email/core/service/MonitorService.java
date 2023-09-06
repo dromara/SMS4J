@@ -5,7 +5,12 @@ import org.dromara.email.comm.config.MailImapConfig;
 import org.dromara.email.comm.entity.MonitorMessage;
 import org.dromara.email.comm.errors.MailException;
 
-import javax.mail.*;
+import javax.mail.Flags;
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.Multipart;
+import javax.mail.Session;
+import javax.mail.Store;
 import javax.mail.search.FlagTerm;
 import java.util.Properties;
 import java.util.Timer;

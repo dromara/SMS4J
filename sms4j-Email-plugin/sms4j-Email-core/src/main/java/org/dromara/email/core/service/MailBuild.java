@@ -7,7 +7,11 @@ import org.dromara.email.api.MailClient;
 import org.dromara.email.comm.config.MailSmtpConfig;
 import org.dromara.email.comm.errors.MailException;
 
-import javax.mail.*;
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;

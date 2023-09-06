@@ -9,7 +9,6 @@ import org.dromara.sms4j.core.load.SmsLoad;
 import org.dromara.sms4j.core.proxy.SmsInvocationHandler;
 import org.dromara.sms4j.provider.config.BaseConfig;
 import org.dromara.sms4j.provider.factory.BaseProviderFactory;
-import org.dromara.sms4j.provider.factory.BeanFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 
 import java.lang.reflect.Proxy;

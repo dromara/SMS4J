@@ -2,12 +2,7 @@ package org.dromara.sms4j.huawei.config;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import lombok.experimental.SuperBuilder;
-import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
-import org.dromara.sms4j.huawei.service.HuaweiSmsImpl;
 import org.dromara.sms4j.provider.config.BaseConfig;
 
 @Data

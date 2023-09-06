@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
-import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 import org.dromara.sms4j.zhutong.service.ZhutongSmsImpl;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

@@ -131,21 +131,6 @@ public class HuaweiBuilder {
         return stringBuffer.toString();
     }
 
-    /**
-     * 生成手机号参数
-     * @param list
-     * @return
-     */
-    public static String generatePhoneParam(List<String> list){
-        StringBuilder stringBuffer = new StringBuilder();
-        for (String s : list) {
-            stringBuffer.append(s);
-            stringBuffer.append(",");
-        }
-        stringBuffer.delete(stringBuffer.length()-1,stringBuffer.length());
-        return stringBuffer.toString();
-    }
-
     static String dateFormat(Date date){
        return SDF.format(date);
     }

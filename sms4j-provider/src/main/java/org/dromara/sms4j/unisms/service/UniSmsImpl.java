@@ -10,7 +10,10 @@ import org.dromara.sms4j.unisms.config.UniConfig;
 import org.dromara.sms4j.unisms.core.Uni;
 import org.dromara.sms4j.unisms.core.UniResponse;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executor;
 
 /**

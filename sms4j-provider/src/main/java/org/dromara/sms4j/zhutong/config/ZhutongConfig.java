@@ -1,10 +1,9 @@
 package org.dromara.sms4j.zhutong.config;
 
-import lombok.*;
-import lombok.experimental.SuperBuilder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.provider.config.BaseConfig;
-import org.dromara.sms4j.zhutong.service.ZhutongSmsImpl;
 
 /**
  * 助通-自定义短信发送-配置

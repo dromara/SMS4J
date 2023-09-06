@@ -1,13 +1,9 @@
 package org.dromara.email.comm.entity;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.convert.Convert;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

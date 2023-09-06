@@ -28,12 +28,11 @@ import org.dromara.sms4j.yunpian.config.YunPianFactory;
 import org.dromara.sms4j.zhutong.config.ZhutongFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 
-@Component
+
 @Slf4j
 @AllArgsConstructor
 public class SmsBlendsInitializer implements ApplicationListener<ContextRefreshedEvent> {

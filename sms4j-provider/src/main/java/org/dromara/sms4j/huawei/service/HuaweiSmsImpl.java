@@ -1,5 +1,6 @@
 package org.dromara.sms4j.huawei.service;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
@@ -14,7 +15,6 @@ import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import java.util.*;
 import java.util.concurrent.Executor;
 
-import static org.dromara.sms4j.huawei.utils.HuaweiBuilder.generatePhoneParam;
 import static org.dromara.sms4j.huawei.utils.HuaweiBuilder.listToString;
 
 @Slf4j
@@ -76,12 +76,12 @@ public class HuaweiSmsImpl extends AbstractSmsBlend<HuaweiConfig> {
 
     @Override
     public SmsResponse massTexting(List<String> phones, String message) {
-        return sendMessage(generatePhoneParam(phones), message);
+        return sendMessage(CollUtil.join(phones, ","), message);
     }
 
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
-        return sendMessage(generatePhoneParam(phones), templateId, messages);
+        return sendMessage(CollUtil.join(phones, ","), templateId, messages);
     }
 
     private SmsResponse getResponse(JSONObject resJson) {

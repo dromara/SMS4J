@@ -22,7 +22,7 @@ public class RestrictedProcessDefaultImpl implements RestrictedProcess {
     @Setter
     private SmsDao smsDao;
 
-    public SmsBlendException process(String phone) throws Exception {
+    public SmsBlendException process(String phone) {
         if (Objects.isNull(smsDao)) {
             throw new SmsBlendException("The dao tool could not be found");
         }

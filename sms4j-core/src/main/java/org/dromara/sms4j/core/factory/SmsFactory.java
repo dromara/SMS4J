@@ -192,7 +192,7 @@ public abstract class SmsFactory {
      * @return 返回短信服务对象列表。如果未找到则返回空列表
      */
     public static List<SmsBlend> getListBySupplier(String supplier) {
-        List<SmsBlend> list = null;
+        List<SmsBlend> list;
         if (StrUtil.isEmpty(supplier)) {
             throw new SmsBlendException("供应商标识不能为空");
         }

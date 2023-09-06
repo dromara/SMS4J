@@ -19,12 +19,9 @@ public class SpringRestrictedProcess implements RestrictedProcess {
 
 
     @Override
-    public SmsBlendException process(String phone) throws Exception {
+    public SmsBlendException process(String phone) {
         SmsConfig config = BeanFactory.getSmsConfig();
         SmsDao smsDao = SmsSpringUtil.getBean(SmsDao.class);
-        if (Objects.isNull(smsDao)) {
-            throw new SmsBlendException("The dao tool could not be found");
-        }
         Integer accountMax = config.getAccountMax(); // 每日最大发送量
         Integer minuteMax = config.getMinuteMax(); // 每分钟最大发送量
         if (SmsUtil.isNotEmpty(accountMax)) {   // 是否配置了每日限制

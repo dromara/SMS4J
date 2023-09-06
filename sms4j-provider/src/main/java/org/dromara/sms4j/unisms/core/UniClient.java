@@ -53,14 +53,12 @@ public class UniClient {
         Map<String, Object> sortedMap = new TreeMap<>(new MapKeyComparator());
         sortedMap.putAll(params);
         StringBuilder sb = new StringBuilder();
-        Iterator<?> iter = sortedMap.entrySet().iterator();
 
-        while (iter.hasNext()) {
+        for (Entry<String, Object> stringObjectEntry : sortedMap.entrySet()) {
             if (sb.length() > 0) {
                 sb.append('&');
             }
-            Entry<?, ?> entry = (Entry<?, ?>) iter.next();
-            sb.append(entry.getKey()).append("=").append(entry.getValue());
+            sb.append(((Entry<?, ?>) stringObjectEntry).getKey()).append("=").append(((Entry<?, ?>) stringObjectEntry).getValue());
         }
 
         return sb.toString();

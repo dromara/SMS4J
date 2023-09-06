@@ -35,7 +35,7 @@ public final class HtmlUtil {
      * @author :Wind
      */
     public static List<String> readHtml(String name) throws MailException {
-        try (InputStream is = HtmlUtil.class.getResourceAsStream("/template/" + name);) {
+        try (InputStream is = HtmlUtil.class.getResourceAsStream("/template/" + name)) {
             return readHtml(is);
         } catch (IOException e) {
             throw new MailException(e);
@@ -50,7 +50,7 @@ public final class HtmlUtil {
      * @author :Wind
      */
     public static List<String> readHtml(File file) throws MailException {
-        try (InputStream ip = Files.newInputStream(file.toPath());) {
+        try (InputStream ip = Files.newInputStream(file.toPath())) {
             return readHtml(ip);
         } catch (IOException e) {
             throw new MailException(e);

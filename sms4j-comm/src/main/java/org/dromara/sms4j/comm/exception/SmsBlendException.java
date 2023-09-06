@@ -20,6 +20,6 @@ public class SmsBlendException extends RuntimeException{
         super("[" + code + "] " + message);
         this.message = message;
         this.code = code;
-        this.code = requestId;
+        this.requestId = requestId;
     }
 }

@@ -163,7 +163,7 @@ public class MailService implements MailClient {
             }
         }
 
-        if (retryCount >= maxRetries && retryOnFailure) {
+        if (retryCount >= maxRetries) {
             try {
                 Message message;
                 if (html != null || parameter != null) {

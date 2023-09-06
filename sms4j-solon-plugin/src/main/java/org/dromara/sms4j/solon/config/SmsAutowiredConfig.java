@@ -72,7 +72,7 @@ public class SmsAutowiredConfig implements LifecycleBean {
 
     //是在 solon 容器扫描完成之后执行的
     @Override
-    public void start() throws Throwable {
+    public void start() {
         /* 如果配置中启用了redis，则注入redis工具*/
         if (BeanFactory.getSmsConfig().getRedisCache()) {
             SmsInvocationHandler.setRestrictedProcess(new SolonRestrictedProcess(aopContext));

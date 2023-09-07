@@ -7,7 +7,7 @@ import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtil;
 import org.dromara.sms4j.provider.config.SmsConfig;
 import org.dromara.sms4j.provider.factory.BeanFactory;
-import org.noear.solon.core.AopContext;
+import org.noear.solon.core.AppContext;
 
 @Slf4j
 public class SolonRestrictedProcess implements RestrictedProcess {
@@ -17,7 +17,7 @@ public class SolonRestrictedProcess implements RestrictedProcess {
     private static final String REDIS_KEY = "sms:restricted:";
     private SmsDao smsDao;
 
-    public SolonRestrictedProcess(AopContext context) {
+    public SolonRestrictedProcess(AppContext context) {
         context.getBeanAsync(SmsDao.class, bean -> smsDao = bean);
     }
 
@@ -26,6 +26,7 @@ public class SolonRestrictedProcess implements RestrictedProcess {
         SmsConfig config = BeanFactory.getSmsConfig();
         Integer accountMax = config.getAccountMax(); // 每日最大发送量
         Integer minuteMax = config.getMinuteMax(); // 每分钟最大发送量
+
         if (SmsUtil.isNotEmpty(accountMax)) {   // 是否配置了每日限制
             Integer i = (Integer) smsDao.get(REDIS_KEY + phone + "max");
             if (SmsUtil.isEmpty(i)) {
@@ -37,6 +38,7 @@ public class SolonRestrictedProcess implements RestrictedProcess {
                 smsDao.set(REDIS_KEY + phone + "max", i + 1, accTimer / 1000);
             }
         }
+
         if (SmsUtil.isNotEmpty(minuteMax)) {  // 是否配置了每分钟最大限制
             Integer o = (Integer) smsDao.get(REDIS_KEY + phone);
             if (SmsUtil.isNotEmpty(o)) {
@@ -50,6 +52,7 @@ public class SolonRestrictedProcess implements RestrictedProcess {
                 smsDao.set(REDIS_KEY + phone, 1, minTimer / 1000);
             }
         }
+
         return null;
     }
 }

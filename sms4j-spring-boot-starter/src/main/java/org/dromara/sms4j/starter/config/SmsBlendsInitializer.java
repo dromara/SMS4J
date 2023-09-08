@@ -10,7 +10,7 @@ import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.cloopen.config.CloopenFactory;
 import org.dromara.sms4j.comm.constant.Constant;
-import org.dromara.sms4j.comm.utils.SmsUtil;
+import org.dromara.sms4j.comm.utils.SmsUtils;
 import org.dromara.sms4j.core.factory.SmsFactory;
 import org.dromara.sms4j.core.proxy.SmsInvocationHandler;
 import org.dromara.sms4j.ctyun.config.CtyunFactory;
@@ -60,7 +60,7 @@ public class SmsBlendsInitializer implements ApplicationListener<ContextRefreshe
                 continue;
             }
             configMap.put("config-id", configId);
-            SmsUtil.replaceKeysSeperator(configMap, "-", "_");
+            SmsUtils.replaceKeysSeperator(configMap, "-", "_");
             JSONObject configJson = new JSONObject(configMap);
             org.dromara.sms4j.api.universal.SupplierConfig supplierConfig = JSONUtil.toBean(configJson, providerFactory.getConfigClass());
             if(Boolean.TRUE.equals(smsConfig.getRestricted())) {

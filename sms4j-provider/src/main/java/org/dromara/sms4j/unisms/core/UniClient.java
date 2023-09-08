@@ -6,12 +6,11 @@ import cn.hutool.crypto.digest.HmacAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
-import org.dromara.sms4j.comm.utils.SmsHttpUtil;
+import org.dromara.sms4j.comm.utils.SmsHttpUtils;
 
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -28,7 +27,7 @@ public class UniClient {
     private final int retryInterval;
     private final int maxRetries;
     private int retry = 0;
-    private final SmsHttpUtil http = SmsHttpUtil.instance();
+    private final SmsHttpUtils http = SmsHttpUtils.instance();
 
     protected UniClient(Builder b) {
         this.accessKeyId = b.accessKeyId;

@@ -7,7 +7,7 @@ import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.introspector.Property;
 import org.yaml.snakeyaml.introspector.PropertyUtils;
 
-public class YamlUtil {
+public class YamlUtils {
 
     /**
      * 构建Yaml实例
@@ -38,7 +38,7 @@ public class YamlUtil {
      * @return 读取内容
      */
     public static <T> T toBean(String content, Class<T> cls) {
-        Yaml yaml = YamlUtil.buildYamlInstance(cls);
+        Yaml yaml = YamlUtils.buildYamlInstance(cls);
         return yaml.loadAs(content, cls);
     }
 

@@ -10,7 +10,7 @@ import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.cloopen.config.CloopenConfig;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
-import org.dromara.sms4j.comm.utils.SmsHttpUtil;
+import org.dromara.sms4j.comm.utils.SmsHttpUtils;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -26,10 +26,10 @@ import java.util.Map;
 public class CloopenHelper {
 
     private final CloopenConfig config;
-    private final SmsHttpUtil http;
+    private final SmsHttpUtils http;
     private int retry = 0;
 
-    public CloopenHelper(CloopenConfig config, SmsHttpUtil http) {
+    public CloopenHelper(CloopenConfig config, SmsHttpUtils http) {
         this.config = config;
         this.http = http;
     }

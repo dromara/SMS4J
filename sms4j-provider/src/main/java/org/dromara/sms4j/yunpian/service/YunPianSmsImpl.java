@@ -7,7 +7,7 @@ import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
-import org.dromara.sms4j.comm.utils.SmsUtil;
+import org.dromara.sms4j.comm.utils.SmsUtils;
 import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import org.dromara.sms4j.yunpian.config.YunpianConfig;
 
@@ -103,7 +103,7 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
         if (phones.size() > 1000) {
             throw new SmsBlendException("单次发送超过最大发送上限，建议每次群发短信人数低于1000");
         }
-        return sendMessage(SmsUtil.listToString(phones), message);
+        return sendMessage(SmsUtils.listToString(phones), message);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
         if (phones.size() > 1000) {
             throw new SmsBlendException("单次发送超过最大发送上限，建议每次群发短信人数低于1000");
         }
-        return sendMessage(SmsUtil.listToString(phones), templateId, messages);
+        return sendMessage(SmsUtils.listToString(phones), templateId, messages);
     }
 
     private String formattingMap(Map<String, String> messages) {

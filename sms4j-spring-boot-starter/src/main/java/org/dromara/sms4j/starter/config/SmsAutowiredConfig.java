@@ -6,8 +6,8 @@ import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.provider.config.SmsBanner;
 import org.dromara.sms4j.provider.config.SmsConfig;
 import org.dromara.sms4j.provider.factory.BeanFactory;
-import org.dromara.sms4j.starter.utils.ConfigUtil;
-import org.dromara.sms4j.starter.utils.SmsSpringUtil;
+import org.dromara.sms4j.starter.utils.ConfigUtils;
+import org.dromara.sms4j.starter.utils.SmsSpringUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -22,10 +22,10 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class SmsAutowiredConfig {
 
-    private final SmsSpringUtil smsSpringUtil;
+    private final SmsSpringUtils smsSpringUtils;
 
-    public SmsAutowiredConfig(SmsSpringUtil smsSpringUtil) {
-        this.smsSpringUtil = smsSpringUtil;
+    public SmsAutowiredConfig(SmsSpringUtils smsSpringUtils) {
+        this.smsSpringUtils = smsSpringUtils;
     }
 
     @Bean
@@ -52,8 +52,8 @@ public class SmsAutowiredConfig {
     /** 注入一个配置文件读取工具*/
     @Bean("smsConfigUtil")
     @Lazy
-    protected ConfigUtil configUtil(Environment environment){
-        return new ConfigUtil(environment);
+    protected ConfigUtils configUtil(Environment environment){
+        return new ConfigUtils(environment);
     }
 
     /** smsConfig参数意义为确保注入时smsConfig已经存在*/

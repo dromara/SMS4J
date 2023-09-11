@@ -59,7 +59,7 @@ public class CloopenSmsImpl extends AbstractSmsBlend<CloopenConfig> {
         CloopenHelper helper = new CloopenHelper(getConfig(), http);
         Map<String, Object> paramMap = new LinkedHashMap<>(4);
         paramMap.put("to", String.join(",", phones));
-        paramMap.put("appId", getConfig().getAppId());
+        paramMap.put("appId", getConfig().getAccessKeyId());
         paramMap.put("templateId", templateId);
         paramMap.put("datas", messages.keySet().stream().map(messages::get).toArray(String[]::new));
         return helper.smsResponse(paramMap);

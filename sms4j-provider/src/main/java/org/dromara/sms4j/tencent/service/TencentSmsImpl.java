@@ -91,7 +91,7 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
         }
         Map<String, String> headsMap = TencentUtils.generateHeadsMap(signature, timestamp, getConfig().getAction(),
                 getConfig().getVersion(), getConfig().getTerritory(), getConfig().getRequestUrl());
-        Map<String, Object> requestBody = TencentUtils.generateRequestBody(phones, getConfig().getSdkAppId(),
+        Map<String, Object> requestBody = TencentUtils.generateRequestBody(phones, getConfig().getAccessKeyId(),
                 getConfig().getSignature(), templateId, messages);
         String url = Constant.HTTPS_PREFIX + getConfig().getRequestUrl();
 

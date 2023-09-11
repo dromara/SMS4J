@@ -1,14 +1,9 @@
 package org.dromara.sms4j.unisms.config;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.provider.config.BaseConfig;
-import org.dromara.sms4j.unisms.service.UniSmsImpl;
 
 @Data
 @EqualsAndHashCode(callSuper = true)

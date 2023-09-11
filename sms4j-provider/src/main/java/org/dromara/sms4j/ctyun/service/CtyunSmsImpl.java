@@ -7,7 +7,7 @@ import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
-import org.dromara.sms4j.comm.utils.SmsUtil;
+import org.dromara.sms4j.comm.utils.SmsUtils;
 import org.dromara.sms4j.ctyun.config.CtyunConfig;
 import org.dromara.sms4j.ctyun.utils.CtyunUtils;
 import org.dromara.sms4j.provider.service.AbstractSmsBlend;
@@ -64,7 +64,7 @@ public class CtyunSmsImpl extends AbstractSmsBlend<CtyunConfig> {
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
         String messageStr = JSONUtil.toJsonStr(messages);
-        return getSmsResponse(SmsUtil.arrayToString(phones), messageStr, templateId);
+        return getSmsResponse(SmsUtils.arrayToString(phones), messageStr, templateId);
     }
 
     private SmsResponse getSmsResponse(String phone, String message, String templateId) {

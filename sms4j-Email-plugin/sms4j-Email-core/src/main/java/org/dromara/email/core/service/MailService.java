@@ -1,7 +1,6 @@
 package org.dromara.email.core.service;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.map.MapUtil;
@@ -164,7 +163,7 @@ public class MailService implements MailClient {
             }
         }
 
-        if (retryCount >= maxRetries && retryOnFailure) {
+        if (retryCount >= maxRetries) {
             try {
                 Message message;
                 if (html != null || parameter != null) {

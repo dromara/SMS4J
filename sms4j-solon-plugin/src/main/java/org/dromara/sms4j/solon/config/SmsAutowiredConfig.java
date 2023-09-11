@@ -1,11 +1,11 @@
 package org.dromara.sms4j.solon.config;
 
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.sms4j.comm.constant.Constant;
+import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.core.proxy.SmsInvocationHandler;
 import org.dromara.sms4j.provider.config.SmsBanner;
 import org.dromara.sms4j.provider.config.SmsConfig;
-import org.dromara.sms4j.comm.constant.Constant;
-import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.provider.factory.BeanFactory;
 import org.dromara.sms4j.solon.aop.SolonRestrictedProcess;
 import org.noear.solon.Solon;
@@ -72,7 +72,7 @@ public class SmsAutowiredConfig implements LifecycleBean {
 
     //是在 solon 容器扫描完成之后执行的
     @Override
-    public void start() throws Throwable {
+    public void start() {
         /* 如果配置中启用了redis，则注入redis工具*/
         if (BeanFactory.getSmsConfig().getRedisCache()) {
             SmsInvocationHandler.setRestrictedProcess(new SolonRestrictedProcess(aopContext));

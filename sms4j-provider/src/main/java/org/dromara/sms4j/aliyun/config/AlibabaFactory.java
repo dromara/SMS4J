@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import org.dromara.sms4j.aliyun.service.AlibabaSmsImpl;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
-import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 
 /**
  * AlibabaSmsConfig

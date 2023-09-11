@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.dao.SmsDao;
 import org.dromara.sms4j.api.proxy.RestrictedProcess;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
-import org.dromara.sms4j.comm.utils.SmsUtil;
+import org.dromara.sms4j.comm.utils.SmsUtils;
 import org.dromara.sms4j.provider.config.SmsConfig;
 import org.dromara.sms4j.provider.factory.BeanFactory;
 
@@ -22,16 +22,16 @@ public class RestrictedProcessDefaultImpl implements RestrictedProcess {
     @Setter
     private SmsDao smsDao;
 
-    public SmsBlendException process(String phone) throws Exception {
+    public SmsBlendException process(String phone) {
         if (Objects.isNull(smsDao)) {
             throw new SmsBlendException("The dao tool could not be found");
         }
         SmsConfig config = BeanFactory.getSmsConfig();
         Integer accountMax = config.getAccountMax(); // 每日最大发送量
         Integer minuteMax = config.getMinuteMax(); // 每分钟最大发送量
-        if (SmsUtil.isNotEmpty(accountMax)) {   // 是否配置了每日限制
+        if (SmsUtils.isNotEmpty(accountMax)) {   // 是否配置了每日限制
             Integer i = (Integer) smsDao.get(phone + "max");
-            if (SmsUtil.isEmpty(i)) {
+            if (SmsUtils.isEmpty(i)) {
                 smsDao.set(phone + "max", 1, accTimer);
             } else if (i >= accountMax) {
                 log.info("The phone:" + phone + ",number of short messages reached the maximum today");
@@ -40,9 +40,9 @@ public class RestrictedProcessDefaultImpl implements RestrictedProcess {
                 smsDao.set(phone + "max", i + 1, accTimer);
             }
         }
-        if (SmsUtil.isNotEmpty(minuteMax)) {  // 是否配置了每分钟最大限制
+        if (SmsUtils.isNotEmpty(minuteMax)) {  // 是否配置了每分钟最大限制
             Integer o = (Integer) smsDao.get(phone);
-            if (SmsUtil.isNotEmpty(o)) {
+            if (SmsUtils.isNotEmpty(o)) {
                 if (o < minuteMax) {
                     smsDao.set(phone, o + 1, minTimer);
                 } else {

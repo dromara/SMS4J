@@ -12,7 +12,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
-import java.nio.channels.*;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.Pipe;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.WritableByteChannel;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.zip.ZipEntry;
@@ -41,9 +45,9 @@ public class ZipUtils extends ZipUtil {
             try (ReadableByteChannel readableByteChannel = pipe.source()) {
                 ByteBuffer buffer = ByteBuffer.allocate(TEMP_SIZE);
                 while (readableByteChannel.read(buffer) >= 0) {
-                    ((Buffer)buffer).flip();
+                    buffer.flip();
                     out.write(buffer);
-                    ((Buffer)buffer).clear();
+                    buffer.clear();
                 }
             }
         }catch (Exception e){

@@ -1,8 +1,5 @@
 package org.dromara.sms4j.test;
 
-import org.dromara.sms4j.api.entity.SmsResponse;
-import org.dromara.sms4j.core.factory.SmsFactory;
-import org.dromara.sms4j.unisms.config.UniConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.noear.solon.test.SolonJUnit4ClassRunner;

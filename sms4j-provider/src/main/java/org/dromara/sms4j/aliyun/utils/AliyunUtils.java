@@ -85,7 +85,7 @@ public class AliyunUtils {
      * @param accessSecret accessSecret
      * @param stringToSign 待生成签名的字符串
      */
-    private static String sign(String accessSecret, String stringToSign) throws Exception {
+    private static String sign(String accessSecret, String stringToSign) {
         HMac hMac = new HMac(HmacAlgorithm.HmacSHA1, accessSecret.getBytes());
         return hMac.digestBase64(stringToSign,StandardCharsets.UTF_8, false);
     }

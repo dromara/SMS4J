@@ -15,8 +15,8 @@ import java.util.Map;
 /**
  * @author wind
  */
-public class SmsUtil {
-    private SmsUtil() {
+public class SmsUtils {
+    private SmsUtils() {
     }   //私有构造防止实例化
 
     /**

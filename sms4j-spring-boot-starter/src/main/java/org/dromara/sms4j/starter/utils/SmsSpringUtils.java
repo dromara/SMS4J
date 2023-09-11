@@ -17,13 +17,13 @@ import java.util.Map;
  * 2023/3/25  0:13
  **/
 @Slf4j
-public class SmsSpringUtil implements ApplicationContextAware {
+public class SmsSpringUtils implements ApplicationContextAware {
 
     private static ApplicationContext applicationContext;
 
     private final DefaultListableBeanFactory beanFactory;
 
-    public SmsSpringUtil(DefaultListableBeanFactory beanFactory) {
+    public SmsSpringUtils(DefaultListableBeanFactory beanFactory) {
         this.beanFactory = beanFactory;
     }
 
@@ -33,8 +33,8 @@ public class SmsSpringUtil implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        if (SmsSpringUtil.applicationContext == null) {
-            SmsSpringUtil.applicationContext = applicationContext;
+        if (SmsSpringUtils.applicationContext == null) {
+            SmsSpringUtils.applicationContext = applicationContext;
         }
     }
 

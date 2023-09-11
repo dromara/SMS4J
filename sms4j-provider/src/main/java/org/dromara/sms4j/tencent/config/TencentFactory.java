@@ -2,7 +2,6 @@ package org.dromara.sms4j.tencent.config;
 
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
-import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 import org.dromara.sms4j.tencent.service.TencentSmsImpl;
 
 /**

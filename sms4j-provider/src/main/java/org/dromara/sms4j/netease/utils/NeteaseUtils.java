@@ -2,7 +2,6 @@ package org.dromara.sms4j.netease.utils;
 
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
-import org.dromara.sms4j.aliyun.config.AlibabaConfig;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.netease.config.NeteaseConfig;
 

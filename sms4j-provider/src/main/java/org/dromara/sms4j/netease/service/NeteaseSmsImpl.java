@@ -1,5 +1,6 @@
 package org.dromara.sms4j.netease.service;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONArray;
@@ -14,7 +15,11 @@ import org.dromara.sms4j.netease.config.NeteaseConfig;
 import org.dromara.sms4j.netease.utils.NeteaseUtils;
 import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.Executor;
 
 /**
@@ -71,7 +76,7 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
 
     @Override
     public SmsResponse massTexting(List<String> phones, String message) {
-        if (phones.size() < 1) {
+        if (CollUtil.isEmpty(phones)) {
             throw new SmsBlendException("手机号不能为空");
         }
         if (phones.size() > 100) {

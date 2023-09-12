@@ -10,11 +10,6 @@ import org.dromara.sms4j.provider.config.BaseConfig;
 public class TencentConfig extends BaseConfig {
 
     /**
-     * 短信sdkAppId
-     */
-    private String sdkAppId;
-
-    /**
      * 地域信息默认为 ap-guangzhou
      */
     private String territory = "ap-guangzhou";

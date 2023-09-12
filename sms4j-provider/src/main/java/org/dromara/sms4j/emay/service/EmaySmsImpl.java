@@ -7,7 +7,7 @@ import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
-import org.dromara.sms4j.comm.utils.SmsUtil;
+import org.dromara.sms4j.comm.utils.SmsUtils;
 import org.dromara.sms4j.emay.config.EmayConfig;
 import org.dromara.sms4j.emay.util.EmayBuilder;
 import org.dromara.sms4j.provider.service.AbstractSmsBlend;
@@ -80,7 +80,7 @@ public class EmaySmsImpl extends AbstractSmsBlend<EmayConfig> {
         if (phones.size() > 500) {
             throw new SmsBlendException("单次发送超过最大发送上限，建议每次群发短信人数低于500");
         }
-        return sendMessage(SmsUtil.listToString(phones), message);
+        return sendMessage(SmsUtils.listToString(phones), message);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class EmaySmsImpl extends AbstractSmsBlend<EmayConfig> {
         for (Map.Entry<String, String> entry : messages.entrySet()) {
             list.add(entry.getValue());
         }
-        return sendMessage(SmsUtil.listToString(phones), EmayBuilder.listToString(list));
+        return sendMessage(SmsUtils.listToString(phones), EmayBuilder.listToString(list));
     }
 
     private SmsResponse getResponse(JSONObject resJson) {

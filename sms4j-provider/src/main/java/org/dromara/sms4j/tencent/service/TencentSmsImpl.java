@@ -8,7 +8,7 @@ import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
-import org.dromara.sms4j.comm.utils.SmsUtil;
+import org.dromara.sms4j.comm.utils.SmsUtils;
 import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import org.dromara.sms4j.tencent.config.TencentConfig;
 import org.dromara.sms4j.tencent.utils.TencentUtils;
@@ -77,7 +77,7 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
             list.add(entry.getValue());
         }
         String[] s = new String[list.size()];
-        return getSmsResponse(SmsUtil.listToArray(phones), list.toArray(s), templateId);
+        return getSmsResponse(SmsUtils.listToArray(phones), list.toArray(s), templateId);
     }
 
     private SmsResponse getSmsResponse(String[] phones, String[] messages, String templateId) {
@@ -91,7 +91,7 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
         }
         Map<String, String> headsMap = TencentUtils.generateHeadsMap(signature, timestamp, getConfig().getAction(),
                 getConfig().getVersion(), getConfig().getTerritory(), getConfig().getRequestUrl());
-        Map<String, Object> requestBody = TencentUtils.generateRequestBody(phones, getConfig().getSdkAppId(),
+        Map<String, Object> requestBody = TencentUtils.generateRequestBody(phones, getConfig().getAccessKeyId(),
                 getConfig().getSignature(), templateId, messages);
         String url = Constant.HTTPS_PREFIX + getConfig().getRequestUrl();
 

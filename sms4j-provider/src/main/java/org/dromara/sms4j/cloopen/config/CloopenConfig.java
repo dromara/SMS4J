@@ -16,11 +16,6 @@ import org.dromara.sms4j.provider.config.BaseConfig;
 public class CloopenConfig extends BaseConfig {
 
     /**
-     * 应用 ID
-     */
-    private String appId;
-
-    /**
      * REST API Base URL
      */
     private String baseUrl = "https://app.cloopen.com:8883/2013-12-26";

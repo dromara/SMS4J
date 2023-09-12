@@ -10,7 +10,7 @@ import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
-import org.dromara.sms4j.comm.utils.SmsUtil;
+import org.dromara.sms4j.comm.utils.SmsUtils;
 import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 
 import java.util.LinkedHashMap;
@@ -76,7 +76,7 @@ public class AlibabaSmsImpl extends AbstractSmsBlend<AlibabaConfig> {
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
         String messageStr = JSONUtil.toJsonStr(messages);
-        return getSmsResponse(SmsUtil.arrayToString(phones), messageStr, templateId);
+        return getSmsResponse(SmsUtils.arrayToString(phones), messageStr, templateId);
     }
 
     private SmsResponse getSmsResponse(String phone, String message, String templateId) {

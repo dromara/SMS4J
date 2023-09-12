@@ -65,7 +65,7 @@ public class TencentUtils {
         String signedHeaders = "content-type;host";
         Map<String, Object> params = new HashMap<>();
         params.put("PhoneNumberSet", phones);
-        params.put("SmsSdkAppId", tencentConfig.getSdkAppId());
+        params.put("SmsSdkAppId", tencentConfig.getAccessKeyId());
         params.put("SignName", tencentConfig.getSignature());
         params.put("TemplateId", templateId);
         params.put("TemplateParamSet", messages);

@@ -10,7 +10,7 @@ import java.util.Objects;
  * @author :Wind
  * 2023/4/8  14:29
  **/
-public class SettingUtil {
+public class SettingUtils {
 
     /** 读取配置文件*/
     public static String getSetting(String path){
@@ -18,6 +18,6 @@ public class SettingUtil {
     }
 
     public static String getSetting(){
-       return getSetting(Objects.requireNonNull(SettingUtil.class.getResource("/smsConfig.json")).getPath());
+       return getSetting(Objects.requireNonNull(SettingUtils.class.getResource("/smsConfig.json")).getPath());
     }
 }

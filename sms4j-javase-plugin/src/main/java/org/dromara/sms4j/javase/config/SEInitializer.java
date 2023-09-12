@@ -17,14 +17,14 @@ import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.cloopen.config.CloopenFactory;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
-import org.dromara.sms4j.comm.utils.SmsUtil;
+import org.dromara.sms4j.comm.utils.SmsUtils;
 import org.dromara.sms4j.core.factory.SmsFactory;
 import org.dromara.sms4j.core.proxy.RestrictedProcessDefaultImpl;
 import org.dromara.sms4j.core.proxy.SmsInvocationHandler;
 import org.dromara.sms4j.ctyun.config.CtyunFactory;
 import org.dromara.sms4j.emay.config.EmayFactory;
 import org.dromara.sms4j.huawei.config.HuaweiFactory;
-import org.dromara.sms4j.javase.util.YamlUtil;
+import org.dromara.sms4j.javase.util.YamlUtils;
 import org.dromara.sms4j.jdcloud.config.JdCloudFactory;
 import org.dromara.sms4j.netease.config.NeteaseFactory;
 import org.dromara.sms4j.provider.config.SmsConfig;
@@ -65,7 +65,7 @@ public class SEInitializer {
      * @param yaml yaml配置字符串
      */
     public void fromYaml(String yaml) {
-        InitConfig config = YamlUtil.toBean(yaml, InitConfig.class);
+        InitConfig config = YamlUtils.toBean(yaml, InitConfig.class);
         this.initConfig(config);
     }
 
@@ -155,7 +155,7 @@ public class SEInitializer {
                 continue;
             }
             configMap.put("config-id", configId);
-            SmsUtil.replaceKeysSeperator(configMap, "-", "_");
+            SmsUtils.replaceKeysSeperator(configMap, "-", "_");
             JSONObject configJson = new JSONObject(configMap);
             SupplierConfig supplierConfig = JSONUtil.toBean(configJson, providerFactory.getConfigClass());
             if(Boolean.TRUE.equals(smsConfig.getRestricted())) {

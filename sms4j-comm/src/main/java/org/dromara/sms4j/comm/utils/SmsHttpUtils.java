@@ -9,16 +9,16 @@ import org.dromara.sms4j.comm.exception.SmsBlendException;
 
 import java.util.Map;
 
-public class SmsHttpUtil {
+public class SmsHttpUtils {
 
-    private SmsHttpUtil() {
+    private SmsHttpUtils() {
     }
 
     private static class SmsHttpHolder {
-        private static final SmsHttpUtil INSTANCE = new SmsHttpUtil();
+        private static final SmsHttpUtils INSTANCE = new SmsHttpUtils();
     }
 
-    public static SmsHttpUtil instance() {
+    public static SmsHttpUtils instance() {
         return SmsHttpHolder.INSTANCE;
     }
 

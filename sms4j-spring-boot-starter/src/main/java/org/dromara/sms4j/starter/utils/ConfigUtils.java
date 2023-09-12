@@ -8,11 +8,11 @@ import org.springframework.core.env.Environment;
  * @author :Wind
  * 2023/4/7  21:39
  **/
-public class ConfigUtil {
+public class ConfigUtils {
 
     private final Environment environment;
 
-    public ConfigUtil(Environment environment) {
+    public ConfigUtils(Environment environment) {
         this.environment = environment;
     }
 

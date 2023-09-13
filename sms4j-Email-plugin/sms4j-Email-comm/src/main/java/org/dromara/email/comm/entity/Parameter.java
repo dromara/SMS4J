@@ -1,4 +1,4 @@
-package org.dromara.email.api;
+package org.dromara.email.comm.entity;
 
 /**
  * Parameter

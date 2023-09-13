@@ -46,22 +46,14 @@ public class MailService implements MailClient {
 
     @Override
     public void send(MailMessage mailMessage) {
-        List<String> html;
-        if (mailMessage.getHtmlInputStream() == null) {
-            html = HtmlUtil.readHtml(mailMessage.getHtmlPath());
-        } else {
+        List<String> html = null;
+        if (mailMessage.getHtmlInputStream() != null) {
             html = HtmlUtil.readHtml(mailMessage.getHtmlInputStream());
         }
-        List<String> address;
-        if (CollUtil.isEmpty(mailMessage.getMailAddressList())) {
-            if (StrUtil.isBlank(mailMessage.getMailAddress())) {
-                throw new MailException("收件人地址不能为空!");
-            }
-            address = CollUtil.newArrayList(mailMessage.getMailAddress());
-        } else {
-            address = mailMessage.getMailAddressList();
+        if (StrUtil.isNotBlank(mailMessage.getHtmlPath())){
+            html = HtmlUtil.readHtml(mailMessage.getHtmlPath());
         }
-        send(address,
+        send(mailMessage.getMailAddress(),
                 mailMessage.getTitle(),
                 mailMessage.getBody(),
                 html,

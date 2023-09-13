@@ -1,6 +1,6 @@
-package org.dromara.email.core;
+package org.dromara.email.comm.utils;
 
-import org.dromara.email.api.Parameter;
+import org.dromara.email.comm.entity.Parameter;
 import org.dromara.email.comm.errors.MailException;
 
 import java.lang.reflect.Field;

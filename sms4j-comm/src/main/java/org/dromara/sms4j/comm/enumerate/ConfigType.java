@@ -7,16 +7,10 @@ package org.dromara.sms4j.comm.enumerate;
  * 2023/4/5  19:08
  **/
 public enum ConfigType {
-    /** 配置文件*/
-    CONFIG_FILE("configFile"),
-    /** setting配置文件*/
-    SETTINGS_FILE("settingsFile"),
-
-    /** 数据库配置*/
-    SQL_CONFIG("sqlConfig"),
-
-    /** nacos配置*/
-    NACOS_CONFIG("nacosConfig");
+    /** yaml配置文件 */
+    YAML("yaml"),
+    /** 接口 */
+    INTERFACE("interface");
 
     private final String name;
 

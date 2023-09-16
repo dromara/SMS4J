@@ -7,7 +7,11 @@ import org.dromara.email.api.MailClient;
 import org.dromara.email.comm.config.MailSmtpConfig;
 import org.dromara.email.comm.errors.MailException;
 
-import javax.mail.*;
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -27,6 +31,10 @@ public class MailBuild {
 
     private Blacklist blacklist;
 
+    private int retryInterval;
+
+    private int maxRetries;
+
     private MailBuild(MailSmtpConfig config) throws MessagingException {
         Properties props = new Properties();
         props.put("mail.smtp.host", config.getSmtpServer());
@@ -42,6 +50,8 @@ public class MailBuild {
         this.message = new MimeMessage(session);
         this.message.setFrom(new InternetAddress(config.getFromAddress()));
         this.config = config;
+        this.retryInterval = config.getRetryInterval();
+        this.maxRetries = config.getMaxRetries();
     }
 
     private MailBuild(MailSmtpConfig config,Blacklist blacklist)throws MessagingException{
@@ -61,13 +71,15 @@ public class MailBuild {
         this.message.setFrom(new InternetAddress(config.getFromAddress()));
         this.config = config;
         this.blacklist = blacklist;
+        this.retryInterval = config.getRetryInterval();
+        this.maxRetries = config.getMaxRetries();
     }
 
     public static MailClient build(MailSmtpConfig config) throws MessagingException {
-        return MailService.NewMailService(new MailBuild(config));
+        return MailService.instance(new MailBuild(config));
     }
     public static MailClient build(MailSmtpConfig config,Blacklist blacklist)throws MessagingException {
-       return MailService.NewMailService(new MailBuild(config,blacklist));
+       return MailService.instance(new MailBuild(config,blacklist));
     }
 
     /**

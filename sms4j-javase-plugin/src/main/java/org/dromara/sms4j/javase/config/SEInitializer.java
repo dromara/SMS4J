@@ -1,25 +1,43 @@
 package org.dromara.sms4j.javase.config;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.resource.ClassPathResource;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.sms4j.aliyun.config.AlibabaConfig;
-import org.dromara.sms4j.cloopen.config.CloopenConfig;
-import org.dromara.sms4j.comm.config.SmsConfig;
+import org.dromara.sms4j.aliyun.config.AlibabaFactory;
+import org.dromara.sms4j.api.SmsBlend;
+import org.dromara.sms4j.api.dao.SmsDao;
+import org.dromara.sms4j.api.universal.SupplierConfig;
+import org.dromara.sms4j.cloopen.config.CloopenFactory;
+import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
-import org.dromara.sms4j.comm.factory.BeanFactory;
-import org.dromara.sms4j.core.config.SupplierFactory;
-import org.dromara.sms4j.emay.config.EmayConfig;
-import org.dromara.sms4j.huawei.config.HuaweiConfig;
-import org.dromara.sms4j.javase.util.YamlUtil;
-import org.dromara.sms4j.jdcloud.config.JdCloudConfig;
-import org.dromara.sms4j.tencent.config.TencentConfig;
-import org.dromara.sms4j.unisms.config.UniConfig;
-import org.dromara.sms4j.yunpian.config.YunpianConfig;
+import org.dromara.sms4j.comm.utils.SmsUtils;
+import org.dromara.sms4j.core.factory.SmsFactory;
+import org.dromara.sms4j.core.proxy.RestrictedProcessDefaultImpl;
+import org.dromara.sms4j.core.proxy.SmsInvocationHandler;
+import org.dromara.sms4j.ctyun.config.CtyunFactory;
+import org.dromara.sms4j.emay.config.EmayFactory;
+import org.dromara.sms4j.huawei.config.HuaweiFactory;
+import org.dromara.sms4j.javase.util.YamlUtils;
+import org.dromara.sms4j.jdcloud.config.JdCloudFactory;
+import org.dromara.sms4j.netease.config.NeteaseFactory;
+import org.dromara.sms4j.provider.config.SmsConfig;
+import org.dromara.sms4j.provider.factory.BaseProviderFactory;
+import org.dromara.sms4j.provider.factory.BeanFactory;
+import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
+import org.dromara.sms4j.tencent.config.TencentFactory;
+import org.dromara.sms4j.unisms.config.UniFactory;
+import org.dromara.sms4j.yunpian.config.YunPianFactory;
+import org.dromara.sms4j.zhutong.config.ZhutongFactory;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 初始化类
@@ -34,98 +52,7 @@ public class SEInitializer {
     }
 
     /**
-     * 初始化短信公共配置
-     * @param smsConfig 短信公共配置
-     * @return 当前初始化类实例
-     */
-    public SEInitializer initSmsConfig(SmsConfig smsConfig) {
-        BeanUtil.copyProperties(smsConfig, BeanFactory.getSmsConfig());
-        return this;
-    }
-
-    /**
-     * 初始化阿里配置
-     * @param alibabaConfig 阿里配置
-     * @return 当前初始化类实例
-     */
-    public SEInitializer initAlibaba(AlibabaConfig alibabaConfig) {
-        BeanUtil.copyProperties(alibabaConfig, SupplierFactory.getAlibabaConfig());
-        return this;
-    }
-
-    /**
-     * 初始化容连云配置
-     * @param cloopenConfig 容连云配置
-     * @return 当前初始化类实例
-     */
-    public SEInitializer initCloopen(CloopenConfig cloopenConfig) {
-        BeanUtil.copyProperties(cloopenConfig, SupplierFactory.getCloopenConfig());
-        return this;
-    }
-
-    /**
-     * 初始化亿美软通配置
-     * @param emayConfig 亿美软通配置
-     * @return 当前初始化类实例
-     */
-    public SEInitializer initEmay(EmayConfig emayConfig) {
-        BeanUtil.copyProperties(emayConfig, SupplierFactory.getEmayConfig());
-        return this;
-    }
-
-    /**
-     * 初始化华为配置
-     * @param huaweiConfig 华为配置
-     * @return 当前初始化类实例
-     */
-    public SEInitializer initHuawei(HuaweiConfig huaweiConfig) {
-        BeanUtil.copyProperties(huaweiConfig, SupplierFactory.getHuaweiConfig());
-        return this;
-    }
-
-    /**
-     * 初始化京东配置
-     * @param jdCloudConfig 京东配置
-     * @return 当前初始化类实例
-     */
-    public SEInitializer initJdCloud(JdCloudConfig jdCloudConfig) {
-        BeanUtil.copyProperties(jdCloudConfig, SupplierFactory.getJdCloudConfig());
-        return this;
-    }
-
-    /**
-     * 初始化腾讯配置
-     * @param tencentConfig 腾讯配置
-     * @return 当前初始化类实例
-     */
-    public SEInitializer initTencent(TencentConfig tencentConfig) {
-        BeanUtil.copyProperties(tencentConfig, SupplierFactory.getTencentConfig());
-        return this;
-    }
-
-    /**
-     * 初始化合一配置
-     * @param uniConfig 合一配置
-     * @return 当前初始化类实例
-     */
-    public SEInitializer initUniSms(UniConfig uniConfig) {
-        BeanUtil.copyProperties(uniConfig, SupplierFactory.getUniConfig());
-        return this;
-    }
-
-    /**
-     * 初始化云片配置
-     * @param yunpianConfig 云片配置
-     * @return 当前初始化类实例
-     */
-    public SEInitializer initYunpian(YunpianConfig yunpianConfig) {
-        BeanUtil.copyProperties(yunpianConfig, SupplierFactory.getYunpianConfig());
-        return this;
-    }
-
-    /**
-     * 默认从sms-aggregation.yml文件中读取配置
-     * @return
+     * 默认从sms4j.yml文件中读取配置
      */
     public void fromYaml() {
         ClassPathResource yamlResouce = new ClassPathResource("sms4j.yml");
@@ -134,15 +61,17 @@ public class SEInitializer {
 
     /**
      * 从yaml中读取配置
+     *
      * @param yaml yaml配置字符串
      */
     public void fromYaml(String yaml) {
-        InitConfig config = YamlUtil.toBean(yaml, InitConfig.class);
+        InitConfig config = YamlUtils.toBean(yaml, InitConfig.class);
         this.initConfig(config);
     }
 
     /**
      * 从json中读取配置
+     *
      * @param json json配置字符串
      */
     public void fromJson(String json) {
@@ -150,50 +79,108 @@ public class SEInitializer {
         this.initConfig(config);
     }
 
+    /**
+     * 从配置bean对象中加载配置
+     *
+     * @param smsConfig 短信公共配置
+     * @param configList 各短信服务商配置列表
+     */
+    public void fromConfig(SmsConfig smsConfig, List<SupplierConfig> configList) {
+        // 注册默认工厂
+        registerDefaultFactory();
+        // 初始化SmsConfig整体配置文件
+        BeanUtil.copyProperties(smsConfig, BeanFactory.getSmsConfig());
+        // 创建短信服务对象
+        if(CollUtil.isEmpty(configList)) {
+            return ;
+        }
+        for(SupplierConfig supplierConfig : configList) {
+            if(Boolean.TRUE.equals(smsConfig.getRestricted())) {
+                SmsFactory.createRestrictedSmsBlend(supplierConfig);
+            } else {
+                SmsFactory.createSmsBlend(supplierConfig);
+            }
+        }
+    }
+
+    /**
+     * 注册服务商工厂
+     * @param factory 服务商工厂
+     */
+    public SEInitializer registerFactory(BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig> factory) {
+        ProviderFactoryHolder.registerFactory(factory);
+        return this;
+    }
+
+    /**
+     * 注册DAO实例
+     * @param smsDao DAO实例
+     */
+    public SEInitializer registerSmsDao(SmsDao smsDao) {
+        if(smsDao == null) {
+            throw new SmsBlendException("注册DAO实例失败，实例不能为空");
+        }
+        RestrictedProcessDefaultImpl process = new RestrictedProcessDefaultImpl();
+        process.setSmsDao(smsDao);
+        SmsInvocationHandler.setRestrictedProcess(process);
+        return this;
+    }
+
     private void initConfig(InitConfig config) {
-        if(config == null) {
+        if (config == null) {
             log.error("初始化配置失败");
             throw new SmsBlendException("初始化配置失败");
         }
         InitSmsConfig smsConfig = config.getSms();
-        if(smsConfig == null) {
+        if (smsConfig == null) {
             log.error("初始化配置失败");
             throw new SmsBlendException("初始化配置失败");
         }
 
-        this.initSmsConfig(smsConfig);
-        AlibabaConfig alibabaConfig = smsConfig.getAlibaba();
-        if(alibabaConfig != null) {
-            this.initAlibaba(alibabaConfig);
+        //注册默认工厂
+        registerDefaultFactory();
+
+        //初始化SmsConfig整体配置文件
+        BeanUtil.copyProperties(smsConfig, BeanFactory.getSmsConfig());
+        // 解析服务商配置
+        Map<String, Map<String, Object>> blends = smsConfig.getBlends();
+        for(String configId : blends.keySet()) {
+            Map<String, Object> configMap = blends.get(configId);
+            Object supplierObj = configMap.get(Constant.SUPPLIER_KEY);
+            String supplier = supplierObj == null ? "" : String.valueOf(supplierObj);
+            supplier = StrUtil.isEmpty(supplier) ? configId : supplier;
+            BaseProviderFactory<SmsBlend, SupplierConfig> providerFactory = (BaseProviderFactory<SmsBlend, SupplierConfig>) ProviderFactoryHolder.requireForSupplier(supplier);
+            if(providerFactory == null) {
+                log.warn("创建\"{}\"的短信服务失败，未找到服务商为\"{}\"的服务", configId, supplier);
+                continue;
+            }
+            configMap.put("config-id", configId);
+            SmsUtils.replaceKeysSeperator(configMap, "-", "_");
+            JSONObject configJson = new JSONObject(configMap);
+            SupplierConfig supplierConfig = JSONUtil.toBean(configJson, providerFactory.getConfigClass());
+            if(Boolean.TRUE.equals(smsConfig.getRestricted())) {
+                SmsFactory.createRestrictedSmsBlend(supplierConfig);
+            } else {
+                SmsFactory.createSmsBlend(supplierConfig);
+            }
         }
-        CloopenConfig cloopenConfig = smsConfig.getCloopen();
-        if(cloopenConfig != null) {
-            this.initCloopen(cloopenConfig);
-        }
-        EmayConfig emayConfig = smsConfig.getEmay();
-        if(emayConfig != null) {
-            this.initEmay(emayConfig);
-        }
-        HuaweiConfig huaweiConfig = smsConfig.getHuawei();
-        if(huaweiConfig != null) {
-            this.initHuawei(huaweiConfig);
-        }
-        JdCloudConfig jdCloudConfig = smsConfig.getJdCloud();
-        if(jdCloudConfig != null) {
-            this.initJdCloud(jdCloudConfig);
-        }
-        TencentConfig tencentConfig = smsConfig.getTencent();
-        if(tencentConfig != null) {
-            this.initTencent(tencentConfig);
-        }
-        UniConfig uniConfig = smsConfig.getUni();
-        if(uniConfig != null) {
-            this.initUniSms(uniConfig);
-        }
-        YunpianConfig yunpianConfig = smsConfig.getYunpian();
-        if(yunpianConfig != null) {
-            this.initYunpian(yunpianConfig);
-        }
+    }
+
+    /**
+     * 注册默认工厂实例
+     */
+    private void registerDefaultFactory() {
+        ProviderFactoryHolder.registerFactory(AlibabaFactory.instance());
+        ProviderFactoryHolder.registerFactory(CloopenFactory.instance());
+        ProviderFactoryHolder.registerFactory(CtyunFactory.instance());
+        ProviderFactoryHolder.registerFactory(EmayFactory.instance());
+        ProviderFactoryHolder.registerFactory(HuaweiFactory.instance());
+        ProviderFactoryHolder.registerFactory(JdCloudFactory.instance());
+        ProviderFactoryHolder.registerFactory(NeteaseFactory.instance());
+        ProviderFactoryHolder.registerFactory(TencentFactory.instance());
+        ProviderFactoryHolder.registerFactory(UniFactory.instance());
+        ProviderFactoryHolder.registerFactory(YunPianFactory.instance());
+        ProviderFactoryHolder.registerFactory(ZhutongFactory.instance());
     }
 
     /**
@@ -213,14 +200,7 @@ public class SEInitializer {
     @EqualsAndHashCode(callSuper = true)
     @ToString(callSuper = true)
     public static class InitSmsConfig extends SmsConfig {
-        private AlibabaConfig alibaba;
-        private CloopenConfig cloopen;
-        private EmayConfig emay;
-        private HuaweiConfig huawei;
-        private JdCloudConfig jdCloud;
-        private TencentConfig tencent;
-        private UniConfig uni;
-        private YunpianConfig yunpian;
+        private Map<String, Map<String, Object>> blends;
     }
 
 }

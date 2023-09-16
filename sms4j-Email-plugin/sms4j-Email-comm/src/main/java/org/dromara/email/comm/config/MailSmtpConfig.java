@@ -52,4 +52,16 @@ public class MailSmtpConfig {
      * */
     @Builder.Default
     private String isAuth = "true";
+
+    /**
+     * 重试间隔（单位：秒），默认为5秒
+     */
+    @Builder.Default
+    private int retryInterval = 5;
+
+    /**
+     * 重试次数，默认为1次
+     */
+    @Builder.Default
+    private int maxRetries = 1;
 }

@@ -5,12 +5,12 @@ import com.jdcloud.sdk.service.sms.client.SmsClient;
 import com.jdcloud.sdk.service.sms.model.BatchSendRequest;
 import com.jdcloud.sdk.service.sms.model.BatchSendResult;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.sms4j.api.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
-import org.dromara.sms4j.comm.annotation.Restricted;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.jdcloud.config.JdCloudConfig;
+import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -25,56 +25,78 @@ import java.util.stream.Collectors;
  * @since 2023/4/10 20:01
  */
 @Slf4j
-public class JdCloudSmsImpl extends AbstractSmsBlend {
+public class JdCloudSmsImpl extends AbstractSmsBlend<JdCloudConfig> {
 
     private final SmsClient client;
 
-    private final JdCloudConfig config;
+    private int retry = 0;
 
     public JdCloudSmsImpl(SmsClient client, JdCloudConfig config, Executor pool, DelayedTime delayed) {
-        super(pool,delayed);
+        super(config, pool, delayed);
         this.client = client;
-        this.config = config;
+    }
+
+    public JdCloudSmsImpl(SmsClient client, JdCloudConfig config) {
+        super(config);
+        this.client = client;
     }
 
     @Override
-    @Restricted
+    public String getSupplier() {
+        return SupplierConstant.JDCLOUD;
+    }
+
+    @Override
     public SmsResponse sendMessage(String phone, String message) {
         return massTexting(Collections.singletonList(phone), message);
     }
 
     @Override
-    @Restricted
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
         return massTexting(Collections.singletonList(phone), templateId, messages);
     }
 
     @Override
-    @Restricted
     public SmsResponse massTexting(List<String> phones, String message) {
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
         map.put(IdUtil.fastSimpleUUID(), message);
-        return massTexting(phones, config.getTemplateId(), map);
+        return massTexting(phones, getConfig().getTemplateId(), map);
     }
 
     @Override
-    @Restricted
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
+        BatchSendRequest request;
         try {
-            BatchSendRequest request = new BatchSendRequest();
+            request = new BatchSendRequest();
             request.setPhoneList(phones);
-            request.setRegionId(config.getRegion());
+            request.setRegionId(getConfig().getRegion());
             request.setTemplateId(templateId);
-            request.setSignId(config.getSignature());
+            request.setSignId(getConfig().getSignature());
             List<String> params = messages.keySet().stream().map(messages::get)
                     .collect(Collectors.toList());
             request.setParams(params);
-
-            BatchSendResult result = client.batchSend(request).getResult();
-            return getSmsResponse(result);
         } catch (Exception e) {
             throw new SmsBlendException(e.getMessage());
         }
+
+        try {
+            BatchSendResult result = client.batchSend(request).getResult();
+            SmsResponse smsResponse = getSmsResponse(result);
+            if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
+                retry = 0;
+                return smsResponse;
+            }
+            return requestRetry(phones, templateId, messages);
+        }catch (SmsBlendException e){
+            return requestRetry(phones, templateId, messages);
+        }
+    }
+
+    private SmsResponse requestRetry(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
+        http.safeSleep(getConfig().getRetryInterval());
+        retry++;
+        log.warn("短信第 {" + retry + "} 次重新发送");
+        return massTexting(phones, templateId, messages);
     }
 
     /**
@@ -85,17 +107,9 @@ public class JdCloudSmsImpl extends AbstractSmsBlend {
      */
     private SmsResponse getSmsResponse(BatchSendResult res) {
         SmsResponse smsResponse = new SmsResponse();
-        smsResponse.setBizId(res.getData().getSequenceNumber());
-        smsResponse.setData(res.getData());
-        smsResponse.setCode(String.valueOf(res.getCode()));
-        smsResponse.setMessage(res.getMessage());
-        Boolean status = res.getStatus();
-        boolean isSuccess = status != null && status;
-        smsResponse.setSuccess(isSuccess);
-        if (!isSuccess) {
-            smsResponse.setErrMessage(res.getMessage());
-            smsResponse.setErrorCode(String.valueOf(res.getCode()));
-        }
+        smsResponse.setSuccess(res.getStatus() != null && res.getStatus());
+        smsResponse.setData(res);
+        smsResponse.setConfigId(getConfigId());
         return smsResponse;
     }
 }

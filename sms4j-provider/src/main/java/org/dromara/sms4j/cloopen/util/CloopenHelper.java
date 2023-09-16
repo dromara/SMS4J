@@ -1,22 +1,20 @@
 package org.dromara.sms4j.cloopen.util;
 
 import cn.hutool.core.codec.Base64;
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.crypto.SecureUtil;
-import cn.hutool.json.JSONUtil;
-import com.dtflys.forest.Forest;
-import com.dtflys.forest.config.ForestConfiguration;
+import cn.hutool.json.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.cloopen.config.CloopenConfig;
+import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
-import org.dromara.sms4j.comm.utils.RestApiFunction;
+import org.dromara.sms4j.comm.utils.SmsHttpUtils;
 
-import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * 容联云 Helper
@@ -24,58 +22,53 @@ import java.util.Optional;
  * @author Charles7c
  * @since 2023/4/17 20:57
  */
+@Slf4j
 public class CloopenHelper {
 
     private final CloopenConfig config;
+    private final SmsHttpUtils http;
+    private int retry = 0;
 
-    public CloopenHelper(CloopenConfig config) {
+    public CloopenHelper(CloopenConfig config, SmsHttpUtils http) {
         this.config = config;
+        this.http = http;
     }
 
-    /**
-     * 发起 REST 请求
-     *
-     * @param restApiFunction REST API 函数式接口
-     * @param paramMap        请求参数
-     * @param <R>             响应类型
-     * @return 响应信息
-     */
-    public <R> SmsResponse request(RestApiFunction<Map<String, Object>, R> restApiFunction, Map<String, Object> paramMap) {
-        SmsResponse smsResponse = new SmsResponse();
+    public SmsResponse smsResponse(Map<String, Object> paramMap){
         try {
             String timestamp = DateUtil.format(new Date(), DatePattern.PURE_DATETIME_PATTERN);
-            // 设置全局变量
-            ForestConfiguration forestConfiguration = Forest.config();
-            forestConfiguration.setVariableValue("baseUrl", (method) -> config.getBaseUrl());
-            forestConfiguration.setVariableValue("accessKeyId", (method) -> config.getAccessKeyId());
-            forestConfiguration.setVariableValue("sign", this.generateSign(config.getAccessKeyId(), config.getAccessKeySecret(), timestamp));
-            forestConfiguration.setVariableValue("authorization", this.generateAuthorization(config.getAccessKeyId(), timestamp));
 
-            // 调用请求
-            R response = restApiFunction.apply(paramMap);
-
-            // 解析结果
-            Map<String, Object> responseMap = Optional.ofNullable(response)
-                    .map(JSONUtil::parseObj)
-                    .map(obj -> (Map<String, Object>) obj)
-                    .orElse(Collections.emptyMap());
-            String statusCode = Convert.toStr(responseMap.get("statusCode"));
-            String statusMsg = Convert.toStr(responseMap.get("statusMsg"));
-            boolean isSuccess = "000000".equals(statusCode);
-            if (isSuccess) {
-                smsResponse.setSuccess(true);
-                smsResponse.setCode(statusCode);
-                smsResponse.setMessage(statusMsg);
-                smsResponse.setData(response);
-                Object bizId = JSONUtil.getByPath(JSONUtil.parse(responseMap), "templateSMS.smsMessageSid");
-                smsResponse.setBizId(Convert.toStr(bizId));
-            } else {
-                smsResponse.setErrMessage(statusMsg);
-                smsResponse.setErrorCode(statusCode);
+            String url = String.format("%s/Accounts/%s/SMS/TemplateSMS?sig=%s",
+                    config.getBaseUrl(),
+                    config.getAccessKeyId(),
+                    this.generateSign(config.getAccessKeyId(), config.getAccessKeySecret(), timestamp));
+            Map<String, String> headers = new LinkedHashMap<>(3);
+            headers.put("Accept", Constant.ACCEPT);
+            headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
+            headers.put("Authorization", this.generateAuthorization(config.getAccessKeyId(), timestamp));
+            SmsResponse smsResponse = getResponse(http.postJson(url, headers, paramMap));
+            if(smsResponse.isSuccess() || retry == config.getMaxRetries()){
+                retry = 0;
+                return smsResponse;
             }
-        } catch (Exception e) {
-            throw new SmsBlendException(e.getMessage());
+            return requestRetry(paramMap);
+        }catch (SmsBlendException e){
+            return requestRetry(paramMap);
         }
+    }
+
+    private SmsResponse requestRetry(Map<String, Object> paramMap) {
+        http.safeSleep(config.getRetryInterval());
+        retry++;
+        log.warn("短信第 {" + retry + "} 次重新发送");
+        return smsResponse(paramMap);
+    }
+
+    private SmsResponse getResponse(JSONObject resJson) {
+        SmsResponse smsResponse = new SmsResponse();
+        smsResponse.setSuccess("000000".equals(resJson.getStr("statusCode")));
+        smsResponse.setData(resJson);
+        smsResponse.setConfigId(this.config.getConfigId());
         return smsResponse;
     }
 

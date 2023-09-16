@@ -2,7 +2,11 @@ package org.dromara.email.comm.utils;
 
 import org.dromara.email.comm.errors.MailException;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +35,7 @@ public final class HtmlUtil {
      * @author :Wind
      */
     public static List<String> readHtml(String name) throws MailException {
-        try (InputStream is = HtmlUtil.class.getResourceAsStream("/template/" + name);) {
+        try (InputStream is = HtmlUtil.class.getResourceAsStream("/template/" + name)) {
             return readHtml(is);
         } catch (IOException e) {
             throw new MailException(e);
@@ -46,7 +50,7 @@ public final class HtmlUtil {
      * @author :Wind
      */
     public static List<String> readHtml(File file) throws MailException {
-        try (InputStream ip = Files.newInputStream(file.toPath());) {
+        try (InputStream ip = Files.newInputStream(file.toPath())) {
             return readHtml(ip);
         } catch (IOException e) {
             throw new MailException(e);
@@ -90,7 +94,8 @@ public final class HtmlUtil {
             for (Map.Entry<String, String> s : parameter.entrySet()) {
                 String piece = piece(s.getKey());
                 if (data.get(i).contains(piece)){
-                    data.set(i,s.getValue());
+                    String replace = data.get(i).replace(piece, s.getValue());
+                    data.set(i,replace);
                 }
             }
         }

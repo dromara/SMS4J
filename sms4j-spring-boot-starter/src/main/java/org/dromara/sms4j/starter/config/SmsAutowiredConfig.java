@@ -1,44 +1,32 @@
 package org.dromara.sms4j.starter.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.sms4j.api.smsProxy.SmsInvocationHandler;
-import org.dromara.sms4j.comm.config.SmsBanner;
-import org.dromara.sms4j.comm.config.SmsConfig;
-import org.dromara.sms4j.comm.config.SmsSqlConfig;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
-import org.dromara.sms4j.comm.factory.BeanFactory;
-import org.dromara.sms4j.comm.utils.JDBCTool;
-import org.dromara.sms4j.core.SupplierSqlConfig;
-import org.dromara.sms4j.starter.aop.RestrictedProcessImpl;
-import org.dromara.sms4j.api.universal.RedisUtil;
-import org.dromara.sms4j.starter.utils.ConfigUtil;
-import org.dromara.sms4j.starter.utils.RedisUtils;
-import org.dromara.sms4j.starter.utils.SpringUtil;
+import org.dromara.sms4j.provider.config.SmsBanner;
+import org.dromara.sms4j.provider.config.SmsConfig;
+import org.dromara.sms4j.provider.factory.BeanFactory;
+import org.dromara.sms4j.starter.utils.ConfigUtils;
+import org.dromara.sms4j.starter.utils.SmsSpringUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 
-import javax.sql.DataSource;
-import java.sql.SQLException;
-import java.util.Objects;
+import javax.annotation.PostConstruct;
 import java.util.concurrent.Executor;
 
 
 @Slf4j
 public class SmsAutowiredConfig {
 
-    private final SpringUtil springUtil;
+    private final SmsSpringUtils smsSpringUtils;
 
-    public SmsAutowiredConfig(SpringUtil springUtil) {
-        this.springUtil = springUtil;
+    public SmsAutowiredConfig(SmsSpringUtils smsSpringUtils) {
+        this.smsSpringUtils = smsSpringUtils;
     }
-
-    @Bean
-    @ConfigurationProperties(prefix = "sms.sql")
-    protected SmsSqlConfig smsSqlConfig(){return BeanFactory.getSmsSqlConfig();}
 
     @Bean
     @Primary
@@ -49,49 +37,34 @@ public class SmsAutowiredConfig {
 
     /** 注入一个定时器*/
     @Bean
+    @Lazy
     protected DelayedTime delayedTime(){
-      return BeanFactory.getDelayedTime();
+        return BeanFactory.getDelayedTime();
     }
 
     /** 注入线程池*/
     @Bean("smsExecutor")
+    @Lazy
     protected Executor taskExecutor(SmsConfig config){
-       return BeanFactory.setExecutor(config);
+        return BeanFactory.setExecutor(config);
     }
 
     /** 注入一个配置文件读取工具*/
-    @Bean
-    protected ConfigUtil configUtil(Environment environment){
-        return new ConfigUtil(environment);
+    @Bean("smsConfigUtil")
+    @Lazy
+    protected ConfigUtils configUtil(Environment environment){
+        return new ConfigUtils(environment);
     }
 
     /** smsConfig参数意义为确保注入时smsConfig已经存在*/
     @Bean
-    @ConditionalOnProperty(prefix = "sms", name = "config-type", havingValue = "config_file")
+    @ConditionalOnProperty(prefix = "sms", name = "config-type", havingValue = "yaml")
     protected SupplierConfig supplierConfig(SmsConfig smsConfig){
         return new SupplierConfig();
     }
 
-    @Bean
-    @ConditionalOnProperty(prefix = "sms", name = "config-type", havingValue = "sql_config")
-    protected SupplierSqlConfig supplierSqlConfig(SmsSqlConfig smsSqlConfig) throws SQLException {
-        DataSource bean = SpringUtil.getBean(DataSource.class);
-        if (!Objects.isNull(bean)){
-            BeanFactory.getJDBCTool().setConnection(bean.getConnection());
-        }
-        return new SupplierSqlConfig();
-    }
-
-    void init(){
-        /* 如果配置中启用了redis，则注入redis工具*/
-        if (BeanFactory.getSmsConfig().getRedisCache()){
-            //如果用户没有实现RedisUtil接口则注入默认的实现
-            if (!SpringUtil.interfaceExist(RedisUtil.class)){
-                springUtil.createBean(RedisUtils.class);
-            }
-            SmsInvocationHandler.setRestrictedProcess(new RestrictedProcessImpl());
-            log.debug("The redis cache is enabled for sms4j");
-        }
+    @PostConstruct
+    void init() {
         //打印banner
         if (BeanFactory.getSmsConfig().getIsPrint()){
             SmsBanner.PrintBanner(Constant.VERSION);

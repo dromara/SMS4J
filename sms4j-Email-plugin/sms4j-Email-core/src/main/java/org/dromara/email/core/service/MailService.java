@@ -1,16 +1,17 @@
 package org.dromara.email.core.service;
 
-import cn.hutool.core.convert.Convert;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpUtil;
 import org.dromara.email.api.MailClient;
-import org.dromara.email.api.Parameter;
+import org.dromara.email.comm.constants.FileConstants;
+import org.dromara.email.comm.entity.MailMessage;
 import org.dromara.email.comm.errors.MailException;
 import org.dromara.email.comm.utils.HtmlUtil;
 import org.dromara.email.comm.utils.ZipUtils;
-import org.dromara.email.core.ReflectUtil;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -25,257 +26,43 @@ import javax.mail.util.ByteArrayDataSource;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 public class MailService implements MailClient {
 
+    private static Logger logger = Logger.getLogger("mailLog");
     private MailBuild mailBuild;
 
     private MailService(MailBuild mailBuild) {
         this.mailBuild = mailBuild;
     }
 
-    public static MailClient NewMailService(MailBuild mailBuild) {
+    public static MailClient instance(MailBuild mailBuild) {
         return new MailService(mailBuild);
     }
 
     @Override
-    public void sendMail(String mailAddress, String title, String body) {
-        sendEmail(mailAddress, title, body, null);
-    }
-
-    @Override
-    public void sendMail(List<String> mailAddress, String title, String body) {
-        sendEmail(mailAddress, title, body, null);
-    }
-
-    @Override
-    public void sendEmail(String mailAddress, String title, String body, Map<String, String> files) {
-        sendEmail(Collections.singletonList(mailAddress), title, body, files);
-    }
-
-    @Override
-    public void sendEmail(String mailAddress, String title, String body, String zipName, Map<String, String> files) {
-        try {
-            Message message = mailBuild.getMessage();
-            message.setRecipients(Message.RecipientType.TO, mailBuild.eliminate(Convert.toList(String.class, mailAddress)));
-            message.setSubject(title);
-            if (StrUtil.isNotBlank(body)) {
-                message.setText(body);
-            }
-            if (files != null && files.size() != 0) {
-                Multipart multipart = new MimeMultipart();
-                zipFiles(multipart, zipName, files);
-                message.setContent(multipart);
-            }
-            Transport.send(message);
-        } catch (MessagingException | IOException e) {
-            throw new MailException(e);
+    public void send(MailMessage mailMessage) {
+        List<String> html = null;
+        if (mailMessage.getHtmlInputStream() != null) {
+            html = HtmlUtil.readHtml(mailMessage.getHtmlInputStream());
         }
-    }
-
-    @Override
-    public void sendEmail(List<String> mailAddress, String title, String body, Map<String, String> files) {
-        try {
-            Message message = mailBuild.getMessage();
-            message.setRecipients(Message.RecipientType.TO, mailBuild.eliminate(mailAddress));
-            message.setSubject(title);
-            if (StrUtil.isNotBlank(body)) {
-                message.setText(body);
-            }
-            if (files != null && files.size() != 0) {
-                Multipart multipart = new MimeMultipart();
-                forFiles(multipart, files);
-                message.setContent(multipart);
-            }
-            Transport.send(message);
-        } catch (MessagingException e) {
-            throw new MailException(e);
+        if (StrUtil.isNotBlank(mailMessage.getHtmlPath())){
+            html = HtmlUtil.readHtml(mailMessage.getHtmlPath());
         }
-    }
-
-    @Override
-    public void sendHtml(String mailAddress, String title, String htmlName, Map<String, String> parameter) {
-        sendHtml(Collections.singletonList(mailAddress), title, htmlName, parameter);
-    }
-
-    @Override
-    public void sendHtml(List<String> mailAddress, String title, String htmlName, Map<String, String> parameter) {
-        sendHtml(mailAddress, title, htmlName, parameter, null);
-    }
-
-    @Override
-    public void sendHtml(String mailAddress, String title, String htmlName, Parameter parameter) {
-        sendHtml(Collections.singletonList(mailAddress), title, htmlName, parameter);
-    }
-
-    @Override
-    public void sendHtml(List<String> mailAddress, String title, String htmlName, Parameter parameter) {
-        sendHtml(mailAddress, title, htmlName, ReflectUtil.getValues(parameter));
-    }
-
-    @Override
-    public void sendHtml(String mailAddress, String title, String htmlName, Map<String, String> parameter, Map<String, String> files) {
-        sendHtml(mailAddress, title, "", htmlName, parameter, files);
-    }
-
-    @Override
-    public void sendHtml(List<String> mailAddress, String title, String htmlName, Map<String, String> parameter, Map<String, String> files) {
-        sendHtml(mailAddress, title, "", htmlName, parameter, files);
-    }
-
-    @Override
-    public void sendHtml(String mailAddress, String title, String htmlName, Parameter parameter, Map<String, String> files) {
-        sendHtml(mailAddress, title, htmlName, ReflectUtil.getValues(parameter), files);
-    }
-
-    @Override
-    public void sendHtml(List<String> mailAddress, String title, String htmlName, Parameter parameter, Map<String, String> files) {
-        sendHtml(mailAddress, title, htmlName, ReflectUtil.getValues(parameter), files);
-    }
-
-    @Override
-    public void sendHtml(String mailAddress, String title, String body, String htmlName, Map<String, String> parameter) {
-        sendHtml(mailAddress, title, body, htmlName, parameter, null);
-    }
-
-    @Override
-    public void sendHtml(List<String> mailAddress, String title, String body, String htmlName, Map<String, String> parameter) {
-        sendHtml(mailAddress, title, body, htmlName, parameter, null);
-    }
-
-    @Override
-    public void sendHtml(String mailAddress, String title, String body, String htmlName, Parameter parameter) {
-        sendHtml(Collections.singletonList(mailAddress), title, body, htmlName, parameter);
-    }
-
-    @Override
-    public void sendHtml(List<String> mailAddress, String title, String body, String htmlName, Parameter parameter) {
-        sendHtml(mailAddress, title, body, htmlName, parameter, null);
-    }
-
-    @Override
-    public void sendHtml(String mailAddress, String title, String body, String htmlName, Map<String, String> parameter, Map<String, String> files) {
-        sendHtml(Collections.singletonList(mailAddress), title, body, htmlName, parameter, files);
-    }
-
-    @Override
-    public void sendHtml(String mailAddress, String title, String body, String htmlName, Map<String, String> parameter, String zipName, Map<String, String> files) {
-        try {
-            Message message = mailBuild.getMessage();
-            message.setRecipients(Message.RecipientType.TO, mailBuild.eliminate(Convert.toList(String.class, mailAddress)));
-            message.setSubject(title);
-
-            Multipart multipart = new MimeMultipart("alternative");
-            //读取模板并进行变量替换
-            List<String> strings = HtmlUtil.replacePlaceholder(HtmlUtil.readHtml(htmlName), parameter);
-            //拼合HTML数据
-            String htmlData = HtmlUtil.pieceHtml(strings);
-            if (StrUtil.isNotBlank(body)) {
-                // 创建文本正文部分
-                MimeBodyPart textPart = new MimeBodyPart();
-                textPart.setText(body);
-                multipart.addBodyPart(textPart);
-            }
-            //添加附件
-            if (MapUtil.isNotEmpty(files)) {
-                zipFiles(multipart, zipName, files);
-            }
-            MimeBodyPart htmlPart = new MimeBodyPart();
-            htmlPart.setContent(htmlData, "text/html;charset=UTF-8");
-            multipart.addBodyPart(htmlPart);
-            message.setContent(multipart);
-            Transport.send(message);
-        } catch (MessagingException | IOException e) {
-            throw new MailException(e);
-        }
-    }
-
-    @Override
-    public void sendHtml(String mailAddress, String title, String body, String htmlName, Parameter parameter, String zipName, Map<String, String> files) {
-        sendHtml(mailAddress, title, body,htmlName, ReflectUtil.getValues(parameter),zipName,files );
-    }
-
-    @Override
-    public void sendHtml(List<String> mailAddress, String title, String body, String htmlName, Map<String, String> parameter, Map<String, String> files) {
-        try {
-            Message message = mailBuild.getMessage();
-            message.setRecipients(Message.RecipientType.TO, mailBuild.eliminate(mailAddress));
-            message.setSubject(title);
-
-            Multipart multipart = new MimeMultipart("alternative");
-            //读取模板并进行变量替换
-            List<String> strings = HtmlUtil.replacePlaceholder(HtmlUtil.readHtml(htmlName), parameter);
-            //拼合HTML数据
-            String htmlData = HtmlUtil.pieceHtml(strings);
-            if (!body.isEmpty()) {
-                // 创建文本正文部分
-                MimeBodyPart textPart = new MimeBodyPart();
-                textPart.setText(body);
-                multipart.addBodyPart(textPart);
-            }
-            //添加附件
-            if (files != null && files.size() != 0) {
-                forFiles(multipart, files);
-            }
-            MimeBodyPart htmlPart = new MimeBodyPart();
-            htmlPart.setContent(htmlData, "text/html;charset=UTF-8");
-            multipart.addBodyPart(htmlPart);
-            message.setContent(multipart);
-            Transport.send(message);
-        } catch (MessagingException e) {
-            throw new MailException(e);
-        }
-    }
-
-    @Override
-    public void sendHtml(String mailAddress, String title, String body, String htmlName, Parameter parameter, Map<String, String> files) {
-        sendHtml(Collections.singletonList(mailAddress), title, body, htmlName, parameter, files);
-    }
-
-    @Override
-    public void sendHtml(List<String> mailAddress, String title, String body, String htmlName, Parameter parameter, Map<String, String> files) {
-        sendHtml(mailAddress, title, body, htmlName, ReflectUtil.getValues(parameter), files);
-    }
-
-    @Override
-    public void sendHtml(List<String> mailAddress, String title, String body, InputStream html, Map<String, String> parameter, Map<String, String> files) {
-        try {
-            Message message = mailBuild.getMessage();
-            message.setRecipients(Message.RecipientType.TO, mailBuild.eliminate(mailAddress));
-            message.setSubject(title);
-
-            Multipart multipart = new MimeMultipart("alternative");
-            //读取模板并进行变量替换
-            List<String> strings = HtmlUtil.replacePlaceholder(HtmlUtil.readHtml(html), parameter);
-            //拼合HTML数据
-            String htmlData = HtmlUtil.pieceHtml(strings);
-            if (!body.isEmpty()) {
-                // 创建文本正文部分
-                MimeBodyPart textPart = new MimeBodyPart();
-                textPart.setText(body);
-                multipart.addBodyPart(textPart);
-            }
-            //添加附件
-            if (files != null && files.size() != 0) {
-                forFiles(multipart, files);
-            }
-            MimeBodyPart htmlPart = new MimeBodyPart();
-            htmlPart.setContent(htmlData, "text/html;charset=UTF-8");
-            multipart.addBodyPart(htmlPart);
-            message.setContent(multipart);
-            Transport.send(message);
-        } catch (MessagingException e) {
-            throw new MailException(e);
-        }
-    }
-
-    @Override
-    public void sendHtml(List<String> mailAddress, String title, String body, InputStream html, Parameter parameter, Map<String, String> files) {
-        sendHtml(mailAddress, title, body, html, ReflectUtil.getValues(parameter), files);
+        send(mailMessage.getMailAddress(),
+                mailMessage.getTitle(),
+                mailMessage.getBody(),
+                html,
+                mailMessage.getHtmlValues(),
+                mailMessage.getZipName(),
+                mailMessage.getFiles(),
+                mailMessage.getCc(),
+                mailMessage.getBcc()
+        );
     }
 
     private void forFiles(Multipart multipart, Map<String, String> files) throws MessagingException {
@@ -284,7 +71,13 @@ public class MailService implements MailClient {
             String v = entry.getValue();
             // 设置附件消息部分
             MimeBodyPart messageBodyPart = new MimeBodyPart();
-            DataSource source = new FileDataSource(v);
+            DataSource source;
+            if (v.startsWith("http")) {
+                byte[] bytes = HttpUtil.downloadBytes(v);
+                source = new ByteArrayDataSource(bytes, FileConstants.IO_FILE_TYPE);
+            } else {
+                source = new FileDataSource(v);
+            }
             messageBodyPart.setDataHandler(new DataHandler(source));
             messageBodyPart.setFileName(k);
             multipart.addBodyPart(messageBodyPart);
@@ -297,9 +90,138 @@ public class MailService implements MailClient {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         ZipUtils.zipFilePip(files, os);
         ByteArrayInputStream stream = IoUtil.toStream(os);
-        DataSource source = new ByteArrayDataSource(stream, "application/octet-stream");
+        DataSource source = new ByteArrayDataSource(stream, FileConstants.IO_FILE_TYPE);
         messageBodyPart.setDataHandler(new DataHandler(source));
         messageBodyPart.setFileName(StrUtil.isNotBlank(zipName) ? zipName : UUID.fastUUID() + ".zip");
         multipart.addBodyPart(messageBodyPart);
+    }
+
+    private void send(List<String> mailAddress,
+                      String title,
+                      String body,
+                      List<String> html,
+                      Map<String, String> parameter,
+                      String zipName,
+                      Map<String, String> files,
+                      List<String> cc,
+                      List<String> bcc) {
+        try {
+            Message message = messageBuild(mailAddress, title, body, html, parameter, zipName, cc, bcc, files);
+            Transport.send(message);
+            logger.info("邮件发送成功！^_^");
+        } catch (MessagingException | IOException e) {
+            // 防止 maxRetries 数值小于0带来的其他问题
+            if (mailBuild.getMaxRetries() > 0) {
+                ReSendList(mailAddress, title, body, html, parameter, zipName, files, cc, bcc);
+            } else {
+                logger.warning(e.getMessage());
+                throw new MailException(e);
+            }
+        }
+    }
+
+    private void ReSendList(List<String> mailAddress,
+                            String title,
+                            String body,
+                            List<String> html,
+                            Map<String, String> parameter,
+                            String zipName,
+                            Map<String, String> files,
+                            List<String> cc,
+                            List<String> bcc) {
+        int maxRetries = mailBuild.getMaxRetries();
+        int retryCount = 1; // 初始值为1；则while循环中少发送一次，最后一次发送在判断 retryCount >= maxRetries 这里。
+        boolean retryOnFailure = true;
+
+        while (retryOnFailure && retryCount < maxRetries) {
+            try {
+                logger.warning("邮件第 {" + retryCount + "} 次重新发送");
+                Message message;
+                if (html != null || parameter != null) {
+                    message = messageBuild(mailAddress, title, body, html, parameter, zipName, cc, bcc, files);
+                } else {
+                    message = messageBuild(mailAddress, title, body, null, null, zipName, cc, bcc, files);
+                }
+                Transport.send(message);
+                retryOnFailure = false; // 发送成功，停止重试
+            } catch (MessagingException | IOException e) {
+                retryCount++;
+                try {
+                    // 间隔秒数
+                    TimeUnit.SECONDS.sleep(mailBuild.getRetryInterval());
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+
+        if (retryCount >= maxRetries) {
+            try {
+                Message message;
+                if (html != null || parameter != null) {
+                    message = messageBuild(mailAddress, title, body, html, parameter, null, cc, bcc, files);
+                } else {
+                    message = messageBuild(mailAddress, title, body, null, null, null, cc, bcc, files);
+                }
+                Transport.send(message);
+            } catch (MessagingException | IOException e) {
+                throw new MailException(e);
+            }
+        }
+    }
+
+    public Message messageBuild(List<String> mailAddress,
+                                String title,
+                                String body,
+                                List<String> html,
+                                Map<String, String> parameter,
+                                String zipName,
+                                List<String> cc,
+                                List<String> bcc,
+                                Map<String, String> files) throws MessagingException, IOException {
+        Message message = mailBuild.getMessage();
+        message.setRecipients(Message.RecipientType.TO, mailBuild.eliminate(mailAddress));
+        message.setSubject(title);
+
+        Multipart multipart = new MimeMultipart("alternative");
+        if (CollUtil.isNotEmpty(html) && MapUtil.isNotEmpty(parameter)) {
+            //读取模板并进行变量替换
+            List<String> strings = HtmlUtil.replacePlaceholder(html, parameter);
+            //拼合HTML数据
+            String htmlData = HtmlUtil.pieceHtml(strings);
+            MimeBodyPart htmlPart = new MimeBodyPart();
+            htmlPart.setContent(htmlData, "text/html;charset=UTF-8");
+            multipart.addBodyPart(htmlPart);
+        }
+
+        if (StrUtil.isNotBlank(body)) {
+            // 创建文本正文部分
+            MimeBodyPart textPart = new MimeBodyPart();
+            textPart.setText(body);
+            multipart.addBodyPart(textPart);
+        }
+        //添加附件
+        if (MapUtil.isNotEmpty(files) && StrUtil.isNotBlank(zipName)) {
+            zipFiles(multipart, zipName, files);
+        } else {
+            if (MapUtil.isNotEmpty(files)) {
+                forFiles(multipart, files);
+                message.setContent(multipart);
+            }
+        }
+        if (CollUtil.isNotEmpty(cc) || CollUtil.isNotEmpty(bcc)) {
+            addCC(cc, bcc, message);
+        }
+        message.setContent(multipart);
+        return message;
+    }
+
+    private void addCC(List<String> cc, List<String> bcc, Message message) throws MessagingException {
+        if (CollUtil.isNotEmpty(cc)) {
+            message.addRecipients(Message.RecipientType.CC, mailBuild.eliminate(cc));
+        }
+        if (CollUtil.isNotEmpty(bcc)) {
+            message.addRecipients(Message.RecipientType.BCC, mailBuild.eliminate(bcc));
+        }
     }
 }

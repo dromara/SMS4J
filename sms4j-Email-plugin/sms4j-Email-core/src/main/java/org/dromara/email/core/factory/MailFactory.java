@@ -33,6 +33,7 @@ public class MailFactory{
         }
     }
 
+
     /**
      *  createMailClient
      * <p>从工厂获取一个邮件发送实例,该实例发送短信将依照黑名单中的数据进行过滤

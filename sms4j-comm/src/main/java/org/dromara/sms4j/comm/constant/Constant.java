@@ -9,7 +9,7 @@ package org.dromara.sms4j.comm.constant;
  **/
 public abstract class Constant {
     /** 项目版本号*/
-    public static final String VERSION = "V 2.1.0";
+    public static final String VERSION = "V 3.0.0";
 
     /**
      * 用于格式化鉴权头域,给"Authorization"参数赋值
@@ -28,6 +28,8 @@ public abstract class Constant {
      */
     public static final String FROM_URLENCODED = "application/x-www-form-urlencoded";
 
+    public static final String ACCEPT = "application/json";
+
     public static final String APPLICATION_JSON_UTF8 = "application/json; charset=utf-8";
 
     /**
@@ -42,6 +44,11 @@ public abstract class Constant {
      * https请求前缀
      */
     public static final String HTTPS_PREFIX = "https://";
+
+    /**
+     * 供应商配置键名
+     */
+    public static final String SUPPLIER_KEY = "supplier";
 
     private Constant() {
     }

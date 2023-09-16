@@ -1,55 +1,48 @@
 package org.dromara.sms4j.tencent.config;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import lombok.experimental.SuperBuilder;
-import org.dromara.sms4j.api.universal.SupplierConfig;
-import org.dromara.sms4j.comm.config.BaseConfig;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
+import org.dromara.sms4j.provider.config.BaseConfig;
 
 @Data
-@SuperBuilder
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
-public class TencentConfig extends BaseConfig implements SupplierConfig {
-
-    /**
-     * 短信sdkAppId
-     */
-    private String sdkAppId;
+public class TencentConfig extends BaseConfig {
 
     /**
      * 地域信息默认为 ap-guangzhou
      */
-    @Builder.Default
     private String territory = "ap-guangzhou";
 
     /**
      * 请求超时时间
      */
-    @Builder.Default
     private Integer connTimeout = 60;
     /** 请求地址*/
-    @Builder.Default
     private String requestUrl = "sms.tencentcloudapi.com";
     /**
      * 接口名称
      */
-    @Builder.Default
     private String action = "SendSms";
 
     /**
      * 接口版本
      */
-    @Builder.Default
     private String version = "2021-01-11";
 
     /**
      * 服务名
      */
-    @Builder.Default
     private String service = "sms";
+
+    /**
+     * 获取供应商
+     *
+     * @since 3.0.0
+     */
+    @Override
+    public String getSupplier() {
+        return SupplierConstant.TENCENT;
+    }
+
 }

@@ -65,7 +65,7 @@ public class TencentUtils {
         String signedHeaders = "content-type;host";
         Map<String, Object> params = new HashMap<>();
         params.put("PhoneNumberSet", phones);
-        params.put("SmsSdkAppId", tencentConfig.getSdkAppId());
+        params.put("SmsSdkAppId", tencentConfig.getAccessKeyId());
         params.put("SignName", tencentConfig.getSignature());
         params.put("TemplateId", templateId);
         params.put("TemplateParamSet", messages);
@@ -92,9 +92,9 @@ public class TencentUtils {
      * @param territory     服务器地区
      * @param requestUrl    请求地址
      */
-    public static Map<String, Object> generateHeadsMap(String authorization, String timestamp, String action,
+    public static Map<String, String> generateHeadsMap(String authorization, String timestamp, String action,
                                                        String version, String territory, String requestUrl) {
-        Map<String, Object> headers = new HashMap<>();
+        Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", authorization);
         headers.put("Content-Type", CT_JSON);
         headers.put("Host", requestUrl);

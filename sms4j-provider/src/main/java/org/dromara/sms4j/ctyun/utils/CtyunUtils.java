@@ -6,6 +6,7 @@ import cn.hutool.crypto.digest.HmacAlgorithm;
 import cn.hutool.json.JSONUtil;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.ctyun.config.CtyunConfig;
 
@@ -35,7 +36,7 @@ public class CtyunUtils {
      * 获取签名请求头
      */
     public static Map<String, String> signHeader(String body, String key, String secret){
-        Map<String, String> map = new ConcurrentHashMap<>();
+        Map<String, String> map = new ConcurrentHashMap<>(4);
 
         // 构造时间戳
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
@@ -58,7 +59,7 @@ public class CtyunUtils {
         // 构造签名
         String signature = Base64.encode(hmacSHA256(signatureStr.getBytes(StandardCharsets.UTF_8), kDate));
         String signHeader =  String.format("%s Headers=ctyun-eop-request-id;eop-date Signature=%s", key, signature);
-        map.put("Content-Type", "application/json;charset=UTF-8");
+        map.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
         map.put("ctyun-eop-request-id", uuid);
         map.put("Eop-date", signatureTime);
         map.put("Eop-Authorization", signHeader);
@@ -74,7 +75,7 @@ public class CtyunUtils {
      * @param templateId    模板id
      */
     public static String generateParamJsonStr(CtyunConfig ctyunConfig, String phone, String message, String templateId) {
-        Map<String, String> paramMap = new HashMap<>();
+        Map<String, String> paramMap = new HashMap<>(5);
         paramMap.put("action", ctyunConfig.getAction());
         paramMap.put("phoneNumber", phone);
         paramMap.put("signName", ctyunConfig.getSignature());

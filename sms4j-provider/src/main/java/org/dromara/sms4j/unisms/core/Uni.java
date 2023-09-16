@@ -61,11 +61,11 @@ public class Uni {
      * @return the Uni Client
      * @author :Wind
      */
-    public static UniClient getClient() {
+    public static UniClient getClient(int retryInterval, int maxRetries) {
         if (Uni.client == null) {
             synchronized (Uni.class) {
                 if (Uni.client == null) {
-                    Uni.client = buildClient();
+                    Uni.client = buildClient(retryInterval, maxRetries);
                 }
             }
         }
@@ -78,7 +78,7 @@ public class Uni {
         }
     }
 
-    private static UniClient buildClient() {
+    private static UniClient buildClient(int retryInterval, int maxRetries) {
         UniClient.Builder builder = new UniClient.Builder(Uni.accessKeyId);
 
         if (Uni.accessKeySecret != null) {
@@ -87,7 +87,8 @@ public class Uni {
 
         builder.endpoint(Uni.endpoint);
         builder.signingAlgorithm(Uni.signingAlgorithm);
-
+        builder.setRetryInterval(retryInterval);
+        builder.setMaxRetries(maxRetries);
         return builder.build();
     }
 }

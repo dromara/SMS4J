@@ -1,16 +1,15 @@
 package org.dromara.sms4j.tencent.service;
 
-import cn.hutool.json.JSONArray;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
-import com.jdcloud.sdk.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.sms4j.api.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
-import org.dromara.sms4j.comm.annotation.Restricted;
 import org.dromara.sms4j.comm.constant.Constant;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
-import org.dromara.sms4j.comm.utils.SmsUtil;
+import org.dromara.sms4j.comm.utils.SmsUtils;
+import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import org.dromara.sms4j.tencent.config.TencentConfig;
 import org.dromara.sms4j.tencent.utils.TencentUtils;
 
@@ -24,106 +23,104 @@ import java.util.concurrent.Executor;
  * @author wind
  */
 @Slf4j
-public class TencentSmsImpl extends AbstractSmsBlend {
+public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
 
-    private final TencentConfig tencentSmsConfig;
+    private int retry = 0;
 
     public TencentSmsImpl(TencentConfig tencentSmsConfig, Executor pool, DelayedTime delayed) {
-        super(pool, delayed);
-        this.tencentSmsConfig = tencentSmsConfig;
+        super(tencentSmsConfig, pool, delayed);
+    }
+
+    public TencentSmsImpl(TencentConfig tencentSmsConfig) {
+        super(tencentSmsConfig);
     }
 
     @Override
-    @Restricted
+    public String getSupplier() {
+        return SupplierConstant.TENCENT;
+    }
+
+    @Override
     public SmsResponse sendMessage(String phone, String message) {
         String[] split = message.split("&");
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
         for (int i = 0; i < split.length; i++) {
             map.put(String.valueOf(i), split[i]);
         }
-        return sendMessage(phone, tencentSmsConfig.getTemplateId(), map);
+        return sendMessage(phone, getConfig().getTemplateId(), map);
     }
 
     @Override
-    @Restricted
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
         List<String> list = new ArrayList<>();
         for (Map.Entry<String, String> entry : messages.entrySet()) {
             list.add(entry.getValue());
         }
         String[] s = new String[list.size()];
-        return getSmsResponse(new String[]{"+86" + phone}, list.toArray(s), templateId);
+        return getSmsResponse(new String[]{StrUtil.addPrefixIfNot(phone, "+86")}, list.toArray(s), templateId);
     }
 
     @Override
-    @Restricted
     public SmsResponse massTexting(List<String> phones, String message) {
         String[] split = message.split("&");
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
         for (int i = 0; i < split.length; i++) {
             map.put(String.valueOf(i), split[i]);
         }
-        return massTexting(phones, tencentSmsConfig.getTemplateId(), map);
+        return massTexting(phones, getConfig().getTemplateId(), map);
     }
 
     @Override
-    @Restricted
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
         List<String> list = new ArrayList<>();
         for (Map.Entry<String, String> entry : messages.entrySet()) {
             list.add(entry.getValue());
         }
         String[] s = new String[list.size()];
-        return getSmsResponse(SmsUtil.listToArray(phones), list.toArray(s), templateId);
+        return getSmsResponse(SmsUtils.listToArray(phones), list.toArray(s), templateId);
     }
 
     private SmsResponse getSmsResponse(String[] phones, String[] messages, String templateId) {
         String timestamp = String.valueOf(System.currentTimeMillis() / 1000);
         String signature;
         try {
-            signature = TencentUtils.generateSignature(this.tencentSmsConfig, templateId, messages, phones, timestamp);
+            signature = TencentUtils.generateSignature(this.getConfig(), templateId, messages, phones, timestamp);
         } catch (Exception e) {
             log.error("tencent send message error", e);
             throw new SmsBlendException(e.getMessage());
         }
-        Map<String, Object> headsMap = TencentUtils.generateHeadsMap(signature, timestamp, tencentSmsConfig.getAction(),
-                tencentSmsConfig.getVersion(), tencentSmsConfig.getTerritory(), tencentSmsConfig.getRequestUrl());
-        Map<String, Object> requestBody = TencentUtils.generateRequestBody(phones, tencentSmsConfig.getSdkAppId(),
-                tencentSmsConfig.getSignature(), templateId, messages);
-        SmsResponse smsResponse = new SmsResponse();
-        String url = Constant.HTTPS_PREFIX + tencentSmsConfig.getRequestUrl();
-        http.post(url)
-                .addHeader(headsMap)
-                .addBody(requestBody)
-                .onSuccess(((data, req, res) -> {
-                    JSONObject jsonBody = res.get(JSONObject.class);
-                    JSONObject response = jsonBody.getJSONObject("Response");
-                    String error = response.getStr("Error");
-                    if (StringUtils.isNotBlank(error)){
-                        smsResponse.setErrorCode("500");
-                        smsResponse.setErrMessage(error);
-                    }else {
-                        JSONArray sendStatusSet = response.getJSONArray("SendStatusSet");
-                        smsResponse.setBizId(sendStatusSet.getJSONObject(0).getStr("SerialNo"));
-                        smsResponse.setMessage(sendStatusSet.getJSONObject(0).getStr("Message"));
-                        smsResponse.setCode(sendStatusSet.getJSONObject(0).getStr("Code"));
-                        smsResponse.setSuccess(true);
-                    }
-                }))
-                .onError((ex, req, res) -> {
-                    JSONObject jsonBody = res.get(JSONObject.class);
-                    if (jsonBody == null) {
-                        smsResponse.setErrorCode("500");
-                        smsResponse.setErrMessage("tencent send sms response is null.check param");
-                    } else {
-                        JSONObject response = jsonBody.getJSONObject("Response");
-                        JSONArray sendStatusSet = response.getJSONArray("SendStatusSet");
-                        smsResponse.setErrMessage(sendStatusSet.getJSONObject(0).getStr("Message"));
-                        smsResponse.setErrorCode(sendStatusSet.getJSONObject(0).getStr("Code"));
-                    }
-                })
-                .execute();
-        return smsResponse;
+        Map<String, String> headsMap = TencentUtils.generateHeadsMap(signature, timestamp, getConfig().getAction(),
+                getConfig().getVersion(), getConfig().getTerritory(), getConfig().getRequestUrl());
+        Map<String, Object> requestBody = TencentUtils.generateRequestBody(phones, getConfig().getAccessKeyId(),
+                getConfig().getSignature(), templateId, messages);
+        String url = Constant.HTTPS_PREFIX + getConfig().getRequestUrl();
+
+        try {
+            SmsResponse smsResponse = getResponse(http.postJson(url, headsMap, requestBody));
+            if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
+                retry = 0;
+                return smsResponse;
+            }
+            return requestRetry(phones, messages, templateId);
+        }catch (SmsBlendException e){
+            return requestRetry(phones, messages, templateId);
+        }
     }
 
+    private SmsResponse requestRetry(String[] phones, String[] messages, String templateId) {
+        http.safeSleep(getConfig().getRetryInterval());
+        retry++;
+        log.warn("短信第 {" + retry + "} 次重新发送");
+        return getSmsResponse(phones, messages, templateId);
+    }
+
+    private SmsResponse getResponse(JSONObject resJson) {
+        SmsResponse smsResponse = new SmsResponse();
+        JSONObject response = resJson.getJSONObject("Response");
+        String error = response.getStr("Error");
+        smsResponse.setSuccess(StrUtil.isBlank(error));
+        smsResponse.setData(resJson);
+        smsResponse.setConfigId(getConfigId());
+        return smsResponse;
+    }
 }

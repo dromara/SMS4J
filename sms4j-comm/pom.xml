@@ -15,14 +15,21 @@
     <description>sms4j-comm</description>
 
     <dependencies>
+
         <dependency>
-            <groupId>com.dtflys.forest</groupId>
-            <artifactId>forest-core</artifactId>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
         </dependency>
 
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-json</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-http</artifactId>
+        </dependency>
+
     </dependencies>
 </project>

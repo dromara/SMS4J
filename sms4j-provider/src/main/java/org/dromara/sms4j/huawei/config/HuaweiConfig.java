@@ -2,30 +2,27 @@ package org.dromara.sms4j.huawei.config;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import lombok.experimental.SuperBuilder;
-import org.dromara.sms4j.api.universal.SupplierConfig;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
+import org.dromara.sms4j.provider.config.BaseConfig;
 
 @Data
-@SuperBuilder
-@ToString
-@EqualsAndHashCode
-@NoArgsConstructor
-public class HuaweiConfig implements SupplierConfig {
-
-    /** appKey*/
-    private String appKey ;
-    /** appSecret */
-    private String appSecret ;
-    /** 短信签名*/
-    private String signature;
+@EqualsAndHashCode(callSuper = true)
+public class HuaweiConfig extends BaseConfig {
     /** 国内短信签名通道号*/
     private String sender;
-    /** 模板Id*/
-    private String templateId;
     /** 短信状态报告接收地*/
     private String statusCallBack;
     /** APP接入地址*/
     private String url;
+
+    /**
+     * 获取供应商
+     *
+     * @since 3.0.0
+     */
+    @Override
+    public String getSupplier() {
+        return SupplierConstant.HUAWEI;
+    }
+
 }

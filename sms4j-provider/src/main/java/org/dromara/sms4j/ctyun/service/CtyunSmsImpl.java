@@ -3,19 +3,18 @@ package org.dromara.sms4j.ctyun.service;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.sms4j.api.AbstractSmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
-import org.dromara.sms4j.comm.annotation.Restricted;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
-import org.dromara.sms4j.comm.utils.SmsUtil;
+import org.dromara.sms4j.comm.utils.SmsUtils;
 import org.dromara.sms4j.ctyun.config.CtyunConfig;
 import org.dromara.sms4j.ctyun.utils.CtyunUtils;
+import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.Executor;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * <p>类名: CtyunSmsImpl
@@ -25,72 +24,86 @@ import java.util.concurrent.atomic.AtomicReference;
  * 2023/5/12  15:06
  **/
 @Slf4j
-public class CtyunSmsImpl extends AbstractSmsBlend {
+public class CtyunSmsImpl extends AbstractSmsBlend<CtyunConfig> {
 
-    private final CtyunConfig ctyunConfig;
+    private int retry = 0;
 
-    public CtyunSmsImpl(CtyunConfig ctyunConfig, Executor pool, DelayedTime delayedTime) {
-        super(pool, delayedTime);
-        this.ctyunConfig = ctyunConfig;
+    public CtyunSmsImpl(CtyunConfig config, Executor pool, DelayedTime delayedTime) {
+        super(config, pool, delayedTime);
+    }
+
+    public CtyunSmsImpl(CtyunConfig config) {
+        super(config);
     }
 
     @Override
-    @Restricted
+    public String getSupplier() {
+        return SupplierConstant.CTYUN;
+    }
+
+    @Override
     public SmsResponse sendMessage(String phone, String message) {
-        LinkedHashMap<String, String> map = new LinkedHashMap<>();
-        map.put(ctyunConfig.getTemplateName(), message);
-        return sendMessage(phone, ctyunConfig.getTemplateId(), map);
+        LinkedHashMap<String, String> map = new LinkedHashMap<>(1);
+        map.put(getConfig().getTemplateName(), message);
+        return sendMessage(phone, getConfig().getTemplateId(), map);
     }
 
     @Override
-    @Restricted
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
         String messageStr = JSONUtil.toJsonStr(messages);
         return getSmsResponse(phone, messageStr, templateId);
     }
 
     @Override
-    @Restricted
     public SmsResponse massTexting(List<String> phones, String message) {
-        LinkedHashMap<String, String> map = new LinkedHashMap<>();
-        map.put(ctyunConfig.getTemplateName(), message);
-        return massTexting(phones, ctyunConfig.getTemplateId(), map);
+        LinkedHashMap<String, String> map = new LinkedHashMap<>(1);
+        map.put(getConfig().getTemplateName(), message);
+        return massTexting(phones, getConfig().getTemplateId(), map);
     }
 
     @Override
-    @Restricted
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
         String messageStr = JSONUtil.toJsonStr(messages);
-        return getSmsResponse(SmsUtil.arrayToString(phones), messageStr, templateId);
+        return getSmsResponse(SmsUtils.arrayToString(phones), messageStr, templateId);
     }
 
     private SmsResponse getSmsResponse(String phone, String message, String templateId) {
-        AtomicReference<SmsResponse> smsResponse = new AtomicReference<>();
         String requestUrl;
         String paramStr;
         try {
-            requestUrl = ctyunConfig.getRequestUrl();
-            paramStr = CtyunUtils.generateParamJsonStr(ctyunConfig, phone, message, templateId);
+            requestUrl = getConfig().getRequestUrl();
+            paramStr = CtyunUtils.generateParamJsonStr(getConfig(), phone, message, templateId);
         } catch (Exception e) {
             log.error("ctyun send message error", e);
             throw new SmsBlendException(e.getMessage());
         }
         log.debug("requestUrl {}", requestUrl);
-        http.post(requestUrl)
-                .addHeader(CtyunUtils.signHeader(paramStr, ctyunConfig.getAccessKeyId(), ctyunConfig.getAccessKeySecret()))
-                .addBody(paramStr)
-                .onSuccess(((data, req, res) -> smsResponse.set(this.getResponse(res.get(JSONObject.class)))))
-                .onError((ex, req, res) -> smsResponse.set(this.getResponse(res.get(JSONObject.class))))
-                .execute();
-        return smsResponse.get();
+        try {
+            SmsResponse smsResponse = getResponse(http.postJson(requestUrl,
+                    CtyunUtils.signHeader(paramStr, getConfig().getAccessKeyId(), getConfig().getAccessKeySecret()),
+                    paramStr));
+            if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
+                retry = 0;
+                return smsResponse;
+            }
+            return requestRetry(phone, message, templateId);
+        }catch (SmsBlendException e){
+            return requestRetry(phone, message, templateId);
+        }
+    }
+
+    private SmsResponse requestRetry(String phone, String message, String templateId) {
+        http.safeSleep(getConfig().getRetryInterval());
+        retry ++;
+        log.warn("短信第 {" + retry + "} 次重新发送");
+        return getSmsResponse(phone, message, templateId);
     }
 
     private SmsResponse getResponse(JSONObject resJson) {
         SmsResponse smsResponse = new SmsResponse();
-        smsResponse.setCode(resJson.getStr("code"));
-        smsResponse.setMessage(resJson.getStr("message"));
-        smsResponse.setBizId(resJson.getStr("requestId"));
-        smsResponse.setSuccess("OK".equals(smsResponse.getCode()));
+        smsResponse.setSuccess("OK".equals(resJson.getStr("code")));
+        smsResponse.setData(resJson);
+        smsResponse.setConfigId(getConfigId());
         return smsResponse;
     }
 

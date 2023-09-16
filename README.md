@@ -41,7 +41,7 @@
    <dependency>
     <groupId>org.dromara.sms4j</groupId>
     <artifactId>sms4j-spring-boot-starter</artifactId>
-    <version>最新版本</version>
+    <version>3.0.0</version>
    </dependency>
    ```
 2. 设置配置文件

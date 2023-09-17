@@ -17,6 +17,10 @@ public abstract class BaseConfig implements SupplierConfig {
      * Access Key
      */
     private String accessKeyId;
+    /**
+     * Sdk App Id
+     */
+    private String sdkAppId;
 
     /**
      * Access Key Secret

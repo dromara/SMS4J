@@ -1,6 +1,7 @@
 package org.dromara.sms4j.starter.config;
 
 import lombok.Data;
+import org.dromara.sms4j.api.dao.SmsDaoDefaultImpl;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.provider.config.SmsBanner;

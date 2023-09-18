@@ -21,11 +21,6 @@ public class SmsConfig {
     private Boolean restricted = false;
 
     /**
-     * 是否使用redis进行缓存
-     */
-    private Boolean redisCache = false;
-
-    /**
      * 单账号每日最大发送量
      */
     private Integer accountMax;

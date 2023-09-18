@@ -29,7 +29,6 @@ public class SmsAutowiredConfig {
     }
 
     @Bean
-    @Primary
     @ConfigurationProperties(prefix = "sms")     //指定配置文件注入属性前缀
     protected SmsConfig smsConfig(){
         return BeanFactory.getSmsConfig();

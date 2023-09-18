@@ -83,12 +83,17 @@ public class SmsBlendsInitializer implements ApplicationListener<ContextRefreshe
         ProviderFactoryHolder.registerFactory(CtyunFactory.instance());
         ProviderFactoryHolder.registerFactory(EmayFactory.instance());
         ProviderFactoryHolder.registerFactory(HuaweiFactory.instance());
-        ProviderFactoryHolder.registerFactory(JdCloudFactory.instance());
         ProviderFactoryHolder.registerFactory(NeteaseFactory.instance());
         ProviderFactoryHolder.registerFactory(TencentFactory.instance());
         ProviderFactoryHolder.registerFactory(UniFactory.instance());
         ProviderFactoryHolder.registerFactory(YunPianFactory.instance());
         ProviderFactoryHolder.registerFactory(ZhutongFactory.instance());
+        try {
+            ProviderFactoryHolder.registerFactory(JdCloudFactory.instance());
+        }catch (Exception e){
+            log.warn(e.getMessage());
+            return;
+        }
     }
 
 }

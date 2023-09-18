@@ -97,12 +97,6 @@ public class SmsBlendsInitializer  {
         if(SmsUtils.isClassExists("com.jdcloud.sdk.auth.CredentialsProvider")) {
             ProviderFactoryHolder.registerFactory(JdCloudFactory.instance());
         }
-        // try {
-        //     ProviderFactoryHolder.registerFactory(JdCloudFactory.instance());
-        // }catch (Exception e){
-        //     log.warn(e.getMessage());
-        //     return;
-        // }
     }
 
 }

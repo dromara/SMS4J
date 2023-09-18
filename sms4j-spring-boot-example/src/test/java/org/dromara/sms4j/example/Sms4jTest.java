@@ -100,8 +100,13 @@ class Sms4jTest {
         if (StrUtil.isBlank(PHONE)) {
             return;
         }
-        // 腾讯
-        SmsResponse smsResponse = SmsFactory.getBySupplier(SupplierConstant.TENCENT).sendMessage(PHONE, SmsUtils.getRandomInt(6));
+        LinkedHashMap<String, String> newMap = SmsUtils.getNewMap();
+        // 验证码
+        newMap.put("1", SmsUtils.getRandomInt(4));
+        // 有效时间
+        newMap.put("2", "2");
+        SmsResponse smsResponse = SmsFactory.getBySupplier(SupplierConstant.TENCENT)
+                .sendMessage(PHONE, "1603670", newMap);
         log.info(JSONUtil.toJsonStr(smsResponse));
         Assert.isTrue(smsResponse.isSuccess());
     }

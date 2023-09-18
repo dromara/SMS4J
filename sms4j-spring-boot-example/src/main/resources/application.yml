@@ -16,9 +16,9 @@ sms:
       template-id: SMS_272470496
       # 模版名称
       templateName: code
-      # 自定义的标识，也就是configId这里可以是任意值（最好不要是中文）
+    # 腾讯短信例子
     tx:
-      #厂商标识，标定此配置是哪个厂商，详细请看厂商标识介绍部分
+      #厂商标识
       supplier: tencent
       #您的accessKey
       access-key-id: 您的accessKey
@@ -26,12 +26,13 @@ sms:
       access-key-secret: 您的accessKeySecret
       #您的短信签名
       signature: 测试签名
-      #模板ID 非必须配置，如果使用sendMessage的快速发送需此配置
+      #模板ID
       template-id: 1603670
       #您的sdkAppId
       sdk-app-id: 1400761645
-    huawei:
-      #厂商标识，标定此配置是哪个厂商，详细请看厂商标识介绍部分
+    # 华为短信例子
+    hw:
+      #厂商标识
       supplier: huawei
       #您的accessKey
       access-key-id: 您的accessKey
@@ -43,14 +44,19 @@ sms:
       template-id: ac4888205c274b2a8263479b954c1ab5
       # APP接入地址
       url: https://smsapi.cn-north-4.myhuaweicloud.com:443
+      # 模版名称
+      templateName: code
+      # 通道号
+      sender: 8823040504797
+    # 合一短信例子
     uni:
-      #厂商标识，标定此配置是哪个厂商，详细请看厂商标识介绍部分
+      #厂商标识
       supplier: unisms
       #您的accessKey
       access-key-id: 您的accessKey
       #您的短信签名
       signature: 测试签名
-      #模板ID 非必须配置，如果使用sendMessage的快速发送需此配置
+      #模板ID
       template-id: pub_verif_short
       # 模版名称
       templateName: code

@@ -34,17 +34,23 @@ import java.util.Map;
 
 
 @Slf4j
-@AllArgsConstructor
-public class SmsBlendsInitializer implements ApplicationListener<ContextRefreshedEvent> {
+public class SmsBlendsInitializer  {
     private List<BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig>> factoryList;
 
     private final SmsConfig smsConfig;
     private final Map<String, Map<String, Object>> blends;
 
-    public void onApplicationEvent(ContextRefreshedEvent event) {
-        if (event.getApplicationContext().getParent() != null) {
-            return;
-        }
+    public SmsBlendsInitializer(List<BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig>> factoryList,
+                                SmsConfig smsConfig,
+                                Map<String, Map<String, Object>> blends
+                                ){
+        this.factoryList = factoryList;
+        this.smsConfig = smsConfig;
+        this.blends = blends;
+        onApplicationEvent();
+    }
+
+    public void onApplicationEvent() {
         this.registerDefaultFactory();
         // 注册短信对象工厂
         ProviderFactoryHolder.registerFactory(factoryList);

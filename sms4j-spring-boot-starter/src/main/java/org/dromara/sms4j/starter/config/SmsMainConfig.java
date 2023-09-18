@@ -2,13 +2,23 @@ package org.dromara.sms4j.starter.config;
 
 import lombok.Data;
 import org.dromara.sms4j.comm.constant.Constant;
+import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.provider.config.SmsBanner;
+import org.dromara.sms4j.provider.config.SmsConfig;
 import org.dromara.sms4j.provider.factory.BeanFactory;
+import org.dromara.sms4j.starter.utils.ConfigUtils;
 import org.dromara.sms4j.starter.utils.SmsSpringUtils;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.env.Environment;
+import org.springframework.data.repository.query.Param;
+
+import java.util.concurrent.Executor;
 
 
 @Data
@@ -19,10 +29,37 @@ public class SmsMainConfig {
         return new SmsSpringUtils(defaultListableBeanFactory);
     }
 
-    /** 主要配置注入 确保springUtil注入后再注入*/
     @Bean
-    public SmsAutowiredConfig smsAutowiredConfig(SmsSpringUtils smsSpringUtils){
-        return new SmsAutowiredConfig(smsSpringUtils);
+    @ConfigurationProperties(prefix = "sms")     //指定配置文件注入属性前缀
+    protected SmsConfig smsConfig() {
+        return BeanFactory.getSmsConfig();
+    }
+
+    /**
+     * 注入一个定时器
+     */
+    @Bean
+    @Lazy
+    protected DelayedTime delayedTime() {
+        return BeanFactory.getDelayedTime();
+    }
+
+    /**
+     * 注入线程池
+     */
+    @Bean("smsExecutor")
+    @Lazy
+    protected Executor taskExecutor(SmsConfig config) {
+        return BeanFactory.setExecutor(config);
+    }
+
+    /**
+     * 注入一个配置文件读取工具
+     */
+    @Bean("smsConfigUtil")
+    @Lazy
+    protected ConfigUtils configUtil(Environment environment) {
+        return new ConfigUtils(environment);
     }
 
     @EventListener

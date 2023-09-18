@@ -175,12 +175,14 @@ public class SEInitializer {
         ProviderFactoryHolder.registerFactory(CtyunFactory.instance());
         ProviderFactoryHolder.registerFactory(EmayFactory.instance());
         ProviderFactoryHolder.registerFactory(HuaweiFactory.instance());
-        ProviderFactoryHolder.registerFactory(JdCloudFactory.instance());
         ProviderFactoryHolder.registerFactory(NeteaseFactory.instance());
         ProviderFactoryHolder.registerFactory(TencentFactory.instance());
         ProviderFactoryHolder.registerFactory(UniFactory.instance());
         ProviderFactoryHolder.registerFactory(YunPianFactory.instance());
         ProviderFactoryHolder.registerFactory(ZhutongFactory.instance());
+        if(SmsUtils.isClassExists("com.jdcloud.sdk.auth.CredentialsProvider")) {
+            ProviderFactoryHolder.registerFactory(JdCloudFactory.instance());
+        }
     }
 
     /**

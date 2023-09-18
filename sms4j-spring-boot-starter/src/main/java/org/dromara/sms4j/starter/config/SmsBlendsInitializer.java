@@ -88,12 +88,15 @@ public class SmsBlendsInitializer implements ApplicationListener<ContextRefreshe
         ProviderFactoryHolder.registerFactory(UniFactory.instance());
         ProviderFactoryHolder.registerFactory(YunPianFactory.instance());
         ProviderFactoryHolder.registerFactory(ZhutongFactory.instance());
-        try {
+        if(SmsUtils.isClassExists("com.jdcloud.sdk.auth.CredentialsProvider")) {
             ProviderFactoryHolder.registerFactory(JdCloudFactory.instance());
-        }catch (Exception e){
-            log.warn(e.getMessage());
-            return;
         }
+        // try {
+        //     ProviderFactoryHolder.registerFactory(JdCloudFactory.instance());
+        // }catch (Exception e){
+        //     log.warn(e.getMessage());
+        //     return;
+        // }
     }
 
 }

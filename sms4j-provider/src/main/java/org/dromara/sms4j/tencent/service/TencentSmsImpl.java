@@ -1,6 +1,7 @@
 package org.dromara.sms4j.tencent.service;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
@@ -117,10 +118,20 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
     private SmsResponse getResponse(JSONObject resJson) {
         SmsResponse smsResponse = new SmsResponse();
         JSONObject response = resJson.getJSONObject("Response");
-        String error = response.getStr("Error");
-        smsResponse.setSuccess(StrUtil.isBlank(error));
+        JSONArray sendStatusSet = response.getJSONArray("SendStatusSet");
+        boolean success = true;
+        for (Object obj : sendStatusSet) {
+            JSONObject jsonObject = (JSONObject) obj;
+            String code = jsonObject.getStr("Code");
+            if (!"Ok".equals(code)) {
+                success = false;
+                break;
+            }
+        }
+        smsResponse.setSuccess(success);
         smsResponse.setData(resJson);
         smsResponse.setConfigId(getConfigId());
         return smsResponse;
     }
+
 }

@@ -43,21 +43,29 @@ body:
       value: |
         [在这里上传图片]
   - type: dropdown
+    id: jdk_version
+    attributes:
+      label: JDK 版本
+      description: 你当前正在使用 JDK 的哪个版本？
+      options:
+        - JDK8
+        - JDK17
+    validations:
+      required: true
+  - type: dropdown
     id: version
     attributes:
-      label: 版本
+      label: SMS4J 版本
       description: 你当前正在使用我们软件的哪个版本/分支？
       options:
-        - 1.0.1
-        - 1.0.2
-        - 1.0.3
-        - 1.0.4
-        - 2.0.0
-        - 2.0.1
-        - 2.0.2
-        - 2.0.3
-        - 2.1.0
-        - 2.1.1
+        - 3.0.0
         - 2.2.0
+        - 2.1.1
+        - 2.1.0
+        - 2.0.3
+        - 2.0.2
+        - 2.0.1
+        - 2.0.0
+        - 1.0.4
     validations:
       required: true

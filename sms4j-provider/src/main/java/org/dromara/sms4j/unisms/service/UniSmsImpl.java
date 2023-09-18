@@ -86,7 +86,7 @@ public class UniSmsImpl extends AbstractSmsBlend<UniConfig> {
         SmsResponse smsResponse = new SmsResponse();
         try {
             UniResponse send = Uni.getClient(getConfig().getRetryInterval(), getConfig().getMaxRetries()).request("sms.message.send", data);
-            smsResponse.setSuccess("Success".equals(send.message));
+            smsResponse.setSuccess("0".equals(send.code));
             smsResponse.setData(send);
             smsResponse.setConfigId(getConfigId());
         } catch (Exception e) {

@@ -54,7 +54,7 @@
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <spring.boot.version>2.7.12</spring.boot.version>
+        <spring.boot.version>2.7.15</spring.boot.version>
         <solon.version>2.5.4</solon.version>
         <redisson.version>3.17.0</redisson.version>
         <jdcloud.version>1.3.3</jdcloud.version>
@@ -116,14 +116,6 @@
                 <groupId>org.dromara.sms4j</groupId>
                 <artifactId>sms4j-provider</artifactId>
                 <version>${revision}</version>
-            </dependency>
-
-            <!-- redis 缓存操作 -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-data-redis</artifactId>
-                <version>${spring.boot.version}</version>
-                <scope>provided</scope>
             </dependency>
 
             <!-- 京东云短信依赖 -->

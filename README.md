@@ -1,9 +1,9 @@
-<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">sms4j v3.0.0</h1>
+<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">sms4j v3.0.1</h1>
 <h4 align="center" style="margin: 30px 0 30px; font-weight: bold;">sms4j -- 让发送短信变的更简单</h4>
 <p align="center">
 <a href="https://gitee.com/dromara/sms4j/stargazers"><img src="https://gitee.com/dromara/sms4j/badge/star.svg?theme=gvp"></a>
 <a href="https://gitee.com/dromara/sms4j/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-green"></a>
-<a href="https://gitee.com/dromara/sms4j"><img src="https://img.shields.io/badge/version-v3.0.0-blue"></a>
+<a href="https://gitee.com/dromara/sms4j"><img src="https://img.shields.io/badge/version-v3.0.1-blue"></a>
 </p>
 <img src="/public/logo.png">
 
@@ -41,7 +41,7 @@
    <dependency>
     <groupId>org.dromara.sms4j</groupId>
     <artifactId>sms4j-spring-boot-starter</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
    </dependency>
    ```
 2. 设置配置文件

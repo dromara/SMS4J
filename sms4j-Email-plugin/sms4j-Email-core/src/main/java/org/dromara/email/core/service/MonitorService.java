@@ -79,7 +79,7 @@ public class MonitorService{
                             monitorMessage.setText(bodyPart.getContent().toString());
                         } else if (contentType.startsWith("text/html")) {
                             // HTML内容
-                            monitorMessage.setText(bodyPart.getContent().toString());
+                            monitorMessage.setHtmlText(bodyPart.getContent().toString());
                         }
                     }
                     monitorMessage.setBody(mp);

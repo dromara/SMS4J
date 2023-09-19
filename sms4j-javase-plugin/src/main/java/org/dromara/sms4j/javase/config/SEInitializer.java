@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.aliyun.config.AlibabaFactory;
 import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.dao.SmsDao;
+import org.dromara.sms4j.api.dao.SmsDaoDefaultImpl;
 import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.cloopen.config.CloopenFactory;
 import org.dromara.sms4j.comm.constant.Constant;
@@ -50,6 +51,8 @@ public class SEInitializer {
     public static SEInitializer initializer() {
         return INSTANCE;
     }
+
+    private SmsDao smsDao;
 
     /**
      * 默认从sms4j.yml文件中读取配置
@@ -123,6 +126,7 @@ public class SEInitializer {
         RestrictedProcessDefaultImpl process = new RestrictedProcessDefaultImpl();
         process.setSmsDao(smsDao);
         SmsInvocationHandler.setRestrictedProcess(process);
+        this.smsDao = smsDao;
         return this;
     }
 
@@ -135,6 +139,11 @@ public class SEInitializer {
         if (smsConfig == null) {
             log.error("初始化配置失败");
             throw new SmsBlendException("初始化配置失败");
+        }
+
+        //注册默认DAO实例
+        if(this.smsDao == null) {
+            this.registerSmsDao(SmsDaoDefaultImpl.getInstance());
         }
 
         //注册默认工厂
@@ -175,12 +184,14 @@ public class SEInitializer {
         ProviderFactoryHolder.registerFactory(CtyunFactory.instance());
         ProviderFactoryHolder.registerFactory(EmayFactory.instance());
         ProviderFactoryHolder.registerFactory(HuaweiFactory.instance());
-        ProviderFactoryHolder.registerFactory(JdCloudFactory.instance());
         ProviderFactoryHolder.registerFactory(NeteaseFactory.instance());
         ProviderFactoryHolder.registerFactory(TencentFactory.instance());
         ProviderFactoryHolder.registerFactory(UniFactory.instance());
         ProviderFactoryHolder.registerFactory(YunPianFactory.instance());
         ProviderFactoryHolder.registerFactory(ZhutongFactory.instance());
+        if(SmsUtils.isClassExists("com.jdcloud.sdk.auth.CredentialsProvider")) {
+            ProviderFactoryHolder.registerFactory(JdCloudFactory.instance());
+        }
     }
 
     /**

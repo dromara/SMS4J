@@ -2,6 +2,7 @@ package org.dromara.sms4j.starter.aop;
 
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.dao.SmsDao;
+import org.dromara.sms4j.api.dao.SmsDaoDefaultImpl;
 import org.dromara.sms4j.api.proxy.RestrictedProcess;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtils;
@@ -20,6 +21,9 @@ public class SpringRestrictedProcess implements RestrictedProcess {
     public SmsBlendException process(String phone) {
         SmsConfig config = BeanFactory.getSmsConfig();
         SmsDao smsDao = SmsSpringUtils.getBean(SmsDao.class);
+        if (SmsUtils.isEmpty(smsDao)){
+            smsDao = SmsDaoDefaultImpl.getInstance();
+        }
         Integer accountMax = config.getAccountMax(); // 每日最大发送量
         Integer minuteMax = config.getMinuteMax(); // 每分钟最大发送量
         if (SmsUtils.isNotEmpty(accountMax)) {   // 是否配置了每日限制

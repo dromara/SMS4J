@@ -20,6 +20,9 @@ public class MonitorMessage {
     /** 邮件文字内容*/
     private String text;
 
+    /** 解析的html内容*/
+    private String htmlText;
+
     /** 邮件发送时间*/
     private Date sendDate;
 

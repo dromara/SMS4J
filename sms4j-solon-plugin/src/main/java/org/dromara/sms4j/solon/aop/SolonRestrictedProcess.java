@@ -2,6 +2,7 @@ package org.dromara.sms4j.solon.aop;
 
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.dao.SmsDao;
+import org.dromara.sms4j.api.dao.SmsDaoDefaultImpl;
 import org.dromara.sms4j.api.proxy.RestrictedProcess;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtils;
@@ -23,6 +24,9 @@ public class SolonRestrictedProcess implements RestrictedProcess {
 
     @Override
     public SmsBlendException process(String phone) {
+        if (SmsUtils.isEmpty(smsDao)){
+            smsDao = SmsDaoDefaultImpl.getInstance();
+        }
         SmsConfig config = BeanFactory.getSmsConfig();
         Integer accountMax = config.getAccountMax(); // 每日最大发送量
         Integer minuteMax = config.getMinuteMax(); // 每分钟最大发送量

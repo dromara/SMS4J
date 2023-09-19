@@ -163,4 +163,13 @@ public class SmsUtils {
         }
     }
 
+    public static boolean isClassExists(String className) {
+        try {
+            Class.forName(className);
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
 }

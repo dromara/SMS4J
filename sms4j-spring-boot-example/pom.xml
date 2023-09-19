@@ -34,6 +34,12 @@
             <artifactId>sms4j-spring-boot-starter</artifactId>
             <version>${revision}</version>
         </dependency>
+        <!-- 京东云短信依赖 -->
+        <dependency>
+            <groupId>com.jdcloud.sdk</groupId>
+            <artifactId>sms</artifactId>
+            <version>${jdcloud.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

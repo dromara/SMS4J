@@ -1,4 +1,4 @@
-package org.dromara.sms4j.starter.config;
+package org.dromara.sms4j.solon.config;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
@@ -20,30 +20,34 @@ import org.dromara.sms4j.netease.config.NeteaseFactory;
 import org.dromara.sms4j.provider.config.SmsConfig;
 import org.dromara.sms4j.provider.factory.BaseProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
-import org.dromara.sms4j.starter.aop.SpringRestrictedProcess;
+import org.dromara.sms4j.solon.aop.SolonRestrictedProcess;
 import org.dromara.sms4j.tencent.config.TencentFactory;
 import org.dromara.sms4j.unisms.config.UniFactory;
 import org.dromara.sms4j.yunpian.config.YunPianFactory;
 import org.dromara.sms4j.zhutong.config.ZhutongFactory;
+import org.noear.solon.core.AppContext;
 
 import java.util.List;
 import java.util.Map;
 
 
 @Slf4j
-public class SmsBlendsInitializer  {
+public class SmsBlendsInitializer {
     private List<BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig>> factoryList;
 
     private final SmsConfig smsConfig;
     private final Map<String, Map<String, Object>> blends;
+    private final AppContext context;
 
     public SmsBlendsInitializer(List<BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig>> factoryList,
                                 SmsConfig smsConfig,
-                                Map<String, Map<String, Object>> blends
+                                Map<String, Map<String, Object>> blends,
+                                AppContext context
                                 ){
         this.factoryList = factoryList;
         this.smsConfig = smsConfig;
         this.blends = blends;
+        this.context = context;
         onApplicationEvent();
     }
 
@@ -57,7 +61,7 @@ public class SmsBlendsInitializer  {
             Object supplierObj = configMap.get(Constant.SUPPLIER_KEY);
             String supplier = supplierObj == null ? "" : String.valueOf(supplierObj);
             supplier = StrUtil.isEmpty(supplier) ? configId : supplier;
-            BaseProviderFactory<SmsBlend, SupplierConfig> providerFactory = (BaseProviderFactory<SmsBlend, org.dromara.sms4j.api.universal.SupplierConfig>) ProviderFactoryHolder.requireForSupplier(supplier);
+            BaseProviderFactory<SmsBlend, SupplierConfig> providerFactory = (BaseProviderFactory<SmsBlend, SupplierConfig>) ProviderFactoryHolder.requireForSupplier(supplier);
             if(providerFactory == null) {
                 log.warn("创建\"{}\"的短信服务失败，未找到供应商为\"{}\"的服务", configId, supplier);
                 continue;
@@ -65,7 +69,7 @@ public class SmsBlendsInitializer  {
             configMap.put("config-id", configId);
             SmsUtils.replaceKeysSeperator(configMap, "-", "_");
             JSONObject configJson = new JSONObject(configMap);
-            org.dromara.sms4j.api.universal.SupplierConfig supplierConfig = JSONUtil.toBean(configJson, providerFactory.getConfigClass());
+            SupplierConfig supplierConfig = JSONUtil.toBean(configJson, providerFactory.getConfigClass());
             if(Boolean.TRUE.equals(smsConfig.getRestricted())) {
                 SmsFactory.createRestrictedSmsBlend(supplierConfig);
             } else {
@@ -74,7 +78,7 @@ public class SmsBlendsInitializer  {
         }
 
         //注册短信拦截实现
-        SmsInvocationHandler.setRestrictedProcess(new SpringRestrictedProcess());
+        SmsInvocationHandler.setRestrictedProcess(new SolonRestrictedProcess(context));
     }
 
     /**

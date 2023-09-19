@@ -16,10 +16,6 @@
     <description>sms4j-spring-boot-starter</description>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.dromara.sms4j</groupId>

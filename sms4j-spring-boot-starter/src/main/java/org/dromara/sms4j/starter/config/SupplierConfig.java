@@ -13,21 +13,22 @@ import java.util.Map;
 
 public class SupplierConfig {
 
-    /** 注入配置*/
+    /**
+     * 注入配置
+     */
     @Bean
     @ConfigurationProperties(prefix = "sms.blends")
     @ConditionalOnProperty(prefix = "sms", name = "config-type", havingValue = "yaml")
-    protected Map<String, Map<String, Object>> blends(){
+    protected Map<String, Map<String, Object>> blends() {
         return new LinkedHashMap<>();
     }
 
 
-     @Bean
-     @ConditionalOnProperty(prefix = "sms", name = "config-type", havingValue = "yaml")
-     protected SmsBlendsInitializer smsBlendsInitializer(List<BaseProviderFactory<? extends SmsBlend, ? extends org.dromara.sms4j.api.universal.SupplierConfig>> factoryList,
-                                                         SmsConfig smsConfig,
-                                                         Map<String, Map<String, Object>> blends){
-         return new SmsBlendsInitializer(factoryList,smsConfig,blends);
-     }
+    @Bean
+    protected SmsBlendsInitializer smsBlendsInitializer(List<BaseProviderFactory<? extends SmsBlend, ? extends org.dromara.sms4j.api.universal.SupplierConfig>> factoryList,
+                                                        SmsConfig smsConfig,
+                                                        Map<String, Map<String, Object>> blends) {
+        return new SmsBlendsInitializer(factoryList, smsConfig, blends);
+    }
 
 }

@@ -69,6 +69,31 @@ public class SmsHttpUtils {
         }
     }
 
+
+    /**
+     * 发送post url 参数拼装url传输
+     * @param url 请求地址
+     * @param headers 请求头
+     * @param params 请求参数
+     * @return 返回体
+     */
+    public JSONObject postUrl(String url, Map<String, String> headers, Map<String, Object> params){
+        StringBuilder urlWithParams = new StringBuilder(url);
+        urlWithParams.append("?");
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            urlWithParams.append(key).append("=").append(value).append("&");
+        }
+        try(HttpResponse response = HttpRequest.post(urlWithParams.toString())
+                .addHeaders(headers)
+                .execute()){
+            return JSONUtil.parseObj(response.body());
+        }catch (Exception e){
+            throw new SmsBlendException(e.getMessage());
+        }
+    }
+
     /**
      * 线程睡眠
      * @param retryInterval 秒

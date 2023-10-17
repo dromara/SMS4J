@@ -138,7 +138,9 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
         body.put("apikey", getConfig().getAccessKeyId());
         body.put("mobile", phone);
         body.put("tpl_id", tplId);
-        body.put("tpl_value", formattingMap(message));
+        if (!message.isEmpty()){
+            body.put("tpl_value", formattingMap(message));
+        }
         if (getConfig().getCallbackUrl() != null && !getConfig().getCallbackUrl().isEmpty()) {
             body.put("callback_url", getConfig().getCallbackUrl());
         }

@@ -64,6 +64,7 @@ public abstract class SmsFactory {
      */
     public static void createSmsBlend(SmsReadConfig smsReadConfig, String configId) {
         BaseConfig supplierConfig = smsReadConfig.getSupplierConfig(configId);
+        supplierConfig.setConfigId(configId);
         SmsBlend smsBlend = create(supplierConfig);
         register(smsBlend);
     }
@@ -110,6 +111,7 @@ public abstract class SmsFactory {
      */
     public static void createRestrictedSmsBlend(SmsReadConfig smsReadConfig, String configId) {
         BaseConfig supplierConfig = smsReadConfig.getSupplierConfig(configId);
+        supplierConfig.setConfigId(configId);
         SmsBlend smsBlend = create(supplierConfig);
         smsBlend = renderWithRestricted(smsBlend);
         register(smsBlend);

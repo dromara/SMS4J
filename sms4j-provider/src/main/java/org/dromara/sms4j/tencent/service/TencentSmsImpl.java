@@ -118,17 +118,23 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
     private SmsResponse getResponse(JSONObject resJson) {
         SmsResponse smsResponse = new SmsResponse();
         JSONObject response = resJson.getJSONObject("Response");
+        // 根据 Error 判断是否配置错误
+        String error = response.getStr("Error");
+        smsResponse.setSuccess(StrUtil.isBlank(error));
+        // 根据 SendStatusSet 判断是否不为Ok
         JSONArray sendStatusSet = response.getJSONArray("SendStatusSet");
-        boolean success = true;
-        for (Object obj : sendStatusSet) {
-            JSONObject jsonObject = (JSONObject) obj;
-            String code = jsonObject.getStr("Code");
-            if (!"Ok".equals(code)) {
-                success = false;
-                break;
+        if (sendStatusSet != null) {
+            boolean success = true;
+            for (Object obj : sendStatusSet) {
+                JSONObject jsonObject = (JSONObject) obj;
+                String code = jsonObject.getStr("Code");
+                if (!"Ok".equals(code)) {
+                    success = false;
+                    break;
+                }
             }
+            smsResponse.setSuccess(success);
         }
-        smsResponse.setSuccess(success);
         smsResponse.setData(resJson);
         smsResponse.setConfigId(getConfigId());
         return smsResponse;

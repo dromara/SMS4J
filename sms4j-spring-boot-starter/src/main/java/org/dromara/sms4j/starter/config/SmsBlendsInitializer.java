@@ -9,6 +9,7 @@ import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.cloopen.config.CloopenFactory;
 import org.dromara.sms4j.comm.constant.Constant;
+import org.dromara.sms4j.comm.enumerate.ConfigType;
 import org.dromara.sms4j.comm.utils.SmsUtils;
 import org.dromara.sms4j.core.factory.SmsFactory;
 import org.dromara.sms4j.core.proxy.SmsInvocationHandler;
@@ -51,25 +52,27 @@ public class SmsBlendsInitializer  {
         this.registerDefaultFactory();
         // 注册短信对象工厂
         ProviderFactoryHolder.registerFactory(factoryList);
-        // 解析供应商配置
-        for(String configId : blends.keySet()) {
-            Map<String, Object> configMap = blends.get(configId);
-            Object supplierObj = configMap.get(Constant.SUPPLIER_KEY);
-            String supplier = supplierObj == null ? "" : String.valueOf(supplierObj);
-            supplier = StrUtil.isEmpty(supplier) ? configId : supplier;
-            BaseProviderFactory<SmsBlend, SupplierConfig> providerFactory = (BaseProviderFactory<SmsBlend, org.dromara.sms4j.api.universal.SupplierConfig>) ProviderFactoryHolder.requireForSupplier(supplier);
-            if(providerFactory == null) {
-                log.warn("创建\"{}\"的短信服务失败，未找到供应商为\"{}\"的服务", configId, supplier);
-                continue;
-            }
-            configMap.put("config-id", configId);
-            SmsUtils.replaceKeysSeperator(configMap, "-", "_");
-            JSONObject configJson = new JSONObject(configMap);
-            org.dromara.sms4j.api.universal.SupplierConfig supplierConfig = JSONUtil.toBean(configJson, providerFactory.getConfigClass());
-            if(Boolean.TRUE.equals(smsConfig.getRestricted())) {
-                SmsFactory.createRestrictedSmsBlend(supplierConfig);
-            } else {
-                SmsFactory.createSmsBlend(supplierConfig);
+        if(ConfigType.YAML.equals(this.smsConfig.getConfigType())) {
+            // 解析供应商配置
+            for(String configId : blends.keySet()) {
+                Map<String, Object> configMap = blends.get(configId);
+                Object supplierObj = configMap.get(Constant.SUPPLIER_KEY);
+                String supplier = supplierObj == null ? "" : String.valueOf(supplierObj);
+                supplier = StrUtil.isEmpty(supplier) ? configId : supplier;
+                BaseProviderFactory<SmsBlend, SupplierConfig> providerFactory = (BaseProviderFactory<SmsBlend, org.dromara.sms4j.api.universal.SupplierConfig>) ProviderFactoryHolder.requireForSupplier(supplier);
+                if(providerFactory == null) {
+                    log.warn("创建\"{}\"的短信服务失败，未找到供应商为\"{}\"的服务", configId, supplier);
+                    continue;
+                }
+                configMap.put("config-id", configId);
+                SmsUtils.replaceKeysSeperator(configMap, "-", "_");
+                JSONObject configJson = new JSONObject(configMap);
+                org.dromara.sms4j.api.universal.SupplierConfig supplierConfig = JSONUtil.toBean(configJson, providerFactory.getConfigClass());
+                if(Boolean.TRUE.equals(smsConfig.getRestricted())) {
+                    SmsFactory.createRestrictedSmsBlend(supplierConfig);
+                } else {
+                    SmsFactory.createSmsBlend(supplierConfig);
+                }
             }
         }
 

@@ -50,4 +50,9 @@ public abstract class SupplierConstant {
      */
     public static final String ZHUTONG = "zhutong";
 
+    /**
+     * 联麓
+     */
+    public static final String LIANLU = "lianlu";
+
 }

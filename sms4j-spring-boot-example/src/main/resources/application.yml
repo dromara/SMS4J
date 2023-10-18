@@ -60,3 +60,10 @@ sms:
       template-id: pub_verif_short
       # 模版名称
       templateName: code
+    lianlu:
+      supplier: lianlu
+      templateId: 模板id
+      appId: 100116
+      appKey: d42d7
+      mchId: 100
+      signName: 【test】

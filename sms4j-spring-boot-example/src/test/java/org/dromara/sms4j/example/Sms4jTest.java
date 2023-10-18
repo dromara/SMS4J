@@ -5,10 +5,12 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.utils.SmsUtils;
 import org.dromara.sms4j.core.factory.SmsFactory;
+import org.dromara.sms4j.lianlu.service.LianLuSmsImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -202,6 +204,34 @@ class Sms4jTest {
         LinkedHashMap<String, String> messages = new LinkedHashMap<>(1);
         messages.put("code", SmsUtils.getRandomInt(6));
         SmsResponse smsResponse = SmsFactory.getBySupplier(SupplierConstant.ZHUTONG).massTexting(ListUtil.of(PHONE, "180****1111"), "59264", messages);
+        log.info(JSONUtil.toJsonStr(smsResponse));
+        Assert.isTrue(smsResponse.isSuccess());
+    }
+
+    /**
+     * 联麓模板短信
+     */
+    @Test
+    public void lianLuTemplateSmsTest() {
+        if (StrUtil.isBlank(PHONE)) {
+            return;
+        }
+        SmsResponse smsResponse = SmsFactory.getBySupplier(SupplierConstant.LIANLU)
+                .sendMessage(PHONE, SmsUtils.getRandomInt(6));
+        log.info(JSONUtil.toJsonStr(smsResponse));
+        Assert.isTrue(smsResponse.isSuccess());
+    }
+
+    /**
+     * 联麓普通短信
+     */
+    @Test
+    public void lianLuNormalSmsTest() {
+        if (StrUtil.isBlank(PHONE)) {
+            return;
+        }
+        LianLuSmsImpl lianLuSms = (LianLuSmsImpl) SmsFactory.getBySupplier(SupplierConstant.LIANLU);
+        SmsResponse smsResponse = lianLuSms.sendNormalMessage(PHONE, "测试短信" + SmsUtils.getRandomInt(6));
         log.info(JSONUtil.toJsonStr(smsResponse));
         Assert.isTrue(smsResponse.isSuccess());
     }

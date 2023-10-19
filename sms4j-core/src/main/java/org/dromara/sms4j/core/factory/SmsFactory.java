@@ -63,7 +63,7 @@ public abstract class SmsFactory {
      * @author :Wind
      */
     public static void createSmsBlend(SmsReadConfig smsReadConfig, String configId) {
-        SupplierConfig supplierConfig = (SupplierConfig)smsReadConfig.getSupplierConfig(configId);
+        BaseConfig supplierConfig = smsReadConfig.getSupplierConfig(configId);
         supplierConfig.setConfigId(configId);
         SmsBlend smsBlend = create(supplierConfig);
         register(smsBlend);

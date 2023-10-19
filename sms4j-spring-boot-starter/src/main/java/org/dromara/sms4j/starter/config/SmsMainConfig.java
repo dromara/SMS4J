@@ -2,7 +2,6 @@ package org.dromara.sms4j.starter.config;
 
 import lombok.Data;
 import org.dromara.sms4j.comm.constant.Constant;
-import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.provider.config.SmsBanner;
 import org.dromara.sms4j.provider.config.SmsConfig;
 import org.dromara.sms4j.provider.factory.BeanFactory;
@@ -15,8 +14,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
-
-import java.util.concurrent.Executor;
 
 
 @Data
@@ -33,23 +30,23 @@ public class SmsMainConfig {
         return BeanFactory.getSmsConfig();
     }
 
-    /**
-     * 注入一个定时器
-     */
-    @Bean
-    @Lazy
-    protected DelayedTime delayedTime() {
-        return BeanFactory.getDelayedTime();
-    }
-
-    /**
-     * 注入线程池
-     */
-    @Bean("smsExecutor")
-    @Lazy
-    protected Executor taskExecutor(SmsConfig config) {
-        return BeanFactory.setExecutor(config);
-    }
+//    /**
+//     * 注入一个定时器
+//     */
+//    @Bean
+//    @Lazy
+//    protected DelayedTime delayedTime() {
+//        return BeanFactory.getDelayedTime();
+//    }
+//
+//    /**
+//     * 注入线程池
+//     */
+//    @Bean("smsExecutor")
+//    @Lazy
+//    protected Executor taskExecutor(SmsConfig config) {
+//        return BeanFactory.setExecutor(config);
+//    }
 
     /**
      * 注入一个配置文件读取工具

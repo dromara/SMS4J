@@ -13,6 +13,7 @@ public enum MessageType {
     MessageType(String name) {
         this.name = name;
     }
+
     private final String name;
 
     public String getName() {

@@ -2,7 +2,7 @@ package org.dromara.oa.core.support;
 
 import java.util.Map;
 
-public abstract class AbstractHttpClient implements MsgHttpClient{
+public abstract class AbstractHttpClient implements MsgHttpClient {
 
     @Override
     public String get(String url) {

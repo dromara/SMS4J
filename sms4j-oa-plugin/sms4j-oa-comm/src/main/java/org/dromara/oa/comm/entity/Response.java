@@ -1,19 +1,23 @@
 package org.dromara.oa.comm.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class Response {
     /**
-     * 响应码
+     * 是否成功
      */
-    private String code;
+    private boolean success;
+
     /**
-     * 响应消息
+     * 厂商原返回体
      */
-    private String message;
+    private Object data;
+
     /**
-     * 响应数据
+     * 配置标识名 如未配置取对应渠道名例如
      */
-    private String data;
+    private String oaConfigId;
 }

@@ -13,9 +13,15 @@ public class Request {
     // 消息内容
     private String content;
 
-    private List<String> phones;
+    private List<String> phoneList;
+
+    private List<String> userIdList;
+
+    private List<String> userNamesList;
+
+    private Boolean isNoticeAll = false;
 
     // oa类型
-    private String  oaType;
+    private String oaType;
 
 }

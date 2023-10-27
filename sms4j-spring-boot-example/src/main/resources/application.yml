@@ -67,3 +67,10 @@ sms:
       appKey: d42d7
       mchId: 100
       signName: 【test】
+    cloopen:
+      # 短信厂商
+      supplier: cloopen
+      base-url: https://app.cloopen.com:8883/2013-12-26
+      access-key-id: 你的Access Key
+      access-key-secret: 你的Access Key Secret
+      sdkAppId: 你的应用ID

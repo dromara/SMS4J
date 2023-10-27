@@ -1,6 +1,11 @@
 sms:
   # 标注从yml读取配置
   config-type: yaml
+  # 黑名单
+  black-list:
+    -13899998888
+  # 账户上限
+  account-max: 1
   blends:
     # 阿里短信例子
     ali:
@@ -60,6 +65,8 @@ sms:
       template-id: pub_verif_short
       # 模版名称
       templateName: code
+      # 渠道上限
+      maximum: 2
     lianlu:
       supplier: lianlu
       templateId: 模板id

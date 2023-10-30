@@ -146,3 +146,11 @@ sms:
 ### 分支介绍
 1. master 正式版分支，最终发布到maven中央仓库的版本
 2. dev 开发分支，贡献的代码将合并到这里，无误后合并至preview
+
+## 鸣谢
+
+- 感谢 JetBrains 提供的免费开源 License：
+
+<p>
+<img src="https://jpom.top/images/friends/ad/jetbrains.png" alt="JetBrains" style="float:left;">
+</p>

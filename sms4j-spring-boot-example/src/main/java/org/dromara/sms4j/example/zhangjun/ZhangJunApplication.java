@@ -14,7 +14,7 @@ public class ZhangJunApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ZhangJunApplication.class, args);
-        SmsFactory.getBySupplier("zhangjun").sendMessage("17679318598", "154468");
+        SmsFactory.getBySupplier("zhangjun").sendMessage("17*****598", "154468");
     }
 
 }

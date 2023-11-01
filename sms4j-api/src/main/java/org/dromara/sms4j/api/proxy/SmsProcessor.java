@@ -18,7 +18,7 @@ public interface SmsProcessor extends Order {
         return null;
     }
 
-    default Object exceptionHandleProcessor(Method method, Object source, Object[] param) throws InvocationTargetException, IllegalAccessException {
+    default Object exceptionHandleProcessor(Method method, Object source, Object[] param,Exception exception) throws InvocationTargetException, IllegalAccessException {
         return null;
     }
 }

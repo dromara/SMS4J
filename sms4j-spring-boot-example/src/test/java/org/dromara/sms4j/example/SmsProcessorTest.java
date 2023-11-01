@@ -1,11 +1,9 @@
 package org.dromara.sms4j.example;
 
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.sms4j.aliyun.config.AlibabaConfig;
+import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
-import org.dromara.sms4j.api.proxy.CoreMethodProcessor;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtils;
@@ -16,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 /**
  * @author sh1yu
@@ -79,13 +76,34 @@ public class SmsProcessorTest {
     //黑名单测试 黑名单手机号13899998888
     @Test
     public void testBlackList() {
+        SmsBlend smsBlend = SmsFactory.getBySupplier(SupplierConstant.UNISMS);
+        //单黑名单添加
+        smsBlend.joinInBlacklist(PHONE);
         SmsBlendException knowEx = null;
         try {
-            SmsFactory.getBySupplier(SupplierConstant.ALIBABA).sendMessage(PHONE, SmsUtils.getRandomInt(6));
+            smsBlend.sendMessage(PHONE, SmsUtils.getRandomInt(6));
         } catch (SmsBlendException e) {
             knowEx = e;
         }
         Assert.notNull(knowEx);
+        //单黑名单移除
+        smsBlend.removeFromBlacklist(PHONE);
+        SmsResponse smsResponse = smsBlend.sendMessage(PHONE, SmsUtils.getRandomInt(6));
+        Assert.isTrue(smsResponse.isSuccess());
+        //批量黑名单添加
+        smsBlend.batchJoinBlacklist(Collections.singletonList(PHONE));
+        knowEx = null;
+        try {
+            smsBlend.sendMessage(PHONE, SmsUtils.getRandomInt(6));
+        } catch (SmsBlendException e) {
+            knowEx = e;
+        }
+        Assert.notNull(knowEx);
+        //批量黑名单添加
+        smsBlend.removeFromBlacklist(PHONE);
+        smsResponse = smsBlend.sendMessage(PHONE, SmsUtils.getRandomInt(6));
+        Assert.isTrue(smsResponse.isSuccess());
+
     }
 
     //账号级上限测试、需成功发送一笔，特殊配置

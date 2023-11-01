@@ -1,5 +1,7 @@
 package org.dromara.sms4j.api.proxy;
 
+import org.dromara.sms4j.comm.constant.NumberOfParasmeters;
+
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -14,21 +16,21 @@ public interface CoreMethodProcessor extends SmsProcessor {
         String name = method.getName();
         int parameterCount = method.getParameterCount();
         if ("sendMessage".equals(method.getName())) {
-            if (2 == parameterCount) {
+            if (NumberOfParasmeters.TWO == NumberOfParasmeters.getNumberOfParasmetersEnum(parameterCount)) {
                 sendMessagePreProcess((String) param[0],(String) param[1]);
                 return param;
             }
-            if (3 == parameterCount) {
+            if (NumberOfParasmeters.THREE == NumberOfParasmeters.getNumberOfParasmetersEnum(parameterCount)) {
                 sendMessageByTemplatePreProcess((String)param[0],(String) param[1],(LinkedHashMap<String, String>)param[2]);
                 return param;
             }
         }
         if ("massTexting".equals(method.getName())) {
-            if (2 == parameterCount) {
+            if (NumberOfParasmeters.TWO == NumberOfParasmeters.getNumberOfParasmetersEnum(parameterCount)) {
                 massTextingPreProcess((List<String>)param[0],(String)param[1]);
                 return param;
             }
-            if (3 == parameterCount) {
+            if (NumberOfParasmeters.THREE == NumberOfParasmeters.getNumberOfParasmetersEnum(parameterCount)) {
                 massTextingByTemplatePreProcess((List<String>)param[0],(String)param[1],(LinkedHashMap<String, String>)param[2]);
                 return param;
             }

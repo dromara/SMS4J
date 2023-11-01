@@ -21,11 +21,8 @@ import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtils;
 import org.dromara.sms4j.core.proxy.EnvirmentHolder;
 import org.dromara.sms4j.core.factory.SmsFactory;
-import org.dromara.sms4j.core.proxy.processor.BlackListProcessor;
-import org.dromara.sms4j.core.proxy.processor.CoreMethodParamValidateProcessor;
-import org.dromara.sms4j.core.proxy.processor.RestrictedProcessor;
+import org.dromara.sms4j.core.proxy.processor.*;
 import org.dromara.sms4j.core.proxy.SmsProxyFactory;
-import org.dromara.sms4j.core.proxy.processor.SingleBlendRestrictedProcessor;
 import org.dromara.sms4j.ctyun.config.CtyunFactory;
 import org.dromara.sms4j.emay.config.EmayFactory;
 import org.dromara.sms4j.huawei.config.HuaweiFactory;
@@ -161,6 +158,7 @@ public class SEInitializer {
         //注册执行器实现
         SmsProxyFactory.addProcessor(new RestrictedProcessor());
         SmsProxyFactory.addProcessor(new BlackListProcessor());
+        SmsProxyFactory.addProcessor(new BlackListRecordingProcessor());
         SmsProxyFactory.addProcessor(new SingleBlendRestrictedProcessor());
         SmsProxyFactory.addProcessor(new CoreMethodParamValidateProcessor());
         for (String configId : blends.keySet()) {

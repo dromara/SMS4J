@@ -38,7 +38,7 @@ public class SmsInvocationHandler implements InvocationHandler {
             result = method.invoke(smsBlend, objects);
         } catch (Exception e) {
             //错误执行器
-            doErrorHandleProcess(smsBlend, method, objects);
+            doErrorHandleProcess(smsBlend, method, objects,e);
         }
         //后置执行器
         doPostrocess(smsBlend, method, objects, result);
@@ -52,9 +52,9 @@ public class SmsInvocationHandler implements InvocationHandler {
         return objects;
     }
 
-    public void doErrorHandleProcess(Object o, Method method, Object[] objects) throws InvocationTargetException, IllegalAccessException {
+    public void doErrorHandleProcess(Object o, Method method, Object[] objects,Exception e) throws InvocationTargetException, IllegalAccessException {
         for (SmsProcessor processor : processors) {
-            processor.exceptionHandleProcessor(method, o, objects);
+            processor.exceptionHandleProcessor(method, o, objects,e);
         }
     }
 

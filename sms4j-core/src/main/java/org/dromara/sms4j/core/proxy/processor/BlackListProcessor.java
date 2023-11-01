@@ -2,8 +2,10 @@ package org.dromara.sms4j.core.proxy.processor;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.sms4j.api.dao.SmsDao;
 import org.dromara.sms4j.api.proxy.CoreMethodProcessor;
 import org.dromara.sms4j.api.proxy.aware.SmsConfigAware;
+import org.dromara.sms4j.api.proxy.aware.SmsDaoAware;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.provider.config.SmsConfig;
 
@@ -16,9 +18,9 @@ import java.util.*;
  * @since 2023/10/27 13:03
  */
 @Slf4j
-public class BlackListProcessor implements CoreMethodProcessor, SmsConfigAware {
+public class BlackListProcessor implements CoreMethodProcessor, SmsDaoAware {
     @Setter
-    Object smsConfig;
+    SmsDao smsDao;
 
     @Override
     public int getOrder() {
@@ -46,13 +48,11 @@ public class BlackListProcessor implements CoreMethodProcessor, SmsConfigAware {
     }
 
     public void doRestricted(List<String> phones) {
-        ArrayList<String> blackList = ((SmsConfig)smsConfig).getBlackList();
+        ArrayList<String> blackList = (ArrayList<String>) smsDao.get("sms:blacklist:global");
         for (String phone : phones) {
             if (blackList.stream().filter(black -> black.replace("-","").equals(phone)).findAny().isPresent()) {
-                throw new SmsBlendException("The phone:", phone + " hit blacklist！");
+                throw new SmsBlendException("The phone:", phone + " hit global blacklist！");
             }
         }
-
     }
-
 }

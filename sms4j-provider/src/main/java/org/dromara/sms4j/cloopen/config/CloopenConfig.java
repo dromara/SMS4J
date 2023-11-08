@@ -21,24 +21,6 @@ public class CloopenConfig extends BaseConfig {
     private String baseUrl = "https://app.cloopen.com:8883/2013-12-26";
 
     /**
-     * Rest URL 域名
-     *
-     * @see #baseUrl
-     * @deprecated v2.0.1
-     */
-    @Deprecated
-    private String serverIp;
-
-    /**
-     * Rest URL 端口
-     *
-     * @see #baseUrl
-     * @deprecated v2.0.1
-     */
-    @Deprecated
-    private String serverPort;
-
-    /**
      * 获取供应商
      *
      * @since 3.0.0

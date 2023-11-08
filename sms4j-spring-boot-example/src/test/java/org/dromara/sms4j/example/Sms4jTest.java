@@ -1,7 +1,7 @@
 package org.dromara.sms4j.example;
 
 import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.lang.Assert;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -13,8 +13,10 @@ import org.dromara.sms4j.core.factory.SmsFactory;
 import org.dromara.sms4j.lianlu.service.LianLuSmsImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.util.Assert;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Slf4j
 @SpringBootTest
@@ -59,7 +61,11 @@ class Sms4jTest {
             return;
         }
         // 容联云
-        SmsResponse smsResponse = SmsFactory.getBySupplier(SupplierConstant.CLOOPEN).sendMessage(PHONE, SmsUtils.getRandomInt(6));
+        Map<String, String> messageMap = MapUtil.newHashMap(2, true);
+        messageMap.put("captcha", SmsUtils.getRandomInt(4));
+        messageMap.put("expirationInMinutes", "5");
+        SmsResponse smsResponse = SmsFactory.getBySupplier(SupplierConstant.CLOOPEN)
+                .sendMessage(PHONE, "1", (LinkedHashMap<String, String>) messageMap);
         log.info(JSONUtil.toJsonStr(smsResponse));
         Assert.isTrue(smsResponse.isSuccess());
     }

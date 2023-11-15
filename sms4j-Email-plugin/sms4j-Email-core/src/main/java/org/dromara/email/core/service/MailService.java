@@ -50,8 +50,11 @@ public class MailService implements MailClient {
         if (mailMessage.getHtmlInputStream() != null) {
             html = HtmlUtil.readHtml(mailMessage.getHtmlInputStream());
         }
-        if (StrUtil.isNotBlank(mailMessage.getHtmlPath())){
-            html = HtmlUtil.readHtml(mailMessage.getHtmlPath());
+        if (StrUtil.isNotBlank(mailMessage.getHtmlPath())) {
+            html = HtmlUtil.readHtml(mailMessage.getHtmlPath(), MailService.class);
+        }
+        if (mailMessage.getHtmlFile() != null) {
+            html = HtmlUtil.readHtml(mailMessage.getHtmlFile());
         }
         send(mailMessage.getMailAddress(),
                 mailMessage.getTitle(),
@@ -184,11 +187,15 @@ public class MailService implements MailClient {
         message.setSubject(title);
 
         Multipart multipart = new MimeMultipart("alternative");
-        if (CollUtil.isNotEmpty(html) && MapUtil.isNotEmpty(parameter)) {
-            //读取模板并进行变量替换
-            List<String> strings = HtmlUtil.replacePlaceholder(html, parameter);
-            //拼合HTML数据
-            String htmlData = HtmlUtil.pieceHtml(strings);
+        if (CollUtil.isNotEmpty(html)) {
+            String htmlData = null;
+            List<String> strings;
+            if (MapUtil.isNotEmpty(parameter)) {
+                //读取模板并进行变量替换
+                strings = HtmlUtil.replacePlaceholder(html, parameter);
+                //拼合HTML数据
+                htmlData = HtmlUtil.pieceHtml(strings);
+            }
             MimeBodyPart htmlPart = new MimeBodyPart();
             htmlPart.setContent(htmlData, "text/html;charset=UTF-8");
             multipart.addBodyPart(htmlPart);

@@ -3,6 +3,7 @@ package org.dromara.email.comm.entity;
 import lombok.Getter;
 import org.dromara.email.comm.utils.ReflectUtil;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,6 +27,9 @@ public class MailMessage {
 
     /** html模板文件的输入流，可来自任意可读取位置*/
     private InputStream htmlInputStream;
+
+    /** html 模板文件的File对象*/
+    private File htmlFile;
 
     /** html 模板参数*/
     private Map<String,String> htmlValues;
@@ -138,6 +142,12 @@ public class MailMessage {
         /** html模板文件的输入流，可来自任意可读取位置*/
         public MailsBuilder html(InputStream htmlInputStream){
             mailMessage.htmlInputStream = htmlInputStream;
+            return this;
+        }
+
+        /** html模板文件的File对象*/
+        public MailsBuilder html(File htmlFile){
+            mailMessage.htmlFile = htmlFile;
             return this;
         }
 

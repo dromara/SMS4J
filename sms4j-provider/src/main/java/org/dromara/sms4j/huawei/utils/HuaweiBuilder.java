@@ -118,6 +118,9 @@ public class HuaweiBuilder {
     }
 
     public static String listToString(List<String> list){
+        if (list == null || list.isEmpty()) {
+            return "[]";
+        }
         StringBuilder stringBuffer = new StringBuilder();
         stringBuffer.append("[\"");
         for (String s : list) {

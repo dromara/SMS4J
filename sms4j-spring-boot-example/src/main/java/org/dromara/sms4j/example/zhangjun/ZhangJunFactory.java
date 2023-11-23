@@ -1,6 +1,5 @@
 package org.dromara.sms4j.example.zhangjun;
 
-import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
 

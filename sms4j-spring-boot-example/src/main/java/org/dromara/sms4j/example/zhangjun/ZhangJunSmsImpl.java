@@ -81,16 +81,19 @@ public class ZhangJunSmsImpl extends AbstractSmsBlend<ZhangJunConfig> {
     }
 
     private SmsResponse getSmsResponse(String phone, String message, String templateId) {
+        SmsResponse smsResponse;
         try {
-            SmsResponse smsResponse = getResponse(http.postJson(getConfig().getUrl(), null, message));
-            if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
-                retry = 0;
-                return smsResponse;
-            }
-            return requestRetry(phone, message, templateId);
-        }catch (SmsBlendException e){
-            return requestRetry(phone, message, templateId);
+            smsResponse = getResponse(http.postJson(getConfig().getUrl(), null, message));
+        } catch (SmsBlendException e) {
+            smsResponse = new SmsResponse();
+            smsResponse.setSuccess(false);
+            smsResponse.setData(e.getMessage());
         }
+        if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
+            retry = 0;
+            return smsResponse;
+        }
+        return requestRetry(phone, message, templateId);
     }
 
     private SmsResponse requestRetry(String phone, String message, String templateId) {

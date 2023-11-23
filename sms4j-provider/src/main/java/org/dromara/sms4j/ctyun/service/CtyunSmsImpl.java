@@ -78,18 +78,21 @@ public class CtyunSmsImpl extends AbstractSmsBlend<CtyunConfig> {
             throw new SmsBlendException(e.getMessage());
         }
         log.debug("requestUrl {}", requestUrl);
+        SmsResponse smsResponse;
         try {
-            SmsResponse smsResponse = getResponse(http.postJson(requestUrl,
+            smsResponse = getResponse(http.postJson(requestUrl,
                     CtyunUtils.signHeader(paramStr, getConfig().getAccessKeyId(), getConfig().getAccessKeySecret()),
                     paramStr));
-            if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
-                retry = 0;
-                return smsResponse;
-            }
-            return requestRetry(phone, message, templateId);
-        }catch (SmsBlendException e){
-            return requestRetry(phone, message, templateId);
+        } catch (SmsBlendException e) {
+            smsResponse = new SmsResponse();
+            smsResponse.setSuccess(false);
+            smsResponse.setData(e.getMessage());
         }
+        if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
+            retry = 0;
+            return smsResponse;
+        }
+        return requestRetry(phone, message, templateId);
     }
 
     private SmsResponse requestRetry(String phone, String message, String templateId) {

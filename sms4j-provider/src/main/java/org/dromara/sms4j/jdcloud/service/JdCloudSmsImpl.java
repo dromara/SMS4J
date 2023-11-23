@@ -79,17 +79,20 @@ public class JdCloudSmsImpl extends AbstractSmsBlend<JdCloudConfig> {
             throw new SmsBlendException(e.getMessage());
         }
 
+        BatchSendResult result = client.batchSend(request).getResult();
+        SmsResponse smsResponse;
         try {
-            BatchSendResult result = client.batchSend(request).getResult();
-            SmsResponse smsResponse = getSmsResponse(result);
-            if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
-                retry = 0;
-                return smsResponse;
-            }
-            return requestRetry(phones, templateId, messages);
-        }catch (SmsBlendException e){
-            return requestRetry(phones, templateId, messages);
+            smsResponse = getSmsResponse(result);
+        } catch (SmsBlendException e) {
+            smsResponse = new SmsResponse();
+            smsResponse.setSuccess(false);
+            smsResponse.setData(e.getMessage());
         }
+        if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
+            retry = 0;
+            return smsResponse;
+        }
+        return requestRetry(phones, templateId, messages);
     }
 
     private SmsResponse requestRetry(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {

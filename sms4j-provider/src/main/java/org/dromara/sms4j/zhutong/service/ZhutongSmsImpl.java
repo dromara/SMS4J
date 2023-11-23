@@ -130,18 +130,21 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
         //内容
         json.put("content", content);
 
+        Map<String, String> headers = new LinkedHashMap<>(1);
+        headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
+        SmsResponse smsResponse;
         try {
-            Map<String, String> headers = new LinkedHashMap<>(1);
-            headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
-            SmsResponse smsResponse = getResponse(http.postJson(requestUrl, headers, json));
-            if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
-                retry = 0;
-                return smsResponse;
-            }
-            return requestRetry(phones, content);
-        }catch (SmsBlendException e){
-            return requestRetry(phones, content);
+            smsResponse = getResponse(http.postJson(requestUrl, headers, json));
+        } catch (SmsBlendException e) {
+            smsResponse = new SmsResponse();
+            smsResponse.setSuccess(false);
+            smsResponse.setData(e.getMessage());
         }
+        if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
+            retry = 0;
+            return smsResponse;
+        }
+        return requestRetry(phones, content);
     }
 
     private SmsResponse requestRetry(List<String> phones, String content) {
@@ -215,18 +218,21 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
         }
         requestJson.set("records", records);
 
+        Map<String, String> headers = new LinkedHashMap<>(1);
+        headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
+        SmsResponse smsResponse;
         try {
-            Map<String, String> headers = new LinkedHashMap<>(1);
-            headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
-            SmsResponse smsResponse = getResponse(http.postJson(requestUrl, headers, requestJson.toString()));
-            if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
-                retry = 0;
-                return smsResponse;
-            }
-            return requestRetry(templateId, phones, messages);
-        }catch (SmsBlendException e){
-            return requestRetry(templateId, phones, messages);
+            smsResponse = getResponse(http.postJson(requestUrl, headers, requestJson.toString()));
+        } catch (SmsBlendException e) {
+            smsResponse = new SmsResponse();
+            smsResponse.setSuccess(false);
+            smsResponse.setData(e.getMessage());
         }
+        if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
+            retry = 0;
+            return smsResponse;
+        }
+        return requestRetry(templateId, phones, messages);
     }
 
     private SmsResponse requestRetry(String templateId, List<String> phones, LinkedHashMap<String, String> messages) {

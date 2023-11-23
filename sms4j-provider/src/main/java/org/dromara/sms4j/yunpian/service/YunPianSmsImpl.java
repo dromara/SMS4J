@@ -55,16 +55,19 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
         Map<String, Object> body = setBody(phone, message, null, getConfig().getTemplateId());
         Map<String, String> headers = getHeaders();
 
+        SmsResponse smsResponse;
         try {
-            SmsResponse smsResponse = getResponse(http.postFrom(Constant.YUNPIAN_URL + "/sms/tpl_single_send.json", headers, body));
-            if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
-                retry = 0;
-                return smsResponse;
-            }
-            return requestRetry(phone, message);
-        }catch (SmsBlendException e){
-            return requestRetry(phone, message);
+            smsResponse = getResponse(http.postFrom(Constant.YUNPIAN_URL + "/sms/tpl_single_send.json", headers, body));
+        } catch (SmsBlendException e) {
+            smsResponse = new SmsResponse();
+            smsResponse.setSuccess(false);
+            smsResponse.setData(e.getMessage());
         }
+        if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
+            retry = 0;
+            return smsResponse;
+        }
+        return requestRetry(phone, message);
     }
 
     private SmsResponse requestRetry(String phone, String message) {
@@ -79,16 +82,17 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
         Map<String, Object> body = setBody(phone, "", messages, templateId);
         Map<String, String> headers = getHeaders();
 
+        SmsResponse smsResponse;
         try {
-            SmsResponse smsResponse = getResponse(http.postFrom(Constant.YUNPIAN_URL + "/sms/tpl_single_send.json", headers, body));
-            if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
-                retry = 0;
-                return smsResponse;
-            }
-            return requestRetry(phone, templateId, messages);
-        }catch (SmsBlendException e){
+            smsResponse = getResponse(http.postFrom(Constant.YUNPIAN_URL + "/sms/tpl_single_send.json", headers, body));
+        } catch (SmsBlendException e) {
             return requestRetry(phone, templateId, messages);
         }
+        if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
+            retry = 0;
+            return smsResponse;
+        }
+        return requestRetry(phone, templateId, messages);
     }
 
     private SmsResponse requestRetry(String phone, String templateId, LinkedHashMap<String, String> messages) {
@@ -138,9 +142,9 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
         body.put("apikey", getConfig().getAccessKeyId());
         body.put("mobile", phone);
         body.put("tpl_id", tplId);
-        if (message!=null && !message.isEmpty()){
+        if (message != null && !message.isEmpty()) {
             body.put("tpl_value", formattingMap(message));
-        }else {
+        } else {
             body.put("tpl_value", "");
         }
         if (getConfig().getCallbackUrl() != null && !getConfig().getCallbackUrl().isEmpty()) {

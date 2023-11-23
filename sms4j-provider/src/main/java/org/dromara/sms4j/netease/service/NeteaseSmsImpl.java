@@ -108,22 +108,25 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
         body.put("params", message);
         body.put("needUp", getConfig().getNeedUp());
 
+        Map<String, String> headers = new LinkedHashMap<>(5);
+        headers.put("Content-Type", Constant.FROM_URLENCODED);
+        headers.put("AppKey", getConfig().getAccessKeyId());
+        headers.put("Nonce", nonce);
+        headers.put("CurTime", curTime);
+        headers.put("CheckSum", checkSum);
+        SmsResponse smsResponse;
         try {
-            Map<String, String> headers = new LinkedHashMap<>(5);
-            headers.put("Content-Type", Constant.FROM_URLENCODED);
-            headers.put("AppKey", getConfig().getAccessKeyId());
-            headers.put("Nonce", nonce);
-            headers.put("CurTime", curTime);
-            headers.put("CheckSum", checkSum);
-            SmsResponse smsResponse = getResponse(http.postJson(requestUrl, headers, body));
-            if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
-                retry = 0;
-                return smsResponse;
-            }
-            return requestRetry(requestUrl, phones, message, templateId);
-        }catch (SmsBlendException e){
-            return requestRetry(requestUrl, phones, message, templateId);
+            smsResponse = getResponse(http.postJson(requestUrl, headers, body));
+        } catch (SmsBlendException e) {
+            smsResponse = new SmsResponse();
+            smsResponse.setSuccess(false);
+            smsResponse.setData(e.getMessage());
         }
+        if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
+            retry = 0;
+            return smsResponse;
+        }
+        return requestRetry(requestUrl, phones, message, templateId);
     }
 
     private SmsResponse requestRetry(String requestUrl, List<String> phones, String message, String templateId) {

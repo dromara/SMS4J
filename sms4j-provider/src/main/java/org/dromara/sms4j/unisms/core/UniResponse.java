@@ -14,6 +14,8 @@ public class UniResponse {
     public JSONObject data = null;
     public Object raw;
 
+    public UniResponse(){}
+
     /**
      * Create a new Uni Response.
      *

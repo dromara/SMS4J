@@ -28,6 +28,9 @@ public class MailMessage {
     /** html模板文件的输入流，可来自任意可读取位置*/
     private InputStream htmlInputStream;
 
+    /** html内容，可以存在模板变量*/
+    private String htmlContent;
+
     /** html 模板文件的File对象*/
     private File htmlFile;
 
@@ -148,6 +151,12 @@ public class MailMessage {
         /** html模板文件的File对象*/
         public MailsBuilder html(File htmlFile){
             mailMessage.htmlFile = htmlFile;
+            return this;
+        }
+
+        /** html内容直接输入*/
+        public MailsBuilder htmlContent(String htmlContent){
+            mailMessage.htmlContent = htmlContent;
             return this;
         }
 

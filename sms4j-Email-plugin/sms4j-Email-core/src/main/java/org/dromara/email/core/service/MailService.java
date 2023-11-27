@@ -26,6 +26,7 @@ import javax.mail.util.ByteArrayDataSource;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -55,6 +56,9 @@ public class MailService implements MailClient {
         }
         if (mailMessage.getHtmlFile() != null) {
             html = HtmlUtil.readHtml(mailMessage.getHtmlFile());
+        }
+        if (StrUtil.isNotBlank(mailMessage.getHtmlContent())) {
+           html = Arrays.asList(mailMessage.getHtmlContent().split("\n"));
         }
         send(mailMessage.getMailAddress(),
                 mailMessage.getTitle(),
@@ -195,6 +199,8 @@ public class MailService implements MailClient {
                 strings = HtmlUtil.replacePlaceholder(html, parameter);
                 //拼合HTML数据
                 htmlData = HtmlUtil.pieceHtml(strings);
+            }else {
+                htmlData = HtmlUtil.pieceHtml(html);
             }
             MimeBodyPart htmlPart = new MimeBodyPart();
             htmlPart.setContent(htmlData, "text/html;charset=UTF-8");

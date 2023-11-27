@@ -15,9 +15,9 @@ import java.util.List;
 import static org.dromara.oa.comm.enums.MessageType.TEXT;
 
 /**
+ * 飞书通知签名和信息构建
  * @author dongfeng
- * @description 飞书通知签名和信息构建
- * @date 2023-10-19 13:07
+ * 2023-10-19 13:07
  */
 public class ByteTalkBuilder {
 
@@ -49,9 +49,7 @@ public class ByteTalkBuilder {
             if (isNoticeAll) {
                 content.append("<at user_id=\"all\">所有人</at>");
             }
-            userNamesList.forEach(l -> {
-                content.append("<at user_id=\"ou_xxx\">").append(l).append("</at>");
-            });
+            userNamesList.forEach(l -> content.append("<at user_id=\"ou_xxx\">").append(l).append("</at>"));
             content.append(request.getContent());
             JSONObject text = new JSONObject();
             text.set("text", content);

@@ -2,7 +2,7 @@ package org.dromara.oa.comm.content;
 
 /**
  * @author dongfeng
- * @date 2023-10-22 13:50
+ * 2023-10-22 13:50
  */
 public class OaContent {
     /**

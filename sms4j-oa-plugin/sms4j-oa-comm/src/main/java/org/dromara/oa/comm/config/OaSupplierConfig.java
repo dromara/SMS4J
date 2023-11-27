@@ -2,7 +2,7 @@ package org.dromara.oa.comm.config;
 
 /**
  * @author dongfeng
- * @date 2023-10-19 13:36
+ * 2023-10-19 13:36
  */
 public interface OaSupplierConfig {
 

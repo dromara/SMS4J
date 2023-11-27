@@ -20,7 +20,7 @@ import static org.dromara.oa.comm.enums.OaType.WETALK;
 
 /**
  * @author dongfeng
- * @date 2023-10-22 21:01
+ * 2023-10-22 21:01
  */
 @Slf4j
 public class WeTalkOaImpl extends AbstractOaBlend<WeTalkConfig> {

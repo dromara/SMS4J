@@ -4,7 +4,6 @@ package org.dromara.oa.comm.entity;
 import lombok.Data;
 import org.dromara.oa.comm.enums.MessageType;
 
-import java.util.Collection;
 import java.util.List;
 
 @Data

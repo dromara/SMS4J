@@ -19,9 +19,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 注册工厂, 读取yaml配置并根据配置生成对象
  * @author dongfeng
- * @description 注册工厂, 读取yaml配置并根据配置生成对象
- * @date 2023-10-22 12:39
+ * 2023-10-22 12:39
  */
 
 @Slf4j

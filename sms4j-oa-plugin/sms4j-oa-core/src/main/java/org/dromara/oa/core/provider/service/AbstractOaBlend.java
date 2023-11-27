@@ -17,7 +17,7 @@ import java.util.concurrent.PriorityBlockingQueue;
 
 /**
  * @author dongfeng
- * @date 2023-10-22 21:03
+ * 2023-10-22 21:03
  */
 public abstract class AbstractOaBlend<C extends OaSupplierConfig> implements OaSender {
 
@@ -71,9 +71,7 @@ public abstract class AbstractOaBlend<C extends OaSupplierConfig> implements OaS
 
 
     public final void senderAsync(Request request, MessageType messageType) {
-        pool.execute(() -> {
-            sender(request, messageType);
-        });
+        pool.execute(() -> sender(request, messageType));
     }
 
     public final void senderAsync(Request request, MessageType messageType, OaCallBack callBack) {

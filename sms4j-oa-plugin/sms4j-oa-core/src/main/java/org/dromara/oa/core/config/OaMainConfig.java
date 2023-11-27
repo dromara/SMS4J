@@ -13,8 +13,7 @@ import java.util.concurrent.Executor;
 
 /**
  * @author dongfeng
- * @description TODO
- * @date 2023-11-01 18:05
+ * 2023-11-01 18:05
  */
 @Data
 public class OaMainConfig {

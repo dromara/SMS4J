@@ -8,7 +8,7 @@ import org.dromara.oa.core.provider.config.OaBaseConfig;
 
 /**
  * @author dongfeng
- * @date 2023-10-19 13:38
+ * 2023-10-19 13:38
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

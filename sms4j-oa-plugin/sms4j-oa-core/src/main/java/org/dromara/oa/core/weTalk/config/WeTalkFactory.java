@@ -7,9 +7,9 @@ import org.dromara.oa.core.provider.factory.OaAbstractProviderFactory;
 import org.dromara.oa.core.weTalk.service.WeTalkOaImpl;
 
 /**
+ * 微信通知对象建造
  * @author dongfeng
- * @description 微信通知对象建造
- * @date 2023-10-22 21:00
+ * 2023-10-22 21:00
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class WeTalkFactory extends OaAbstractProviderFactory<WeTalkOaImpl, WeTalkConfig> {

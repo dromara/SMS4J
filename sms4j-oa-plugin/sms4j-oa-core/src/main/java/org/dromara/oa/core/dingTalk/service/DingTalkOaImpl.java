@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.oa.comm.entity.Request;
 import org.dromara.oa.comm.entity.Response;
 import org.dromara.oa.comm.enums.MessageType;
-import org.dromara.oa.comm.enums.OaType;
 import org.dromara.oa.comm.errors.OaException;
 import org.dromara.oa.core.dingTalk.config.DingTalkConfig;
 import org.dromara.oa.core.dingTalk.utils.DingTalkBuilder;
@@ -21,7 +20,7 @@ import static org.dromara.oa.comm.enums.OaType.DINGTALK;
 
 /**
  * @author dongfeng
- * @date 2023-10-22 21:01
+ * 2023-10-22 21:01
  */
 @Slf4j
 public class DingTalkOaImpl extends AbstractOaBlend<DingTalkConfig> {

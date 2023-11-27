@@ -20,7 +20,7 @@ import static org.dromara.oa.comm.enums.OaType.BYTETALK;
 
 /**
  * @author dongfeng
- * @date 2023-10-22 21:01
+ * 2023-10-22 21:01
  */
 @Slf4j
 public class ByteTalkOaImpl extends AbstractOaBlend<ByteTalkConfig> {

@@ -11,9 +11,9 @@ import static org.dromara.oa.comm.enums.MessageType.MARKDOWN;
 import static org.dromara.oa.comm.enums.MessageType.TEXT;
 
 /**
+ * 企业微信--签名和消息构建
  * @author dongfeng
- * @description 微信通知签名和信息构建
- * @date 2023-10-19 13:07
+ * 2023-10-19 13:07
  */
 public class WeTalkBuilder {
 

@@ -13,7 +13,7 @@ import java.util.Map;
 
 /**
  * @author dongfeng
- * @date 2023-10-22 12:50
+ * 2023-10-22 12:50
  */
 public class OaSupplierConfig {
     /**

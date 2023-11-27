@@ -19,9 +19,9 @@ import java.util.Objects;
 import static org.dromara.oa.comm.enums.MessageType.*;
 
 /**
+ * 钉钉通知签名和信息构建
  * @author dongfeng
- * @description 钉钉通知签名和信息构建
- * @date 2023-10-19 13:07
+ * 2023-10-19 13:07
  */
 public class DingTalkBuilder {
     public static String sign(String secret) {

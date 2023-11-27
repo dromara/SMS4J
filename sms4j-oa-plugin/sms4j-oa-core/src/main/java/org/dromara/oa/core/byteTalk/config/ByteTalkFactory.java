@@ -7,9 +7,9 @@ import org.dromara.oa.core.byteTalk.service.ByteTalkOaImpl;
 import org.dromara.oa.core.provider.factory.OaAbstractProviderFactory;
 
 /**
+ * 飞书通知对象建造
  * @author dongfeng
- * @description 飞书通知对象建造
- * @date 2023-10-22 21:00
+ * 2023-10-22 21:00
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ByteTalkFactory extends OaAbstractProviderFactory<ByteTalkOaImpl, ByteTalkConfig> {

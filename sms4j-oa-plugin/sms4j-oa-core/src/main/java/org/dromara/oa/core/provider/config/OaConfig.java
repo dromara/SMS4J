@@ -3,9 +3,9 @@ package org.dromara.oa.core.provider.config;
 import lombok.Data;
 
 /**
+ * Oa线程池配置
  * @author dongfeng
- * @description TODO
- * @date 2023-11-01 17:55
+ * 2023-11-01 17:55
  */
 @Data
 public class OaConfig {

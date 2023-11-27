@@ -6,12 +6,11 @@ import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.core.datainterface.SmsReadConfig;
 import org.dromara.sms4j.core.load.SmsLoad;
-import org.dromara.sms4j.core.proxy.SmsInvocationHandler;
+import org.dromara.sms4j.core.proxy.SmsProxyFactory;
 import org.dromara.sms4j.provider.config.BaseConfig;
 import org.dromara.sms4j.provider.factory.BaseProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 
-import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -64,7 +63,6 @@ public abstract class SmsFactory {
      */
     public static void createSmsBlend(SmsReadConfig smsReadConfig, String configId) {
         BaseConfig supplierConfig = smsReadConfig.getSupplierConfig(configId);
-        supplierConfig.setConfigId(configId);
         SmsBlend smsBlend = create(supplierConfig);
         register(smsBlend);
     }
@@ -93,9 +91,9 @@ public abstract class SmsFactory {
      * @param config 短信配置
      * @author :Wind
      */
+    @Deprecated
     public static void createRestrictedSmsBlend(SupplierConfig config) {
         SmsBlend smsBlend = create(config);
-        smsBlend = renderWithRestricted(smsBlend);
         register(smsBlend);
     }
 
@@ -109,11 +107,10 @@ public abstract class SmsFactory {
      * @param configId      配置ID
      * @author :Wind
      */
+    @Deprecated
     public static void createRestrictedSmsBlend(SmsReadConfig smsReadConfig, String configId) {
         BaseConfig supplierConfig = smsReadConfig.getSupplierConfig(configId);
-        supplierConfig.setConfigId(configId);
         SmsBlend smsBlend = create(supplierConfig);
-        smsBlend = renderWithRestricted(smsBlend);
         register(smsBlend);
     }
 
@@ -126,11 +123,11 @@ public abstract class SmsFactory {
      * @param smsReadConfig 读取额外配置接口
      * @author :Wind
      */
+    @Deprecated
     public static void createRestrictedSmsBlend(SmsReadConfig smsReadConfig) {
         List<BaseConfig> supplierConfigList = smsReadConfig.getSupplierConfigList();
         supplierConfigList.forEach(supplierConfig -> {
             SmsBlend smsBlend = create(supplierConfig);
-            smsBlend = renderWithRestricted(smsBlend);
             register(smsBlend);
         });
     }
@@ -140,8 +137,12 @@ public abstract class SmsFactory {
         if (factory == null) {
             throw new SmsBlendException("不支持当前供应商配置");
         }
-        return factory.createSms(config);
+        SmsBlend sms = factory.createSms(config);
+        return renderWithProxy(sms);
+
     }
+
+
 
     /**
      * renderWithRestricted
@@ -149,9 +150,9 @@ public abstract class SmsFactory {
      *
      * @author :Wind
      */
-    private static SmsBlend renderWithRestricted(SmsBlend sms) {
-        SmsInvocationHandler smsInvocationHandler = SmsInvocationHandler.newSmsInvocationHandler(sms);
-        return (SmsBlend) Proxy.newProxyInstance(sms.getClass().getClassLoader(), new Class[]{SmsBlend.class}, smsInvocationHandler);
+    @Deprecated
+    private static SmsBlend renderWithProxy(SmsBlend sms) {
+        return SmsProxyFactory.getProxySmsBlend(sms);
     }
 
     /**

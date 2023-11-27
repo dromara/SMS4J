@@ -2,45 +2,69 @@ package org.dromara.sms4j.core.proxy;
 
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.SmsBlend;
-import org.dromara.sms4j.api.proxy.RestrictedProcess;
-import org.dromara.sms4j.comm.exception.SmsBlendException;
+import org.dromara.sms4j.api.proxy.SmsProcessor;
+import org.dromara.sms4j.api.proxy.SuppotFilter;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Objects;
+import java.util.LinkedList;
+import java.util.List;
 
+
+/**
+ * SmsBlend增强，封装smsblend和执行器
+ *
+ * @author sh1yu
+ * @since 2023/10/27 13:03
+ */
 @Slf4j
 public class SmsInvocationHandler implements InvocationHandler {
     private final SmsBlend smsBlend;
-    private static RestrictedProcess restrictedProcess = new RestrictedProcessDefaultImpl();
+    private final LinkedList<SmsProcessor> processors;
 
-    private SmsInvocationHandler(SmsBlend smsBlend) {
+
+    public SmsInvocationHandler(SmsBlend smsBlend, LinkedList<SmsProcessor> processors) {
         this.smsBlend = smsBlend;
-    }
-
-    public static SmsInvocationHandler newSmsInvocationHandler(SmsBlend smsBlend) {
-        return new SmsInvocationHandler(smsBlend);
+        this.processors = processors;
     }
 
     @Override
     public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
-        Object result;
-        if ("sendMessage".equals(method.getName()) || "massTexting".equals(method.getName())) {
-            //取手机号作为参数
-            String phone = (String) objects[0];
-            SmsBlendException smsBlendException = restrictedProcess.process(phone);
-            if (!Objects.isNull(smsBlendException)) {
-                throw smsBlendException;
-            }
+        Object result = null;
+        //前置执行器
+        objects = doPreProcess(smsBlend, method, objects);
+        try {
+            result = method.invoke(smsBlend, objects);
+        } catch (Exception e) {
+            //错误执行器
+            doErrorHandleProcess(smsBlend, method, objects,e);
         }
-        result = method.invoke(smsBlend, objects);
+        //后置执行器
+        doPostrocess(smsBlend, method, objects, result);
         return result;
     }
 
-    /**
-     * 设置 restrictedProcess
-     */
-    public static void setRestrictedProcess(RestrictedProcess restrictedProcess) {
-        SmsInvocationHandler.restrictedProcess = restrictedProcess;
+    public Object[] doPreProcess(Object o, Method method, Object[] objects) {
+        for (SmsProcessor processor : processors) {
+            objects = processor.preProcessor(method, o, objects);
+        }
+        return objects;
+    }
+
+    public void doErrorHandleProcess(Object o, Method method, Object[] objects,Exception e) throws InvocationTargetException, IllegalAccessException {
+        for (SmsProcessor processor : processors) {
+            processor.exceptionHandleProcessor(method, o, objects,e);
+        }
+    }
+
+    public Object doPostrocess(Object o, Method method, Object[] objects, Object result) {
+        for (SmsProcessor processor : processors) {
+            Object overrideResult = processor.postProcessor(result, objects);
+            if (overrideResult != null) {
+                return overrideResult;
+            }
+        }
+        return result;
     }
 }

@@ -24,6 +24,7 @@ public class UniClient {
     private final String accessKeySecret;
     private final String endpoint;
     private final String signingAlgorithm;
+    private boolean isSimple;
     private final int retryInterval;
     private final int maxRetries;
     private int retry = 0;
@@ -41,7 +42,7 @@ public class UniClient {
     private static String getSignature(final String message, final String secretKey) {
         try {
             HMac hMac = new HMac(HmacAlgorithm.HmacSHA256, secretKey.getBytes());
-            byte[] bytes =  hMac.digest(message.getBytes());
+            byte[] bytes = hMac.digest(message.getBytes());
             return Base64.encode(bytes);
         } catch (Exception e) {
             return null;
@@ -87,8 +88,15 @@ public class UniClient {
         headers.put("User-Agent", USER_AGENT);
         headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
         headers.put("Accept", Constant.ACCEPT);
-
-        String url = this.endpoint + "?action=" + action + "&accessKeyId=" + this.accessKeyId;
+        String url;
+        if (this.isSimple) {
+            url = this.endpoint + "?action=" + action + "&accessKeyId=" + this.accessKeyId;
+        } else {
+            Map<String, Object> d = new HashMap<>();
+            Map<String, Object> signed = sign(d);
+            url = this.endpoint + "?action=" + action + "&accessKeyId=" + this.accessKeyId + "&algorithm=" + signed.get("algorithm") +
+                    "&timestamp=" + signed.get("timestamp") + "&nonce=" + signed.get("nonce") + "&signature=" + signed.get("signature");
+        }
         UniResponse smsResponse;
         try {
             smsResponse = new UniResponse(http.postJson(url, headers, data));
@@ -117,6 +125,12 @@ public class UniClient {
         private String signingAlgorithm;
         private int retryInterval;
         private int maxRetries;
+        private boolean isSimple;
+
+        public Builder isSimple(boolean isSimple) {
+            this.isSimple = isSimple;
+            return this;
+        }
 
         public Builder(final String accessKeyId) {
             this.accessKeyId = accessKeyId;

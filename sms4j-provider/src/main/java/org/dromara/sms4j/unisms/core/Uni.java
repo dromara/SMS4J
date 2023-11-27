@@ -80,11 +80,11 @@ public class Uni {
 
     private static UniClient buildClient(int retryInterval, int maxRetries) {
         UniClient.Builder builder = new UniClient.Builder(Uni.accessKeyId);
-
+        builder.isSimple(true);
         if (Uni.accessKeySecret != null) {
             builder.accessKeySecret(Uni.accessKeySecret);
+            builder.isSimple(false);
         }
-
         builder.endpoint(Uni.endpoint);
         builder.signingAlgorithm(Uni.signingAlgorithm);
         builder.setRetryInterval(retryInterval);

@@ -28,7 +28,7 @@ public class BlackListProcessor implements CoreMethodProcessor, SmsDaoAware {
     }
 
     @Override
-    public void sendMessagePreProcess(String phone, String message) {
+    public void sendMessagePreProcess(String phone, Object message) {
         doRestricted(Collections.singletonList(phone));
     }
 

@@ -31,6 +31,13 @@ public class SmsProcessorTest {
     public void testParamValidate() {
         SmsBlendException knowEx = null;
         try {
+            SmsFactory.getBySupplier(SupplierConstant.ALIBABA).sendMessage(PHONE, new LinkedHashMap<>());
+        } catch (SmsBlendException e) {
+            knowEx = e;
+        }
+        Assert.notNull(knowEx);
+        knowEx = null;
+        try {
             SmsFactory.getBySupplier(SupplierConstant.ALIBABA).sendMessage("", SmsUtils.getRandomInt(6));
         } catch (SmsBlendException e) {
             knowEx = e;

@@ -15,9 +15,9 @@ public interface CoreMethodProcessor extends SmsProcessor {
     default Object[] preProcessor(Method method, Object source, Object[] param) {
         String name = method.getName();
         int parameterCount = method.getParameterCount();
-        if ("sendMessage".equals(method.getName())) {
+        if ("sendMessage".equals(name)) {
             if (NumberOfParasmeters.TWO == NumberOfParasmeters.getNumberOfParasmetersEnum(parameterCount)) {
-                sendMessagePreProcess((String) param[0],(String) param[1]);
+                sendMessagePreProcess((String) param[0], param[1]);
                 return param;
             }
             if (NumberOfParasmeters.THREE == NumberOfParasmeters.getNumberOfParasmetersEnum(parameterCount)) {
@@ -25,7 +25,7 @@ public interface CoreMethodProcessor extends SmsProcessor {
                 return param;
             }
         }
-        if ("massTexting".equals(method.getName())) {
+        if ("massTexting".equals(name)) {
             if (NumberOfParasmeters.TWO == NumberOfParasmeters.getNumberOfParasmetersEnum(parameterCount)) {
                 massTextingPreProcess((List<String>)param[0],(String)param[1]);
                 return param;
@@ -37,7 +37,7 @@ public interface CoreMethodProcessor extends SmsProcessor {
         }
         return param;
     }
-    void sendMessagePreProcess(String phone, String message);
+    void sendMessagePreProcess(String phone, Object message);
     void sendMessageByTemplatePreProcess(String phone, String templateId, LinkedHashMap<String, String> messages);
     void massTextingPreProcess(List<String> phones, String message);
     void massTextingByTemplatePreProcess(List<String> phones, String templateId, LinkedHashMap<String, String> messages);

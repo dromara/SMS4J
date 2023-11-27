@@ -89,17 +89,18 @@ public class UniClient {
         headers.put("Accept", Constant.ACCEPT);
 
         String url = this.endpoint + "?action=" + action + "&accessKeyId=" + this.accessKeyId;
-
+        UniResponse smsResponse;
         try {
-            UniResponse smsResponse = new UniResponse(http.postJson(url, headers, data));
-            if("Success".equals(smsResponse.message) || retry == maxRetries){
-                retry = 0;
-                return smsResponse;
-            }
-            return requestRetry(action, data);
-        }catch (SmsBlendException e){
-            return requestRetry(action, data);
+            smsResponse = new UniResponse(http.postJson(url, headers, data));
+        } catch (SmsBlendException e) {
+            smsResponse = new UniResponse();
+            smsResponse.message = "Error";
         }
+        if ("Success".equals(smsResponse.message) || retry == maxRetries) {
+            retry = 0;
+            return smsResponse;
+        }
+        return requestRetry(action, data);
     }
 
     private UniResponse requestRetry(String action, Map<String, Object> data) {

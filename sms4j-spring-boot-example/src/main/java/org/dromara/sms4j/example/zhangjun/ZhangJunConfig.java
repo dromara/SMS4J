@@ -2,7 +2,6 @@ package org.dromara.sms4j.example.zhangjun;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.provider.config.BaseConfig;
 
 /**

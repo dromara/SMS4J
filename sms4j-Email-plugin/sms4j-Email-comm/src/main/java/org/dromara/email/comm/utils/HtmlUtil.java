@@ -81,7 +81,7 @@ public final class HtmlUtil {
             try {
                 inputStream.close();
             } catch (IOException e) {
-                System.out.println(e);
+                e.printStackTrace();
             }
         }
         return data;

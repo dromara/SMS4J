@@ -44,18 +44,22 @@ public class EmaySmsImpl extends AbstractSmsBlend<EmayConfig> {
     public SmsResponse sendMessage(String phone, String message) {
         String url = getConfig().getRequestUrl();
         Map<String, Object> params = EmayBuilder.buildRequestBody(getConfig().getAccessKeyId(), getConfig().getAccessKeySecret(), phone, message);
+
+        Map<String, String> headers = new LinkedHashMap<>(1);
+        headers.put("Content-Type", Constant.FROM_URLENCODED);
+        SmsResponse smsResponse;
         try {
-            Map<String, String> headers = new LinkedHashMap<>(1);
-            headers.put("Content-Type", Constant.FROM_URLENCODED);
-            SmsResponse smsResponse = getResponse(http.postUrl(url, headers, params));
-            if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
-                retry = 0;
-                return smsResponse;
-            }
-            return requestRetry(phone, message);
-        }catch (SmsBlendException e){
-            return requestRetry(phone, message);
+            smsResponse = getResponse(http.postUrl(url, headers, params));
+        } catch (SmsBlendException e) {
+            smsResponse = new SmsResponse();
+            smsResponse.setSuccess(false);
+            smsResponse.setData(e.getMessage());
         }
+        if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
+            retry = 0;
+            return smsResponse;
+        }
+        return requestRetry(phone, message);
     }
 
     private SmsResponse requestRetry(String phone, String message) {

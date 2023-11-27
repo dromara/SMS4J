@@ -55,20 +55,24 @@ public class HuaweiSmsImpl extends AbstractSmsBlend<HuaweiConfig> {
         }
         String mess = listToString(list);
         String requestBody = HuaweiBuilder.buildRequestBody(getConfig().getSender(), phone, templateId, mess, getConfig().getStatusCallBack(), getConfig().getSignature());
+
+        Map<String, String> headers = new LinkedHashMap<>(3);
+        headers.put("Authorization", Constant.HUAWEI_AUTH_HEADER_VALUE);
+        headers.put("X-WSSE", HuaweiBuilder.buildWsseHeader(getConfig().getAccessKeyId(), getConfig().getAccessKeySecret()));
+        headers.put("Content-Type", Constant.FROM_URLENCODED);
+        SmsResponse smsResponse;
         try {
-            Map<String, String> headers = new LinkedHashMap<>(3);
-            headers.put("Authorization", Constant.HUAWEI_AUTH_HEADER_VALUE);
-            headers.put("X-WSSE", HuaweiBuilder.buildWsseHeader(getConfig().getAccessKeyId(), getConfig().getAccessKeySecret()));
-            headers.put("Content-Type", Constant.FROM_URLENCODED);
-            SmsResponse smsResponse = getResponse(http.postJson(url, headers, requestBody));
-            if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
-                retry = 0;
-                return smsResponse;
-            }
-            return requestRetry(phone, templateId, messages);
-        }catch (SmsBlendException e){
-            return requestRetry(phone, templateId, messages);
+            smsResponse = getResponse(http.postJson(url, headers, requestBody));
+        } catch (SmsBlendException e) {
+            smsResponse = new SmsResponse();
+            smsResponse.setSuccess(false);
+            smsResponse.setData(e.getMessage());
         }
+        if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
+            retry = 0;
+            return smsResponse;
+        }
+        return requestRetry(phone, templateId, messages);
     }
 
     private SmsResponse requestRetry(String phone, String templateId, LinkedHashMap<String, String> messages) {

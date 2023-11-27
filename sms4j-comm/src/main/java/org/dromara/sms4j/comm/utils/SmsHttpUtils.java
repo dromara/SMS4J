@@ -1,6 +1,5 @@
 package org.dromara.sms4j.comm.utils;
 
-import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.HttpRequest;
@@ -9,8 +8,6 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.Map;
 
 public class SmsHttpUtils {

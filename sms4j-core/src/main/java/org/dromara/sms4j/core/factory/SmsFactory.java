@@ -81,7 +81,7 @@ public abstract class SmsFactory {
     public static void createSmsBlend(SmsReadConfig smsReadConfig) {
         List<BaseConfig> supplierConfigList = smsReadConfig.getSupplierConfigList();
         supplierConfigList.forEach(supplierConfig -> {
-            SmsBlend smsBlend = create((SupplierConfig)supplierConfig);
+            SmsBlend smsBlend = create(supplierConfig);
             register(smsBlend);
         });
     }

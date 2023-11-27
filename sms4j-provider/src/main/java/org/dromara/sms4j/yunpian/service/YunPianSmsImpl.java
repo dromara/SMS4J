@@ -70,6 +70,11 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
         return requestRetry(phone, message);
     }
 
+    @Override
+    public SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages) {
+        return sendMessage(phone, getConfig().getTemplateId(), messages);
+    }
+
     private SmsResponse requestRetry(String phone, String message) {
         http.safeSleep(getConfig().getRetryInterval());
         retry++;

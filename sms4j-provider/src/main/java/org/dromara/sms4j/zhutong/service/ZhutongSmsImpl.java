@@ -67,6 +67,11 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
     }
 
     @Override
+    public SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages) {
+        return sendMessage(phone, getConfig().getTemplateId(), messages);
+    }
+
+    @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
         return getSmsResponseTemplate(templateId, phone, messages);
     }

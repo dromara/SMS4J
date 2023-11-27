@@ -59,6 +59,11 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
         return getSmsResponse(getConfig().getTemplateUrl(), Collections.singletonList(phone), message, getConfig().getTemplateId());
     }
 
+    @Override
+    public SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages) {
+        return sendMessage(phone, getConfig().getTemplateId(), messages);
+    }
+
 
     /**
      * @param phone

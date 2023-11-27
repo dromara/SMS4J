@@ -50,6 +50,11 @@ public class UniSmsImpl extends AbstractSmsBlend<UniConfig> {
     }
 
     @Override
+    public SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages) {
+        return sendMessage(phone, getConfig().getTemplateId(), messages);
+    }
+
+    @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
         Map<String, Object> data = new LinkedHashMap<>(4);
         data.put("to", Collections.singletonList(phone));

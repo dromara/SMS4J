@@ -49,6 +49,11 @@ public class CtyunSmsImpl extends AbstractSmsBlend<CtyunConfig> {
     }
 
     @Override
+    public SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages) {
+        return sendMessage(phone, getConfig().getTemplateId(), messages);
+    }
+
+    @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
         String messageStr = JSONUtil.toJsonStr(messages);
         return getSmsResponse(phone, messageStr, templateId);

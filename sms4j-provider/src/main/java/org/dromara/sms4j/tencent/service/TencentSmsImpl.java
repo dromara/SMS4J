@@ -52,6 +52,11 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
     }
 
     @Override
+    public SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages) {
+        return sendMessage(phone, getConfig().getTemplateId(), messages);
+    }
+
+    @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
         List<String> list = new ArrayList<>();
         for (Map.Entry<String, String> entry : messages.entrySet()) {

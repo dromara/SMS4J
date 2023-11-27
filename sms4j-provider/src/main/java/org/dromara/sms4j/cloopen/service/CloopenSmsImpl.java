@@ -43,6 +43,11 @@ public class CloopenSmsImpl extends AbstractSmsBlend<CloopenConfig> {
     }
 
     @Override
+    public SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages) {
+        return sendMessage(phone, getConfig().getTemplateId(), messages);
+    }
+
+    @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
         return massTexting(Collections.singletonList(phone), templateId, messages);
     }

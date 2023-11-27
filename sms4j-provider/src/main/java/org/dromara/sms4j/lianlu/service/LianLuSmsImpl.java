@@ -45,6 +45,11 @@ public class LianLuSmsImpl extends AbstractSmsBlend<LianLuConfig> {
         return this.massTexting(Collections.singletonList(phone), templateParam);
     }
 
+    @Override
+    public SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages) {
+        return sendMessage(phone, getConfig().getTemplateId(), messages);
+    }
+
     /**
      * 模板信息
      *

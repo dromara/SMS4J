@@ -47,6 +47,11 @@ public class HuaweiSmsImpl extends AbstractSmsBlend<HuaweiConfig> {
     }
 
     @Override
+    public SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages) {
+        return sendMessage(phone, getConfig().getTemplateId(), messages);
+    }
+
+    @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
         String url = getConfig().getUrl() + Constant.HUAWEI_REQUEST_URL;
         List<String> list = new ArrayList<>();

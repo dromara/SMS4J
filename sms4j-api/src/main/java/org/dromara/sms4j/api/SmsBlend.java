@@ -3,7 +3,6 @@ package org.dromara.sms4j.api;
 import org.dromara.sms4j.api.callback.CallBack;
 import org.dromara.sms4j.api.entity.SmsResponse;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -42,6 +41,15 @@ public interface SmsBlend {
      * @author :Wind
      */
     SmsResponse sendMessage(String phone, String message);
+
+    /**
+     *  sendMessage
+     * <p>说明：发送固定消息模板多模板参数短信
+     * @param  phone 接收短信的手机号
+     * @param messages 模板内容
+     * @author :Wind
+    */
+    SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages);
 
     /**
      * <p>说明：使用自定义模板发送短信

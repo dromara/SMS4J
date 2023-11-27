@@ -33,9 +33,9 @@ public class OaFactory {
     }
 
     public static OaSender createAndGetOa(OaSupplierConfig config) {
-        BaseProviderFactory factory = ProviderFactoryHolder.requireForSupplier(config.getSupplier());
+        OaBaseProviderFactory factory = ProviderFactoryHolder.requireForSupplier(config.getSupplier());
         if (factory == null) {
-            throw new OaException("不支持当前供应商配置");
+            throw new OaException("不支持"+config.getSupplier()+"供应商配置");
         }
         return factory.createSmsOa(config);
     }

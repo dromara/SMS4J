@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.dromara.oa.comm.content.OaContent;
 import org.dromara.oa.core.byteTalk.service.ByteTalkOaImpl;
-import org.dromara.oa.core.provider.factory.AbstractProviderFactory;
+import org.dromara.oa.core.provider.factory.OaAbstractProviderFactory;
 
 /**
  * @author dongfeng
@@ -12,7 +12,7 @@ import org.dromara.oa.core.provider.factory.AbstractProviderFactory;
  * @date 2023-10-22 21:00
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ByteTalkFactory extends AbstractProviderFactory<ByteTalkOaImpl, ByteTalkConfig> {
+public class ByteTalkFactory extends OaAbstractProviderFactory<ByteTalkOaImpl, ByteTalkConfig> {
     private static final ByteTalkFactory INSTANCE = new ByteTalkFactory();
 
     /**

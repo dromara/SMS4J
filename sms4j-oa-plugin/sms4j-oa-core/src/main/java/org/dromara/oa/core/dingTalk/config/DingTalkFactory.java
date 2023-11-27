@@ -4,7 +4,9 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.dromara.oa.comm.content.OaContent;
 import org.dromara.oa.core.dingTalk.service.DingTalkOaImpl;
-import org.dromara.oa.core.provider.factory.AbstractProviderFactory;
+import org.dromara.oa.core.provider.factory.OaAbstractProviderFactory;
+
+import java.util.concurrent.Executor;
 
 /**
  * @author dongfeng
@@ -12,7 +14,7 @@ import org.dromara.oa.core.provider.factory.AbstractProviderFactory;
  * @date 2023-10-22 21:00
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class DingTalkFactory extends AbstractProviderFactory<DingTalkOaImpl, DingTalkConfig> {
+public class DingTalkFactory extends OaAbstractProviderFactory<DingTalkOaImpl, DingTalkConfig> {
     private static final DingTalkFactory INSTANCE = new DingTalkFactory();
 
     /**
@@ -22,6 +24,7 @@ public class DingTalkFactory extends AbstractProviderFactory<DingTalkOaImpl, Din
     public DingTalkOaImpl createSmsOa(DingTalkConfig dingTalkConfig) {
         return new DingTalkOaImpl(dingTalkConfig);
     }
+
 
     @Override
     public String getSupplier() {

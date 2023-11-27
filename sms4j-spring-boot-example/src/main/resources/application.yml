@@ -60,10 +60,11 @@ sms:
       template-id: pub_verif_short
       # 模版名称
       templateName: code
-
+sms-oa:
+  config-type: yaml
   oas:
     oaDingTalkByYaml: # configId
-      isEnable: true # 表示该配置是否生效(默认生效,false表示不生效)
+      isEnable: false # 表示该配置是否生效(默认生效,false表示不生效)
       supplier: dingding # 厂商标识
       tokenId: 您的accessKey
       sign: 您的sign
@@ -74,3 +75,6 @@ sms:
     oaWeTalkByYaml:
       supplier: wetalk # 厂商标识
       tokenId: 您的sign
+  core-pool-size: 20
+  queue-capacity: 20
+  max-pool-size: 20

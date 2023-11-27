@@ -9,7 +9,8 @@ import org.dromara.oa.comm.config.OaSupplierConfig;
 import org.dromara.oa.comm.content.OaContent;
 import org.dromara.oa.core.byteTalk.config.ByteTalkFactory;
 import org.dromara.oa.core.dingTalk.config.DingTalkFactory;
-import org.dromara.oa.core.provider.factory.BaseProviderFactory;
+import org.dromara.oa.core.provider.config.OaConfig;
+import org.dromara.oa.core.provider.factory.OaBaseProviderFactory;
 import org.dromara.oa.core.provider.factory.OaFactory;
 import org.dromara.oa.core.provider.factory.ProviderFactoryHolder;
 import org.dromara.oa.core.weTalk.config.WeTalkFactory;
@@ -25,12 +26,18 @@ import java.util.Map;
 
 @Slf4j
 public class OaBlendsInitializer {
-    private List<BaseProviderFactory<? extends OaSender, ? extends OaSupplierConfig>> factoryList;
+    private List<OaBaseProviderFactory<? extends OaSender, ? extends OaSupplierConfig>> factoryList;
 
+    private final OaConfig oaConfig;
     private final Map<String, Map<String, Object>> blends;
 
-    public OaBlendsInitializer(Map<String, Map<String, Object>> oas
+    public OaBlendsInitializer(
+            List<OaBaseProviderFactory<? extends OaSender, ? extends OaSupplierConfig>> factoryList,
+            OaConfig oaConfig,
+            Map<String, Map<String, Object>> oas
     ) {
+        this.factoryList=factoryList;
+        this.oaConfig = oaConfig;
         this.blends = oas;
         onApplicationEvent();
     }
@@ -41,12 +48,13 @@ public class OaBlendsInitializer {
         for (String configId : blends.keySet()) {
             Map<String, Object> configMap = blends.get(configId);
             if (Boolean.FALSE.equals(configMap.get("isEnable"))) {
+                log.warn("configId为"+configId+"的配置未启用,请注意是否需要开启");
                 continue;
             }
             Object supplierObj = configMap.get(OaContent.SUPPLIER_KEY);
             String supplier = supplierObj == null ? "" : String.valueOf(supplierObj);
             supplier = StrUtil.isEmpty(supplier) ? configId : supplier;
-            BaseProviderFactory<OaSender, OaSupplierConfig> providerFactory = (BaseProviderFactory<OaSender, OaSupplierConfig>) ProviderFactoryHolder.requireForSupplier(supplier);
+            OaBaseProviderFactory<OaSender, OaSupplierConfig> providerFactory = (OaBaseProviderFactory<OaSender, OaSupplierConfig>) ProviderFactoryHolder.requireForSupplier(supplier);
             if (providerFactory == null) {
                 log.warn("创建\"{}\"的通知webhook服务失败，未找到供应商为\"{}\"的服务", configId, supplier);
                 continue;

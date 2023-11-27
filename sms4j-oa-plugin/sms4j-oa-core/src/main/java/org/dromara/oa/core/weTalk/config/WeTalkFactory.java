@@ -3,7 +3,7 @@ package org.dromara.oa.core.weTalk.config;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.dromara.oa.comm.content.OaContent;
-import org.dromara.oa.core.provider.factory.AbstractProviderFactory;
+import org.dromara.oa.core.provider.factory.OaAbstractProviderFactory;
 import org.dromara.oa.core.weTalk.service.WeTalkOaImpl;
 
 /**
@@ -12,7 +12,7 @@ import org.dromara.oa.core.weTalk.service.WeTalkOaImpl;
  * @date 2023-10-22 21:00
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class WeTalkFactory extends AbstractProviderFactory<WeTalkOaImpl, WeTalkConfig> {
+public class WeTalkFactory extends OaAbstractProviderFactory<WeTalkOaImpl, WeTalkConfig> {
     private static final WeTalkFactory INSTANCE = new WeTalkFactory();
 
     /**

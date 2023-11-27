@@ -3,7 +3,9 @@ package org.dromara.oa.core.provider.factory;
 import org.dromara.oa.api.OaSender;
 import org.dromara.oa.comm.config.OaSupplierConfig;
 
-public interface BaseProviderFactory<S extends OaSender, C extends OaSupplierConfig> {
+import java.util.concurrent.Executor;
+
+public interface OaBaseProviderFactory<S extends OaSender, C extends OaSupplierConfig> {
 
     /**
      * 创建通知webhook实现对象

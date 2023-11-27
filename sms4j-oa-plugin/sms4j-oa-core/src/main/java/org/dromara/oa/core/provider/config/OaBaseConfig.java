@@ -19,6 +19,9 @@ public abstract class OaBaseConfig implements OaSupplierConfig {
     private String tokenId;
 
     private String sign;
+    /**
+     * 默认开启
+     */
 
     private Boolean isEnable = true;
 

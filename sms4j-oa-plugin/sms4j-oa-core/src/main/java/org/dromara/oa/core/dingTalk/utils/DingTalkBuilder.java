@@ -1,5 +1,6 @@
 package org.dromara.oa.core.dingTalk.utils;
 
+import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import org.dromara.oa.comm.entity.Request;
 import org.dromara.oa.comm.enums.MessageType;
@@ -12,9 +13,10 @@ import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.List;
+import java.util.Objects;
 
-import static org.dromara.oa.comm.enums.MessageType.MARKDOWN;
-import static org.dromara.oa.comm.enums.MessageType.TEXT;
+import static org.dromara.oa.comm.enums.MessageType.*;
 
 /**
  * @author dongfeng
@@ -45,26 +47,47 @@ public class DingTalkBuilder {
 
 
     public static JSONObject createMessage(Request request, MessageType messageType) {
+
+
         JSONObject message = new JSONObject();
         if (messageType == TEXT) {
             message.set("msgtype", "text");
             JSONObject text = new JSONObject();
             text.set("content", request.getContent());
-            JSONObject at = new JSONObject();
-            at.set("atMobiles", request.getPhoneList());
-            at.set("isAtAll", request.getIsNoticeAll());
-            message.set("at", at);
             message.set("text", text);
         } else if (messageType == MARKDOWN) {
             message.set("msgtype", "markdown");
             JSONObject markdown = new JSONObject();
             markdown.set("text", request.getContent());
             markdown.set("title", request.getTitle());
-            JSONObject at = new JSONObject();
-            at.set("atMobiles", request.getPhoneList());
-            message.set("at", at);
             message.set("markdown", markdown);
+        } else if (messageType == LINK) {
+            message.set("msgtype", "link");
+            JSONObject link = new JSONObject();
+            link.set("text", request.getContent());
+            link.set("title", request.getTitle());
+            link.set("picUrl", request.getPicUrl());
+            link.set("messageUrl", request.getMessageUrl());
+            message.set("link", link);
         }
+
+
+        // 处理提到的人
+        JSONObject at = new JSONObject();
+        List<String> phoneList = request.getPhoneList();
+        List<String> userIdList = request.getUserIdList();
+        if(!Objects.isNull(phoneList)){
+            JSONArray phoneArray = new JSONArray();
+            phoneList.forEach(phoneArray::set);
+            at.set("atMobiles", phoneArray);
+        }
+        if(!Objects.isNull(userIdList)){
+            JSONArray userIdArray = new JSONArray();
+            userIdList.forEach(userIdArray::set);
+            at.set("atUserIds", userIdArray);
+        }
+        at.set("isAtAll", request.getIsNoticeAll());
+        message.set("at", at);
         return message;
     }
 }

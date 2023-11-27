@@ -16,20 +16,20 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ProviderFactoryHolder {
 
 
-    private static final Map<String, BaseProviderFactory<? extends OaSender, ? extends OaSupplierConfig>> factories = new ConcurrentHashMap<>();
+    private static final Map<String, OaBaseProviderFactory<? extends OaSender, ? extends OaSupplierConfig>> factories = new ConcurrentHashMap<>();
 
-    public static void registerFactory(BaseProviderFactory<? extends OaSender, ? extends OaSupplierConfig> factory) {
+    public static void registerFactory(OaBaseProviderFactory<? extends OaSender, ? extends OaSupplierConfig> factory) {
         if (factory == null) {
             throw new OaException("注册供应商工厂失败，工厂实例不能为空");
         }
         factories.put(factory.getSupplier(), factory);
     }
 
-    public static void registerFactory(List<BaseProviderFactory<? extends OaSender, ? extends OaSupplierConfig>> factoryList) {
+    public static void registerFactory(List<OaBaseProviderFactory<? extends OaSender, ? extends OaSupplierConfig>> factoryList) {
         if (CollUtil.isEmpty(factoryList)) {
             return;
         }
-        for (BaseProviderFactory<? extends OaSender, ? extends OaSupplierConfig> factory : factoryList) {
+        for (OaBaseProviderFactory<? extends OaSender, ? extends OaSupplierConfig> factory : factoryList) {
             if (factory == null) {
                 continue;
             }
@@ -37,7 +37,7 @@ public class ProviderFactoryHolder {
         }
     }
 
-    public static BaseProviderFactory<? extends OaSender, ? extends OaSupplierConfig> requireForSupplier(String supplier) {
+    public static OaBaseProviderFactory<? extends OaSender, ? extends OaSupplierConfig> requireForSupplier(String supplier) {
         return factories.getOrDefault(supplier, null);
     }
 }

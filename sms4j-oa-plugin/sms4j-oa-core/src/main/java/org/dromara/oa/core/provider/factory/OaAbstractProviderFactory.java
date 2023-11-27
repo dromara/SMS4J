@@ -6,11 +6,11 @@ import org.dromara.oa.comm.config.OaSupplierConfig;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-public abstract class AbstractProviderFactory<S extends OaSender, C extends OaSupplierConfig> implements BaseProviderFactory<S, C> {
+public abstract class OaAbstractProviderFactory<S extends OaSender, C extends OaSupplierConfig> implements OaBaseProviderFactory<S, C> {
 
     private Class<C> configClass;
 
-    public AbstractProviderFactory() {
+    public OaAbstractProviderFactory() {
         Type genericSuperclass = getClass().getGenericSuperclass();
         if (genericSuperclass instanceof ParameterizedType) {
             ParameterizedType paramType = (ParameterizedType) genericSuperclass;

@@ -15,6 +15,7 @@ import org.dromara.oa.core.support.HttpClientImpl;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.Executor;
 
 import static org.dromara.oa.comm.enums.OaType.DINGTALK;
 
@@ -34,16 +35,27 @@ public class DingTalkOaImpl extends AbstractOaBlend<DingTalkConfig> {
         super(config);
     }
 
+    /**
+     * 建造一个微信通知对象服务
+     */
+    public DingTalkOaImpl(DingTalkConfig config, Executor pool) {
+        super(config,pool);
+    }
+
     @Override
     public String getSupplier() {
-        return OaType.DINGTALK.getType();
+        return getConfig().getSupplier();
     }
 
     @Override
     public Response sender(Request request, MessageType messageType) {
-
+        try {
+            Thread.sleep(10000L);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         if (Objects.isNull(request.getContent())) {
-            throw new OaException("消息体content不能为空");
+            throw new OaException("消息体content不能为空",getConfig().getConfigId());
         }
         StringBuilder webhook = new StringBuilder();
         JSONObject message = null;
@@ -62,7 +74,7 @@ public class DingTalkOaImpl extends AbstractOaBlend<DingTalkConfig> {
             log.info("请求返回结果：" + post);
         } catch (Exception e) {
             log.warn("请求失败问题：" + e.getMessage());
-            throw new OaException(e.getMessage());
+            throw new OaException(e.getMessage(),getConfig().getConfigId());
         }
         // 后续解析响应体提取errorCode判断是否成功
         return new Response(true, post, config.getConfigId());

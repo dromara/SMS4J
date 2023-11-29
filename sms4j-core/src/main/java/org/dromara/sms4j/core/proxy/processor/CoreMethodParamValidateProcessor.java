@@ -21,7 +21,7 @@ public class CoreMethodParamValidateProcessor implements CoreMethodProcessor {
     }
 
     @Override
-    public void sendMessagePreProcess(String phone, String message) {
+    public void sendMessagePreProcess(String phone, Object message) {
         validatePhone(phone);
         validateMessage(message);
     }
@@ -44,9 +44,18 @@ public class CoreMethodParamValidateProcessor implements CoreMethodProcessor {
         validateMessages(templateId, messages);
     }
 
-    public void validateMessage(String message) {
-        if (null == message || "".equals(message)) {
-            throw new SmsBlendException("cant send a null message!");
+    public void validateMessage(Object messageObj) {
+        if (messageObj instanceof String){
+            String message = (String) messageObj;
+            if (null == message || "".equals(message)) {
+                throw new SmsBlendException("cant send a null message!");
+            }
+        }
+        if (messageObj instanceof Map){
+            Map message = (Map) messageObj;
+            if (message.size()<1) {
+                throw new SmsBlendException("cant send a null message!");
+            }
         }
     }
 

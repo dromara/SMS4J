@@ -48,11 +48,6 @@ public class DingTalkOaImpl extends AbstractOaBlend<DingTalkConfig> {
 
     @Override
     public Response sender(Request request, MessageType messageType) {
-        try {
-            Thread.sleep(10000L);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
         if (Objects.isNull(request.getContent())) {
             throw new OaException("消息体content不能为空",getConfig().getConfigId());
         }

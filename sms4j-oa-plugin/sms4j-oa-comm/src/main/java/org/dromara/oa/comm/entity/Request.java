@@ -22,6 +22,7 @@ public class Request implements Comparable<Request> {
 
     private List<String> phoneList;
 
+    // 用于@,唯一标识:userId/openId
     private List<String> userIdList;
 
     private List<String> userNamesList;

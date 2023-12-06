@@ -51,13 +51,13 @@ public class SingleBlendRestrictedProcessor implements SmsProcessor, SmsDaoAware
         SmsBlend smsBlend = (SmsBlend) source;
         String configId = smsBlend.getConfigId();
         Map targetConfig = (Map) smsBlendsConfig.get(configId);
-        Object maximumString = targetConfig.get("maximum");
-        if (SmsUtils.isEmpty(maximumString)) {
+        Object maximumObj = targetConfig.get("maximum");
+        if (SmsUtils.isEmpty(maximumObj)) {
             return param;
         }
-        Integer maximum = 0;
+        int maximum = 0;
         try{
-             maximum = Integer.getInteger((String) maximumString) ;
+             maximum = (int) maximumObj ;
         }catch (Exception e){
             log.error("获取厂商级发送上限参数错误！请检查！");
             throw new IllegalArgumentException("获取厂商级发送上限参数错误");

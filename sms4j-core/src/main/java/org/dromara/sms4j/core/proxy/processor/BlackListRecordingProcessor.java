@@ -25,6 +25,9 @@ public class BlackListRecordingProcessor implements SmsProcessor, SmsDaoAware, S
     @Setter
     Object smsConfig;
 
+    public int getOrder(){
+        return 1;
+    }
 
     @Override
     public Object[] preProcessor(Method method, Object source, Object[] param) {

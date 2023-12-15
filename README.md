@@ -78,7 +78,7 @@
          url: https://XXXXX.cn-north-4.XXXXXXXX.com:443
       zhutong:
          #助通短信
-         #助通终端用户管理的用户名 username 必填；非登录账号密码，请登录后台管理地址进行查看：http://mix2.zthysms.com/login
+         #助通终端用户管理的用户名 username 必填；非登录账号密码，请登录后台管理地址进行查看：https://mix2.zthysms.com/login
          accessKeyId: tushu1122XXX
          #助通终端用户管理的用户名 passwrod 必填；
          accessKeySecret: UbXXX4SL

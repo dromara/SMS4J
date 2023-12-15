@@ -49,6 +49,9 @@ public class BlackListProcessor implements CoreMethodProcessor, SmsDaoAware {
 
     public void doRestricted(List<String> phones) {
         ArrayList<String> blackList = (ArrayList<String>) smsDao.get("sms:blacklist:global");
+        if(null==blackList){
+            return;
+        }
         for (String phone : phones) {
             if (blackList.stream().filter(black -> black.replace("-","").equals(phone)).findAny().isPresent()) {
                 throw new SmsBlendException("The phone:", phone + " hit global blacklist！");

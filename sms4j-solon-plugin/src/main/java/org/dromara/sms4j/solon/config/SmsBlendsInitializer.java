@@ -10,9 +10,9 @@ import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.cloopen.config.CloopenFactory;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.utils.SmsUtils;
-import org.dromara.sms4j.core.proxy.EnvirmentHolder;
+import org.dromara.sms4j.core.proxy.EnvironmentHolder;
 import org.dromara.sms4j.core.factory.SmsFactory;
-import org.dromara.sms4j.core.proxy.processor.*;
+import org.dromara.sms4j.core.proxy.interceptor.*;
 import org.dromara.sms4j.core.proxy.SmsProxyFactory;
 import org.dromara.sms4j.ctyun.config.CtyunFactory;
 import org.dromara.sms4j.emay.config.EmayFactory;
@@ -60,15 +60,15 @@ public class SmsBlendsInitializer {
         // 注册短信对象工厂
         ProviderFactoryHolder.registerFactory(factoryList);
         //持有初始化配置信息
-        EnvirmentHolder.frozenEnvirmet(smsConfig, blends);
+        EnvironmentHolder.frozen(smsConfig, blends);
         //框架依赖持有缓存扩展
         new SolonSmsDaoHolder(context);
         //注册执行器实现
-        SmsProxyFactory.addProcessor(new RestrictedProcessor());
-        SmsProxyFactory.addProcessor(new BlackListProcessor());
-        SmsProxyFactory.addProcessor(new BlackListRecordingProcessor());
-        SmsProxyFactory.addProcessor(new SingleBlendRestrictedProcessor());
-        SmsProxyFactory.addProcessor(new CoreMethodParamValidateProcessor());
+        SmsProxyFactory.addProcessor(new RestrictedMethodInterceptor());
+        SmsProxyFactory.addProcessor(new BlackListMethodInterceptor());
+        SmsProxyFactory.addProcessor(new BlackListRecordingMethodInterceptor());
+        SmsProxyFactory.addProcessor(new SingleBlendRestrictedMethodInterceptor());
+        SmsProxyFactory.addProcessor(new SyncMethodParamValidateMethodInterceptor());
         // 解析供应商配置
         for(String configId : blends.keySet()) {
             Map<String, Object> configMap = blends.get(configId);

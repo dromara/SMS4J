@@ -1,4 +1,5 @@
 package org.dromara.sms4j.api.proxy;
+
 /**
  * 排序接口
  *
@@ -6,7 +7,13 @@ package org.dromara.sms4j.api.proxy;
  * @since 2023/10/27 13:03
  */
 public interface Order {
-    default public int getOrder(){
-        return 999;
+
+    /**
+     * 获取排序值，排序值越大的对象则优先级越低
+     *
+     * @return 排序值
+     */
+    default int getOrder(){
+        return Integer.MAX_VALUE;
     }
 }

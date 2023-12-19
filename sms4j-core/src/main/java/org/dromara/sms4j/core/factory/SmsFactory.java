@@ -142,8 +142,6 @@ public abstract class SmsFactory {
 
     }
 
-
-
     /**
      * renderWithRestricted
      * <p>  构建smsBlend对象的代理对象
@@ -152,7 +150,7 @@ public abstract class SmsFactory {
      */
     @Deprecated
     private static SmsBlend renderWithProxy(SmsBlend sms) {
-        return SmsProxyFactory.getProxySmsBlend(sms);
+        return SmsProxyFactory.getProxiedSmsBlend(sms);
     }
 
     /**

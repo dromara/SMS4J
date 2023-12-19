@@ -20,6 +20,7 @@ import org.dromara.sms4j.emay.config.EmayFactory;
 import org.dromara.sms4j.huawei.config.HuaweiFactory;
 import org.dromara.sms4j.jdcloud.config.JdCloudFactory;
 import org.dromara.sms4j.lianlu.config.LianLuFactory;
+import org.dromara.sms4j.local.LocalFactory;
 import org.dromara.sms4j.netease.config.NeteaseFactory;
 import org.dromara.sms4j.provider.config.SmsConfig;
 import org.dromara.sms4j.provider.factory.BaseProviderFactory;
@@ -65,22 +66,21 @@ public class SmsBlendsInitializer  {
             SmsProxyFactory.addProcessor(new SingleBlendRestrictedProcessor());
             SmsProxyFactory.addProcessor(new CoreMethodParamValidateProcessor());
             // 解析供应商配置
-            for(String configId : blends.keySet()) {
-                Map<String, Object> configMap = blends.get(configId);
+            blends.forEach((configId, configMap) -> {
                 Object supplierObj = configMap.get(Constant.SUPPLIER_KEY);
                 String supplier = supplierObj == null ? "" : String.valueOf(supplierObj);
                 supplier = StrUtil.isEmpty(supplier) ? configId : supplier;
                 BaseProviderFactory<SmsBlend, SupplierConfig> providerFactory = (BaseProviderFactory<SmsBlend, org.dromara.sms4j.api.universal.SupplierConfig>) ProviderFactoryHolder.requireForSupplier(supplier);
                 if(providerFactory == null) {
-                    log.warn("创建\"{}\"的短信服务失败，未找到供应商为\"{}\"的服务", configId, supplier);
-                    continue;
+                    log.warn("创建'{}'的短信服务失败，未找到供应商为'{}'的服务", configId, supplier);
+                    return;
                 }
                 configMap.put("config-id", configId);
                 SmsUtils.replaceKeysSeperator(configMap, "-", "_");
                 JSONObject configJson = new JSONObject(configMap);
                 org.dromara.sms4j.api.universal.SupplierConfig supplierConfig = JSONUtil.toBean(configJson, providerFactory.getConfigClass());
                 SmsFactory.createSmsBlend(supplierConfig);
-            }
+            });
         }
 
 
@@ -90,6 +90,7 @@ public class SmsBlendsInitializer  {
      * 注册默认工厂实例
      */
     private void registerDefaultFactory() {
+        ProviderFactoryHolder.registerFactory(LocalFactory.instance());
         ProviderFactoryHolder.registerFactory(AlibabaFactory.instance());
         ProviderFactoryHolder.registerFactory(CloopenFactory.instance());
         ProviderFactoryHolder.registerFactory(CtyunFactory.instance());

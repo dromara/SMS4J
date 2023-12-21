@@ -36,3 +36,6 @@ build/
 .flattened-pom.xml
 **/.flattened-pom.xml
 /.fastRequest/**
+
+### Others
+*.Ds_Store

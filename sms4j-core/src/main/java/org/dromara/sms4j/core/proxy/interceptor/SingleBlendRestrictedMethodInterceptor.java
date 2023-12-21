@@ -1,17 +1,16 @@
-package org.dromara.sms4j.core.proxy.processor;
+package org.dromara.sms4j.core.proxy.interceptor;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.dao.SmsDao;
-import org.dromara.sms4j.api.proxy.CoreMethodProcessor;
-import org.dromara.sms4j.api.proxy.SmsProcessor;
+import org.dromara.sms4j.api.proxy.SmsMethodType;
+import org.dromara.sms4j.api.proxy.SmsMethodInterceptor;
 import org.dromara.sms4j.api.proxy.aware.SmsBlendConfigAware;
 import org.dromara.sms4j.api.proxy.aware.SmsDaoAware;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtils;
-import org.dromara.sms4j.provider.config.BaseConfig;
-import org.dromara.sms4j.provider.service.AbstractSmsBlend;
+import org.dromara.sms4j.core.proxy.SmsProxyFactory;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -24,9 +23,11 @@ import java.util.*;
  * @since 2023/10/27 13:03
  */
 @Slf4j
-public class SingleBlendRestrictedProcessor implements SmsProcessor, SmsDaoAware, SmsBlendConfigAware {
+public class SingleBlendRestrictedMethodInterceptor implements SmsMethodInterceptor, SmsDaoAware, SmsBlendConfigAware {
 
     private static final String REDIS_KEY = "sms:restricted:";
+    private static final String SEND_MESSAGE_METHOD = "sendMessage";
+    private static final String MASS_TEXT_METHOD = "massText";
 
     /**
      * 缓存实例
@@ -35,30 +36,31 @@ public class SingleBlendRestrictedProcessor implements SmsProcessor, SmsDaoAware
     private SmsDao smsDao;
 
     @Setter
-    Map smsBlendsConfig;
+    private Map<String, Map<String, Object>> smsBlendsConfig;
 
     @Override
     public int getOrder() {
-        return 2;
+        return SmsProxyFactory.SINGLE_BLEND_RESTRICTED_METHOD_INTERCEPTOR_ORDER;
     }
 
     @Override
-    public Object[] preProcessor(Method method, Object source, Object[] param) {
-        String name = method.getName();
-        if (!"sendMessage".equals(name) && !"massText".equals(name)) {
-            return param;
+    public Object[] beforeInvoke(SmsMethodType methodType, Method method, Object target, Object[] params) {
+        if (Objects.isNull(methodType)
+            || !Objects.equals(methodType.getName(), SEND_MESSAGE_METHOD)
+            || !Objects.equals(methodType.getName(), MASS_TEXT_METHOD)) {
+            return params;
         }
-        SmsBlend smsBlend = (SmsBlend) source;
+        SmsBlend smsBlend = (SmsBlend)target;
         String configId = smsBlend.getConfigId();
-        Map targetConfig = (Map) smsBlendsConfig.get(configId);
+        Map<String, Object> targetConfig = smsBlendsConfig.get(configId);
         Object maximumObj = targetConfig.get("maximum");
         if (SmsUtils.isEmpty(maximumObj)) {
-            return param;
+            return params;
         }
         int maximum = 0;
-        try{
-             maximum = (int) maximumObj ;
-        }catch (Exception e){
+        try {
+            maximum = (int)maximumObj;
+        } catch (Exception e) {
             log.error("获取厂商级发送上限参数错误！请检查！");
             throw new IllegalArgumentException("获取厂商级发送上限参数错误");
         }
@@ -66,11 +68,11 @@ public class SingleBlendRestrictedProcessor implements SmsProcessor, SmsDaoAware
         if (SmsUtils.isEmpty(i)) {
             smsDao.set(REDIS_KEY + configId + "maximum", 1);
         } else if (i >= maximum) {
-            log.info("The channel:" + configId + ",messages reached the maximum");
-            throw new SmsBlendException("The channel:" + configId + ",messages reached the maximum");
+            log.info("The channel: {}, messages reached the maximum", configId);
+            throw new SmsBlendException("The channel: " + configId + ", messages reached the maximum", configId);
         } else {
             smsDao.set(REDIS_KEY + configId + "maximum", i + 1);
         }
-        return param;
+        return params;
     }
 }

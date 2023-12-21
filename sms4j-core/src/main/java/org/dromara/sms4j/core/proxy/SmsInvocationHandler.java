@@ -1,69 +1,54 @@
 package org.dromara.sms4j.core.proxy;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.SmsBlend;
-import org.dromara.sms4j.api.proxy.SmsProcessor;
-import org.dromara.sms4j.api.proxy.SuppotFilter;
+import org.dromara.sms4j.api.proxy.SmsMethodType;
+import org.dromara.sms4j.api.proxy.SmsMethodInterceptor;
 
 import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.LinkedList;
 import java.util.List;
 
-
 /**
- * SmsBlend增强，封装smsblend和执行器
+ * {@link SmsBlend}代理，用于织入{@link SmsMethodInterceptor}实现前置和后置拦截
  *
  * @author sh1yu
  * @since 2023/10/27 13:03
  */
 @Slf4j
+@RequiredArgsConstructor
 public class SmsInvocationHandler implements InvocationHandler {
-    private final SmsBlend smsBlend;
-    private final LinkedList<SmsProcessor> processors;
 
-
-    public SmsInvocationHandler(SmsBlend smsBlend, LinkedList<SmsProcessor> processors) {
-        this.smsBlend = smsBlend;
-        this.processors = processors;
-    }
+    private final SmsBlend delegate;
+    private final List<SmsMethodInterceptor> interceptors;
 
     @Override
-    public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
+    public Object invoke(Object target, Method method, Object[] params) {
+        SmsMethodType methodType = SmsMethodType.of(method);
         Object result = null;
-        //前置执行器
-        objects = doPreProcess(smsBlend, method, objects);
+        // 前置拦截
+        params = invokePreHandle(methodType, delegate, method, params);
+        Exception ex = null;
         try {
-            result = method.invoke(smsBlend, objects);
+            result = method.invoke(delegate, params);
         } catch (Exception e) {
-            //错误执行器
-            doErrorHandleProcess(smsBlend, method, objects,e);
+            ex = e;
         }
-        //后置执行器
-        doPostrocess(smsBlend, method, objects, result);
-        return result;
+        // 后置拦截
+        return invokeAfterCompletion(methodType, method, params, result, ex);
     }
 
-    public Object[] doPreProcess(Object o, Method method, Object[] objects) {
-        for (SmsProcessor processor : processors) {
-            objects = processor.preProcessor(method, o, objects);
+    private Object[] invokePreHandle(SmsMethodType methodType, Object o, Method method, Object[] objects) {
+        for (SmsMethodInterceptor interceptor : interceptors) {
+            objects = interceptor.beforeInvoke(methodType, method, o, objects);
         }
         return objects;
     }
 
-    public void doErrorHandleProcess(Object o, Method method, Object[] objects,Exception e) throws InvocationTargetException, IllegalAccessException {
-        for (SmsProcessor processor : processors) {
-            processor.exceptionHandleProcessor(method, o, objects,e);
-        }
-    }
-
-    public Object doPostrocess(Object o, Method method, Object[] objects, Object result) {
-        for (SmsProcessor processor : processors) {
-            Object overrideResult = processor.postProcessor(result, objects);
-            if (overrideResult != null) {
-                return overrideResult;
-            }
+    private Object invokeAfterCompletion(SmsMethodType methodType, Method method, Object[] params, Object result, Exception ex) {
+        for (SmsMethodInterceptor interceptor : interceptors) {
+            result = interceptor.afterCompletion(methodType, method, params, result, ex);
         }
         return result;
     }

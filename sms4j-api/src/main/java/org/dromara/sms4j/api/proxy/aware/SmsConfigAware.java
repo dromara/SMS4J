@@ -1,6 +1,5 @@
 package org.dromara.sms4j.api.proxy.aware;
 
-
 /**
  * 系统配置感知接口
  *

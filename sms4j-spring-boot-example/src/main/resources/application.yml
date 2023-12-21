@@ -2,8 +2,11 @@ sms:
   # 标注从yml读取配置
   config-type: yaml
   # 账户上限
-  account-max: 1
+  account-max: 5
   blends:
+    # 本地测试
+    local:
+      supplier: local
     # 阿里短信例子
     ali:
       #厂商标识，标定此配置是哪个厂商，详细请看厂商标识介绍部分

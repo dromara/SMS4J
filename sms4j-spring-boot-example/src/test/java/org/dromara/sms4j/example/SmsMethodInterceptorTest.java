@@ -8,6 +8,7 @@ import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtils;
 import org.dromara.sms4j.core.factory.SmsFactory;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -20,7 +21,7 @@ import java.util.LinkedHashMap;
  */
 @Slf4j
 @SpringBootTest
-public class SmsProcessorTest {
+public class SmsMethodInterceptorTest {
     /**
      * 填测试手机号
      */
@@ -31,7 +32,7 @@ public class SmsProcessorTest {
     @Test
     public void test1() {
         System.out.println("------------");
-        SmsBlend smsBlend = SmsFactory.getBySupplier(SupplierConstant.UNISMS);
+        SmsBlend smsBlend = SmsFactory.getBySupplier(SupplierConstant.LOCAL);
         SmsResponse smsResponse = smsBlend.sendMessage(PHONE, SmsUtils.getRandomInt(6));
         Assert.isTrue(smsResponse.isSuccess());
         System.out.println(smsResponse.getData());
@@ -44,7 +45,7 @@ public class SmsProcessorTest {
     public void test2() {
         System.out.println("------------");
 
-        SmsBlend smsBlend = SmsFactory.getBySupplier(SupplierConstant.HUAWEI);
+        SmsBlend smsBlend = SmsFactory.getBySupplier(SupplierConstant.LOCAL);
         SmsResponse smsResponse = smsBlend.sendMessage(PHONE1, SmsUtils.getRandomInt(6));
         Assert.isTrue(smsResponse.isSuccess());
         System.out.println(smsResponse.getData());
@@ -56,62 +57,28 @@ public class SmsProcessorTest {
     public void test3() {
         System.out.println("------------");
 
-        SmsBlendException knowEx = null;
-        try {
-            SmsFactory.getBySupplier(SupplierConstant.UNISMS).sendMessage(PHONE, new LinkedHashMap<>());
-        } catch (SmsBlendException e) {
-            knowEx = e;
-            System.out.println(knowEx.getMessage());
-        }
-        Assert.notNull(knowEx);
-        knowEx = null;
-        try {
-            SmsFactory.getBySupplier(SupplierConstant.UNISMS).sendMessage("", SmsUtils.getRandomInt(6));
-        } catch (SmsBlendException e) {
-            knowEx = e;
-            System.out.println(knowEx.getMessage());
-        }
-        Assert.notNull(knowEx);
-        knowEx = null;
-        try {
-            SmsFactory.getBySupplier(SupplierConstant.UNISMS).sendMessage(PHONE, "");
-        } catch (SmsBlendException e) {
-            knowEx = e;
-            System.out.println(knowEx.getMessage());
-        }
-        Assert.notNull(knowEx);
-        knowEx = null;
-        try {
-            SmsFactory.getBySupplier(SupplierConstant.UNISMS).sendMessage(PHONE, "111", new LinkedHashMap<>());
-        } catch (SmsBlendException e) {
-            knowEx = e;
-            System.out.println(knowEx.getMessage());
-        }
-        Assert.notNull(knowEx);
-        knowEx = null;
-        try {
-            SmsFactory.getBySupplier(SupplierConstant.UNISMS).massTexting(Collections.singletonList(PHONE), "");
-        } catch (SmsBlendException e) {
-            knowEx = e;
-            System.out.println(knowEx.getMessage());
-        }
-        Assert.notNull(knowEx);
-        knowEx = null;
-        try {
-            SmsFactory.getBySupplier(SupplierConstant.UNISMS).massTexting(Collections.singletonList(PHONE), "2222", new LinkedHashMap<>());
-        } catch (SmsBlendException e) {
-            knowEx = e;
-            System.out.println(knowEx.getMessage());
-        }
-        Assert.notNull(knowEx);
-        knowEx = null;
-        try {
-            SmsFactory.getBySupplier(SupplierConstant.UNISMS).massTexting(new ArrayList<String>(), "321321");
-        } catch (SmsBlendException e) {
-            knowEx = e;
-            System.out.println(knowEx.getMessage());
-        }
-        Assert.notNull(knowEx);
+        SmsBlend sb = SmsFactory.getBySupplier(SupplierConstant.LOCAL);
+        Assertions.assertThrows(SmsBlendException.class,
+            () -> sb.sendMessage(PHONE, new LinkedHashMap<>())
+        );
+        Assertions.assertThrows(SmsBlendException.class,
+            () -> sb.sendMessage("", SmsUtils.getRandomInt(6))
+        );
+        Assertions.assertThrows(SmsBlendException.class,
+            () -> sb.sendMessage(PHONE, "")
+        );
+        Assertions.assertThrows(SmsBlendException.class,
+            () -> sb.sendMessage(PHONE, "111", new LinkedHashMap<>())
+        );
+        Assertions.assertThrows(SmsBlendException.class,
+            () -> sb.massTexting(Collections.singletonList(PHONE), "")
+        );
+        Assertions.assertThrows(SmsBlendException.class,
+            () -> sb.massTexting(Collections.singletonList(PHONE), "2222", new LinkedHashMap<>())
+        );
+        Assertions.assertThrows(SmsBlendException.class,
+            () -> sb.massTexting(new ArrayList<>(), "321321")
+        );
     }
 
     //黑名单测试
@@ -119,7 +86,7 @@ public class SmsProcessorTest {
     public void test4() {
         System.out.println("------------");
 
-        SmsBlend smsBlend = SmsFactory.getBySupplier(SupplierConstant.UNISMS);
+        SmsBlend smsBlend = SmsFactory.getBySupplier(SupplierConstant.LOCAL);
         //单黑名单添加
         smsBlend.joinInBlacklist(PHONE);
         SmsBlendException knowEx = null;
@@ -155,17 +122,10 @@ public class SmsProcessorTest {
     @Test
     public void test5() {
         System.out.println("------------");
-
-        SmsResponse smsResponse = SmsFactory.getBySupplier(SupplierConstant.UNISMS).sendMessage(PHONE, SmsUtils.getRandomInt(6));
+        SmsBlend sb = SmsFactory.getBySupplier(SupplierConstant.LOCAL);
+        SmsResponse smsResponse = sb.sendMessage(PHONE, SmsUtils.getRandomInt(6));
         Assert.isTrue(smsResponse.isSuccess());
-        SmsBlendException knowEx = null;
-        try {
-            SmsFactory.getBySupplier(SupplierConstant.UNISMS).sendMessage(PHONE, SmsUtils.getRandomInt(6));
-        } catch (SmsBlendException e) {
-            knowEx = e;
-            System.out.println(knowEx.getMessage());
-        }
-        Assert.notNull(knowEx);
+        Assertions.assertThrows(SmsBlendException.class, () -> sb.sendMessage(PHONE, SmsUtils.getRandomInt(6)));
     }
 
     //渠道级上限测试、需成功发送6笔，再发就会报错 参数配置 6
@@ -173,12 +133,13 @@ public class SmsProcessorTest {
     public void test6() {
         System.out.println("------------");
 
-        SmsResponse smsResponse = SmsFactory.getBySupplier(SupplierConstant.UNISMS).sendMessage(PHONE1, SmsUtils.getRandomInt(6));
+        SmsResponse smsResponse = SmsFactory.getBySupplier(SupplierConstant.LOCAL)
+            .sendMessage(PHONE1, SmsUtils.getRandomInt(6));
         Assert.isTrue(smsResponse.isSuccess());
 
         SmsBlendException knowEx = null;
         try {
-            SmsFactory.getBySupplier(SupplierConstant.UNISMS).sendMessage(PHONE1, SmsUtils.getRandomInt(6));
+            SmsFactory.getBySupplier(SupplierConstant.LOCAL).sendMessage(PHONE1, SmsUtils.getRandomInt(6));
         } catch (SmsBlendException e) {
             knowEx = e;
             System.out.println(knowEx.getMessage());

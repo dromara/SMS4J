@@ -19,9 +19,9 @@ import org.dromara.sms4j.cloopen.config.CloopenFactory;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtils;
-import org.dromara.sms4j.core.proxy.EnvirmentHolder;
+import org.dromara.sms4j.core.proxy.EnvironmentHolder;
 import org.dromara.sms4j.core.factory.SmsFactory;
-import org.dromara.sms4j.core.proxy.processor.*;
+import org.dromara.sms4j.core.proxy.interceptor.*;
 import org.dromara.sms4j.core.proxy.SmsProxyFactory;
 import org.dromara.sms4j.ctyun.config.CtyunFactory;
 import org.dromara.sms4j.emay.config.EmayFactory;
@@ -29,6 +29,7 @@ import org.dromara.sms4j.huawei.config.HuaweiFactory;
 import org.dromara.sms4j.javase.util.YamlUtils;
 import org.dromara.sms4j.jdcloud.config.JdCloudFactory;
 import org.dromara.sms4j.lianlu.config.LianLuFactory;
+import org.dromara.sms4j.local.LocalFactory;
 import org.dromara.sms4j.netease.config.NeteaseFactory;
 import org.dromara.sms4j.provider.config.SmsConfig;
 import org.dromara.sms4j.provider.factory.BaseProviderFactory;
@@ -153,36 +154,36 @@ public class SEInitializer {
         Map<String, Map<String, Object>> blends = smsConfig.getBlends();
 
         //持有初始化配置信息
-        EnvirmentHolder.frozenEnvirmet(smsConfig, blends);
+        EnvironmentHolder.frozen(smsConfig, blends);
 
         //注册执行器实现
-        SmsProxyFactory.addProcessor(new RestrictedProcessor());
-        SmsProxyFactory.addProcessor(new BlackListProcessor());
-        SmsProxyFactory.addProcessor(new BlackListRecordingProcessor());
-        SmsProxyFactory.addProcessor(new SingleBlendRestrictedProcessor());
-        SmsProxyFactory.addProcessor(new CoreMethodParamValidateProcessor());
-        for (String configId : blends.keySet()) {
-            Map<String, Object> configMap = blends.get(configId);
+        SmsProxyFactory.addProcessor(new RestrictedMethodInterceptor());
+        SmsProxyFactory.addProcessor(new BlackListMethodInterceptor());
+        SmsProxyFactory.addProcessor(new BlackListRecordingMethodInterceptor());
+        SmsProxyFactory.addProcessor(new SingleBlendRestrictedMethodInterceptor());
+        SmsProxyFactory.addProcessor(new SyncMethodParamValidateMethodInterceptor());
+        blends.forEach((configId, configMap) -> {
             Object supplierObj = configMap.get(Constant.SUPPLIER_KEY);
             String supplier = supplierObj == null ? "" : String.valueOf(supplierObj);
             supplier = StrUtil.isEmpty(supplier) ? configId : supplier;
             BaseProviderFactory<SmsBlend, SupplierConfig> providerFactory = (BaseProviderFactory<SmsBlend, SupplierConfig>) ProviderFactoryHolder.requireForSupplier(supplier);
             if (providerFactory == null) {
-                log.warn("创建\"{}\"的短信服务失败，未找到服务商为\"{}\"的服务", configId, supplier);
-                continue;
+                log.warn("创建'{}'的短信服务失败，未找到服务商为'{}'的服务", configId, supplier);
+                return;
             }
             configMap.put("config-id", configId);
             SmsUtils.replaceKeysSeperator(configMap, "-", "_");
             JSONObject configJson = new JSONObject(configMap);
             SupplierConfig supplierConfig = JSONUtil.toBean(configJson, providerFactory.getConfigClass());
             SmsFactory.createSmsBlend(supplierConfig);
-        }
+        });
     }
 
     /**
      * 注册默认工厂实例
      */
     private void registerDefaultFactory() {
+        ProviderFactoryHolder.registerFactory(LocalFactory.instance());
         ProviderFactoryHolder.registerFactory(AlibabaFactory.instance());
         ProviderFactoryHolder.registerFactory(CloopenFactory.instance());
         ProviderFactoryHolder.registerFactory(CtyunFactory.instance());

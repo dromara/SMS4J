@@ -2,6 +2,7 @@ package org.dromara.oa.core.dingTalk.utils;
 
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.dromara.oa.comm.entity.Request;
 import org.dromara.oa.comm.enums.MessageType;
 
@@ -16,13 +17,16 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 
-import static org.dromara.oa.comm.enums.MessageType.*;
+import static org.dromara.oa.comm.enums.MessageType.DINGTALK_MARKDOWN;
+import static org.dromara.oa.comm.enums.MessageType.DINGTALK_TEXT;
+import static org.dromara.oa.comm.enums.MessageType.DINGTALK_LINK;
 
 /**
  * 钉钉通知签名和信息构建
  * @author dongfeng
  * 2023-10-19 13:07
  */
+@Slf4j
 public class DingTalkBuilder {
     public static String sign(String secret) {
         Long timestamp = System.currentTimeMillis();
@@ -50,18 +54,18 @@ public class DingTalkBuilder {
 
 
         JSONObject message = new JSONObject();
-        if (messageType == TEXT) {
+        if (messageType == DINGTALK_TEXT) {
             message.set("msgtype", "text");
             JSONObject text = new JSONObject();
             text.set("content", request.getContent());
             message.set("text", text);
-        } else if (messageType == MARKDOWN) {
+        } else if (messageType == DINGTALK_MARKDOWN) {
             message.set("msgtype", "markdown");
             JSONObject markdown = new JSONObject();
             markdown.set("text", request.getContent());
             markdown.set("title", request.getTitle());
             message.set("markdown", markdown);
-        } else if (messageType == LINK) {
+        } else if (messageType == DINGTALK_LINK) {
             message.set("msgtype", "link");
             JSONObject link = new JSONObject();
             link.set("text", request.getContent());
@@ -69,6 +73,8 @@ public class DingTalkBuilder {
             link.set("picUrl", request.getPicUrl());
             link.set("messageUrl", request.getMessageUrl());
             message.set("link", link);
+        }else{
+            log.error("输入的消息格式不对,message:"+messageType+"应该使用DINGTALK前缀的消息类型");
         }
 
 

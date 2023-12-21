@@ -1,14 +1,28 @@
 package org.dromara.oa.comm.enums;
 
 public enum MessageType {
-    // text 类型
-    TEXT("text"),
+    // 钉钉支持类型
+    DINGTALK_TEXT("text"),
 
-    // md 格式
-    MARKDOWN("markdown"),
+    DINGTALK_MARKDOWN("markdown"),
 
-    // link 格式
-    LINK("link");
+    DINGTALK_LINK("link"),
+    // 飞书支持类型
+
+    BYTETALK_TEXT("text"),
+//    BYTETALK_MARKDOWN("markdown"),
+//    BYTETALK_LINK("link"),
+
+    // 企业微信支持类型
+    WETETALK_TEXT("text"),
+
+    WETETALK_MARKDOWN("markdown");
+    //暂未支持
+//    WETETALK_IMAGE("image"),
+//    WETETALK_NEWS("news"),
+//    WETETALK_FILE("file"),
+//    WETETALK_VOICE("voice"),
+//    WETETALK_TEMPLATE_CARD("template_card");
 
     MessageType(String name) {
         this.name = name;

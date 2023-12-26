@@ -143,7 +143,6 @@ public abstract class SmsFactory {
     }
 
 
-
     /**
      * renderWithRestricted
      * <p>  构建smsBlend对象的代理对象
@@ -296,6 +295,32 @@ public abstract class SmsFactory {
         SmsBlend blend = blends.remove(configId);
         SmsLoad.getBeanLoad().removeLoadServer(blend);
         return blend != null;
+    }
+
+    /**
+     * reload
+     * <p> 重新读取并刷新缓存内短信实例
+     *
+     * @param configId      配置标识
+     * @param smsReadConfig 配置接口实现对象
+     * @author :Wind
+     */
+    public static void reload(String configId, SmsReadConfig smsReadConfig) {
+        SmsFactory.unregister(configId);
+        SmsFactory.createRestrictedSmsBlend(smsReadConfig, configId);
+    }
+
+    /**
+     *  reloadAll
+     * <p> 重新读取并刷新全部短信实例
+     * @param smsReadConfig 配置接口实现对象
+     * @author :Wind
+    */
+    public static void reloadAll(SmsReadConfig smsReadConfig) {
+        List<BaseConfig> supplierConfigList = smsReadConfig.getSupplierConfigList();
+        for (BaseConfig baseConfig : supplierConfigList) {
+          reload(baseConfig.getConfigId(),smsReadConfig);
+        }
     }
 
 }

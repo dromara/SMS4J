@@ -15,6 +15,7 @@ import org.dromara.sms4j.lianlu.service.LianLuSmsImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -254,13 +255,26 @@ class Sms4jTest {
 
         LinkedHashMap<String, String> messages = new LinkedHashMap<>();
         messages.put("code", SmsUtils.getRandomInt(6));
-        SmsResponse smsResponse1 = dz.sendMessage(PHONE, messages);
-        log.info(JSONUtil.toJsonStr(smsResponse1));
-        Assert.isTrue(smsResponse1.isSuccess());
+
+        ArrayList<String> phones = new ArrayList<>();
+        phones.add(PHONE);
+        phones.add(PHONE);
 
         SmsResponse smsResponse = dz.sendMessage(PHONE, "测试短信" + SmsUtils.getRandomInt(6));
         log.info(JSONUtil.toJsonStr(smsResponse));
         Assert.isTrue(smsResponse.isSuccess());
+
+        SmsResponse smsResponse1 = dz.sendMessage(PHONE, messages);
+        log.info(JSONUtil.toJsonStr(smsResponse1));
+        Assert.isTrue(smsResponse1.isSuccess());
+
+        SmsResponse smsResponse3 = dz.massTexting(phones, "测试短信" + SmsUtils.getRandomInt(6));
+        log.info(JSONUtil.toJsonStr(smsResponse3));
+        Assert.isTrue(smsResponse3.isSuccess());
+
+        SmsResponse smsResponse4 = dz.massTexting(phones, "527551147741814784" ,messages);
+        log.info(JSONUtil.toJsonStr(smsResponse4));
+        Assert.isTrue(smsResponse4.isSuccess());
         
     }
 

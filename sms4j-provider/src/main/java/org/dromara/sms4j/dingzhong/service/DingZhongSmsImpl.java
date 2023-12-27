@@ -49,15 +49,6 @@ public class DingZhongSmsImpl extends AbstractSmsBlend<DingZhongConfig> {
         return SupplierConstant.DINGZHONG;
     }
 
-    public SmsResponse temp(){
-        DingZhongHelper helper = new DingZhongHelper(getConfig(), http);
-        Map<String, Object> paramMap = new LinkedHashMap<>(3);
-        paramMap.put("cdkey", getConfig().getAccessKeyId());
-        paramMap.put("password", getConfig().getAccessKeySecret());
-        paramMap.put("content", "你正在申请手机注册，验证码为：<%code%>，5分钟内有效！");
-        return helper.smsResponse(paramMap);
-    }
-
     @Override
     public SmsResponse sendMessage(String phone, String message) {
         DingZhongHelper helper = new DingZhongHelper(getConfig(), http);
@@ -67,12 +58,11 @@ public class DingZhongSmsImpl extends AbstractSmsBlend<DingZhongConfig> {
         paramMap.put("mobile", phone);
         paramMap.put("msg", message);
         return helper.smsResponse(paramMap);
-        //return temp();
     }
 
     @Override
     public SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages) {
-        return sendMessage(phone,getConfig().getTemplateId(),messages);
+        return sendMessage(phone, getConfig().getTemplateId(), messages);
     }
 
     @Override
@@ -91,11 +81,11 @@ public class DingZhongSmsImpl extends AbstractSmsBlend<DingZhongConfig> {
 
     @Override
     public SmsResponse massTexting(List<String> phones, String message) {
-       return sendMessage(SmsUtils.arrayToString(phones),message);
+        return sendMessage(SmsUtils.arrayToString(phones), message);
     }
 
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
-       return sendMessage(SmsUtils.arrayToString(phones),templateId,messages);
+        return sendMessage(SmsUtils.arrayToString(phones), templateId, messages);
     }
 }

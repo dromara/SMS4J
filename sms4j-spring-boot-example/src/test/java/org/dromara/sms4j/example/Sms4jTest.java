@@ -6,6 +6,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.utils.SmsUtils;
@@ -24,7 +25,7 @@ class Sms4jTest {
     /**
      * 填测试手机号
      */
-    private static final String PHONE = "";
+    private static final String PHONE = "17897011002";
 
     @Test
     public void byLoadTest() {
@@ -239,6 +240,28 @@ class Sms4jTest {
         SmsResponse smsResponse = lianLuSms.sendNormalMessage(PHONE, "测试短信" + SmsUtils.getRandomInt(6));
         log.info(JSONUtil.toJsonStr(smsResponse));
         Assert.isTrue(smsResponse.isSuccess());
+    }
+
+    /**
+     * 鼎众普通短信
+     */
+    @Test
+    public void dingZhongSmsTest() {
+        if (StrUtil.isBlank(PHONE)) {
+            return;
+        }
+        SmsBlend dz = SmsFactory.getBySupplier(SupplierConstant.DINGZHONG);
+
+        LinkedHashMap<String, String> messages = new LinkedHashMap<>();
+        messages.put("code", SmsUtils.getRandomInt(6));
+        SmsResponse smsResponse1 = dz.sendMessage(PHONE, messages);
+        log.info(JSONUtil.toJsonStr(smsResponse1));
+        Assert.isTrue(smsResponse1.isSuccess());
+
+        SmsResponse smsResponse = dz.sendMessage(PHONE, "测试短信" + SmsUtils.getRandomInt(6));
+        log.info(JSONUtil.toJsonStr(smsResponse));
+        Assert.isTrue(smsResponse.isSuccess());
+        
     }
 
 }

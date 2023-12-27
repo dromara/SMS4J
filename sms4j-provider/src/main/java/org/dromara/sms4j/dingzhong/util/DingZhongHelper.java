@@ -32,7 +32,6 @@ public class DingZhongHelper {
 
     public SmsResponse smsResponse(Map<String, Object> paramMap) {
         String url = String.format("%s/%s", config.getRequestUrl(), SmsUtils.isEmpty(paramMap.get("templateId"))?config.getBaseAction():config.getTemplateAction());
-        //String url = String.format("%s/%s", config.getRequestUrl(), "SmsTemplate/CreateSmsTemplate");
         Map<String, String> headers = new LinkedHashMap<>(2);
         headers.put("Accept", Constant.ACCEPT);
         headers.put("Content-Type", Constant.FROM_URLENCODED);

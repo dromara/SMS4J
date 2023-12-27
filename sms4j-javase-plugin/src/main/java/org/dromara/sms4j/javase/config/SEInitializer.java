@@ -24,6 +24,7 @@ import org.dromara.sms4j.core.factory.SmsFactory;
 import org.dromara.sms4j.core.proxy.processor.*;
 import org.dromara.sms4j.core.proxy.SmsProxyFactory;
 import org.dromara.sms4j.ctyun.config.CtyunFactory;
+import org.dromara.sms4j.dingzhong.config.DingZhongFactory;
 import org.dromara.sms4j.emay.config.EmayFactory;
 import org.dromara.sms4j.huawei.config.HuaweiFactory;
 import org.dromara.sms4j.javase.util.YamlUtils;
@@ -39,6 +40,12 @@ import org.dromara.sms4j.unisms.config.UniFactory;
 import org.dromara.sms4j.yunpian.config.YunPianFactory;
 import org.dromara.sms4j.zhutong.config.ZhutongFactory;
 
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -98,6 +105,33 @@ public class SEInitializer {
         // 创建短信服务对象
         if (CollUtil.isEmpty(configList)) {
             return;
+        }
+        try{
+            Map<String, Map<String, Object>> blends = new HashMap<>();
+            for (SupplierConfig supplierConfig : configList) {
+                Map<String, Object> param = new HashMap<>();
+                String channel = supplierConfig.getSupplier();
+                Class<? extends SupplierConfig> clazz = supplierConfig.getClass();
+                BeanInfo beanInfo = Introspector.getBeanInfo(clazz, Object.class);
+                PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+                for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+                    Method readMethod = propertyDescriptor.getReadMethod();
+                    Object item = readMethod.invoke(supplierConfig);
+                    param.put(propertyDescriptor.getName(),item);
+                }
+                blends.put(channel,param);
+            }
+            //持有初始化配置信息
+            EnvirmentHolder.frozenEnvirmet(smsConfig, blends);
+
+            //注册执行器实现
+            SmsProxyFactory.addProcessor(new RestrictedProcessor());
+            SmsProxyFactory.addProcessor(new BlackListProcessor());
+            SmsProxyFactory.addProcessor(new BlackListRecordingProcessor());
+            SmsProxyFactory.addProcessor(new SingleBlendRestrictedProcessor());
+            SmsProxyFactory.addProcessor(new CoreMethodParamValidateProcessor());
+        }catch (Exception e){
+            log.error("配置对象转换配置信息失败，但不影响基础功能的使用。【注意】：未加载SMS4J扩展功能模块，拦截器，参数校验可能失效！");
         }
         for (SupplierConfig supplierConfig : configList) {
             SmsFactory.createSmsBlend(supplierConfig);
@@ -194,6 +228,7 @@ public class SEInitializer {
         ProviderFactoryHolder.registerFactory(YunPianFactory.instance());
         ProviderFactoryHolder.registerFactory(ZhutongFactory.instance());
         ProviderFactoryHolder.registerFactory(LianLuFactory.instance());
+        ProviderFactoryHolder.registerFactory(DingZhongFactory.instance());
         if (SmsUtils.isClassExists("com.jdcloud.sdk.auth.CredentialsProvider")) {
             ProviderFactoryHolder.registerFactory(JdCloudFactory.instance());
         }

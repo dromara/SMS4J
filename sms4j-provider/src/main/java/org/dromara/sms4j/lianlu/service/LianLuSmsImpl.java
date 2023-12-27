@@ -47,6 +47,9 @@ public class LianLuSmsImpl extends AbstractSmsBlend<LianLuConfig> {
 
     @Override
     public SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<String, String>();
+        }
         return sendMessage(phone, getConfig().getTemplateId(), messages);
     }
 

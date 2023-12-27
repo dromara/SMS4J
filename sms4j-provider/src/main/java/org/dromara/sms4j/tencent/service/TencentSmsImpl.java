@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 
 /**
@@ -53,6 +54,9 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
 
     @Override
     public SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<String, String>();
+        }
         return sendMessage(phone, getConfig().getTemplateId(), messages);
     }
 

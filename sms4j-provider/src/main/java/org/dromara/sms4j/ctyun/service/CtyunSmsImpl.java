@@ -14,6 +14,7 @@ import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 
 /**
@@ -50,6 +51,9 @@ public class CtyunSmsImpl extends AbstractSmsBlend<CtyunConfig> {
 
     @Override
     public SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<String, String>();
+        }
         return sendMessage(phone, getConfig().getTemplateId(), messages);
     }
 

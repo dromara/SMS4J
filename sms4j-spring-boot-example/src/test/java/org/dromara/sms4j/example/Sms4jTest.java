@@ -26,7 +26,7 @@ class Sms4jTest {
     /**
      * 填测试手机号
      */
-    private static final String PHONE = "17897011002";
+    private static final String PHONE = "";
 
     @Test
     public void byLoadTest() {
@@ -272,7 +272,7 @@ class Sms4jTest {
         log.info(JSONUtil.toJsonStr(smsResponse3));
         Assert.isTrue(smsResponse3.isSuccess());
 
-        SmsResponse smsResponse4 = dz.massTexting(phones, "527551147741814784" ,messages);
+        SmsResponse smsResponse4 = dz.massTexting(phones, "" ,messages);
         log.info(JSONUtil.toJsonStr(smsResponse4));
         Assert.isTrue(smsResponse4.isSuccess());
         

@@ -6,6 +6,9 @@ import org.dromara.sms4j.comm.enumerate.ConfigType;
 
 import java.util.ArrayList;
 
+/**
+ * 短信配置类
+ */
 @Data
 public class SmsConfig {
 

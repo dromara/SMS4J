@@ -16,6 +16,10 @@ import java.util.TimerTask;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
+/**
+ * 短信服务抽象类
+ * @param <C>
+ */
 public abstract class AbstractSmsBlend<C extends SupplierConfig> implements SmsBlend {
 
     @Getter

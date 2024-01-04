@@ -8,60 +8,55 @@
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-
     <packaging>pom</packaging>
-    <artifactId>sms4j-Email-plugin</artifactId>
+    <artifactId>sms4j-email-jakarta</artifactId>
 
     <modules>
-        <module>sms4j-Email-comm</module>
-        <module>sms4j-Email-api</module>
-        <module>sms4j-Email-core</module>
+        <module>sms4j-email-jakarta-api</module>
+        <module>sms4j-email-jakarta-comm</module>
+        <module>sms4j-email-jakarta-core</module>
     </modules>
 
-    <name>sms4j-Email-plugin</name>
-    <description>sms4j-Email-plugin</description>
+    <name>sms4j-email-jakarta</name>
+    <description>JDK 11 或更高版本中使用</description>
 
     <properties>
-
+        <jakarta-mail.version>2.1.2</jakarta-mail.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+
             <dependency>
                 <groupId>org.dromara.sms4j</groupId>
-                <artifactId>sms4j-Email-api</artifactId>
+                <artifactId>sms4j-email-jakarta-api</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.dromara.sms4j</groupId>
-                <artifactId>sms4j-Email-comm</artifactId>
+                <artifactId>sms4j-email-jakarta-comm</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.dromara.sms4j</groupId>
-                <artifactId>sms4j-Email-core</artifactId>
+                <artifactId>sms4j-email-jakarta-core</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.sun.mail</groupId>
-                <artifactId>javax.mail</artifactId>
-                <version>${mail.version}</version>
+                <groupId>jakarta.activation</groupId>
+                <artifactId>jakarta.activation-api</artifactId>
+                <version>${jakarta-mail.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.sun.activation</groupId>
-                <artifactId>javax.activation</artifactId>
-                <version>${sunactivation.version}</version>
+                <groupId>jakarta.mail</groupId>
+                <artifactId>jakarta.mail-api</artifactId>
+                <version>${jakarta-mail.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-cron</artifactId>
-                <version>${hutool.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 

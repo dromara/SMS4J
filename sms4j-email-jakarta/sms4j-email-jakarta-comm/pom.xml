@@ -4,25 +4,30 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.dromara.sms4j</groupId>
-        <artifactId>sms4j-Email-plugin</artifactId>
+        <artifactId>sms4j-email-jakarta</artifactId>
         <version>${revision}</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>sms4j-Email-core</artifactId>
-    <name>sms4j-Email-core</name>
-    <description>sms4j-Email-core</description>
+    <artifactId>sms4j-email-jakarta-comm</artifactId>
+    <description>email通用配置</description>
 
     <dependencies>
+
         <dependency>
-            <groupId>org.dromara.sms4j</groupId>
-            <artifactId>sms4j-Email-api</artifactId>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-cron</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.sun.activation</groupId>
-            <artifactId>javax.activation</artifactId>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-http</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>jakarta.mail</groupId>
+            <artifactId>jakarta.mail-api</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

@@ -22,6 +22,7 @@
 
     <properties>
         <jakarta-mail.version>2.1.2</jakarta-mail.version>
+        <jakarta-eclipse.version>2.0.2</jakarta-eclipse.version>
     </properties>
 
     <dependencyManagement>
@@ -46,8 +47,8 @@
             </dependency>
 
             <dependency>
-                <groupId>jakarta.activation</groupId>
-                <artifactId>jakarta.activation-api</artifactId>
+                <groupId>org.eclipse.angus</groupId>
+                <artifactId>jakarta.mail</artifactId>
                 <version>${jakarta-mail.version}</version>
             </dependency>
 

@@ -130,7 +130,7 @@ public class LianLuSmsImpl extends AbstractSmsBlend<LianLuConfig> {
      * @return
      */
     public SmsResponse sendNormalMessage(List<String> phones, String message) {
-        return sendNormalMessage(phones, message, getConfig().getSignName());
+        return sendNormalMessage(phones, message, getConfig().getSignature());
     }
 
     /**

@@ -37,13 +37,6 @@ public class LianLuConfig extends BaseConfig {
 
     private String requestUrl = "https://apis.shlianlu.com/sms/trade";
 
-    /**
-     * 短信签名
-     * 发送普通短信时需使用
-     * 不填会使用平台上设置的默认签名
-     */
-    private String signName;
-
     @Override
     public String getSupplier() {
         return SupplierConstant.LIANLU;
@@ -56,6 +49,6 @@ public class LianLuConfig extends BaseConfig {
                 .setMchId(getMchId())
                 .setVersion(getVersion())
                 .setSignType(getSignType())
-                .setSignName(getSignName());
+                .setSignName(getSignature());
     }
 }

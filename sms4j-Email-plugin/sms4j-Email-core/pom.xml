@@ -13,10 +13,6 @@
     <name>sms4j-Email-core</name>
     <description>sms4j-Email-core</description>
 
-    <properties>
-
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.dromara.sms4j</groupId>
@@ -27,13 +23,6 @@
             <groupId>com.sun.activation</groupId>
             <artifactId>javax.activation</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>jakarta.activation</groupId>
-            <artifactId>jakarta.activation-api</artifactId>
-        </dependency>
-
     </dependencies>
-
 
 </project>

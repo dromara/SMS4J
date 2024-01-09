@@ -14,6 +14,11 @@ import org.dromara.sms4j.comm.exception.SmsBlendException;
 public abstract class BaseConfig implements SupplierConfig {
 
     /**
+     * 自定义实现工厂路径
+     */
+    private String factory;
+
+    /**
      * Access Key
      */
     private String accessKeyId;
@@ -73,4 +78,9 @@ public abstract class BaseConfig implements SupplierConfig {
         }
         this.maxRetries = maxRetries;
     }
+
+    /**
+     * 最大发送数量，默认integer上限
+     */
+    private int maximum = Integer.MAX_VALUE;
 }

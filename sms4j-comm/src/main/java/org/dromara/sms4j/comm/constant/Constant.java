@@ -8,8 +8,10 @@ package org.dromara.sms4j.comm.constant;
  * 2023/3/31  19:33
  **/
 public abstract class Constant {
-    /** 项目版本号*/
-    public static final String VERSION = "V 3.0.4";
+    /**
+     * 项目版本号
+     */
+    public static final String VERSION = "V 3.0.1";
 
     /**
      * 用于格式化鉴权头域,给"Authorization"参数赋值
@@ -37,7 +39,9 @@ public abstract class Constant {
      */
     public static final String HUAWEI_JAVA_DATE = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
-    /** 云片短信国内短信请求地址*/
+    /**
+     * 云片短信国内短信请求地址
+     */
     public static final String YUNPIAN_URL = "https://sms.yunpian.com/v2";
 
     /**
@@ -49,6 +53,11 @@ public abstract class Constant {
      * 供应商配置键名
      */
     public static final String SUPPLIER_KEY = "supplier";
+
+    /**
+     * 自定义实现工厂路径
+     */
+    public static final String FACTORY_PATH = "factory";
 
     private Constant() {
     }

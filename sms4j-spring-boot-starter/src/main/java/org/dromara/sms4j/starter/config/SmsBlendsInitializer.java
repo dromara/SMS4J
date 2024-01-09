@@ -11,9 +11,12 @@ import org.dromara.sms4j.cloopen.config.CloopenFactory;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.enumerate.ConfigType;
 import org.dromara.sms4j.comm.utils.SmsUtils;
+import org.dromara.sms4j.core.proxy.EnvirmentHolder;
 import org.dromara.sms4j.core.factory.SmsFactory;
-import org.dromara.sms4j.core.proxy.SmsInvocationHandler;
+import org.dromara.sms4j.core.proxy.processor.*;
+import org.dromara.sms4j.core.proxy.SmsProxyFactory;
 import org.dromara.sms4j.ctyun.config.CtyunFactory;
+import org.dromara.sms4j.dingzhong.config.DingZhongFactory;
 import org.dromara.sms4j.emay.config.EmayFactory;
 import org.dromara.sms4j.huawei.config.HuaweiFactory;
 import org.dromara.sms4j.jdcloud.config.JdCloudFactory;
@@ -22,7 +25,6 @@ import org.dromara.sms4j.netease.config.NeteaseFactory;
 import org.dromara.sms4j.provider.config.SmsConfig;
 import org.dromara.sms4j.provider.factory.BaseProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
-import org.dromara.sms4j.starter.aop.SpringRestrictedProcess;
 import org.dromara.sms4j.tencent.config.TencentFactory;
 import org.dromara.sms4j.unisms.config.UniFactory;
 import org.dromara.sms4j.yunpian.config.YunPianFactory;
@@ -53,7 +55,16 @@ public class SmsBlendsInitializer  {
         this.registerDefaultFactory();
         // 注册短信对象工厂
         ProviderFactoryHolder.registerFactory(factoryList);
+
         if(ConfigType.YAML.equals(this.smsConfig.getConfigType())) {
+            //持有初始化配置信息
+            EnvirmentHolder.frozenEnvirmet(smsConfig, blends);
+            //注册执行器实现
+            SmsProxyFactory.addProcessor(new RestrictedProcessor());
+            SmsProxyFactory.addProcessor(new BlackListProcessor());
+            SmsProxyFactory.addProcessor(new BlackListRecordingProcessor());
+            SmsProxyFactory.addProcessor(new SingleBlendRestrictedProcessor());
+            SmsProxyFactory.addProcessor(new CoreMethodParamValidateProcessor());
             // 解析供应商配置
             for(String configId : blends.keySet()) {
                 Map<String, Object> configMap = blends.get(configId);
@@ -69,16 +80,11 @@ public class SmsBlendsInitializer  {
                 SmsUtils.replaceKeysSeperator(configMap, "-", "_");
                 JSONObject configJson = new JSONObject(configMap);
                 org.dromara.sms4j.api.universal.SupplierConfig supplierConfig = JSONUtil.toBean(configJson, providerFactory.getConfigClass());
-                if(Boolean.TRUE.equals(smsConfig.getRestricted())) {
-                    SmsFactory.createRestrictedSmsBlend(supplierConfig);
-                } else {
-                    SmsFactory.createSmsBlend(supplierConfig);
-                }
+                SmsFactory.createSmsBlend(supplierConfig);
             }
         }
 
-        //注册短信拦截实现
-        SmsInvocationHandler.setRestrictedProcess(new SpringRestrictedProcess());
+
     }
 
     /**
@@ -96,6 +102,7 @@ public class SmsBlendsInitializer  {
         ProviderFactoryHolder.registerFactory(YunPianFactory.instance());
         ProviderFactoryHolder.registerFactory(ZhutongFactory.instance());
         ProviderFactoryHolder.registerFactory(LianLuFactory.instance());
+        ProviderFactoryHolder.registerFactory(DingZhongFactory.instance());
         if(SmsUtils.isClassExists("com.jdcloud.sdk.auth.CredentialsProvider")) {
             ProviderFactoryHolder.registerFactory(JdCloudFactory.instance());
         }

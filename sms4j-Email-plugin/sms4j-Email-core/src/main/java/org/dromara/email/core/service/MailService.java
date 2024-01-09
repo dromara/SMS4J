@@ -26,6 +26,7 @@ import javax.mail.util.ByteArrayDataSource;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -50,8 +51,14 @@ public class MailService implements MailClient {
         if (mailMessage.getHtmlInputStream() != null) {
             html = HtmlUtil.readHtml(mailMessage.getHtmlInputStream());
         }
-        if (StrUtil.isNotBlank(mailMessage.getHtmlPath())){
-            html = HtmlUtil.readHtml(mailMessage.getHtmlPath());
+        if (StrUtil.isNotBlank(mailMessage.getHtmlPath())) {
+            html = HtmlUtil.readHtml(mailMessage.getHtmlPath(), MailService.class);
+        }
+        if (mailMessage.getHtmlFile() != null) {
+            html = HtmlUtil.readHtml(mailMessage.getHtmlFile());
+        }
+        if (StrUtil.isNotBlank(mailMessage.getHtmlContent())) {
+           html = Arrays.asList(mailMessage.getHtmlContent().split("\n"));
         }
         send(mailMessage.getMailAddress(),
                 mailMessage.getTitle(),
@@ -184,11 +191,17 @@ public class MailService implements MailClient {
         message.setSubject(title);
 
         Multipart multipart = new MimeMultipart("alternative");
-        if (CollUtil.isNotEmpty(html) && MapUtil.isNotEmpty(parameter)) {
-            //读取模板并进行变量替换
-            List<String> strings = HtmlUtil.replacePlaceholder(html, parameter);
-            //拼合HTML数据
-            String htmlData = HtmlUtil.pieceHtml(strings);
+        if (CollUtil.isNotEmpty(html)) {
+            String htmlData = null;
+            List<String> strings;
+            if (MapUtil.isNotEmpty(parameter)) {
+                //读取模板并进行变量替换
+                strings = HtmlUtil.replacePlaceholder(html, parameter);
+                //拼合HTML数据
+                htmlData = HtmlUtil.pieceHtml(strings);
+            }else {
+                htmlData = HtmlUtil.pieceHtml(html);
+            }
             MimeBodyPart htmlPart = new MimeBodyPart();
             htmlPart.setContent(htmlData, "text/html;charset=UTF-8");
             multipart.addBodyPart(htmlPart);

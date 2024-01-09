@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 
 /**
@@ -40,6 +41,14 @@ public class CloopenSmsImpl extends AbstractSmsBlend<CloopenConfig> {
     @Override
     public SmsResponse sendMessage(String phone, String message) {
         return massTexting(Collections.singletonList(phone), message);
+    }
+
+    @Override
+    public SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<String, String>();
+        }
+        return sendMessage(phone, getConfig().getTemplateId(), messages);
     }
 
     @Override

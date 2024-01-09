@@ -9,6 +9,7 @@ import java.util.List;
 /**
  * SmsBlend
  * <p> 通用接口，定义国内短信方法
+ *
  * @author :Wind
  * 2023/5/16  16:03
  **/
@@ -16,12 +17,14 @@ public interface SmsBlend {
 
     /**
      * 获取短信实例唯一标识
+     *
      * @return
      */
     String getConfigId();
 
     /**
      * 获取供应商标识
+     *
      * @return
      */
     String getSupplier();
@@ -38,6 +41,15 @@ public interface SmsBlend {
      * @author :Wind
      */
     SmsResponse sendMessage(String phone, String message);
+
+    /**
+     *  sendMessage
+     * <p>说明：发送固定消息模板多模板参数短信
+     * @param  phone 接收短信的手机号
+     * @param messages 模板内容
+     * @author :Wind
+    */
+    SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages);
 
     /**
      * <p>说明：使用自定义模板发送短信
@@ -151,4 +163,43 @@ public interface SmsBlend {
      */
     void delayMassTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages, Long delayedTime);
 
+    /**
+     * <p>说明：加入黑名单【这个需要有全局操作的同时需要操作缓存，那么不给smsblend实际处理，代理部分处理】
+     * joinInBlacklist
+     *
+     * @param phone 需要加入黑名单的手机号
+     * @author :sh1yu
+     */
+    default void joinInBlacklist(String phone) {
+    }
+
+    /**
+     * <p>说明：从黑名单移除【为了sms4j组件有统一入口，同时这个需要有全局操作的同时需要操作缓存，那么不给smsblend实际处理，代理部分处理】
+     * removeFromBlacklist
+     *
+     * @param phone 需要加入黑名单的手机号
+     * @author :sh1yu
+     */
+    default void removeFromBlacklist(String phone) {
+    }
+
+    /**
+     * <p>说明：批量加入黑名单【为了sms4j组件有统一入口，同时这个需要有全局操作的同时需要操作缓存，那么不给smsblend实际处理，代理部分处理】
+     * batchJoinBlacklist
+     *
+     * @param phones 需要加入黑名单的手机号数组
+     * @author :sh1yu
+     */
+    default void batchJoinBlacklist(List<String > phones) {
+    }
+
+    /**
+     * <p>说明：批量从黑名单移除【为了sms4j组件有统一入口，同时这个需要有全局操作的同时需要操作缓存，那么不给smsblend实际处理，代理部分处理】
+     * batchRemovalFromBlacklist
+     *
+     * @param phones 需要移除黑名单的手机号数组
+     * @author :sh1yu
+     */
+    default void batchRemovalFromBlacklist(List<String > phones) {
+    }
 }

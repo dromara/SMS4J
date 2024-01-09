@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 
 /**
@@ -49,6 +50,14 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
             map.put(String.valueOf(i), split[i]);
         }
         return sendMessage(phone, getConfig().getTemplateId(), map);
+    }
+
+    @Override
+    public SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<String, String>();
+        }
+        return sendMessage(phone, getConfig().getTemplateId(), messages);
     }
 
     @Override
@@ -96,16 +105,19 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
                 getConfig().getSignature(), templateId, messages);
         String url = Constant.HTTPS_PREFIX + getConfig().getRequestUrl();
 
+        SmsResponse smsResponse;
         try {
-            SmsResponse smsResponse = getResponse(http.postJson(url, headsMap, requestBody));
-            if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
-                retry = 0;
-                return smsResponse;
-            }
-            return requestRetry(phones, messages, templateId);
-        }catch (SmsBlendException e){
-            return requestRetry(phones, messages, templateId);
+            smsResponse = getResponse(http.postJson(url, headsMap, requestBody));
+        } catch (SmsBlendException e) {
+            smsResponse = new SmsResponse();
+            smsResponse.setSuccess(false);
+            smsResponse.setData(e.getMessage());
         }
+        if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
+            retry = 0;
+            return smsResponse;
+        }
+        return requestRetry(phones, messages, templateId);
     }
 
     private SmsResponse requestRetry(String[] phones, String[] messages, String templateId) {

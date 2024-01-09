@@ -1,6 +1,7 @@
 package org.dromara.sms4j.example;
 
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
@@ -13,8 +14,8 @@ import org.dromara.sms4j.core.factory.SmsFactory;
 import org.dromara.sms4j.lianlu.service.LianLuSmsImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -240,6 +241,41 @@ class Sms4jTest {
         SmsResponse smsResponse = lianLuSms.sendNormalMessage(PHONE, "测试短信" + SmsUtils.getRandomInt(6));
         log.info(JSONUtil.toJsonStr(smsResponse));
         Assert.isTrue(smsResponse.isSuccess());
+    }
+
+    /**
+     * 鼎众普通短信
+     */
+    @Test
+    public void dingZhongSmsTest() {
+        if (StrUtil.isBlank(PHONE)) {
+            return;
+        }
+        SmsBlend dz = SmsFactory.getBySupplier(SupplierConstant.DINGZHONG);
+
+        LinkedHashMap<String, String> messages = new LinkedHashMap<>();
+        messages.put("code", SmsUtils.getRandomInt(6));
+
+        ArrayList<String> phones = new ArrayList<>();
+        phones.add(PHONE);
+        phones.add(PHONE);
+
+        SmsResponse smsResponse = dz.sendMessage(PHONE, "测试短信" + SmsUtils.getRandomInt(6));
+        log.info(JSONUtil.toJsonStr(smsResponse));
+        Assert.isTrue(smsResponse.isSuccess());
+
+        SmsResponse smsResponse1 = dz.sendMessage(PHONE, messages);
+        log.info(JSONUtil.toJsonStr(smsResponse1));
+        Assert.isTrue(smsResponse1.isSuccess());
+
+        SmsResponse smsResponse3 = dz.massTexting(phones, "测试短信" + SmsUtils.getRandomInt(6));
+        log.info(JSONUtil.toJsonStr(smsResponse3));
+        Assert.isTrue(smsResponse3.isSuccess());
+
+        SmsResponse smsResponse4 = dz.massTexting(phones, "" ,messages);
+        log.info(JSONUtil.toJsonStr(smsResponse4));
+        Assert.isTrue(smsResponse4.isSuccess());
+        
     }
 
 }

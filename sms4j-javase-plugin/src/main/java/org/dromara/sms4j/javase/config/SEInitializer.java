@@ -19,10 +19,12 @@ import org.dromara.sms4j.cloopen.config.CloopenFactory;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtils;
+import org.dromara.sms4j.core.proxy.EnvirmentHolder;
 import org.dromara.sms4j.core.factory.SmsFactory;
-import org.dromara.sms4j.core.proxy.RestrictedProcessDefaultImpl;
-import org.dromara.sms4j.core.proxy.SmsInvocationHandler;
+import org.dromara.sms4j.core.proxy.processor.*;
+import org.dromara.sms4j.core.proxy.SmsProxyFactory;
 import org.dromara.sms4j.ctyun.config.CtyunFactory;
+import org.dromara.sms4j.dingzhong.config.DingZhongFactory;
 import org.dromara.sms4j.emay.config.EmayFactory;
 import org.dromara.sms4j.huawei.config.HuaweiFactory;
 import org.dromara.sms4j.javase.util.YamlUtils;
@@ -38,6 +40,12 @@ import org.dromara.sms4j.unisms.config.UniFactory;
 import org.dromara.sms4j.yunpian.config.YunPianFactory;
 import org.dromara.sms4j.zhutong.config.ZhutongFactory;
 
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -86,7 +94,7 @@ public class SEInitializer {
     /**
      * 从配置bean对象中加载配置
      *
-     * @param smsConfig 短信公共配置
+     * @param smsConfig  短信公共配置
      * @param configList 各短信服务商配置列表
      */
     public void fromConfig(SmsConfig smsConfig, List<SupplierConfig> configList) {
@@ -95,20 +103,44 @@ public class SEInitializer {
         // 初始化SmsConfig整体配置文件
         BeanUtil.copyProperties(smsConfig, BeanFactory.getSmsConfig());
         // 创建短信服务对象
-        if(CollUtil.isEmpty(configList)) {
-            return ;
+        if (CollUtil.isEmpty(configList)) {
+            return;
         }
-        for(SupplierConfig supplierConfig : configList) {
-            if(Boolean.TRUE.equals(smsConfig.getRestricted())) {
-                SmsFactory.createRestrictedSmsBlend(supplierConfig);
-            } else {
-                SmsFactory.createSmsBlend(supplierConfig);
+        try{
+            Map<String, Map<String, Object>> blends = new HashMap<>();
+            for (SupplierConfig supplierConfig : configList) {
+                Map<String, Object> param = new HashMap<>();
+                String channel = supplierConfig.getSupplier();
+                Class<? extends SupplierConfig> clazz = supplierConfig.getClass();
+                BeanInfo beanInfo = Introspector.getBeanInfo(clazz, Object.class);
+                PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+                for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+                    Method readMethod = propertyDescriptor.getReadMethod();
+                    Object item = readMethod.invoke(supplierConfig);
+                    param.put(propertyDescriptor.getName(),item);
+                }
+                blends.put(channel,param);
             }
+            //持有初始化配置信息
+            EnvirmentHolder.frozenEnvirmet(smsConfig, blends);
+
+            //注册执行器实现
+            SmsProxyFactory.addProcessor(new RestrictedProcessor());
+            SmsProxyFactory.addProcessor(new BlackListProcessor());
+            SmsProxyFactory.addProcessor(new BlackListRecordingProcessor());
+            SmsProxyFactory.addProcessor(new SingleBlendRestrictedProcessor());
+            SmsProxyFactory.addProcessor(new CoreMethodParamValidateProcessor());
+        }catch (Exception e){
+            log.error("配置对象转换配置信息失败，但不影响基础功能的使用。【注意】：未加载SMS4J扩展功能模块，拦截器，参数校验可能失效！");
+        }
+        for (SupplierConfig supplierConfig : configList) {
+            SmsFactory.createSmsBlend(supplierConfig);
         }
     }
 
     /**
      * 注册服务商工厂
+     *
      * @param factory 服务商工厂
      */
     public SEInitializer registerFactory(BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig> factory) {
@@ -118,15 +150,13 @@ public class SEInitializer {
 
     /**
      * 注册DAO实例
+     *
      * @param smsDao DAO实例
      */
     public SEInitializer registerSmsDao(SmsDao smsDao) {
-        if(smsDao == null) {
+        if (smsDao == null) {
             throw new SmsBlendException("注册DAO实例失败，实例不能为空");
         }
-        RestrictedProcessDefaultImpl process = new RestrictedProcessDefaultImpl();
-        process.setSmsDao(smsDao);
-        SmsInvocationHandler.setRestrictedProcess(process);
         this.smsDao = smsDao;
         return this;
     }
@@ -143,7 +173,7 @@ public class SEInitializer {
         }
 
         //注册默认DAO实例
-        if(this.smsDao == null) {
+        if (this.smsDao == null) {
             this.registerSmsDao(SmsDaoDefaultImpl.getInstance());
         }
 
@@ -152,15 +182,26 @@ public class SEInitializer {
 
         //初始化SmsConfig整体配置文件
         BeanUtil.copyProperties(smsConfig, BeanFactory.getSmsConfig());
+
         // 解析服务商配置
         Map<String, Map<String, Object>> blends = smsConfig.getBlends();
-        for(String configId : blends.keySet()) {
+
+        //持有初始化配置信息
+        EnvirmentHolder.frozenEnvirmet(smsConfig, blends);
+
+        //注册执行器实现
+        SmsProxyFactory.addProcessor(new RestrictedProcessor());
+        SmsProxyFactory.addProcessor(new BlackListProcessor());
+        SmsProxyFactory.addProcessor(new BlackListRecordingProcessor());
+        SmsProxyFactory.addProcessor(new SingleBlendRestrictedProcessor());
+        SmsProxyFactory.addProcessor(new CoreMethodParamValidateProcessor());
+        for (String configId : blends.keySet()) {
             Map<String, Object> configMap = blends.get(configId);
             Object supplierObj = configMap.get(Constant.SUPPLIER_KEY);
             String supplier = supplierObj == null ? "" : String.valueOf(supplierObj);
             supplier = StrUtil.isEmpty(supplier) ? configId : supplier;
             BaseProviderFactory<SmsBlend, SupplierConfig> providerFactory = (BaseProviderFactory<SmsBlend, SupplierConfig>) ProviderFactoryHolder.requireForSupplier(supplier);
-            if(providerFactory == null) {
+            if (providerFactory == null) {
                 log.warn("创建\"{}\"的短信服务失败，未找到服务商为\"{}\"的服务", configId, supplier);
                 continue;
             }
@@ -168,11 +209,7 @@ public class SEInitializer {
             SmsUtils.replaceKeysSeperator(configMap, "-", "_");
             JSONObject configJson = new JSONObject(configMap);
             SupplierConfig supplierConfig = JSONUtil.toBean(configJson, providerFactory.getConfigClass());
-            if(Boolean.TRUE.equals(smsConfig.getRestricted())) {
-                SmsFactory.createRestrictedSmsBlend(supplierConfig);
-            } else {
-                SmsFactory.createSmsBlend(supplierConfig);
-            }
+            SmsFactory.createSmsBlend(supplierConfig);
         }
     }
 
@@ -191,7 +228,8 @@ public class SEInitializer {
         ProviderFactoryHolder.registerFactory(YunPianFactory.instance());
         ProviderFactoryHolder.registerFactory(ZhutongFactory.instance());
         ProviderFactoryHolder.registerFactory(LianLuFactory.instance());
-        if(SmsUtils.isClassExists("com.jdcloud.sdk.auth.CredentialsProvider")) {
+        ProviderFactoryHolder.registerFactory(DingZhongFactory.instance());
+        if (SmsUtils.isClassExists("com.jdcloud.sdk.auth.CredentialsProvider")) {
             ProviderFactoryHolder.registerFactory(JdCloudFactory.instance());
         }
     }

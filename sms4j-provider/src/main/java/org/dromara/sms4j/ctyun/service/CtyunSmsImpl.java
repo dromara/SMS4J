@@ -14,6 +14,7 @@ import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 
 /**
@@ -49,6 +50,14 @@ public class CtyunSmsImpl extends AbstractSmsBlend<CtyunConfig> {
     }
 
     @Override
+    public SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<String, String>();
+        }
+        return sendMessage(phone, getConfig().getTemplateId(), messages);
+    }
+
+    @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
         String messageStr = JSONUtil.toJsonStr(messages);
         return getSmsResponse(phone, messageStr, templateId);
@@ -78,18 +87,21 @@ public class CtyunSmsImpl extends AbstractSmsBlend<CtyunConfig> {
             throw new SmsBlendException(e.getMessage());
         }
         log.debug("requestUrl {}", requestUrl);
+        SmsResponse smsResponse;
         try {
-            SmsResponse smsResponse = getResponse(http.postJson(requestUrl,
+            smsResponse = getResponse(http.postJson(requestUrl,
                     CtyunUtils.signHeader(paramStr, getConfig().getAccessKeyId(), getConfig().getAccessKeySecret()),
                     paramStr));
-            if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
-                retry = 0;
-                return smsResponse;
-            }
-            return requestRetry(phone, message, templateId);
-        }catch (SmsBlendException e){
-            return requestRetry(phone, message, templateId);
+        } catch (SmsBlendException e) {
+            smsResponse = new SmsResponse();
+            smsResponse.setSuccess(false);
+            smsResponse.setData(e.getMessage());
         }
+        if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
+            retry = 0;
+            return smsResponse;
+        }
+        return requestRetry(phone, message, templateId);
     }
 
     private SmsResponse requestRetry(String phone, String message, String templateId) {

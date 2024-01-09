@@ -34,27 +34,32 @@ public class CloopenHelper {
         this.http = http;
     }
 
-    public SmsResponse smsResponse(Map<String, Object> paramMap){
-        try {
-            String timestamp = DateUtil.format(new Date(), DatePattern.PURE_DATETIME_PATTERN);
+    public SmsResponse smsResponse(Map<String, Object> paramMap) {
 
-            String url = String.format("%s/Accounts/%s/SMS/TemplateSMS?sig=%s",
-                    config.getBaseUrl(),
-                    config.getAccessKeyId(),
-                    this.generateSign(config.getAccessKeyId(), config.getAccessKeySecret(), timestamp));
-            Map<String, String> headers = new LinkedHashMap<>(3);
-            headers.put("Accept", Constant.ACCEPT);
-            headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
-            headers.put("Authorization", this.generateAuthorization(config.getAccessKeyId(), timestamp));
-            SmsResponse smsResponse = getResponse(http.postJson(url, headers, paramMap));
-            if(smsResponse.isSuccess() || retry == config.getMaxRetries()){
-                retry = 0;
-                return smsResponse;
-            }
-            return requestRetry(paramMap);
-        }catch (SmsBlendException e){
-            return requestRetry(paramMap);
+        String timestamp = DateUtil.format(new Date(), DatePattern.PURE_DATETIME_PATTERN);
+
+        String url = String.format("%s/Accounts/%s/SMS/TemplateSMS?sig=%s",
+                config.getBaseUrl(),
+                config.getAccessKeyId(),
+                this.generateSign(config.getAccessKeyId(), config.getAccessKeySecret(), timestamp));
+        Map<String, String> headers = new LinkedHashMap<>(3);
+        headers.put("Accept", Constant.ACCEPT);
+        headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
+        headers.put("Authorization", this.generateAuthorization(config.getAccessKeyId(), timestamp));
+        SmsResponse smsResponse = null;
+        try {
+            smsResponse = getResponse(http.postJson(url, headers, paramMap));
+        } catch (SmsBlendException e) {
+            smsResponse = new SmsResponse();
+            smsResponse.setSuccess(false);
+            smsResponse.setData(e.getMessage());
         }
+        if (smsResponse.isSuccess() || retry == config.getMaxRetries()) {
+            retry = 0;
+            return smsResponse;
+        }
+        return requestRetry(paramMap);
+
     }
 
     private SmsResponse requestRetry(Map<String, Object> paramMap) {

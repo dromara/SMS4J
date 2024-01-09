@@ -15,6 +15,7 @@ import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
@@ -52,6 +53,14 @@ public class JdCloudSmsImpl extends AbstractSmsBlend<JdCloudConfig> {
     }
 
     @Override
+    public SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<String, String>();
+        }
+        return sendMessage(phone, getConfig().getTemplateId(), messages);
+    }
+
+    @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
         return massTexting(Collections.singletonList(phone), templateId, messages);
     }
@@ -79,17 +88,20 @@ public class JdCloudSmsImpl extends AbstractSmsBlend<JdCloudConfig> {
             throw new SmsBlendException(e.getMessage());
         }
 
+        BatchSendResult result = client.batchSend(request).getResult();
+        SmsResponse smsResponse;
         try {
-            BatchSendResult result = client.batchSend(request).getResult();
-            SmsResponse smsResponse = getSmsResponse(result);
-            if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
-                retry = 0;
-                return smsResponse;
-            }
-            return requestRetry(phones, templateId, messages);
-        }catch (SmsBlendException e){
-            return requestRetry(phones, templateId, messages);
+            smsResponse = getSmsResponse(result);
+        } catch (SmsBlendException e) {
+            smsResponse = new SmsResponse();
+            smsResponse.setSuccess(false);
+            smsResponse.setData(e.getMessage());
         }
+        if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
+            retry = 0;
+            return smsResponse;
+        }
+        return requestRetry(phones, templateId, messages);
     }
 
     private SmsResponse requestRetry(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {

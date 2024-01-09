@@ -16,6 +16,10 @@ import java.util.TimerTask;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
+/**
+ * 短信服务抽象类
+ * @param <C>
+ */
 public abstract class AbstractSmsBlend<C extends SupplierConfig> implements SmsBlend {
 
     @Getter
@@ -60,6 +64,15 @@ public abstract class AbstractSmsBlend<C extends SupplierConfig> implements SmsB
      */
 
     public abstract SmsResponse sendMessage(String phone, String message);
+
+    /**
+     *  sendMessage
+     * <p>说明：发送固定消息模板多模板参数短信
+     * @param  phone 接收短信的手机号
+     * @param messages 模板内容
+     * @author :Wind
+     */
+    public abstract SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages);
 
     /**
      * <p>说明：使用自定义模板发送短信

@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 
 /**
@@ -64,6 +65,14 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
         LinkedHashMap<String, String> map = new LinkedHashMap<>(1);
         map.put(config.getTemplateName(), message);
         return sendMessage(phone, config.getTemplateId(), map);
+    }
+
+    @Override
+    public SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<String, String>();
+        }
+        return sendMessage(phone, getConfig().getTemplateId(), messages);
     }
 
     @Override
@@ -130,18 +139,21 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
         //内容
         json.put("content", content);
 
+        Map<String, String> headers = new LinkedHashMap<>(1);
+        headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
+        SmsResponse smsResponse;
         try {
-            Map<String, String> headers = new LinkedHashMap<>(1);
-            headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
-            SmsResponse smsResponse = getResponse(http.postJson(requestUrl, headers, json));
-            if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
-                retry = 0;
-                return smsResponse;
-            }
-            return requestRetry(phones, content);
-        }catch (SmsBlendException e){
-            return requestRetry(phones, content);
+            smsResponse = getResponse(http.postJson(requestUrl, headers, json));
+        } catch (SmsBlendException e) {
+            smsResponse = new SmsResponse();
+            smsResponse.setSuccess(false);
+            smsResponse.setData(e.getMessage());
         }
+        if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
+            retry = 0;
+            return smsResponse;
+        }
+        return requestRetry(phones, content);
     }
 
     private SmsResponse requestRetry(List<String> phones, String content) {
@@ -215,18 +227,21 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
         }
         requestJson.set("records", records);
 
+        Map<String, String> headers = new LinkedHashMap<>(1);
+        headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
+        SmsResponse smsResponse;
         try {
-            Map<String, String> headers = new LinkedHashMap<>(1);
-            headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
-            SmsResponse smsResponse = getResponse(http.postJson(requestUrl, headers, requestJson.toString()));
-            if(smsResponse.isSuccess() || retry == getConfig().getMaxRetries()){
-                retry = 0;
-                return smsResponse;
-            }
-            return requestRetry(templateId, phones, messages);
-        }catch (SmsBlendException e){
-            return requestRetry(templateId, phones, messages);
+            smsResponse = getResponse(http.postJson(requestUrl, headers, requestJson.toString()));
+        } catch (SmsBlendException e) {
+            smsResponse = new SmsResponse();
+            smsResponse.setSuccess(false);
+            smsResponse.setData(e.getMessage());
         }
+        if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
+            retry = 0;
+            return smsResponse;
+        }
+        return requestRetry(templateId, phones, messages);
     }
 
     private SmsResponse requestRetry(String templateId, List<String> phones, LinkedHashMap<String, String> messages) {

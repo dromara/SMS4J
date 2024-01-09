@@ -17,7 +17,7 @@
 [gitee](https://gitee.com/dromara/sms4j)
 [github](https://github.com/dromara/sms4j)
 
-#### [官方文档](http://wind.kim)
+#### [官方文档](http://sms4l.com)
 #### [JavaDoc文档](https://apidoc.gitee.com/dromara/sms4j/)
 
 ## 支持厂商一览
@@ -32,6 +32,8 @@
 - **[合一短信](https://unisms.apistd.com/)**
 - **[云片短信](https://www.yunpian.com/product/domestic-sms)**
 - **[助通短信](https://www.ztinfo.cn/products/sms)**
+- **[联麓短信](https://console.shlianlu.com/#/document/smsDoc)**
+- **[鼎众短信](http://demoapi.321sms.com:8201/index.html)**
 
 ## 在SpringBoot环境集成
 

@@ -49,7 +49,7 @@
             <dependency>
                 <groupId>org.eclipse.angus</groupId>
                 <artifactId>jakarta.mail</artifactId>
-                <version>${jakarta-mail.version}</version>
+                <version>${jakarta-eclipse.version}</version>
             </dependency>
 
             <dependency>

@@ -58,6 +58,12 @@
                 <version>${jakarta-mail.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>jakarta.activation</groupId>
+                <artifactId>jakarta.activation-api</artifactId>
+                <version>${jakarta-mail.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

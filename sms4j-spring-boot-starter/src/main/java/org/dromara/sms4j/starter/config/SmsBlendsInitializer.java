@@ -73,22 +73,6 @@ public class SmsBlendsInitializer  {
                 insideMap.put(key,smsReadConfig);
                 blendsInclude.put(key,insideMap);
                 num++;
-               /* BaseConfig supplierConfig = smsReadConfig.getSupplierConfig("");
-                List<BaseConfig> supplierConfigList = smsReadConfig.getSupplierConfigList();
-                if(null != supplierConfigList){
-                    supplierConfigList.add(supplierConfig);
-                    for (BaseConfig config : supplierConfigList) {
-                        String key = SmsReadConfig.class.getSimpleName() + num;
-                        Map<String, Object> insideMap = new HashMap<>();
-                        insideMap.put(key,supplierConfig);
-                        blendsInclude.put(key,insideMap);
-                        num++;
-                    }
-                }else {
-                    if(null != supplierConfig){
-
-                    }
-                }*/
             }
             EnvirmentHolder.frozenEnvirmet(smsConfig, blendsInclude);
             //注册执行器实现

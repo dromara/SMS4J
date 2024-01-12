@@ -11,6 +11,7 @@ import org.dromara.sms4j.cloopen.config.CloopenFactory;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.enumerate.ConfigType;
 import org.dromara.sms4j.comm.utils.SmsUtils;
+import org.dromara.sms4j.core.datainterface.SmsReadConfig;
 import org.dromara.sms4j.core.proxy.EnvirmentHolder;
 import org.dromara.sms4j.core.factory.SmsFactory;
 import org.dromara.sms4j.core.proxy.processor.*;
@@ -25,11 +26,14 @@ import org.dromara.sms4j.netease.config.NeteaseFactory;
 import org.dromara.sms4j.provider.config.SmsConfig;
 import org.dromara.sms4j.provider.factory.BaseProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
+import org.dromara.sms4j.starter.adepter.ConfigCombineMapAdeptor;
 import org.dromara.sms4j.tencent.config.TencentFactory;
 import org.dromara.sms4j.unisms.config.UniFactory;
 import org.dromara.sms4j.yunpian.config.YunPianFactory;
 import org.dromara.sms4j.zhutong.config.ZhutongFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,14 +44,16 @@ public class SmsBlendsInitializer  {
 
     private final SmsConfig smsConfig;
     private final Map<String, Map<String, Object>> blends;
+    private final ObjectProvider<SmsReadConfig> extendsSmsConfigs;
 
     public SmsBlendsInitializer(List<BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig>> factoryList,
                                 SmsConfig smsConfig,
-                                Map<String, Map<String, Object>> blends
-                                ){
+                                Map<String, Map<String, Object>> blends,
+                                ObjectProvider<SmsReadConfig> extendsSmsConfigs){
         this.factoryList = factoryList;
         this.smsConfig = smsConfig;
         this.blends = blends;
+        this.extendsSmsConfigs = extendsSmsConfigs;
         onApplicationEvent();
     }
 
@@ -58,7 +64,33 @@ public class SmsBlendsInitializer  {
 
         if(ConfigType.YAML.equals(this.smsConfig.getConfigType())) {
             //持有初始化配置信息
-            EnvirmentHolder.frozenEnvirmet(smsConfig, blends);
+            Map<String, Map<String, Object>> blendsInclude = new ConfigCombineMapAdeptor<String, Map<String, Object>>();
+            blendsInclude.putAll(this.blends);
+            int num = 0;
+            for (SmsReadConfig smsReadConfig : extendsSmsConfigs) {
+                String key = SmsReadConfig.class.getSimpleName() + num;
+                Map<String, Object> insideMap = new HashMap<>();
+                insideMap.put(key,smsReadConfig);
+                blendsInclude.put(key,insideMap);
+                num++;
+               /* BaseConfig supplierConfig = smsReadConfig.getSupplierConfig("");
+                List<BaseConfig> supplierConfigList = smsReadConfig.getSupplierConfigList();
+                if(null != supplierConfigList){
+                    supplierConfigList.add(supplierConfig);
+                    for (BaseConfig config : supplierConfigList) {
+                        String key = SmsReadConfig.class.getSimpleName() + num;
+                        Map<String, Object> insideMap = new HashMap<>();
+                        insideMap.put(key,supplierConfig);
+                        blendsInclude.put(key,insideMap);
+                        num++;
+                    }
+                }else {
+                    if(null != supplierConfig){
+
+                    }
+                }*/
+            }
+            EnvirmentHolder.frozenEnvirmet(smsConfig, blendsInclude);
             //注册执行器实现
             SmsProxyFactory.addProcessor(new RestrictedProcessor());
             SmsProxyFactory.addProcessor(new BlackListProcessor());

@@ -52,6 +52,10 @@ public class SingleBlendRestrictedProcessor implements SmsProcessor, SmsDaoAware
         String configId = smsBlend.getConfigId();
         Map targetConfig = (Map) smsBlendsConfig.get(configId);
         Object maximumObj = targetConfig.get("maximum");
+        if (null == maximumObj) {
+            log.info("配置信息未能加载到本拦截器，跳过渠道级上限前置拦截执行器");
+            return param;
+        }
         if (SmsUtils.isEmpty(maximumObj)) {
             return param;
         }

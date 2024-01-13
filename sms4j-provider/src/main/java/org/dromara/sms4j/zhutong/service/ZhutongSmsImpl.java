@@ -2,6 +2,7 @@ package org.dromara.sms4j.zhutong.service;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
@@ -139,7 +140,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
         //内容
         json.put("content", content);
 
-        Map<String, String> headers = new LinkedHashMap<>(1);
+        Map<String, String> headers = MapUtil.newHashMap(1, true);
         headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
         SmsResponse smsResponse;
         try {
@@ -227,7 +228,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
         }
         requestJson.set("records", records);
 
-        Map<String, String> headers = new LinkedHashMap<>(1);
+        Map<String, String> headers = MapUtil.newHashMap(1, true);
         headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
         SmsResponse smsResponse;
         try {

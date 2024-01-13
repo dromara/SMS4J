@@ -2,6 +2,7 @@ package org.dromara.sms4j.netease.service;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
@@ -109,7 +110,7 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
         String nonce = IdUtil.fastSimpleUUID();
         String curTime = String.valueOf(DateUtil.currentSeconds());
         String checkSum = NeteaseUtils.getCheckSum(getConfig().getAccessKeySecret(), nonce, curTime);
-        Map<String, Object> body = new LinkedHashMap<>(4);
+        Map<String, Object> body = MapUtil.newHashMap(4, true);
         body.put("templateid", templateId);
         JSONArray jsonArray = new JSONArray();
         jsonArray.addAll(phones);
@@ -117,7 +118,7 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
         body.put("params", message);
         body.put("needUp", getConfig().getNeedUp());
 
-        Map<String, String> headers = new LinkedHashMap<>(5);
+        Map<String, String> headers = MapUtil.newHashMap(5, true);
         headers.put("Content-Type", Constant.FROM_URLENCODED);
         headers.put("AppKey", getConfig().getAccessKeyId());
         headers.put("Nonce", nonce);

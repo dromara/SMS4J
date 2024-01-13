@@ -1,5 +1,6 @@
 package org.dromara.sms4j.dingzhong.service;
 
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
@@ -52,7 +53,7 @@ public class DingZhongSmsImpl extends AbstractSmsBlend<DingZhongConfig> {
     @Override
     public SmsResponse sendMessage(String phone, String message) {
         DingZhongHelper helper = new DingZhongHelper(getConfig(), http);
-        Map<String, Object> paramMap = new LinkedHashMap<>(4);
+        Map<String, Object> paramMap = MapUtil.newHashMap(4, true);
         paramMap.put("cdkey", getConfig().getAccessKeyId());
         paramMap.put("password", getConfig().getAccessKeySecret());
         paramMap.put("mobile", phone);
@@ -68,7 +69,7 @@ public class DingZhongSmsImpl extends AbstractSmsBlend<DingZhongConfig> {
     @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
         DingZhongHelper helper = new DingZhongHelper(getConfig(), http);
-        Map<String, Object> paramMap = new LinkedHashMap<>(5);
+        Map<String, Object> paramMap = MapUtil.newHashMap(5, true);
         paramMap.put("cdkey", getConfig().getAccessKeyId());
         paramMap.put("password", getConfig().getAccessKeySecret());
         paramMap.put("mobile", phone);

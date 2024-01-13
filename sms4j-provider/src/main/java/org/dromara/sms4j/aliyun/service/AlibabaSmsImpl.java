@@ -1,5 +1,6 @@
 package org.dromara.sms4j.aliyun.service;
 
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -100,7 +101,7 @@ public class AlibabaSmsImpl extends AbstractSmsBlend<AlibabaConfig> {
         }
         log.debug("requestUrl {}", requestUrl);
 
-        Map<String, String> headers = new LinkedHashMap<>(1);
+        Map<String, String> headers = MapUtil.newHashMap(1, true);
         headers.put("Content-Type", Constant.FROM_URLENCODED);
         SmsResponse smsResponse;
         try {

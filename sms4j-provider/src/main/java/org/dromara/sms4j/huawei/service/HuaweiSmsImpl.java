@@ -1,6 +1,7 @@
 package org.dromara.sms4j.huawei.service;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
@@ -65,7 +66,7 @@ public class HuaweiSmsImpl extends AbstractSmsBlend<HuaweiConfig> {
         String mess = listToString(list);
         String requestBody = HuaweiBuilder.buildRequestBody(getConfig().getSender(), phone, templateId, mess, getConfig().getStatusCallBack(), getConfig().getSignature());
 
-        Map<String, String> headers = new LinkedHashMap<>(3);
+        Map<String, String> headers = MapUtil.newHashMap(3, true);
         headers.put("Authorization", Constant.HUAWEI_AUTH_HEADER_VALUE);
         headers.put("X-WSSE", HuaweiBuilder.buildWsseHeader(getConfig().getAccessKeyId(), getConfig().getAccessKeySecret()));
         headers.put("Content-Type", Constant.FROM_URLENCODED);

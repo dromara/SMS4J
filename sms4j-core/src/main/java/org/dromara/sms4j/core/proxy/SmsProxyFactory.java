@@ -89,7 +89,7 @@ public abstract class SmsProxyFactory {
         if (null != smsDao) {
             return smsDao;
         }
-        log.error("尝试框架加载失败，最终使用默认SmsDao！");
+        log.info("尝试框架加载失败，最终使用默认SmsDao！");
         return SmsDaoDefaultImpl.getInstance();
     }
 
@@ -100,7 +100,7 @@ public abstract class SmsProxyFactory {
             Method getSmsDao = clazz.getMethod("getSmsDao", null);
             return (SmsDao) getSmsDao.invoke(null, null);
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            log.error("{}:加载SmsDao失败，尝试其他框架加载......", frameworkName);
+            log.info("{}:加载SmsDao失败，尝试其他框架加载......", frameworkName);
         }
         return null;
     }

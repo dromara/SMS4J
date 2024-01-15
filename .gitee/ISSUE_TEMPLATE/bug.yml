@@ -58,6 +58,7 @@ body:
       label: SMS4J 版本
       description: 你当前正在使用我们软件的哪个版本/分支？
       options:
+        - 3.1.0
         - 3.0.4
         - 3.0.3
         - 3.0.2

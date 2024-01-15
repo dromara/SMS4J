@@ -4,8 +4,6 @@ package org.dromara.sms4j.provider.config;
 import lombok.Data;
 import org.dromara.sms4j.comm.enumerate.ConfigType;
 
-import java.util.ArrayList;
-
 /**
  * 短信配置类
  */
@@ -58,9 +56,5 @@ public class SmsConfig {
     /** 是否打印http log*/
     private Boolean HttpLog = false;
 
-    /**
-     * 黑名单配置
-     */
-    private ArrayList<String> blackList = new ArrayList<>();
 
 }

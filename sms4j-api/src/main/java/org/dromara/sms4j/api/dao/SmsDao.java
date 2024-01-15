@@ -35,6 +35,15 @@ public interface SmsDao {
     Object get(String key);
 
     /**
+     *  remove
+     * <p> 根据key移除缓存
+     * @param key 缓存键
+     * @return 被删除的value
+     * @author :Wind
+    */
+    Object remove(String key);
+
+    /**
      * 清空
      */
     void clean();

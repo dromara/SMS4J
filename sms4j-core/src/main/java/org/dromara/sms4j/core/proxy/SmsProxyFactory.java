@@ -81,6 +81,10 @@ public abstract class SmsProxyFactory {
     //获取Sms的实现
     private static SmsDao getSmsDaoFromFramework() {
         SmsDao smsDao;
+        smsDao = getSmsDaoFromFramework("org.dromara.sms4j.javase.config.SESmsDaoHolder", "JavaSE");
+        if (null != smsDao) {
+            return smsDao;
+        }
         smsDao = getSmsDaoFromFramework("org.dromara.sms4j.starter.holder.SpringSmsDaoHolder", "SpringBoot");
         if (null != smsDao) {
             return smsDao;
@@ -98,7 +102,9 @@ public abstract class SmsProxyFactory {
         try {
             Class<?> clazz = Class.forName(className);
             Method getSmsDao = clazz.getMethod("getSmsDao", null);
-            return (SmsDao) getSmsDao.invoke(null, null);
+            SmsDao smsDao = (SmsDao) getSmsDao.invoke(null, null);
+            log.info("{}:加载SmsDao成功，使用{}", frameworkName,smsDao.getClass().getName());
+            return smsDao;
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             log.info("{}:加载SmsDao失败，尝试其他框架加载......", frameworkName);
         }

@@ -59,7 +59,7 @@ public class SmsConfig {
     private Boolean HttpLog = false;
 
     /**
-     * 黑名单配置
+     * 黑名单配置 此配置不支持yaml读取
      */
     private ArrayList<String> blackList = new ArrayList<>();
 

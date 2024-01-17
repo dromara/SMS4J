@@ -5,8 +5,10 @@ import lombok.SneakyThrows;
 import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.enumerate.ConfigType;
+import org.dromara.sms4j.core.datainterface.SmsReadConfig;
 import org.dromara.sms4j.provider.config.SmsConfig;
 import org.dromara.sms4j.provider.factory.BaseProviderFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -53,8 +55,9 @@ public class SupplierConfig {
     @Bean
     protected SmsBlendsInitializer smsBlendsInitializer(List<BaseProviderFactory<? extends SmsBlend, ? extends org.dromara.sms4j.api.universal.SupplierConfig>> factoryList,
                                                         SmsConfig smsConfig,
-                                                        Map<String, Map<String, Object>> blends) {
-        return new SmsBlendsInitializer(factoryList, smsConfig, blends);
+                                                        Map<String, Map<String, Object>> blends,
+                                                        ObjectProvider<SmsReadConfig> extendsSmsConfigs) {
+        return new SmsBlendsInitializer(factoryList, smsConfig, blends, extendsSmsConfigs);
     }
 
 }

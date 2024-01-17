@@ -7,6 +7,6 @@ import org.dromara.sms4j.starter.utils.SmsSpringUtils;
 
 public class SpringSmsDaoHolder {
     public static SmsDao getSmsDao() {
-        return SmsSpringUtils.getBean(SmsDao.class);
+        return SmsSpringUtils.getApplicationContext().getBean(SmsDao.class);
     }
 }

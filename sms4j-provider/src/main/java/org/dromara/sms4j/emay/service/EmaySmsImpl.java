@@ -1,5 +1,6 @@
 package org.dromara.sms4j.emay.service;
 
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
@@ -46,7 +47,7 @@ public class EmaySmsImpl extends AbstractSmsBlend<EmayConfig> {
         String url = getConfig().getRequestUrl();
         Map<String, Object> params = EmayBuilder.buildRequestBody(getConfig().getAccessKeyId(), getConfig().getAccessKeySecret(), phone, message);
 
-        Map<String, String> headers = new LinkedHashMap<>(1);
+        Map<String, String> headers = MapUtil.newHashMap(1, true);
         headers.put("Content-Type", Constant.FROM_URLENCODED);
         SmsResponse smsResponse;
         try {

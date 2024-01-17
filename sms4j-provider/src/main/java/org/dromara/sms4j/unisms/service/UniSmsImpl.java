@@ -1,5 +1,6 @@
 package org.dromara.sms4j.unisms.service;
 
+import cn.hutool.core.map.MapUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
@@ -58,9 +59,9 @@ public class UniSmsImpl extends AbstractSmsBlend<UniConfig> {
     @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
         if (Objects.isNull(messages)){
-            messages = new LinkedHashMap<String, String>();
+            messages = new LinkedHashMap<>();
         }
-        Map<String, Object> data = new LinkedHashMap<>(4);
+        Map<String, Object> data = MapUtil.newHashMap(4, true);
         data.put("to", Collections.singletonList(phone));
         data.put("signature", getConfig().getSignature());
         data.put("templateId", templateId);
@@ -83,7 +84,7 @@ public class UniSmsImpl extends AbstractSmsBlend<UniConfig> {
         if (phones.size() > 1000) {
             throw new SmsBlendException("单次发送超过最大发送上限，建议每次群发短信人数低于1000");
         }
-        Map<String, Object> data = new LinkedHashMap<>(4);
+        Map<String, Object> data = MapUtil.newHashMap(4, true);
         data.put("to", phones);
         data.put("signature", getConfig().getSignature());
         data.put("templateId", templateId);

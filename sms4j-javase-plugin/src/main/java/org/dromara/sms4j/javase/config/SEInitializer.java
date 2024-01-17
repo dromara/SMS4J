@@ -158,6 +158,7 @@ public class SEInitializer {
             throw new SmsBlendException("注册DAO实例失败，实例不能为空");
         }
         this.smsDao = smsDao;
+        SESmsDaoHolder.setSmsDao(smsDao);
         return this;
     }
 

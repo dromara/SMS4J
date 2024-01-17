@@ -3,6 +3,7 @@ package org.dromara.sms4j.cloopen.util;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +43,7 @@ public class CloopenHelper {
                 config.getBaseUrl(),
                 config.getAccessKeyId(),
                 this.generateSign(config.getAccessKeyId(), config.getAccessKeySecret(), timestamp));
-        Map<String, String> headers = new LinkedHashMap<>(3);
+        Map<String, String> headers = MapUtil.newHashMap(3, true);
         headers.put("Accept", Constant.ACCEPT);
         headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
         headers.put("Authorization", this.generateAuthorization(config.getAccessKeyId(), timestamp));

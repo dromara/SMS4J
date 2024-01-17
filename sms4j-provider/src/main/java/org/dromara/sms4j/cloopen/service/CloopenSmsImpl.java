@@ -1,5 +1,6 @@
 package org.dromara.sms4j.cloopen.service;
 
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.IdUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
@@ -66,7 +67,7 @@ public class CloopenSmsImpl extends AbstractSmsBlend<CloopenConfig> {
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
         CloopenHelper helper = new CloopenHelper(getConfig(), http);
-        Map<String, Object> paramMap = new LinkedHashMap<>(4);
+        Map<String, Object> paramMap = MapUtil.newHashMap(4, true);
         paramMap.put("to", String.join(",", phones));
         paramMap.put("appId", getConfig().getSdkAppId());
         paramMap.put("templateId", templateId);

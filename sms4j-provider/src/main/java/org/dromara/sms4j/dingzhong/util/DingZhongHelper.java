@@ -1,5 +1,6 @@
 package org.dromara.sms4j.dingzhong.util;
 
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
@@ -32,7 +33,7 @@ public class DingZhongHelper {
 
     public SmsResponse smsResponse(Map<String, Object> paramMap) {
         String url = String.format("%s/%s", config.getRequestUrl(), SmsUtils.isEmpty(paramMap.get("templateId"))?config.getBaseAction():config.getTemplateAction());
-        Map<String, String> headers = new LinkedHashMap<>(2);
+        Map<String, String> headers = MapUtil.newHashMap(2, true);
         headers.put("Accept", Constant.ACCEPT);
         headers.put("Content-Type", Constant.FROM_URLENCODED);
         SmsResponse smsResponse = null;

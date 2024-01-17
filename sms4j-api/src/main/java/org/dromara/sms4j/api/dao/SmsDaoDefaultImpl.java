@@ -82,6 +82,11 @@ public class SmsDaoDefaultImpl implements SmsDao {
     }
 
     @Override
+    public Object remove(String key) {
+        return DATA_MAP.remove(key);
+    }
+
+    @Override
     public void clean() {
         DATA_MAP.clear();
     }

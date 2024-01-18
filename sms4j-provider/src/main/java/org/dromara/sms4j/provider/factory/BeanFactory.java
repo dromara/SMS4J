@@ -53,6 +53,11 @@ public class BeanFactory {
         return executor;
     }
 
+    public static Executor setExecutor(Executor exec) {
+        executor = exec;
+        return executor;
+    }
+
     public static Executor getExecutor() {
         if (executor == null){
             // 创建一个线程池对象

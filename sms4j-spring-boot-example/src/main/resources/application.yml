@@ -79,13 +79,19 @@ sms:
       access-key-secret: 你的Access Key Secret
       sdkAppId: 你的应用ID
     #自定义广州掌骏短信，添加factory全路径。config,factory,SmsImpl复制其他默认实现即可，修改对应的supplier和发送核心逻辑即可
-    zhangjun:
-      supplier: zhangjun
-      factory: org.dromara.sms4j.example.zhangjun.ZhangJunFactory
-      templateId: d2a****777
-      appId: 64c52d2a****77775fe72e3
-      sid: d2a****777
-      url: https://sms.idowe.com/**/**/**/send
+#    zhangjun:
+#      supplier: zhangjun
+#      factory: org.dromara.sms4j.example.zhangjun.ZhangJunFactory
+#      templateId: d2a****777
+#      appId: 64c52d2a****77775fe72e3
+#      sid: d2a****777
+#      url: https://sms.idowe.com/**/**/**/send
+    qiniu:
+      access-key-id: z_fGcmAj0XOlM_K0KhurGbesdh1ec_nJNCjmo8Ag
+      access-key-secret: xz1AzgPsVnhQaPHy1y_tvajgn3fIVL5bw_qy_hLK
+      templateId: 1752130467315859456
+      signatureId: 1751851165571624960
+      templateName: code
 sms-oa:
   config-type: yaml
   oas:

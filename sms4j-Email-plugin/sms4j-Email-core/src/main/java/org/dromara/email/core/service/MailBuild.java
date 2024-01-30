@@ -43,6 +43,7 @@ public class MailBuild {
         props.put("mail.smtp.ssl.enable", config.getIsSSL());
 //        props.put("mail.smtp.ssl.socketFactory", new MailSSLSocketFactory());
         this.session = Session.getInstance(props, new Authenticator() {
+            @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(config.getUsername(), config.getPassword());
             }
@@ -63,6 +64,7 @@ public class MailBuild {
 //        props.put("mail.smtp.ssl.socketFactory", new MailSSLSocketFactory());
         this.session = Session.getInstance(props,
                 new Authenticator() {
+                    @Override
                     protected PasswordAuthentication getPasswordAuthentication() {
                         return new PasswordAuthentication(config.getUsername(), config.getPassword());
                     }

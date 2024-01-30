@@ -1,5 +1,8 @@
 package org.dromara.oa.comm.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum MessageType {
     // 钉钉支持类型
     DINGTALK_TEXT("text"),
@@ -30,7 +33,4 @@ public enum MessageType {
 
     private final String name;
 
-    public String getName() {
-        return name;
-    }
 }

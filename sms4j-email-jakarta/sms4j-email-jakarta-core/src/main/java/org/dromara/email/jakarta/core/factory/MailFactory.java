@@ -1,12 +1,12 @@
 package org.dromara.email.jakarta.core.factory;
 
+import jakarta.mail.MessagingException;
 import org.dromara.email.jakarta.api.Blacklist;
 import org.dromara.email.jakarta.api.MailClient;
 import org.dromara.email.jakarta.comm.config.MailSmtpConfig;
 import org.dromara.email.jakarta.comm.errors.MailException;
 import org.dromara.email.jakarta.core.service.MailBuild;
 
-import jakarta.mail.MessagingException;
 import java.util.HashMap;
 import java.util.Map;
 

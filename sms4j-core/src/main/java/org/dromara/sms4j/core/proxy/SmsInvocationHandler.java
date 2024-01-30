@@ -3,13 +3,11 @@ package org.dromara.sms4j.core.proxy;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.proxy.SmsProcessor;
-import org.dromara.sms4j.api.proxy.SuppotFilter;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
-import java.util.List;
 
 
 /**
@@ -52,7 +50,7 @@ public class SmsInvocationHandler implements InvocationHandler {
         return objects;
     }
 
-    public void doErrorHandleProcess(Object o, Method method, Object[] objects,Exception e) throws InvocationTargetException, IllegalAccessException {
+    public void doErrorHandleProcess(Object o, Method method, Object[] objects,Exception e) {
         for (SmsProcessor processor : processors) {
             processor.exceptionHandleProcessor(method, o, objects,e);
         }

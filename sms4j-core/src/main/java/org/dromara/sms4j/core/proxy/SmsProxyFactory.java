@@ -8,8 +8,8 @@ import org.dromara.sms4j.api.proxy.Order;
 import org.dromara.sms4j.api.proxy.SmsProcessor;
 import org.dromara.sms4j.api.proxy.SuppotFilter;
 import org.dromara.sms4j.api.proxy.aware.SmsBlendConfigAware;
-import org.dromara.sms4j.api.proxy.aware.SmsDaoAware;
 import org.dromara.sms4j.api.proxy.aware.SmsConfigAware;
+import org.dromara.sms4j.api.proxy.aware.SmsDaoAware;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -52,10 +52,8 @@ public abstract class SmsProxyFactory {
         //判断当前的执行器有没有开厂商过滤，支不支持当前厂商
         if (processor instanceof SuppotFilter) {
             List<String> supports = ((SuppotFilter) processor).getSupports();
-            boolean exsit = supports.stream().filter(support -> support.equals(smsBlend.getSupplier())).findAny().isPresent();
-            if (!exsit) {
-                return true;
-            }
+            boolean exsit = supports.stream().anyMatch(support -> support.equals(smsBlend.getSupplier()));
+            return !exsit;
         }
         return false;
     }

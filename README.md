@@ -137,7 +137,7 @@ sms:
 1.  Fork 本仓库
 2.  新建 Feat_xxx 分支
 3.  提交代码
-4.  新建 Pull Request 到 dev-3.x 分支
+4.  新建 Pull Request 到 dev-3.0.x 分支
 ```
 ## 贡献原则
 - 我们原则上欢迎任何人为sms4j添加加瓦贡献代码

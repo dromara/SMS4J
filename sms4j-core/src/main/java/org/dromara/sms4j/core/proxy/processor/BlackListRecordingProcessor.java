@@ -17,14 +17,14 @@ import java.util.List;
  * @author sh1yu
  * @since 2023/10/27 13:03
  */
+@Setter
 @Slf4j
 public class BlackListRecordingProcessor implements SmsProcessor, SmsDaoAware, SmsConfigAware {
-    @Setter
     SmsDao smsDao;
 
-    @Setter
     Object smsConfig;
 
+    @Override
     public int getOrder(){
         return 1;
     }
@@ -32,28 +32,28 @@ public class BlackListRecordingProcessor implements SmsProcessor, SmsDaoAware, S
     @Override
     public Object[] preProcessor(Method method, Object source, Object[] param) {
         //添加到黑名单
-        if (method.getName().equals("joinInBlacklist")) {
+        if ("joinInBlacklist".equals(method.getName())) {
             String cacheKey = getCacheKey();
             ArrayList<String> blackList = getBlackList(cacheKey);
             blackList.add((String) param[0]);
             flushBlackList(cacheKey,blackList);
         }
         //从黑名单移除
-        if (method.getName().equals("removeFromBlacklist")) {
+        if ("removeFromBlacklist".equals(method.getName())) {
             String cacheKey = getCacheKey();
             ArrayList<String> blackList = getBlackList(cacheKey);
             blackList.remove((String) param[0]);
             flushBlackList(cacheKey,blackList);
         }
         //批量添加到黑名单
-        if (method.getName().equals("batchJoinBlacklist")) {
+        if ("batchJoinBlacklist".equals(method.getName())) {
             String cacheKey = getCacheKey();
             ArrayList<String> blackList = getBlackList(cacheKey);
             blackList.addAll((List<String>) param[0]);
             flushBlackList(cacheKey,blackList);
         }
         //批量从黑名单移除
-        if (method.getName().equals("batchRemovalFromBlacklist")) {
+        if ("batchRemovalFromBlacklist".equals(method.getName())) {
             String cacheKey = getCacheKey();
             ArrayList<String> blackList = getBlackList(cacheKey);
             blackList.removeAll((List<String>) param[0]);

@@ -70,15 +70,18 @@ public abstract class AbstractOaBlend<C extends OaSupplierConfig> implements OaS
     }
 
 
+    @Override
     public final void senderAsync(Request request, MessageType messageType) {
         pool.execute(() -> sender(request, messageType));
     }
 
+    @Override
     public final void senderAsync(Request request, MessageType messageType, OaCallBack callBack) {
         CompletableFuture<Response> future = CompletableFuture.supplyAsync(() -> sender(request, messageType));
         future.thenAcceptAsync(callBack::callBack);
     }
 
+    @Override
     public final void senderAsyncByPriority(Request request, MessageType messageType) {
         request.setMessageType(messageType);
         priorityQueueMap.offer(request);

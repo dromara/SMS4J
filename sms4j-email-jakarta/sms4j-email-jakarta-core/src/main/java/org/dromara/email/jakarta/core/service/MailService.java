@@ -9,6 +9,12 @@ import cn.hutool.http.HttpUtil;
 import jakarta.activation.DataHandler;
 import jakarta.activation.DataSource;
 import jakarta.activation.FileDataSource;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Multipart;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMultipart;
 import jakarta.mail.util.ByteArrayDataSource;
 import org.dromara.email.jakarta.api.MailClient;
 import org.dromara.email.jakarta.comm.constants.FileConstants;
@@ -16,13 +22,6 @@ import org.dromara.email.jakarta.comm.entity.MailMessage;
 import org.dromara.email.jakarta.comm.errors.MailException;
 import org.dromara.email.jakarta.comm.utils.HtmlUtil;
 import org.dromara.email.jakarta.comm.utils.ZipUtils;
-
-import jakarta.mail.Message;
-import jakarta.mail.MessagingException;
-import jakarta.mail.Multipart;
-import jakarta.mail.Transport;
-import jakarta.mail.internet.MimeBodyPart;
-import jakarta.mail.internet.MimeMultipart;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

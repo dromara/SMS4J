@@ -4,9 +4,14 @@ import cn.hutool.core.bean.BeanUtil;
 import org.dromara.sms4j.core.datainterface.SmsReadConfig;
 import org.dromara.sms4j.provider.config.BaseConfig;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class ConfigCombineMapAdeptor<S, M> extends HashMap {
+    @Override
     public M get(Object key) {
         Object o = super.get(key);
         if (null == o){

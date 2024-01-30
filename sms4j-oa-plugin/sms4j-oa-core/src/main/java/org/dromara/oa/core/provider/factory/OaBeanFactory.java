@@ -1,10 +1,15 @@
 package org.dromara.oa.core.provider.factory;
 
-import org.dromara.oa.comm.task.delayed.DelayedTime;
+import lombok.Getter;
 import org.dromara.oa.comm.entity.Request;
+import org.dromara.oa.comm.task.delayed.DelayedTime;
 import org.dromara.oa.core.provider.config.OaConfig;
 
-import java.util.concurrent.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.Executor;
+import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class OaBeanFactory {
 
@@ -12,15 +17,18 @@ public class OaBeanFactory {
     private static DelayedTime delayedTime;
 
     /** 线程池*/
+    @Getter
     private static Executor executor;
 
     /** 核心配置信息*/
     private static OaConfig oaConfig;
 
     /** 优先级队列*/
+    @Getter
     private static PriorityBlockingQueue<Request> priorityBlockingQueue;
 
     /** 优先级队列*/
+    @Getter
     private static Boolean priorityExecutorThreadStatus = false;
 
     private OaBeanFactory() {
@@ -58,23 +66,11 @@ public class OaBeanFactory {
         return priorityBlockingQueue;
     }
 
-    public static Executor getExecutor() {
-        return executor;
-    }
-
     public static OaConfig getSmsConfig(){
         if (oaConfig == null){
             oaConfig = new OaConfig();
         }
         return oaConfig;
-    }
-
-    public static PriorityBlockingQueue<Request> getPriorityBlockingQueue(){
-        return priorityBlockingQueue;
-    }
-
-    public static Boolean getPriorityExecutorThreadStatus() {
-        return priorityExecutorThreadStatus;
     }
 
     public static Boolean setPriorityExecutorThreadStatus(Boolean bo) {

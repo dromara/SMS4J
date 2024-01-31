@@ -87,11 +87,12 @@ sms:
 #      sid: d2a****777
 #      url: https://sms.idowe.com/**/**/**/send
     qiniu:
-      access-key-id: z_fGcmAj0XOlM_K0KhurGbesdh1ec_nJNCjmo8Ag
-      access-key-secret: xz1AzgPsVnhQaPHy1y_tvajgn3fIVL5bw_qy_hLK
+      access-key-id: EQcDflLTCYnU1hqQaYw-qkvYCmqIYLhog1lkWHb2
+      access-key-secret: NeS2ptvZQoIypnN6u97WQmerr2DdLe7wxFfQvji1
       templateId: 1752130467315859456
       signatureId: 1751851165571624960
       templateName: code
+
 sms-oa:
   config-type: yaml
   oas:

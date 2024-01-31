@@ -16,10 +16,12 @@ public class QiNiuConfig extends BaseConfig {
 
 
     private String baseUrl = "https://sms.qiniuapi.com";
+
     private String templateName;
 
     private String singleMsgUrl = "/v1/message/single";
 
+    private String massMsgUrl = "/v1/message";
 
     private String signatureId;
 

@@ -25,6 +25,9 @@ import java.util.concurrent.Executor;
  **/
 @Slf4j
 public class QiNiuSmsImpl extends AbstractSmsBlend<QiNiuConfig> {
+
+    private int retry = 0;
+
     @Override
     public String getSupplier() {
         return SupplierConstant.QINIU;
@@ -77,12 +80,20 @@ public class QiNiuSmsImpl extends AbstractSmsBlend<QiNiuConfig> {
      * @date 2024/1/31 8:54
      * @Description: 统一处理返回结果
      */
-    public SmsResponse handleRes(JSONObject jsonObject) {
+    public SmsResponse handleRes(String url, HashMap<String, Object> params) {
+        JSONObject jsonObject = http.postJson(url, QiNiuUtils.getHeaderAndSign(url, params, getConfig()), params);
         SmsResponse smsResponse = new SmsResponse();
         smsResponse.setSuccess(ObjectUtil.isEmpty(jsonObject.getStr("error")));
         smsResponse.setData(jsonObject);
         smsResponse.setConfigId(getConfigId());
-        return smsResponse;
+        if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
+            retry = 0;
+            return smsResponse;
+        }
+        http.safeSleep(getConfig().getRetryInterval());
+        retry++;
+        log.warn("短信第 {" + retry + "} 次重新发送");
+        return handleRes(url, params);
     }
 
     /**
@@ -100,7 +111,7 @@ public class QiNiuSmsImpl extends AbstractSmsBlend<QiNiuConfig> {
         params.put("template_id", templateId);
         params.put("mobiles", phones.toArray());
         params.put("parameters", messages);
-        return handleRes(http.postJson(url, QiNiuUtils.getHeaderAndSign(url, params, getConfig()), params));
+        return handleRes(url, params);
     }
 
 
@@ -114,7 +125,7 @@ public class QiNiuSmsImpl extends AbstractSmsBlend<QiNiuConfig> {
 
         log.info("hashMap:{}", hashMap);
 
-        return handleRes(http.postJson(url, QiNiuUtils.getHeaderAndSign(url, hashMap, getConfig()), hashMap));
+        return handleRes(url, hashMap);
     }
 
 }

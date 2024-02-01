@@ -1,12 +1,6 @@
 package org.dromara.email.jakarta.core.service;
 
 import cn.hutool.core.collection.CollUtil;
-import lombok.Data;
-import org.dromara.email.jakarta.api.Blacklist;
-import org.dromara.email.jakarta.api.MailClient;
-import org.dromara.email.jakarta.comm.config.MailSmtpConfig;
-import org.dromara.email.jakarta.comm.errors.MailException;
-
 import jakarta.mail.Authenticator;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
@@ -15,6 +9,12 @@ import jakarta.mail.Session;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import lombok.Data;
+import org.dromara.email.jakarta.api.Blacklist;
+import org.dromara.email.jakarta.api.MailClient;
+import org.dromara.email.jakarta.comm.config.MailSmtpConfig;
+import org.dromara.email.jakarta.comm.errors.MailException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -43,6 +43,7 @@ public class MailBuild {
         props.put("mail.smtp.ssl.enable", config.getIsSSL());
 //        props.put("mail.smtp.ssl.socketFactory", new MailSSLSocketFactory());
         this.session = Session.getInstance(props, new Authenticator() {
+            @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(config.getUsername(), config.getPassword());
             }
@@ -63,6 +64,7 @@ public class MailBuild {
 //        props.put("mail.smtp.ssl.socketFactory", new MailSSLSocketFactory());
         this.session = Session.getInstance(props,
                 new Authenticator() {
+                    @Override
                     protected PasswordAuthentication getPasswordAuthentication() {
                         return new PasswordAuthentication(config.getUsername(), config.getPassword());
                     }

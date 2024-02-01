@@ -30,6 +30,7 @@ public abstract class AbstractProviderFactory<S extends SmsBlend, C extends Supp
      * 获取配置类
      * @return 配置类
      */
+    @Override
     public Class<C> getConfigClass() {
         return configClass;
     }

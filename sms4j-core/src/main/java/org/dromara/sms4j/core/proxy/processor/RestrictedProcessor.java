@@ -22,6 +22,7 @@ import java.util.Objects;
  * @author sh1yu
  * @since 2023/10/27 13:03
  */
+@Setter
 @Slf4j
 public class RestrictedProcessor implements CoreMethodProcessor, SmsDaoAware {
     static Long minTimer = 60 * 1000L;
@@ -31,7 +32,6 @@ public class RestrictedProcessor implements CoreMethodProcessor, SmsDaoAware {
     /**
      * 缓存实例
      */
-    @Setter
     private SmsDao smsDao;
 
     @Override

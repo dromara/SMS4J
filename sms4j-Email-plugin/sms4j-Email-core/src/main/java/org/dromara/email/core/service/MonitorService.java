@@ -1,5 +1,6 @@
 package org.dromara.email.core.service;
 
+import lombok.Getter;
 import org.dromara.email.api.Monitor;
 import org.dromara.email.comm.config.MailImapConfig;
 import org.dromara.email.comm.entity.MonitorMessage;
@@ -32,6 +33,7 @@ import java.util.TimerTask;
 public class MonitorService{
     private final Store store;
     private Monitor monitor;
+    @Getter
     private MailImapConfig mailImapConfig;
     private Timer timer;
 
@@ -127,7 +129,4 @@ public class MonitorService{
         timer.cancel();
     }
 
-    public MailImapConfig getMailImapConfig() {
-        return mailImapConfig;
-    }
 }

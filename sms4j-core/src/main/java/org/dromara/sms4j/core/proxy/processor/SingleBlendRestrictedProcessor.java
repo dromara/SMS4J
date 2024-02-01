@@ -4,17 +4,14 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.dao.SmsDao;
-import org.dromara.sms4j.api.proxy.CoreMethodProcessor;
 import org.dromara.sms4j.api.proxy.SmsProcessor;
 import org.dromara.sms4j.api.proxy.aware.SmsBlendConfigAware;
 import org.dromara.sms4j.api.proxy.aware.SmsDaoAware;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtils;
-import org.dromara.sms4j.provider.config.BaseConfig;
-import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Map;
 
 
 /**
@@ -23,6 +20,7 @@ import java.util.*;
  * @author sh1yu
  * @since 2023/10/27 13:03
  */
+@Setter
 @Slf4j
 public class SingleBlendRestrictedProcessor implements SmsProcessor, SmsDaoAware, SmsBlendConfigAware {
 
@@ -31,10 +29,8 @@ public class SingleBlendRestrictedProcessor implements SmsProcessor, SmsDaoAware
     /**
      * 缓存实例
      */
-    @Setter
     private SmsDao smsDao;
 
-    @Setter
     Map smsBlendsConfig;
 
     @Override

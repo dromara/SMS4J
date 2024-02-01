@@ -17,9 +17,9 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 
+import static org.dromara.oa.comm.enums.MessageType.DINGTALK_LINK;
 import static org.dromara.oa.comm.enums.MessageType.DINGTALK_MARKDOWN;
 import static org.dromara.oa.comm.enums.MessageType.DINGTALK_TEXT;
-import static org.dromara.oa.comm.enums.MessageType.DINGTALK_LINK;
 
 /**
  * 钉钉通知签名和信息构建

@@ -1,10 +1,5 @@
 package org.dromara.email.jakarta.core.service;
 
-import org.dromara.email.jakarta.api.Monitor;
-import org.dromara.email.jakarta.comm.config.MailImapConfig;
-import org.dromara.email.jakarta.comm.entity.MonitorMessage;
-import org.dromara.email.jakarta.comm.errors.MailException;
-
 import jakarta.mail.BodyPart;
 import jakarta.mail.Flags;
 import jakarta.mail.Folder;
@@ -14,6 +9,12 @@ import jakarta.mail.Multipart;
 import jakarta.mail.Session;
 import jakarta.mail.Store;
 import jakarta.mail.search.FlagTerm;
+import lombok.Getter;
+import org.dromara.email.jakarta.api.Monitor;
+import org.dromara.email.jakarta.comm.config.MailImapConfig;
+import org.dromara.email.jakarta.comm.entity.MonitorMessage;
+import org.dromara.email.jakarta.comm.errors.MailException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,6 +33,7 @@ import java.util.TimerTask;
 public class MonitorService{
     private final Store store;
     private Monitor monitor;
+    @Getter
     private MailImapConfig mailImapConfig;
     private Timer timer;
 
@@ -127,7 +129,4 @@ public class MonitorService{
         timer.cancel();
     }
 
-    public MailImapConfig getMailImapConfig() {
-        return mailImapConfig;
-    }
 }

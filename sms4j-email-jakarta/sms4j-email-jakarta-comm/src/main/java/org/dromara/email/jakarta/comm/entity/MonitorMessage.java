@@ -1,7 +1,7 @@
 package org.dromara.email.jakarta.comm.entity;
 
-import lombok.Data;
 import jakarta.mail.Multipart;
+import lombok.Data;
 
 import java.util.Date;
 

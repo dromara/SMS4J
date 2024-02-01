@@ -10,7 +10,6 @@ import org.dromara.sms4j.comm.utils.SmsHttpUtils;
 import org.dromara.sms4j.comm.utils.SmsUtils;
 import org.dromara.sms4j.dingzhong.config.DingZhongConfig;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**

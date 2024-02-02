@@ -30,6 +30,7 @@ import org.dromara.sms4j.netease.config.NeteaseFactory;
 import org.dromara.sms4j.provider.config.SmsConfig;
 import org.dromara.sms4j.provider.factory.BaseProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
+import org.dromara.sms4j.qiniu.config.QiNiuFactory;
 import org.dromara.sms4j.starter.adepter.ConfigCombineMapAdeptor;
 import org.dromara.sms4j.tencent.config.TencentFactory;
 import org.dromara.sms4j.unisms.config.UniFactory;
@@ -123,6 +124,7 @@ public class SmsBlendsInitializer  {
         ProviderFactoryHolder.registerFactory(ZhutongFactory.instance());
         ProviderFactoryHolder.registerFactory(LianLuFactory.instance());
         ProviderFactoryHolder.registerFactory(DingZhongFactory.instance());
+        ProviderFactoryHolder.registerFactory(QiNiuFactory.instance());
         if(SmsUtils.isClassExists("com.jdcloud.sdk.auth.CredentialsProvider")) {
             ProviderFactoryHolder.registerFactory(JdCloudFactory.instance());
         }

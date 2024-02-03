@@ -142,7 +142,7 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
     private SmsResponse requestRetry(String requestUrl, List<String> phones, String message, String templateId) {
         http.safeSleep(getConfig().getRetryInterval());
         retry++;
-        log.warn("短信第 {" + retry + "} 次重新发送");
+        log.warn("短信第 {} 次重新发送", retry);
         return getSmsResponse(requestUrl, phones, message, templateId);
     }
 

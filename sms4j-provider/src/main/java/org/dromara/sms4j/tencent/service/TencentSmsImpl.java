@@ -123,7 +123,7 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
     private SmsResponse requestRetry(String[] phones, String[] messages, String templateId) {
         http.safeSleep(getConfig().getRetryInterval());
         retry++;
-        log.warn("短信第 {" + retry + "} 次重新发送");
+        log.warn("短信第 {} 次重新发送", retry);
         return getSmsResponse(phones, messages, templateId);
     }
 

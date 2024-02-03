@@ -160,7 +160,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
     private SmsResponse requestRetry(List<String> phones, String content) {
         http.safeSleep(getConfig().getRetryInterval());
         retry++;
-        log.warn("短信第 {" + retry + "} 次重新发送");
+        log.warn("短信第 {} 次重新发送", retry);
         return getSmsResponse(phones, content);
     }
 
@@ -248,7 +248,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
     private SmsResponse requestRetry(String templateId, List<String> phones, LinkedHashMap<String, String> messages) {
         http.safeSleep(getConfig().getRetryInterval());
         retry++;
-        log.warn("短信第 {" + retry + "} 次重新发送");
+        log.warn("短信第 {} 次重新发送", retry);
         return getSmsResponseTemplate(templateId, phones, messages);
     }
 

@@ -72,8 +72,8 @@ public class RestrictedProcessor implements CoreMethodProcessor, SmsDaoAware {
                 if (SmsUtils.isEmpty(i)) {
                     smsDao.set(REDIS_KEY + phone + "max", 1, accTimer / 1000);
                 } else if (i >= accountMax) {
-                    log.info("The phone:" + phone + ",number of short messages reached the maximum today");
-                    throw new SmsBlendException("The phone:" + phone + ",number of short messages reached the maximum today");
+                    log.info("The phone: {},number of short messages reached the maximum today", phone);
+                    throw new SmsBlendException("The phone: {},number of short messages reached the maximum today", phone);
                 } else {
                     smsDao.set(REDIS_KEY + phone + "max", i + 1, accTimer / 1000);
                 }
@@ -84,8 +84,8 @@ public class RestrictedProcessor implements CoreMethodProcessor, SmsDaoAware {
                     if (o < minuteMax) {
                         smsDao.set(REDIS_KEY + phone, o + 1, minTimer / 1000);
                     } else {
-                        log.info("The phone:" + phone + ",number of short messages reached the maximum today");
-                        throw new SmsBlendException("The phone:", phone + " Text messages are sent too often！");
+                        log.info("The phone: {},number of short messages reached the maximum today", phone);
+                        throw new SmsBlendException("The phone: {} Text messages are sent too often！", phone);
                     }
                 } else {
                     smsDao.set(REDIS_KEY + phone, 1, minTimer / 1000);

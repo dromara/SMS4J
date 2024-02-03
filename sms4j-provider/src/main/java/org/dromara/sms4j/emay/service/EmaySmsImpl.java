@@ -75,7 +75,7 @@ public class EmaySmsImpl extends AbstractSmsBlend<EmayConfig> {
     private SmsResponse requestRetry(String phone, String message) {
         http.safeSleep(getConfig().getRetryInterval());
         retry++;
-        log.warn("短信第 {" + retry + "} 次重新发送");
+        log.warn("短信第 {} 次重新发送", retry);
         return sendMessage(phone, message);
     }
 

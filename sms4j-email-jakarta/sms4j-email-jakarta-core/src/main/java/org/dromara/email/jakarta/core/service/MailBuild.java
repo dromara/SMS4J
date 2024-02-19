@@ -114,9 +114,9 @@ public class MailBuild {
             if (Objects.isNull(blacklist)) {
                 return InternetAddress.parse(Objects.requireNonNull(CollUtil.join(source, ",")));
             }
-            List<String> blacklist1 = blacklist.getBlacklist();
-            for (String s : blacklist1) {
-                if (!source.contains(s)) {
+            List<String> black = blacklist.getBlacklist();
+            for (String s : source) {
+                if (!black.contains(s)) {
                     list.add(s);
                 }
             }

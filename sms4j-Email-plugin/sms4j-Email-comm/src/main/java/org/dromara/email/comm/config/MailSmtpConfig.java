@@ -27,6 +27,11 @@ public class MailSmtpConfig {
     private String fromAddress;
 
     /**
+     * 发送人昵称
+     * */
+    private String nickName;
+
+    /**
      * 服务器地址
      * */
     private String smtpServer;

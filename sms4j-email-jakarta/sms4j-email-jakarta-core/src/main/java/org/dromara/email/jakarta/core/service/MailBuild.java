@@ -1,6 +1,7 @@
 package org.dromara.email.jakarta.core.service;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import jakarta.mail.Authenticator;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
@@ -15,6 +16,7 @@ import org.dromara.email.jakarta.api.MailClient;
 import org.dromara.email.jakarta.comm.config.MailSmtpConfig;
 import org.dromara.email.jakarta.comm.errors.MailException;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -49,7 +51,15 @@ public class MailBuild {
             }
         });
         this.message = new MimeMessage(session);
-        this.message.setFrom(new InternetAddress(config.getFromAddress()));
+        try {
+            if (StrUtil.isEmpty(config.getNickName())){
+                this.message.setFrom(new InternetAddress(config.getFromAddress()));
+            }else {
+                this.message.setFrom(new InternetAddress(config.getFromAddress(),config.getNickName()));
+            }
+        } catch (UnsupportedEncodingException e) {
+            throw new MailException(e);
+        }
         this.config = config;
         this.retryInterval = config.getRetryInterval();
         this.maxRetries = config.getMaxRetries();
@@ -70,7 +80,15 @@ public class MailBuild {
                     }
                 });
         this.message = new MimeMessage(session);
-        this.message.setFrom(new InternetAddress(config.getFromAddress()));
+        try {
+            if (StrUtil.isEmpty(config.getNickName())){
+                this.message.setFrom(new InternetAddress(config.getFromAddress()));
+            }else {
+                this.message.setFrom(new InternetAddress(config.getFromAddress(),config.getNickName()));
+            }
+        } catch (UnsupportedEncodingException e) {
+            throw new MailException(e);
+        }
         this.config = config;
         this.blacklist = blacklist;
         this.retryInterval = config.getRetryInterval();
@@ -96,7 +114,8 @@ public class MailBuild {
             if (Objects.isNull(blacklist)) {
                 return InternetAddress.parse(Objects.requireNonNull(CollUtil.join(source, ",")));
             }
-            for (String s : blacklist.getBlacklist()) {
+            List<String> blacklist1 = blacklist.getBlacklist();
+            for (String s : blacklist1) {
                 if (!source.contains(s)) {
                     list.add(s);
                 }

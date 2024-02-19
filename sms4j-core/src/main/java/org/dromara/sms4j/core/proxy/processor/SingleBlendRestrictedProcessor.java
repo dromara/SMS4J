@@ -66,8 +66,8 @@ public class SingleBlendRestrictedProcessor implements SmsProcessor, SmsDaoAware
         if (SmsUtils.isEmpty(i)) {
             smsDao.set(REDIS_KEY + configId + "maximum", 1);
         } else if (i >= maximum) {
-            log.info("The channel:" + configId + ",messages reached the maximum");
-            throw new SmsBlendException("The channel:" + configId + ",messages reached the maximum");
+            log.info("The channel: {},messages reached the maximum", configId);
+            throw new SmsBlendException("The channel: {},messages reached the maximum", configId);
         } else {
             smsDao.set(REDIS_KEY + configId + "maximum", i + 1);
         }

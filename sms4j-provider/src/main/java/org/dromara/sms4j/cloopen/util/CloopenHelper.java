@@ -65,7 +65,7 @@ public class CloopenHelper {
     private SmsResponse requestRetry(Map<String, Object> paramMap) {
         http.safeSleep(config.getRetryInterval());
         retry++;
-        log.warn("短信第 {" + retry + "} 次重新发送");
+        log.warn("短信第 {} 次重新发送", retry);
         return smsResponse(paramMap);
     }
 

@@ -107,7 +107,7 @@ public class JdCloudSmsImpl extends AbstractSmsBlend<JdCloudConfig> {
     private SmsResponse requestRetry(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
         http.safeSleep(getConfig().getRetryInterval());
         retry++;
-        log.warn("短信第 {" + retry + "} 次重新发送");
+        log.warn("短信第 {} 次重新发送", retry);
         return massTexting(phones, templateId, messages);
     }
 

@@ -1,6 +1,8 @@
 package org.dromara.sms4j.qiniu.util;
 
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.crypto.digest.HMac;
+import cn.hutool.crypto.digest.HmacAlgorithm;
 import cn.hutool.json.JSONUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -8,8 +10,6 @@ import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.qiniu.config.QiNiuConfig;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -18,8 +18,6 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
-import static org.apache.commons.codec.digest.HmacUtils.hmacSha1;
 
 /**
  * @author Administrator
@@ -43,19 +41,15 @@ public class QiNiuUtils {
         if (ObjectUtil.isNotEmpty(body)) {
             dataToSign.append(body);
         }
-        Mac sha1Mac = Mac.getInstance(HMAC_SHA1_ALGORITHM);
-        SecretKeySpec secretKeySpec = new SecretKeySpec(qiNiuConfig.getAccessKeySecret().getBytes(StandardCharsets.UTF_8), HMAC_SHA1_ALGORITHM);
-        sha1Mac.init(secretKeySpec);
-        byte[] signData = sha1Mac.doFinal(dataToSign.toString().getBytes(StandardCharsets.UTF_8));
+        HMac hMac = new HMac(HmacAlgorithm.HmacSHA1, qiNiuConfig.getAccessKeySecret().getBytes(StandardCharsets.UTF_8));
+        byte[] signData = hMac.digest(dataToSign.toString().getBytes(StandardCharsets.UTF_8));
         String encodedSignature = Base64.getEncoder().encodeToString(signData);
-
-        System.out.println("encodedSignature = " + encodedSignature);
 
         return "Qiniu " + qiNiuConfig.getAccessKeyId() + ":" + encodedSignature;
     }
 
     public static Map<String, String> getHeaderAndSign(String url, HashMap<String, Object> hashMap, QiNiuConfig qiNiuConfig) {
-        String signature = null;
+        String signature;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
         dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         String signDate = dateFormat.format(new Date());
@@ -67,7 +61,7 @@ public class QiNiuUtils {
         }
 
         //请求头
-        Map<String, String> header = new HashMap<>();
+        Map<String, String> header = new HashMap<>(3);
         header.put("Authorization", signature);
         header.put("X-Qiniu-Date", signDate);
         header.put("Content-Type", "application/json");

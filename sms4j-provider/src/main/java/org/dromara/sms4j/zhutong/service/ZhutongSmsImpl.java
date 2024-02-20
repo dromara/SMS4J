@@ -78,6 +78,9 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
 
     @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<>();
+        }
         return getSmsResponseTemplate(templateId, phone, messages);
     }
 
@@ -96,6 +99,9 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
 
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<>();
+        }
         return getSmsResponseTemplate(templateId, phones, messages);
     }
 

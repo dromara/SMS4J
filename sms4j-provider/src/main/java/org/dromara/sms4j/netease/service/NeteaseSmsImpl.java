@@ -78,6 +78,9 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
      */
     @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<String, String>();
+        }
         Optional.ofNullable(phone).orElseThrow(() -> new SmsBlendException("手机号不能为空"));
         Optional.ofNullable(getConfig().getTemplateId()).orElseThrow(() -> new SmsBlendException("模板ID不能为空"));
         String messageStr = messages.get("params");
@@ -98,6 +101,9 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
 
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<String, String>();
+        }
         if (phones.size() > 100) {
             throw new SmsBlendException("单次发送超过最大发送上限，建议每次群发短信人数低于100");
         }

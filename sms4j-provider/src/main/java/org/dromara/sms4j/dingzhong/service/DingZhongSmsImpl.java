@@ -14,6 +14,7 @@ import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 
 /**
@@ -68,6 +69,9 @@ public class DingZhongSmsImpl extends AbstractSmsBlend<DingZhongConfig> {
 
     @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<String, String>();
+        }
         DingZhongHelper helper = new DingZhongHelper(getConfig(), http);
         Map<String, Object> paramMap = MapUtil.newHashMap(5, true);
         paramMap.put("cdkey", getConfig().getAccessKeyId());

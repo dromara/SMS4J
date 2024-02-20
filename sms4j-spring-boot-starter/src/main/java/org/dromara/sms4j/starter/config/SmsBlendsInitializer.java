@@ -128,6 +128,7 @@ public class SmsBlendsInitializer  {
         if(SmsUtils.isClassExists("com.jdcloud.sdk.auth.CredentialsProvider")) {
             ProviderFactoryHolder.registerFactory(JdCloudFactory.instance());
         }
+        log.debug("加载内置运营商完成！");
     }
 
 }

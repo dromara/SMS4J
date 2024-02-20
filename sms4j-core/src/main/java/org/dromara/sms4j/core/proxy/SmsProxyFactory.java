@@ -91,7 +91,7 @@ public abstract class SmsProxyFactory {
         if (null != smsDao) {
             return smsDao;
         }
-        log.info("尝试框架加载失败，最终使用默认SmsDao！");
+        log.debug("未找到合适框架加载，最终使用默认SmsDao！如无自实现SmsDao请忽略本消息！");
         return SmsDaoDefaultImpl.getInstance();
     }
 
@@ -104,7 +104,7 @@ public abstract class SmsProxyFactory {
             log.info("{}:加载SmsDao成功，使用{}", frameworkName,smsDao.getClass().getName());
             return smsDao;
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            log.debug("{}:加载SmsDao失败，尝试其他框架加载......", frameworkName);
+            log.debug("{}:尝试其他框架加载......", frameworkName);
         }
         return null;
     }

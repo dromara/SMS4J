@@ -1,7 +1,7 @@
 package org.dromara.sms4j.core.proxy.processor;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.collection.CollUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.proxy.CoreMethodProcessor;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
@@ -49,22 +49,19 @@ public class CoreMethodParamValidateProcessor implements CoreMethodProcessor {
     }
 
     public void validateMessage(Object messageObj) {
+        if(Objects.isNull(messageObj)){
+            throw new SmsBlendException("cant send a null message!");
+        }
         if (messageObj instanceof String){
             String message = (String) messageObj;
             if (StrUtil.isBlank(message)) {
                 throw new SmsBlendException("cant send a null message!");
             }
         }
-        if (messageObj instanceof Map){
-            Map message = (Map) messageObj;
-            if (message.isEmpty()) {
-                throw new SmsBlendException("cant send a null message!");
-            }
-        }
     }
 
     public void validatePhone(String phone) {
-        if (StrUtil.isBlank(phone)) {
+        if (StrUtil.isNotEmpty(phone)) {
             throw new SmsBlendException("cant send message to null!");
         }
     }
@@ -82,7 +79,7 @@ public class CoreMethodParamValidateProcessor implements CoreMethodProcessor {
     }
 
     public void validateMessages(String templateId, LinkedHashMap<String, String> messages) {
-        if (StrUtil.isNotBlank(templateId) && CollUtil.isEmpty(messages)) {
+        if (StrUtil.isEmpty(templateId) && messages == null) {
             throw new SmsBlendException("cant use template without template param");
         }
     }

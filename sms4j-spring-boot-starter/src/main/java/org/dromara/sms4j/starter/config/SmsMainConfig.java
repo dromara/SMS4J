@@ -30,24 +30,6 @@ public class SmsMainConfig {
         return BeanFactory.getSmsConfig();
     }
 
-//    /**
-//     * 注入一个定时器
-//     */
-//    @Bean
-//    @Lazy
-//    protected DelayedTime delayedTime() {
-//        return BeanFactory.getDelayedTime();
-//    }
-//
-//    /**
-//     * 注入线程池
-//     */
-//    @Bean("smsExecutor")
-//    @Lazy
-//    protected Executor taskExecutor(SmsConfig config) {
-//        return BeanFactory.setExecutor(config);
-//    }
-
     /**
      * 注入一个配置文件读取工具
      */

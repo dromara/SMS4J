@@ -88,6 +88,9 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
 
     @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<>();
+        }
         Map<String, Object> body = setBody(phone, "", messages, templateId);
         Map<String, String> headers = getHeaders();
 
@@ -121,6 +124,9 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
 
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<>();
+        }
         if (phones.size() > 1000) {
             throw new SmsBlendException("单次发送超过最大发送上限，建议每次群发短信人数低于1000");
         }

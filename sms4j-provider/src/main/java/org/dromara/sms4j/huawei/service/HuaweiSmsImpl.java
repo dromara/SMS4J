@@ -58,6 +58,9 @@ public class HuaweiSmsImpl extends AbstractSmsBlend<HuaweiConfig> {
 
     @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<String, String>();
+        }
         String url = getConfig().getUrl() + Constant.HUAWEI_REQUEST_URL;
         List<String> list = new ArrayList<>();
         for (Map.Entry<String, String> entry : messages.entrySet()) {
@@ -99,6 +102,9 @@ public class HuaweiSmsImpl extends AbstractSmsBlend<HuaweiConfig> {
 
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<String, String>();
+        }
         return sendMessage(CollUtil.join(phones, ","), templateId, messages);
     }
 

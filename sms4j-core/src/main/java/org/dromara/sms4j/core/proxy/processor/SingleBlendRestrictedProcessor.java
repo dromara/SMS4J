@@ -57,7 +57,7 @@ public class SingleBlendRestrictedProcessor implements SmsProcessor, SmsDaoAware
         }
         int maximum = 0;
         try{
-             maximum = Integer.parseInt(maximumObj) ;
+             maximum = Integer.parseInt(String.valueOf(maximumObj)) ;
         }catch (Exception e){
             log.error("获取厂商级发送上限参数错误！请检查！");
             throw new IllegalArgumentException("获取厂商级发送上限参数错误");

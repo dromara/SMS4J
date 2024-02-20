@@ -2,20 +2,18 @@ package org.dromara.sms4j.qiniu.service;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
-import com.google.gson.Gson;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
-import org.dromara.sms4j.netease.config.NeteaseConfig;
 import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import org.dromara.sms4j.qiniu.config.QiNiuConfig;
 import org.dromara.sms4j.qiniu.util.QiNiuUtils;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 
 /**
@@ -106,6 +104,9 @@ public class QiNiuSmsImpl extends AbstractSmsBlend<QiNiuConfig> {
      * @Description: 发送群发短信
      */
     private SmsResponse senMassMsg(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<>();
+        }
         String url = getConfig().getBaseUrl() + getConfig().getMassMsgUrl();
         HashMap<String, Object> params = new HashMap<>();
         params.put("template_id", templateId);
@@ -116,6 +117,9 @@ public class QiNiuSmsImpl extends AbstractSmsBlend<QiNiuConfig> {
 
 
     private SmsResponse sendSingleMsg(String phone, String templateId, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<>();
+        }
         String url = getConfig().getBaseUrl() + getConfig().getSingleMsgUrl();
         //手机号
         HashMap<String, Object> hashMap = new HashMap<>();

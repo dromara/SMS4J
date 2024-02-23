@@ -61,9 +61,13 @@ public class RestrictedProcessor implements CoreMethodProcessor, SmsDaoAware {
 
     public void doRestricted(List<String> phones) {
         if (Objects.isNull(smsDao)) {
-            throw new SmsBlendException("The dao tool could not be found");
+            throw new SmsBlendException("The smsDao tool could not be found");
         }
         SmsConfig config = BeanFactory.getSmsConfig();
+        // 如果未开始限制则不做处理
+        if (!config.getRestricted()){
+            return;
+        }
         Integer accountMax = config.getAccountMax(); // 每日最大发送量
         Integer minuteMax = config.getMinuteMax(); // 每分钟最大发送量
         for (String phone : phones) {

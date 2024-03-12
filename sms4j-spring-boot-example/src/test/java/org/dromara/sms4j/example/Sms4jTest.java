@@ -26,7 +26,7 @@ class Sms4jTest {
     /**
      * 填测试手机号
      */
-    private static final String PHONE = "";
+    private static final String PHONE = "13478969075";
 
     @Test
     public void byLoadTest() {
@@ -38,6 +38,12 @@ class Sms4jTest {
         Assert.isTrue(smsResponse.isSuccess());
     }
 
+    @Test
+    public void jiguangSmsTest() {
+        // 阿里
+        SmsResponse smsResponse = SmsFactory.getBySupplier("jiguang").sendMessage(PHONE, SmsUtils.getRandomInt(6));
+        Assert.isTrue(smsResponse.isSuccess());
+    }
     @Test
     public void alibabaSmsTest() {
         // 阿里

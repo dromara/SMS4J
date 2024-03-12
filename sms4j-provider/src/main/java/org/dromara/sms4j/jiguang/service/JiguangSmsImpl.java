@@ -6,6 +6,7 @@ import cn.jiguang.common.resp.APIRequestException;
 import cn.jsms.api.SendSMSResult;
 import cn.jsms.api.common.SMSClient;
 import cn.jsms.api.common.model.SMSPayload;
+import com.jdcloud.sdk.service.sms.model.BatchSendResult;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.aliyun.config.AlibabaConfig;
 import org.dromara.sms4j.api.entity.SmsResponse;
@@ -15,10 +16,7 @@ import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.jiguang.config.JiguangConfig;
 import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
@@ -72,12 +70,51 @@ public class JiguangSmsImpl extends AbstractSmsBlend<JiguangConfig> {
     public SmsResponse massTexting(List<String> phones, String message) {
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
         map.put(IdUtil.fastSimpleUUID(), message);
-        return massTexting(phones, getConfig().getTemplateId(), map);
+        return massTexting(phones, getConfig().getTemplateid(), map);
     }
 
     @Override
-    public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
-        return null;
+    public SmsResponse massTexting(List<String> phones, String templateid,  LinkedHashMap<String, String> messages) {
+        SmsResponse response = new SmsResponse();
+        Optional<String> message = messages.keySet()
+                .stream().findFirst();
+        try {//构建发送短信
+            SMSPayload payload = SMSPayload.newBuilder()
+                    .setMobileNumber(phones.get(0)) // 手机号码
+                    .setTempId(Integer.valueOf(templateid))            // 短信模板ID 需要自行申请 模板id为：1的则自带验证码模板id
+                    .addTempPara("code", "123456")  // key模板参数value：参数值  您的手机验证码：{{code}}，有效期5分钟，请勿泄露。如非本人操作，请忽略此短信。谢谢！
+                    .setSignId(Integer.valueOf(getConfig().getSignid()))// 签名id 需要自行申请审核。个人也可以申请
+                    .build();
+
+            //发送短信 会返回msg_id
+            SendSMSResult res = this.client.sendTemplateSMS(payload);
+            if(res != null && res.isResultOK()){
+                response.setSuccess(true);
+            }else{
+                response.setSuccess(false);
+            }
+            //执行业务/
+            //指向保存短信发送记录业务逻辑 可以直接扔到MQ
+            /**
+             * 第一个参数极光返回的消息id
+             * 第二个发送的手机号
+             * 第三个发送内容
+             * 第四个发送时间
+             * 保存到DB
+             */
+            //insertSendSmsLog(res.getMessageId(),phoneNumber,code,0,System.currentTimeMillis()/1000);
+            //执行业务/
+
+        } catch (APIConnectionException e) {
+            log.error(e.getStackTrace().toString());
+            e.printStackTrace();
+            response.setSuccess(false);
+        } catch (APIRequestException e) {
+            log.error(e.getStackTrace().toString());
+            e.printStackTrace();
+            response.setSuccess(false);
+        }
+        return response;
     }
 
 //    @Override
@@ -125,6 +162,13 @@ public class JiguangSmsImpl extends AbstractSmsBlend<JiguangConfig> {
      * @param res 云商原始响应信息
      * @return 发送短信返回信息
      */
+    private SmsResponse getSmsResponse(BatchSendResult res) {
+        SmsResponse smsResponse = new SmsResponse();
+        smsResponse.setSuccess(res.getStatus() != null && res.getStatus());
+        smsResponse.setData(res);
+        smsResponse.setConfigId(getConfigId());
+        return smsResponse;
+    }
 //    private SmsResponse getSmsResponse(BatchSendResult res) {
 //        SmsResponse smsResponse = new SmsResponse();
 //        smsResponse.setSuccess(res.getStatus() != null && res.getStatus());

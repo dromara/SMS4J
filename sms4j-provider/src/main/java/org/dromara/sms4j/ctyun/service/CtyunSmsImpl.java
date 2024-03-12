@@ -60,7 +60,7 @@ public class CtyunSmsImpl extends AbstractSmsBlend<CtyunConfig> {
     @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
         if (Objects.isNull(messages)){
-            messages = new LinkedHashMap<String, String>();
+            messages = new LinkedHashMap<>();
         }
         String messageStr = JSONUtil.toJsonStr(messages);
         return getSmsResponse(phone, messageStr, templateId);
@@ -76,7 +76,7 @@ public class CtyunSmsImpl extends AbstractSmsBlend<CtyunConfig> {
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
         if (Objects.isNull(messages)){
-            messages = new LinkedHashMap<String, String>();
+            messages = new LinkedHashMap<>();
         }
         String messageStr = JSONUtil.toJsonStr(messages);
         return getSmsResponse(SmsUtils.arrayToString(phones), messageStr, templateId);

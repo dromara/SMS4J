@@ -1,7 +1,6 @@
 package org.dromara.sms4j.api.proxy;
 
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 /**
  * 执行器接口

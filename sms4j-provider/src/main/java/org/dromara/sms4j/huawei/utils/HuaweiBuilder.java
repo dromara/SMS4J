@@ -35,7 +35,8 @@ public class HuaweiBuilder {
             return null;
         }
         String time = dateFormat(new Date());
-        String nonce = UUID.randomUUID().toString().replace("-", ""); //Nonce
+        // Nonce
+        String nonce = UUID.randomUUID().toString().replace("-", "");
         MessageDigest md;
         byte[] passwordDigest = null;
 
@@ -46,8 +47,8 @@ public class HuaweiBuilder {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-
-        String passwordDigestBase64Str = Base64.encode(passwordDigest); //PasswordDigest
+        // PasswordDigest
+        String passwordDigestBase64Str = Base64.encode(passwordDigest);
         //若passwordDigestBase64Str中包含换行符,请执行如下代码进行修正
         //passwordDigestBase64Str = passwordDigestBase64Str.replaceAll("[\\s*\t\n\r]", "");
         return String.format(Constant.HUAWEI_WSSE_HEADER_FORMAT, appKey, passwordDigestBase64Str, nonce, time);

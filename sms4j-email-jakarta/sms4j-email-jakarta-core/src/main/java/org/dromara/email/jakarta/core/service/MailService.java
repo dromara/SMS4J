@@ -33,8 +33,8 @@ import java.util.logging.Logger;
 
 public class MailService implements MailClient {
 
-    private static Logger logger = Logger.getLogger("mailLog");
-    private MailBuild mailBuild;
+    private static final Logger logger = Logger.getLogger("mailLog");
+    private final MailBuild mailBuild;
 
     private MailService(MailBuild mailBuild) {
         this.mailBuild = mailBuild;
@@ -130,7 +130,8 @@ public class MailService implements MailClient {
                             List<String> cc,
                             List<String> bcc) {
         int maxRetries = mailBuild.getMaxRetries();
-        int retryCount = 1; // 初始值为1；则while循环中少发送一次，最后一次发送在判断 retryCount >= maxRetries 这里。
+        // 初始值为1；则while循环中少发送一次，最后一次发送在判断 retryCount >= maxRetries 这里。
+        int retryCount = 1;
         boolean retryOnFailure = true;
 
         while (retryOnFailure && retryCount < maxRetries) {
@@ -143,7 +144,8 @@ public class MailService implements MailClient {
                     message = messageBuild(mailAddress, title, body, null, null, zipName, cc, bcc, files);
                 }
                 Transport.send(message);
-                retryOnFailure = false; // 发送成功，停止重试
+                // 发送成功，停止重试
+                retryOnFailure = false;
             } catch (MessagingException | IOException e) {
                 retryCount++;
                 try {

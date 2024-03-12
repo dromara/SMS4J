@@ -45,7 +45,7 @@ import java.util.Map;
 
 @Slf4j
 public class SmsBlendsInitializer  {
-    private List<BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig>> factoryList;
+    private final List<BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig>> factoryList;
 
     private final SmsConfig smsConfig;
     private final Map<String, Map<String, Object>> blends;

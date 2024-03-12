@@ -68,10 +68,13 @@ public class RestrictedProcessor implements CoreMethodProcessor, SmsDaoAware {
         if (!config.getRestricted()){
             return;
         }
-        Integer accountMax = config.getAccountMax(); // 每日最大发送量
-        Integer minuteMax = config.getMinuteMax(); // 每分钟最大发送量
+        // 每日最大发送量
+        Integer accountMax = config.getAccountMax();
+        // 每分钟最大发送量
+        Integer minuteMax = config.getMinuteMax();
         for (String phone : phones) {
-            if (SmsUtils.isNotEmpty(accountMax)) {   // 是否配置了每日限制
+            // 是否配置了每日限制
+            if (SmsUtils.isNotEmpty(accountMax)) {
                 Integer i = (Integer) smsDao.get(REDIS_KEY + phone + "max");
                 if (SmsUtils.isEmpty(i)) {
                     smsDao.set(REDIS_KEY + phone + "max", 1, accTimer / 1000);
@@ -82,7 +85,8 @@ public class RestrictedProcessor implements CoreMethodProcessor, SmsDaoAware {
                     smsDao.set(REDIS_KEY + phone + "max", i + 1, accTimer / 1000);
                 }
             }
-            if (SmsUtils.isNotEmpty(minuteMax)) {  // 是否配置了每分钟最大限制
+            // 是否配置了每分钟最大限制
+            if (SmsUtils.isNotEmpty(minuteMax)) {
                 Integer o = (Integer) smsDao.get(REDIS_KEY + phone);
                 if (SmsUtils.isNotEmpty(o)) {
                     if (o < minuteMax) {

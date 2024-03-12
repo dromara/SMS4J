@@ -19,7 +19,7 @@ import java.util.Map;
  **/
 public class MonitorFactory {
 
-    private final static Map<String, MonitorService> services = new HashMap<>();
+    private final static Map<String, MonitorService> SERVICES = new HashMap<>();
 
     /**
      *  put
@@ -30,7 +30,7 @@ public class MonitorFactory {
      * @author :Wind
     */
     public static void put(String key, MailImapConfig config, Monitor monitor){
-        services.put(key,new MonitorService(config,monitor));
+        SERVICES.put(key,new MonitorService(config,monitor));
     }
 
     /**
@@ -40,7 +40,7 @@ public class MonitorFactory {
      * @author :Wind
     */
     public static void start(String key){
-       services.get(key).start();
+       SERVICES.get(key).start();
     }
 
     /**
@@ -50,7 +50,7 @@ public class MonitorFactory {
      * @author :Wind
     */
     public static void stop(String key){
-        services.get(key).stop();
+        SERVICES.get(key).stop();
     }
 
     /**
@@ -60,6 +60,6 @@ public class MonitorFactory {
      * @author :Wind
     */
     public static MailImapConfig getConfig(String key) {
-        return services.get(key).getMailImapConfig();
+        return SERVICES.get(key).getMailImapConfig();
     }
 }

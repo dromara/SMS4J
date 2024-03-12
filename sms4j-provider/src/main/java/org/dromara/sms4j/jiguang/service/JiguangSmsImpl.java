@@ -78,11 +78,13 @@ public class JiguangSmsImpl extends AbstractSmsBlend<JiguangConfig> {
         SmsResponse response = new SmsResponse();
         Optional<String> message = messages.keySet()
                 .stream().findFirst();
+        String key = message.get();
+        String code = messages.getOrDefault(key, "");
         try {//构建发送短信
             SMSPayload payload = SMSPayload.newBuilder()
                     .setMobileNumber(phones.get(0)) // 手机号码
                     .setTempId(Integer.valueOf(templateid))            // 短信模板ID 需要自行申请 模板id为：1的则自带验证码模板id
-                    .addTempPara("code", "123456")  // key模板参数value：参数值  您的手机验证码：{{code}}，有效期5分钟，请勿泄露。如非本人操作，请忽略此短信。谢谢！
+                    .addTempPara("code", code)  // key模板参数value：参数值  您的手机验证码：{{code}}，有效期5分钟，请勿泄露。如非本人操作，请忽略此短信。谢谢！
                     .setSignId(Integer.valueOf(getConfig().getSignid()))// 签名id 需要自行申请审核。个人也可以申请
                     .build();
 

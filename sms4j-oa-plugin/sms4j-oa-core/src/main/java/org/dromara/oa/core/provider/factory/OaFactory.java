@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class OaFactory {
-    private final static Map<String, OaSender> configs = new ConcurrentHashMap<>();
+    private final static Map<String, OaSender> CONFIGS = new ConcurrentHashMap<>();
 
     /**
      * <p>创建各个厂商的实现类
@@ -29,7 +29,7 @@ public class OaFactory {
         if (smsBlend == null) {
             throw new OaException("通知webhook服务对象不能为空");
         }
-        configs.put(smsBlend.getConfigId(), smsBlend);
+        CONFIGS.put(smsBlend.getConfigId(), smsBlend);
     }
 
     public static OaSender createAndGetOa(OaSupplierConfig config) {
@@ -47,7 +47,7 @@ public class OaFactory {
      * @return 返回通知webhook服务对象。如果未找到则返回null
      */
     public static OaSender getSmsOaBlend(String configId) {
-        return configs.get(configId);
+        return CONFIGS.get(configId);
     }
 
 }

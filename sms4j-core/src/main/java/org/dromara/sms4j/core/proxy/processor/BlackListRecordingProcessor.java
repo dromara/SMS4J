@@ -62,12 +62,21 @@ public class BlackListRecordingProcessor implements SmsProcessor, SmsDaoAware, S
         return param;
     }
 
-    //构建cachekey
+    /**
+     * 构建CacheKey
+     *
+     * @return CacheKey
+     */
     public String getCacheKey(){
         return "sms:blacklist:global";
     }
 
-    //获取黑名单，没有就新建
+    /**
+     * 获取黑名单，没有就新建
+     *
+     * @param cacheKey 缓存key
+     * @return 黑名单
+     */
     public ArrayList<String> getBlackList(String cacheKey) {
         ArrayList<String> blackList;
         Object cache = smsDao.get(cacheKey);
@@ -80,7 +89,12 @@ public class BlackListRecordingProcessor implements SmsProcessor, SmsDaoAware, S
         return blackList;
     }
 
-    //让黑名单生效
+    /**
+     * 让黑名单生效
+     *
+     * @param cacheKey  缓存key
+     * @param blackList 黑命令
+     */
     public void flushBlackList(String cacheKey ,ArrayList<String> blackList) {
         smsDao.set(cacheKey, blackList);
     }

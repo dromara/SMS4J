@@ -84,7 +84,7 @@ public class LianLuSmsImpl extends AbstractSmsBlend<LianLuConfig> {
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
         if (Objects.isNull(messages)){
-            messages = new LinkedHashMap<String, String>();
+            messages = new LinkedHashMap<>();
         }
         LianLuRequest req = getRequest();
         req.setType(TEMPLATE_MSG)

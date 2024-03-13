@@ -75,7 +75,7 @@ public class JdCloudSmsImpl extends AbstractSmsBlend<JdCloudConfig> {
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
         if (Objects.isNull(messages)){
-            messages = new LinkedHashMap<String, String>();
+            messages = new LinkedHashMap<>();
         }
         BatchSendRequest request;
         try {

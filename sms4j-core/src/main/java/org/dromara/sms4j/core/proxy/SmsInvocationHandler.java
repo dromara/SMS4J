@@ -5,7 +5,6 @@ import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.proxy.SmsProcessor;
 
 import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
 
@@ -28,7 +27,7 @@ public class SmsInvocationHandler implements InvocationHandler {
     }
 
     @Override
-    public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
+    public Object invoke(Object o, Method method, Object[] objects) {
         Object result = null;
         //前置执行器
         objects = doPreProcess(smsBlend, method, objects);

@@ -10,14 +10,14 @@ import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.qiniu.config.QiNiuConfig;
 
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Base64;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * @author Administrator
@@ -30,7 +30,7 @@ public class QiNiuUtils {
 
     private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
 
-    public static String getSignature(String method, String url, QiNiuConfig qiNiuConfig, String body, String signDate) throws NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException, MalformedURLException {
+    public static String getSignature(String method, String url, QiNiuConfig qiNiuConfig, String body, String signDate) {
         URI reqUrl = URI.create(url);
         StringBuilder dataToSign = new StringBuilder();
         dataToSign.append(method.toUpperCase()).append(" ").append(reqUrl.getPath());

@@ -25,7 +25,7 @@ import static org.dromara.oa.comm.enums.OaType.WETALK;
 @Slf4j
 public class WeTalkOaImpl extends AbstractOaBlend<WeTalkConfig> {
 
-    private HttpClientImpl httpClient = new HttpClientImpl();
+    private final HttpClientImpl httpClient = new HttpClientImpl();
 
     public WeTalkOaImpl(WeTalkConfig config) {
         super(config);

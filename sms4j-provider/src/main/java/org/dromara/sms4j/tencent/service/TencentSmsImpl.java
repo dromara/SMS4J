@@ -60,7 +60,7 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
     @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
         if (Objects.isNull(messages)){
-            messages = new LinkedHashMap<String, String>();
+            messages = new LinkedHashMap<>();
         }
         List<String> list = new ArrayList<>();
         for (Map.Entry<String, String> entry : messages.entrySet()) {
@@ -83,7 +83,7 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
         if (Objects.isNull(messages)){
-            messages = new LinkedHashMap<String, String>();
+            messages = new LinkedHashMap<>();
         }
         List<String> list = new ArrayList<>();
         for (Map.Entry<String, String> entry : messages.entrySet()) {

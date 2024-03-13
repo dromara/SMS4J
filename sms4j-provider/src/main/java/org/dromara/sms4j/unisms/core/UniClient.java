@@ -118,7 +118,7 @@ public class UniClient {
     }
 
     public static class Builder {
-        private String accessKeyId;
+        private final String accessKeyId;
         private String accessKeySecret;
         private String endpoint;
         private String signingAlgorithm;

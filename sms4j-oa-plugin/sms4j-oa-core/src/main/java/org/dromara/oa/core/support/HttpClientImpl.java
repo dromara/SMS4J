@@ -2,7 +2,6 @@ package org.dromara.oa.core.support;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpUtil;
 
 import java.util.Map;
 

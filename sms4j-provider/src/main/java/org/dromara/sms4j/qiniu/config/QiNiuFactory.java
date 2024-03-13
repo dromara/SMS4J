@@ -1,12 +1,8 @@
 package org.dromara.sms4j.qiniu.config;
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
-import org.dromara.sms4j.netease.config.NeteaseConfig;
-import org.dromara.sms4j.netease.config.NeteaseFactory;
-import org.dromara.sms4j.netease.service.NeteaseSmsImpl;
 import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
 import org.dromara.sms4j.qiniu.service.QiNiuSmsImpl;
 

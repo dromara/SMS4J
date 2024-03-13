@@ -133,9 +133,7 @@ public abstract class AbstractSmsBlend<C extends SupplierConfig> implements SmsB
      */
     @Override
     public final void sendMessageAsync(String phone, String message){
-        pool.execute(() -> {
-            sendMessage(phone, message);
-        });
+        pool.execute(() -> sendMessage(phone, message));
     }
 
     /**
@@ -164,9 +162,7 @@ public abstract class AbstractSmsBlend<C extends SupplierConfig> implements SmsB
      */
     @Override
     public final void sendMessageAsync(String phone, String templateId, LinkedHashMap<String, String> messages){
-        pool.execute(() -> {
-            sendMessage(phone, templateId, messages);
-        });
+        pool.execute(() -> sendMessage(phone, templateId, messages));
     }
 
     /**

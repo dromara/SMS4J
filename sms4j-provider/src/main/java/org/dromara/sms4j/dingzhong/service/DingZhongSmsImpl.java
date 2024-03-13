@@ -70,7 +70,7 @@ public class DingZhongSmsImpl extends AbstractSmsBlend<DingZhongConfig> {
     @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
         if (Objects.isNull(messages)){
-            messages = new LinkedHashMap<String, String>();
+            messages = new LinkedHashMap<>();
         }
         DingZhongHelper helper = new DingZhongHelper(getConfig(), http);
         Map<String, Object> paramMap = MapUtil.newHashMap(5, true);

@@ -17,13 +17,9 @@ public class JiguangConfig extends BaseConfig {
      */
     private String masterSecret;
     /**
-     * templateid
-     */
-    private String templateid;
-    /**
      * signid
      */
-    private String signid;
+    private String signId;
     /**
      * 获取供应商
      *

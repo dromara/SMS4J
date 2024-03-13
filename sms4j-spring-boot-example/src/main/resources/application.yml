@@ -65,8 +65,8 @@ sms:
       supplier: jiguang
       appKey: 1
       masterSecret: 1
-      templateid: 1
-      signid: 26897
+      templateId: 1
+      signId: 26897
     #自定义广州掌骏短信，添加factory全路径。config,factory,SmsImpl复制其他默认实现即可，修改对应的supplier和发送核心逻辑即可
     zhangjun:
       supplier: zhangjun

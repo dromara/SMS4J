@@ -3,6 +3,7 @@ package org.dromara.sms4j.example;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -40,8 +42,30 @@ class Sms4jTest {
 
     @Test
     public void jiguangSmsTest() {
-        // 阿里
-        SmsResponse smsResponse = SmsFactory.getBySupplier("jiguang").sendMessage(PHONE, SmsUtils.getRandomInt(6));
+        // 极光
+        SmsResponse smsResponse = SmsFactory.getBySupplier(SupplierConstant.JIGUANG).sendMessage(PHONE, SmsUtils.getRandomInt(6));
+        Assert.isTrue(smsResponse.isSuccess());
+    }
+
+    @Test
+    public void jiguangSmsTestMultipleMessagesSendMessage() {
+        // 极光
+        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        map.put("name", "test");
+        map.put("password", "test");
+        SmsResponse smsResponse = SmsFactory.getBySupplier(SupplierConstant.JIGUANG).sendMessage(PHONE, "226992", map);
+        Assert.isTrue(smsResponse.isSuccess());
+    }
+    @Test
+    public void jiguangSmsTestMultipleMessages() {
+        // 极光
+        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        map.put("name", "test");
+        map.put("password", "test");
+        List<String> phones = new ArrayList<>();
+        phones.add(PHONE);
+        phones.add("1864262369");
+        SmsResponse smsResponse = SmsFactory.getBySupplier(SupplierConstant.JIGUANG).massTexting(phones, "226992", map);
         Assert.isTrue(smsResponse.isSuccess());
     }
     @Test

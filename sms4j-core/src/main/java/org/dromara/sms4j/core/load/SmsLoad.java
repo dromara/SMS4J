@@ -5,6 +5,7 @@ import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.universal.SupplierConfig;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -49,9 +50,11 @@ public class SmsLoad {
      * @author :Wind
      */
     public void removeLoadServer(SmsBlend LoadServer) {
-        for (int i = 0; i < LoadServers.size(); i++) {
-            if (LoadServers.get(i).getSmsServer().equals(LoadServer)) {
-                LoadServers.remove(i);
+        Iterator<LoadServer> iterator = LoadServers.iterator();
+        while (iterator.hasNext()) {
+            LoadServer server = iterator.next();
+            if (server.getSmsServer().getConfigId().equals(LoadServer.getConfigId())) {
+                iterator.remove();
                 break;
             }
         }

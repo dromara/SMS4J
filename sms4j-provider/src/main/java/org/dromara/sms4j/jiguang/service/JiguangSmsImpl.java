@@ -69,6 +69,7 @@ public class JiguangSmsImpl extends AbstractSmsBlend<JiguangConfig> {
             }else{
                 response.setSuccess(false);
             }
+            response.setData(res);
             //执行业务/
             //指向保存短信发送记录业务逻辑 可以直接扔到MQ
             /**
@@ -131,6 +132,7 @@ public class JiguangSmsImpl extends AbstractSmsBlend<JiguangConfig> {
             }else{
                 response.setSuccess(false);
             }
+            response.setData(res);
             //执行业务/
             //指向保存短信发送记录业务逻辑 可以直接扔到MQ
             /**
@@ -203,6 +205,7 @@ public class JiguangSmsImpl extends AbstractSmsBlend<JiguangConfig> {
             if (result != null && result.isResultOK()){
                 response.setSuccess(true);
             }
+            response.setData(result);
             log.info("Got result: " + result);
         } catch (APIConnectionException e) {
             response.setSuccess(false);

@@ -4,17 +4,14 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.dao.SmsDao;
-import org.dromara.sms4j.api.proxy.CoreMethodProcessor;
 import org.dromara.sms4j.api.proxy.SmsProcessor;
 import org.dromara.sms4j.api.proxy.aware.SmsBlendConfigAware;
 import org.dromara.sms4j.api.proxy.aware.SmsDaoAware;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtils;
-import org.dromara.sms4j.provider.config.BaseConfig;
-import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Map;
 
 
 /**
@@ -23,6 +20,7 @@ import java.util.*;
  * @author sh1yu
  * @since 2023/10/27 13:03
  */
+@Setter
 @Slf4j
 public class SingleBlendRestrictedProcessor implements SmsProcessor, SmsDaoAware, SmsBlendConfigAware {
 
@@ -31,10 +29,8 @@ public class SingleBlendRestrictedProcessor implements SmsProcessor, SmsDaoAware
     /**
      * 缓存实例
      */
-    @Setter
     private SmsDao smsDao;
 
-    @Setter
     Map smsBlendsConfig;
 
     @Override
@@ -52,16 +48,12 @@ public class SingleBlendRestrictedProcessor implements SmsProcessor, SmsDaoAware
         String configId = smsBlend.getConfigId();
         Map targetConfig = (Map) smsBlendsConfig.get(configId);
         Object maximumObj = targetConfig.get("maximum");
-        if (null == maximumObj) {
-            log.info("配置信息未能加载到本拦截器，跳过渠道级上限前置拦截执行器");
-            return param;
-        }
         if (SmsUtils.isEmpty(maximumObj)) {
             return param;
         }
         int maximum = 0;
         try{
-             maximum = (int) maximumObj ;
+             maximum = Integer.parseInt(String.valueOf(maximumObj)) ;
         }catch (Exception e){
             log.error("获取厂商级发送上限参数错误！请检查！");
             throw new IllegalArgumentException("获取厂商级发送上限参数错误");
@@ -70,8 +62,8 @@ public class SingleBlendRestrictedProcessor implements SmsProcessor, SmsDaoAware
         if (SmsUtils.isEmpty(i)) {
             smsDao.set(REDIS_KEY + configId + "maximum", 1);
         } else if (i >= maximum) {
-            log.info("The channel:" + configId + ",messages reached the maximum");
-            throw new SmsBlendException("The channel:" + configId + ",messages reached the maximum");
+            log.info("The channel: {},messages reached the maximum", configId);
+            throw new SmsBlendException("The channel: {},messages reached the maximum", configId);
         } else {
             smsDao.set(REDIS_KEY + configId + "maximum", i + 1);
         }

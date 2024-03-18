@@ -12,6 +12,6 @@ public interface MsgHttpClient {
 
     String post(String url, Map<String, String> headers);
 
-    <T> String post(StringBuilder url, Map<String, String> headers, T message) throws Exception;
+    <T> String post(StringBuilder url, Map<String, String> headers, T message);
 
 }

@@ -9,7 +9,6 @@ import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsHttpUtils;
 
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -67,7 +66,7 @@ public class UniClient {
     private Map<String, Object> sign(final Map<String, Object> query) {
         if (this.accessKeySecret != null) {
             query.put("algorithm", this.signingAlgorithm);
-            query.put("timestamp", new Date().getTime());
+            query.put("timestamp", System.currentTimeMillis());
             query.put("nonce", UUID.randomUUID().toString().replaceAll("-", ""));
 
             String strToSign = UniClient.queryStringify(query);
@@ -114,12 +113,12 @@ public class UniClient {
     private UniResponse requestRetry(String action, Map<String, Object> data) {
         http.safeSleep(retryInterval);
         retry++;
-        log.warn("短信第 {" + retry + "} 次重新发送");
+        log.warn("短信第 {} 次重新发送", retry);
         return request(action, data);
     }
 
     public static class Builder {
-        private String accessKeyId;
+        private final String accessKeyId;
         private String accessKeySecret;
         private String endpoint;
         private String signingAlgorithm;

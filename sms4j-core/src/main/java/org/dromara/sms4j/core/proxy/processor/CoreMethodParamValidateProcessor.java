@@ -1,10 +1,13 @@
 package org.dromara.sms4j.core.proxy.processor;
 
+import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.proxy.CoreMethodProcessor;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -45,22 +48,19 @@ public class CoreMethodParamValidateProcessor implements CoreMethodProcessor {
     }
 
     public void validateMessage(Object messageObj) {
+        if(Objects.isNull(messageObj)){
+            throw new SmsBlendException("cant send a null message!");
+        }
         if (messageObj instanceof String){
             String message = (String) messageObj;
-            if (null == message || "".equals(message)) {
-                throw new SmsBlendException("cant send a null message!");
-            }
-        }
-        if (messageObj instanceof Map){
-            Map message = (Map) messageObj;
-            if (message.size()<1) {
+            if (StrUtil.isBlank(message)) {
                 throw new SmsBlendException("cant send a null message!");
             }
         }
     }
 
     public void validatePhone(String phone) {
-        if (null == phone || "".equals(phone)) {
+        if (StrUtil.isNotEmpty(phone)) {
             throw new SmsBlendException("cant send message to null!");
         }
     }
@@ -70,7 +70,7 @@ public class CoreMethodParamValidateProcessor implements CoreMethodProcessor {
             throw new SmsBlendException("cant send message to null!");
         }
         for (String phone : phones) {
-            if (null != phone && !"".equals(phone)) {
+            if (StrUtil.isNotBlank(phone)) {
                 return;
             }
         }
@@ -78,7 +78,7 @@ public class CoreMethodParamValidateProcessor implements CoreMethodProcessor {
     }
 
     public void validateMessages(String templateId, LinkedHashMap<String, String> messages) {
-        if (null != templateId && !"".equals(templateId) && (messages == null || messages.size() < 1)) {
+        if (StrUtil.isEmpty(templateId) && messages == null) {
             throw new SmsBlendException("cant use template without template param");
         }
     }

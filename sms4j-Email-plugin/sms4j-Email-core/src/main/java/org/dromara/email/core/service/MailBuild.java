@@ -1,6 +1,7 @@
 package org.dromara.email.core.service;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import lombok.Data;
 import org.dromara.email.api.Blacklist;
 import org.dromara.email.api.MailClient;
@@ -15,6 +16,7 @@ import javax.mail.Session;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -43,12 +45,21 @@ public class MailBuild {
         props.put("mail.smtp.ssl.enable", config.getIsSSL());
 //        props.put("mail.smtp.ssl.socketFactory", new MailSSLSocketFactory());
         this.session = Session.getInstance(props, new Authenticator() {
+            @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(config.getUsername(), config.getPassword());
             }
         });
         this.message = new MimeMessage(session);
-        this.message.setFrom(new InternetAddress(config.getFromAddress()));
+        try {
+            if (StrUtil.isEmpty(config.getNickName())){
+                this.message.setFrom(new InternetAddress(config.getFromAddress()));
+            }else {
+                this.message.setFrom(new InternetAddress(config.getFromAddress(),config.getNickName()));
+            }
+        } catch (UnsupportedEncodingException e) {
+            throw new MailException(e);
+        }
         this.config = config;
         this.retryInterval = config.getRetryInterval();
         this.maxRetries = config.getMaxRetries();
@@ -63,12 +74,21 @@ public class MailBuild {
 //        props.put("mail.smtp.ssl.socketFactory", new MailSSLSocketFactory());
         this.session = Session.getInstance(props,
                 new Authenticator() {
+                    @Override
                     protected PasswordAuthentication getPasswordAuthentication() {
                         return new PasswordAuthentication(config.getUsername(), config.getPassword());
                     }
                 });
         this.message = new MimeMessage(session);
-        this.message.setFrom(new InternetAddress(config.getFromAddress()));
+        try {
+            if (StrUtil.isEmpty(config.getNickName())){
+                this.message.setFrom(new InternetAddress(config.getFromAddress()));
+            }else {
+                this.message.setFrom(new InternetAddress(config.getFromAddress(),config.getNickName()));
+            }
+        } catch (UnsupportedEncodingException e) {
+            throw new MailException(e);
+        }
         this.config = config;
         this.blacklist = blacklist;
         this.retryInterval = config.getRetryInterval();
@@ -94,8 +114,9 @@ public class MailBuild {
             if (Objects.isNull(blacklist)) {
                 return InternetAddress.parse(Objects.requireNonNull(CollUtil.join(source, ",")));
             }
-            for (String s : blacklist.getBlacklist()) {
-                if (!source.contains(s)) {
+            List<String> black = blacklist.getBlacklist();
+            for (String s : source) {
+                if (!black.contains(s)) {
                     list.add(s);
                 }
             }

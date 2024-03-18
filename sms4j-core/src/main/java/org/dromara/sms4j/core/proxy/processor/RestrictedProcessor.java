@@ -22,6 +22,7 @@ import java.util.Objects;
  * @author sh1yu
  * @since 2023/10/27 13:03
  */
+@Setter
 @Slf4j
 public class RestrictedProcessor implements CoreMethodProcessor, SmsDaoAware {
     static Long minTimer = 60 * 1000L;
@@ -31,7 +32,6 @@ public class RestrictedProcessor implements CoreMethodProcessor, SmsDaoAware {
     /**
      * 缓存实例
      */
-    @Setter
     private SmsDao smsDao;
 
     @Override
@@ -61,31 +61,39 @@ public class RestrictedProcessor implements CoreMethodProcessor, SmsDaoAware {
 
     public void doRestricted(List<String> phones) {
         if (Objects.isNull(smsDao)) {
-            throw new SmsBlendException("The dao tool could not be found");
+            throw new SmsBlendException("The smsDao tool could not be found");
         }
         SmsConfig config = BeanFactory.getSmsConfig();
-        Integer accountMax = config.getAccountMax(); // 每日最大发送量
-        Integer minuteMax = config.getMinuteMax(); // 每分钟最大发送量
+        // 如果未开始限制则不做处理
+        if (!config.getRestricted()){
+            return;
+        }
+        // 每日最大发送量
+        Integer accountMax = config.getAccountMax();
+        // 每分钟最大发送量
+        Integer minuteMax = config.getMinuteMax();
         for (String phone : phones) {
-            if (SmsUtils.isNotEmpty(accountMax)) {   // 是否配置了每日限制
+            // 是否配置了每日限制
+            if (SmsUtils.isNotEmpty(accountMax)) {
                 Integer i = (Integer) smsDao.get(REDIS_KEY + phone + "max");
                 if (SmsUtils.isEmpty(i)) {
                     smsDao.set(REDIS_KEY + phone + "max", 1, accTimer / 1000);
                 } else if (i >= accountMax) {
-                    log.info("The phone:" + phone + ",number of short messages reached the maximum today");
-                    throw new SmsBlendException("The phone:" + phone + ",number of short messages reached the maximum today");
+                    log.info("The phone: {},number of short messages reached the maximum today", phone);
+                    throw new SmsBlendException("The phone: {},number of short messages reached the maximum today", phone);
                 } else {
                     smsDao.set(REDIS_KEY + phone + "max", i + 1, accTimer / 1000);
                 }
             }
-            if (SmsUtils.isNotEmpty(minuteMax)) {  // 是否配置了每分钟最大限制
+            // 是否配置了每分钟最大限制
+            if (SmsUtils.isNotEmpty(minuteMax)) {
                 Integer o = (Integer) smsDao.get(REDIS_KEY + phone);
                 if (SmsUtils.isNotEmpty(o)) {
                     if (o < minuteMax) {
                         smsDao.set(REDIS_KEY + phone, o + 1, minTimer / 1000);
                     } else {
-                        log.info("The phone:" + phone + ",number of short messages reached the maximum today");
-                        throw new SmsBlendException("The phone:", phone + " Text messages are sent too often！");
+                        log.info("The phone: {},number of short messages reached the maximum today", phone);
+                        throw new SmsBlendException("The phone: {} Text messages are sent too often！", phone);
                     }
                 } else {
                     smsDao.set(REDIS_KEY + phone, 1, minTimer / 1000);

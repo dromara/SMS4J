@@ -1,5 +1,6 @@
 package org.dromara.sms4j.starter.utils;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -19,16 +20,13 @@ import java.util.Map;
 @Slf4j
 public class SmsSpringUtils implements ApplicationContextAware {
 
+    @Getter
     private static ApplicationContext applicationContext;
 
     private final DefaultListableBeanFactory beanFactory;
 
     public SmsSpringUtils(DefaultListableBeanFactory beanFactory) {
         this.beanFactory = beanFactory;
-    }
-
-    public static ApplicationContext getApplicationContext() {
-        return applicationContext;
     }
 
     @Override

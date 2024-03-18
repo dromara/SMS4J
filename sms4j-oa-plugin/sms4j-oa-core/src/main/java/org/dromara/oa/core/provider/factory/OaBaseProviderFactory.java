@@ -3,8 +3,6 @@ package org.dromara.oa.core.provider.factory;
 import org.dromara.oa.api.OaSender;
 import org.dromara.oa.comm.config.OaSupplierConfig;
 
-import java.util.concurrent.Executor;
-
 public interface OaBaseProviderFactory<S extends OaSender, C extends OaSupplierConfig> {
 
     /**

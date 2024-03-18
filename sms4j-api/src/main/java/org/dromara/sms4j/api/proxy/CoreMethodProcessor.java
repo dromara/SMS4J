@@ -12,6 +12,7 @@ import java.util.List;
  * @since 2023/10/27 13:03
  */
 public interface CoreMethodProcessor extends SmsProcessor {
+    @Override
     default Object[] preProcessor(Method method, Object source, Object[] param) {
         String name = method.getName();
         int parameterCount = method.getParameterCount();

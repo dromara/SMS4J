@@ -51,13 +51,16 @@ public class HuaweiSmsImpl extends AbstractSmsBlend<HuaweiConfig> {
     @Override
     public SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages) {
         if (Objects.isNull(messages)){
-            messages = new LinkedHashMap<String, String>();
+            messages = new LinkedHashMap<>();
         }
         return sendMessage(phone, getConfig().getTemplateId(), messages);
     }
 
     @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<>();
+        }
         String url = getConfig().getUrl() + Constant.HUAWEI_REQUEST_URL;
         List<String> list = new ArrayList<>();
         for (Map.Entry<String, String> entry : messages.entrySet()) {
@@ -88,7 +91,7 @@ public class HuaweiSmsImpl extends AbstractSmsBlend<HuaweiConfig> {
     private SmsResponse requestRetry(String phone, String templateId, LinkedHashMap<String, String> messages) {
         http.safeSleep(getConfig().getRetryInterval());
         retry++;
-        log.warn("短信第 {" + retry + "} 次重新发送");
+        log.warn("短信第 {} 次重新发送", retry);
         return sendMessage(phone, templateId, messages);
     }
 
@@ -99,6 +102,9 @@ public class HuaweiSmsImpl extends AbstractSmsBlend<HuaweiConfig> {
 
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<>();
+        }
         return sendMessage(CollUtil.join(phones, ","), templateId, messages);
     }
 

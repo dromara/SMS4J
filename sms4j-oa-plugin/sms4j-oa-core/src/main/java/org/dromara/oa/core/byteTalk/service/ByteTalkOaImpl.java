@@ -25,7 +25,7 @@ import static org.dromara.oa.comm.enums.OaType.BYTETALK;
 @Slf4j
 public class ByteTalkOaImpl extends AbstractOaBlend<ByteTalkConfig> {
 
-    private HttpClientImpl httpClient = new HttpClientImpl();
+    private final HttpClientImpl httpClient = new HttpClientImpl();
 
     public ByteTalkOaImpl(ByteTalkConfig config) {
         super(config);

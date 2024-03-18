@@ -25,7 +25,7 @@ import static org.dromara.oa.comm.enums.OaType.DINGTALK;
 @Slf4j
 public class DingTalkOaImpl extends AbstractOaBlend<DingTalkConfig> {
 
-    private HttpClientImpl httpClient = new HttpClientImpl();
+    private final HttpClientImpl httpClient = new HttpClientImpl();
 
     /**
      * 建造一个微信通知对象服务

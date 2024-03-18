@@ -74,7 +74,7 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
     @Override
     public SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages) {
         if (Objects.isNull(messages)){
-            messages = new LinkedHashMap<String, String>();
+            messages = new LinkedHashMap<>();
         }
         return sendMessage(phone, getConfig().getTemplateId(), messages);
     }
@@ -82,12 +82,15 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
     private SmsResponse requestRetry(String phone, String message) {
         http.safeSleep(getConfig().getRetryInterval());
         retry++;
-        log.warn("短信第 {" + retry + "} 次重新发送");
+        log.warn("短信第 {} 次重新发送", retry);
         return sendMessage(phone, message);
     }
 
     @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<>();
+        }
         Map<String, Object> body = setBody(phone, "", messages, templateId);
         Map<String, String> headers = getHeaders();
 
@@ -107,7 +110,7 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
     private SmsResponse requestRetry(String phone, String templateId, LinkedHashMap<String, String> messages) {
         http.safeSleep(getConfig().getRetryInterval());
         retry++;
-        log.warn("短信第 {" + retry + "} 次重新发送");
+        log.warn("短信第 {} 次重新发送", retry);
         return sendMessage(phone, templateId, messages);
     }
 
@@ -121,6 +124,9 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
 
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<>();
+        }
         if (phones.size() > 1000) {
             throw new SmsBlendException("单次发送超过最大发送上限，建议每次群发短信人数低于1000");
         }

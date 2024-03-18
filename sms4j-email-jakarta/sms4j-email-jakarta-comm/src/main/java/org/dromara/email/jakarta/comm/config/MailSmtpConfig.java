@@ -27,6 +27,11 @@ public class MailSmtpConfig {
     private String fromAddress;
 
     /**
+     * 发送人昵称
+     * */
+    private String nickName;
+
+    /**
      * 服务器地址
      * */
     private String smtpServer;
@@ -45,23 +50,23 @@ public class MailSmtpConfig {
      * 是否开启ssl 默认开启
      * */
     @Builder.Default
-    private String isSSL = "true";
+    private final String isSSL = "true";
 
     /**
      * 是否开启验证 默认开启
      * */
     @Builder.Default
-    private String isAuth = "true";
+    private final String isAuth = "true";
 
     /**
      * 重试间隔（单位：秒），默认为5秒
      */
     @Builder.Default
-    private int retryInterval = 5;
+    private final int retryInterval = 5;
 
     /**
      * 重试次数，默认为1次
      */
     @Builder.Default
-    private int maxRetries = 1;
+    private final int maxRetries = 1;
 }

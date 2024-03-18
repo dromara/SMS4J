@@ -26,6 +26,7 @@ public abstract class OaAbstractProviderFactory<S extends OaSender, C extends Oa
      *
      * @return 配置类
      */
+    @Override
     public Class<C> getConfigClass() {
         return configClass;
     }

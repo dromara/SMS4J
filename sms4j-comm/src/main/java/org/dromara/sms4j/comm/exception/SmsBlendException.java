@@ -2,7 +2,7 @@ package org.dromara.sms4j.comm.exception;
 
 public class SmsBlendException extends RuntimeException{
     public String code;
-    public String message;
+    public final String message;
     public String requestId;
 
     public SmsBlendException(String message) {

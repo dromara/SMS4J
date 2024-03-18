@@ -47,13 +47,16 @@ public class CloopenSmsImpl extends AbstractSmsBlend<CloopenConfig> {
     @Override
     public SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages) {
         if (Objects.isNull(messages)){
-            messages = new LinkedHashMap<String, String>();
+            messages = new LinkedHashMap<>();
         }
         return sendMessage(phone, getConfig().getTemplateId(), messages);
     }
 
     @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<>();
+        }
         return massTexting(Collections.singletonList(phone), templateId, messages);
     }
 
@@ -66,6 +69,9 @@ public class CloopenSmsImpl extends AbstractSmsBlend<CloopenConfig> {
 
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<>();
+        }
         CloopenHelper helper = new CloopenHelper(getConfig(), http);
         Map<String, Object> paramMap = MapUtil.newHashMap(4, true);
         paramMap.put("to", String.join(",", phones));

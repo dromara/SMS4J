@@ -22,8 +22,6 @@ import java.util.Objects;
  **/
 public final class HtmlUtil {
 
-    private static final HtmlUtil htmlUtil = new HtmlUtil();
-
     private HtmlUtil() {
     }
 

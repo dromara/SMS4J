@@ -26,7 +26,7 @@ import java.util.Map;
 
 @Slf4j
 public class OaBlendsInitializer {
-    private List<OaBaseProviderFactory<? extends OaSender, ? extends OaSupplierConfig>> factoryList;
+    private final List<OaBaseProviderFactory<? extends OaSender, ? extends OaSupplierConfig>> factoryList;
 
     private final OaConfig oaConfig;
     private final Map<String, Map<String, Object>> blends;

@@ -60,7 +60,7 @@ public class CoreMethodParamValidateProcessor implements CoreMethodProcessor {
     }
 
     public void validatePhone(String phone) {
-        if (StrUtil.isNotEmpty(phone)) {
+        if (StrUtil.isBlank(phone)) {
             throw new SmsBlendException("cant send message to null!");
         }
     }

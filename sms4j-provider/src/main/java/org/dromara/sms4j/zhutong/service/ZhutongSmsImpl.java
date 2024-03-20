@@ -238,7 +238,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
         headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
         SmsResponse smsResponse;
         try {
-            smsResponse = getResponse(http.postJson(requestUrl, headers, requestJson.toString()));
+            smsResponse = getResponse(http.postJson(url, headers, requestJson.toString()));
         } catch (SmsBlendException e) {
             smsResponse = new SmsResponse();
             smsResponse.setSuccess(false);

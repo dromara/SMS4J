@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.aliyun.config.AlibabaFactory;
 import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.universal.SupplierConfig;
+import org.dromara.sms4j.budingyun.config.BudingV2Factory;
 import org.dromara.sms4j.cloopen.config.CloopenFactory;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.enumerate.ConfigType;
@@ -125,6 +126,7 @@ public class SmsBlendsInitializer  {
         ProviderFactoryHolder.registerFactory(LianLuFactory.instance());
         ProviderFactoryHolder.registerFactory(DingZhongFactory.instance());
         ProviderFactoryHolder.registerFactory(QiNiuFactory.instance());
+        ProviderFactoryHolder.registerFactory(BudingV2Factory.instance());
         if(SmsUtils.isClassExists("com.jdcloud.sdk.auth.CredentialsProvider")) {
             ProviderFactoryHolder.registerFactory(JdCloudFactory.instance());
         }

@@ -78,7 +78,7 @@ public class CoreMethodParamValidateProcessor implements CoreMethodProcessor {
     }
 
     public void validateMessages(String templateId, LinkedHashMap<String, String> messages) {
-        if (StrUtil.isEmpty(templateId) && messages == null) {
+        if (StrUtil.isEmpty(templateId)) {
             throw new SmsBlendException("cant use template without template param");
         }
     }

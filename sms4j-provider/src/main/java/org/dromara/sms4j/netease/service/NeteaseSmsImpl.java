@@ -6,6 +6,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.constant.Constant;
@@ -121,7 +122,14 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
         JSONArray jsonArray = new JSONArray();
         jsonArray.addAll(phones);
         body.put("mobiles", jsonArray.toString());
-        body.put("params", message);
+        //保证模板变量参数使用jsonarray传递
+        if (!JSONUtil.isTypeJSONArray(message)) {
+            jsonArray = new JSONArray();
+            jsonArray.add(message);
+            body.put("params", jsonArray.toString());
+        }else {
+            body.put("params", message);
+        }
         body.put("needUp", getConfig().getNeedUp());
 
         Map<String, String> headers = MapUtil.newHashMap(5, true);
@@ -132,7 +140,7 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
         headers.put("CheckSum", checkSum);
         SmsResponse smsResponse;
         try {
-            smsResponse = getResponse(http.postJson(requestUrl, headers, body));
+            smsResponse = getResponse(http.postFrom(requestUrl, headers, body));
         } catch (SmsBlendException e) {
             smsResponse = new SmsResponse();
             smsResponse.setSuccess(false);

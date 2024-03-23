@@ -20,6 +20,9 @@ public class Request implements Comparable<Request> {
     // link类型的参数
     private String messageUrl;
 
+    // news类型的参数
+    private List<WeTalkRequestArticle> articleList;
+
     private List<String> phoneList;
 
     // 用于@,唯一标识:userId/openId

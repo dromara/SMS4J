@@ -3,6 +3,7 @@ package org.dromara.sms4j.example;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.oa.api.OaSender;
 import org.dromara.oa.comm.entity.Request;
+import org.dromara.oa.comm.entity.WeTalkRequestArticle;
 import org.dromara.oa.comm.enums.MessageType;
 import org.dromara.oa.core.byteTalk.config.ByteTalkConfig;
 import org.dromara.oa.core.dingTalk.config.DingTalkConfig;
@@ -307,7 +308,7 @@ public class SmsOaTest {
     /**
      * 填access_token
      */
-    private static final String WeTalkTOKENID = "";
+    private static final String WeTalkTOKENID = "e55b2f93-69c7-4874-9c41-530ff92f627a";
 
     /**
      * WeTalk的Text测试
@@ -331,7 +332,7 @@ public class SmsOaTest {
         request.setIsNoticeAll(true);
         request.setContent("测试消息");
 
-        alarm.sender(request, MessageType.WETETALK_TEXT);
+        alarm.sender(request, MessageType.WE_TALK_TEXT);
 
     }
 
@@ -361,11 +362,32 @@ public class SmsOaTest {
                         ">普通用户反馈:<font color=\"comment\">117例</font>" +
                         ">VIP用户反馈:<font color=\"comment\">15例</font>");
 
-        alarm.sender(request, MessageType.WETETALK_MARKDOWN);
+        alarm.sender(request, MessageType.WE_TALK_MARKDOWN);
 
          
     }
 
+    /**
+     * WeTalk的News测试
+     */
+    @Test
+    public void oaWeTalkNews() {
+        String key = "oaWeTalk";
+        WeTalkConfig WeTalkConfig = new WeTalkConfig();
+        WeTalkConfig.setConfigId(key);
+        WeTalkConfig.setTokenId(WeTalkTOKENID);
+
+        // 根据配置创建服务实例并注册
+        OaFactory.createAndRegisterOaSender(WeTalkConfig);
+        OaSender alarm = OaFactory.getSmsOaBlend(key);
+
+        Request request = new Request();
+        ArrayList<WeTalkRequestArticle> articles = new ArrayList<>();
+        articles.add(new WeTalkRequestArticle("中秋节礼品领取", "今年中秋节公司有豪礼相送", "www.qq.com", "http://res.mail.qq.com/node/ww/wwopenmng/images/independent/doc/test_pic_msg1.png"));
+        request.setArticleList(articles);
+
+        alarm.sender(request, MessageType.WE_TALK_NEWS);
+    }
 
     /**
      * WeTalk的异步消息发送
@@ -390,8 +412,8 @@ public class SmsOaTest {
         request.setContent("测试消息");
 
         // 异步发送方式
-        alarm.senderAsync(request, MessageType.WETETALK_TEXT);
-        alarm.senderAsync(request, MessageType.WETETALK_TEXT, smsResponse -> System.out.println("ConfigId为" + smsResponse.getOaConfigId() + "的异步任务发送成功"));
+        alarm.senderAsync(request, MessageType.WE_TALK_TEXT);
+        alarm.senderAsync(request, MessageType.WE_TALK_TEXT, smsResponse -> System.out.println("ConfigId为" + smsResponse.getOaConfigId() + "的异步任务发送成功"));
 
         // 防止主线程挂掉
         try {
@@ -410,7 +432,7 @@ public class SmsOaTest {
         request.setPhoneList(phones);
         request.setIsNoticeAll(true);
         request.setContent("SMS4JContent");
-        alarm.sender(request, MessageType.WETETALK_TEXT);
+        alarm.sender(request, MessageType.WE_TALK_TEXT);
     }
 }
 

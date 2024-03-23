@@ -14,7 +14,6 @@ import org.dromara.oa.core.weTalk.utils.WeTalkBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import static org.dromara.oa.comm.enums.OaType.WE_TALK;
 
@@ -39,9 +38,7 @@ public class WeTalkOaImpl extends AbstractOaBlend<WeTalkConfig> {
     @Override
     public Response sender(Request request, MessageType messageType) {
 
-        if (Objects.isNull(request.getContent())) {
-            throw new OaException("消息体content不能为空");
-        }
+
         StringBuilder webhook = new StringBuilder();
         JSONObject message = null;
         WeTalkConfig config = getConfig();

@@ -58,7 +58,7 @@ public class SmsOaTest {
 //        request.setIsNoticeAll(true);
         request.setContent("测试消息");
 
-        alarm.sender(request, MessageType.DINGTALK_TEXT);
+        alarm.sender(request, MessageType.DING_TALK_TEXT);
 
     }
 
@@ -82,7 +82,7 @@ public class SmsOaTest {
         request.setIsNoticeAll(true);
         request.setContent("#### 杭州天气 @150XXXXXXXX \n > 9度，西北风1级，空气良89，相对温度73%\n > ![screenshot](https://img.alicdn.com/tfs/TB1NwmBEL9TBuNjy1zbXXXpepXa-2400-1218.png)\n > ###### 10点20分发布 [天气](https://www.dingtalk.com) \n");
         request.setTitle("标题");
-        alarm.sender(request, MessageType.DINGTALK_MARKDOWN);
+        alarm.sender(request, MessageType.DING_TALK_MARKDOWN);
 
     }
 
@@ -106,8 +106,7 @@ public class SmsOaTest {
         request.setTitle("点击跳转到钉钉");
         request.setMessageUrl("https://www.dingtalk.com/s?__biz=MzA4NjMwMTA2Ng==&mid=2650316842&idx=1&sn=60da3ea2b29f1dcc43a7c8e4a7c97a16&scene=2&srcid=09189AnRJEdIiWVaKltFzNTw&from=timeline&isappinstalled=0&key=&ascene=2&uin=&devicetype=android-23&version=26031933&nettype=WIFI");
         request.setPicUrl("https://img.alicdn.com/tfs/TB1NwmBEL9TBuNjy1zbXXXpepXa-2400-1218.png");
-
-        alarm.sender(request, MessageType.DINGTALK_LINK);
+        alarm.sender(request, MessageType.DING_TALK_LINK);
 
          
     }
@@ -138,8 +137,8 @@ public class SmsOaTest {
         request.setContent("测试消息");
 
         // 异步发送方式
-        alarm.senderAsync(request, MessageType.DINGTALK_TEXT);
-        alarm.senderAsync(request, MessageType.DINGTALK_TEXT, smsResponse -> System.out.println("ConfigId为" + smsResponse.getOaConfigId() + "的异步任务发送成功"));
+        alarm.senderAsync(request, MessageType.DING_TALK_TEXT);
+        alarm.senderAsync(request, MessageType.DING_TALK_TEXT, smsResponse -> System.out.println("ConfigId为" + smsResponse.getOaConfigId() + "的异步任务发送成功"));
 
         try {
             Thread.sleep(3000L);
@@ -183,7 +182,7 @@ public class SmsOaTest {
                 request.setPriority(priority);
                 //测试-1-TEXT
                 request.setContent("该消息优先级为" + priority);
-                alarm.senderAsyncByPriority(request, MessageType.DINGTALK_TEXT);
+                alarm.senderAsyncByPriority(request, MessageType.DING_TALK_TEXT);
                 System.out.println("优先级为" + priority + "的异步任务已提交");
 
             }).start();
@@ -210,7 +209,7 @@ public class SmsOaTest {
         // 支持@all
 //        request.setIsNoticeAll(true);
         request.setContent("测试消息");
-        alarm.sender(request, MessageType.DINGTALK_TEXT);
+        alarm.sender(request, MessageType.DING_TALK_TEXT);
     }
     //***********************ByteTalk-Test************************//
     /**
@@ -247,7 +246,7 @@ public class SmsOaTest {
         request.setUserIdList(userIds);
         request.setIsNoticeAll(true);
         request.setContent("测试消息");
-        alarm.sender(request, MessageType.BYTETALK_TEXT);
+        alarm.sender(request, MessageType.BYTE_TALK_TEXT);
     }
 
 
@@ -273,8 +272,8 @@ public class SmsOaTest {
         request.setIsNoticeAll(true);
         request.setContent("测试消息");
 
-        alarm.senderAsync(request, MessageType.BYTETALK_TEXT);
-        alarm.senderAsync(request, MessageType.BYTETALK_TEXT, smsResponse -> System.out.println("ConfigId为" + smsResponse.getOaConfigId() + "的异步任务发送成功"));
+        alarm.senderAsync(request, MessageType.BYTE_TALK_TEXT);
+        alarm.senderAsync(request, MessageType.BYTE_TALK_TEXT, smsResponse -> System.out.println("ConfigId为" + smsResponse.getOaConfigId() + "的异步任务发送成功"));
 
         // 防止主线程挂掉
         try {
@@ -294,7 +293,7 @@ public class SmsOaTest {
         request.setUserIdList(userIds);
         request.setIsNoticeAll(true);
         request.setContent("测试消息");
-        alarm.sender(request, MessageType.BYTETALK_TEXT);
+        alarm.sender(request, MessageType.BYTE_TALK_TEXT);
     }
     //***********************WeTalk-Test************************//
     /**

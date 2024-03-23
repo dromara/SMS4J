@@ -15,9 +15,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 
-import static org.dromara.oa.comm.enums.MessageType.DINGTALK_LINK;
-import static org.dromara.oa.comm.enums.MessageType.DINGTALK_MARKDOWN;
-import static org.dromara.oa.comm.enums.MessageType.DINGTALK_TEXT;
+import static org.dromara.oa.comm.enums.MessageType.DING_TALK_LINK;
+import static org.dromara.oa.comm.enums.MessageType.DING_TALK_MARKDOWN;
+import static org.dromara.oa.comm.enums.MessageType.DING_TALK_TEXT;
 
 /**
  * 钉钉通知签名和信息构建
@@ -46,18 +46,18 @@ public class DingTalkBuilder {
 
 
         JSONObject message = new JSONObject();
-        if (messageType == DINGTALK_TEXT) {
+        if (messageType == DING_TALK_TEXT) {
             message.set("msgtype", "text");
             JSONObject text = new JSONObject();
             text.set("content", request.getContent());
             message.set("text", text);
-        } else if (messageType == DINGTALK_MARKDOWN) {
+        } else if (messageType == DING_TALK_MARKDOWN) {
             message.set("msgtype", "markdown");
             JSONObject markdown = new JSONObject();
             markdown.set("text", request.getContent());
             markdown.set("title", request.getTitle());
             message.set("markdown", markdown);
-        } else if (messageType == DINGTALK_LINK) {
+        } else if (messageType == DING_TALK_LINK) {
             message.set("msgtype", "link");
             JSONObject link = new JSONObject();
             link.set("text", request.getContent());

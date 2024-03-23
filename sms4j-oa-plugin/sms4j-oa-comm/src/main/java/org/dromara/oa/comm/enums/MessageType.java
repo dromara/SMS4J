@@ -5,14 +5,14 @@ import lombok.Getter;
 @Getter
 public enum MessageType {
     // 钉钉支持类型
-    DINGTALK_TEXT("text"),
+    DING_TALK_TEXT("text"),
 
-    DINGTALK_MARKDOWN("markdown"),
+    DING_TALK_MARKDOWN("markdown"),
 
-    DINGTALK_LINK("link"),
+    DING_TALK_LINK("link"),
+
     // 飞书支持类型
-
-    BYTETALK_TEXT("text"),
+    BYTE_TALK_TEXT("text"),
 //    BYTETALK_MARKDOWN("markdown"),
 //    BYTETALK_LINK("link"),
 

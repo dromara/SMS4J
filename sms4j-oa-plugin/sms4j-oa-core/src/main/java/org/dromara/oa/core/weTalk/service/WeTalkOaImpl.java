@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static org.dromara.oa.comm.enums.OaType.WETALK;
+import static org.dromara.oa.comm.enums.OaType.WE_TALK;
 
 /**
  * @author dongfeng
@@ -33,7 +33,7 @@ public class WeTalkOaImpl extends AbstractOaBlend<WeTalkConfig> {
 
     @Override
     public String getSupplier() {
-        return OaType.WETALK.getType();
+        return OaType.WE_TALK.getType();
     }
 
     @Override
@@ -45,7 +45,7 @@ public class WeTalkOaImpl extends AbstractOaBlend<WeTalkConfig> {
         StringBuilder webhook = new StringBuilder();
         JSONObject message = null;
         WeTalkConfig config = getConfig();
-        webhook.append(WETALK.getUrl());
+        webhook.append(WE_TALK.getUrl());
         webhook.append(config.getTokenId());
         message = WeTalkBuilder.createWeTalkMessage(request, messageType);
         String post;

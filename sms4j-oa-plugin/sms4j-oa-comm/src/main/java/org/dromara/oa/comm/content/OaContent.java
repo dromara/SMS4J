@@ -13,14 +13,14 @@ public class OaContent {
     /**
      * 钉钉
      */
-    public static final String DINGTALK = "dingding";
+    public static final String DING_TALK = "ding_ding";
     /**
      * 飞书
      */
-    public static final String BYTETALK = "feishu";
+    public static final String BYTE_TALK = "byte_talk";
     /**
      * 微信
      */
-    public static final String WETALK = "wetalk";
+    public static final String WE_TALK = "we_talk";
 
 }

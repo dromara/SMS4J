@@ -308,7 +308,7 @@ public class SmsOaTest {
     /**
      * 填access_token
      */
-    private static final String WeTalkTOKENID = "e55b2f93-69c7-4874-9c41-530ff92f627a";
+    private static final String WeTalkTOKENID = "";
 
     /**
      * WeTalk的Text测试
@@ -422,6 +422,7 @@ public class SmsOaTest {
             throw new RuntimeException(e);
         }
     }
+
     @Test
     public void oaWeTalkByYamlTest() {
         String configId = "oaWeTalkByYaml";

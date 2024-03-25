@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 
-import static org.dromara.oa.comm.enums.OaType.DINGTALK;
+import static org.dromara.oa.comm.enums.OaType.DING_TALK;
 
 /**
  * @author dongfeng
@@ -54,7 +54,7 @@ public class DingTalkOaImpl extends AbstractOaBlend<DingTalkConfig> {
         StringBuilder webhook = new StringBuilder();
         JSONObject message = null;
         DingTalkConfig config = getConfig();
-        webhook.append(DINGTALK.getUrl());
+        webhook.append(DING_TALK.getUrl());
         webhook.append(config.getTokenId());
         String sign = config.getSign();
         if (!Objects.isNull(sign)) {

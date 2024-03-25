@@ -25,7 +25,7 @@ public class WeTalkFactory extends OaAbstractProviderFactory<WeTalkOaImpl, WeTal
 
     @Override
     public String getSupplier() {
-        return OaContent.WETALK;
+        return OaContent.WE_TALK;
     }
 
     /**

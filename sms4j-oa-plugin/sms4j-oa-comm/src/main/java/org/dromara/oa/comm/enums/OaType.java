@@ -6,15 +6,15 @@ public enum OaType {
     /**
      * 钉钉
      */
-    DINGTALK("dingding", "https://oapi.dingtalk.com/robot/send?access_token=", true),
+    DING_TALK("ding_ding", "https://oapi.dingtalk.com/robot/send?access_token=", true),
     /**
      * 微信
      */
-    WETALK("wetalk", "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=", true),
+    WE_TALK("we_talk", "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=", true),
     /**
      * 飞书
      */
-    BYTETALK("feishu", "https://open.feishu.cn/open-apis/bot/v2/hook/", true),
+    BYTE_TALK("byte_talk", "https://open.feishu.cn/open-apis/bot/v2/hook/", true),
     ;
 
     @Getter

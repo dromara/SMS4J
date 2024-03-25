@@ -25,7 +25,7 @@ public class ByteTalkFactory extends OaAbstractProviderFactory<ByteTalkOaImpl, B
 
     @Override
     public String getSupplier() {
-        return OaContent.BYTETALK;
+        return OaContent.BYTE_TALK;
     }
 
     /**

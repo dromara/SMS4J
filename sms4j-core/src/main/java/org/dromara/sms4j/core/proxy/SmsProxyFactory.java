@@ -8,8 +8,8 @@ import org.dromara.sms4j.api.proxy.Order;
 import org.dromara.sms4j.api.proxy.SmsProcessor;
 import org.dromara.sms4j.api.proxy.SuppotFilter;
 import org.dromara.sms4j.api.proxy.aware.SmsBlendConfigAware;
-import org.dromara.sms4j.api.proxy.aware.SmsDaoAware;
 import org.dromara.sms4j.api.proxy.aware.SmsConfigAware;
+import org.dromara.sms4j.api.proxy.aware.SmsDaoAware;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -52,10 +52,8 @@ public abstract class SmsProxyFactory {
         //判断当前的执行器有没有开厂商过滤，支不支持当前厂商
         if (processor instanceof SuppotFilter) {
             List<String> supports = ((SuppotFilter) processor).getSupports();
-            boolean exsit = supports.stream().filter(support -> support.equals(smsBlend.getSupplier())).findAny().isPresent();
-            if (!exsit) {
-                return true;
-            }
+            boolean exsit = supports.stream().anyMatch(support -> support.equals(smsBlend.getSupplier()));
+            return !exsit;
         }
         return false;
     }
@@ -93,7 +91,7 @@ public abstract class SmsProxyFactory {
         if (null != smsDao) {
             return smsDao;
         }
-        log.info("尝试框架加载失败，最终使用默认SmsDao！");
+        log.debug("未找到合适框架加载，最终使用默认SmsDao！如无自实现SmsDao请忽略本消息！");
         return SmsDaoDefaultImpl.getInstance();
     }
 
@@ -106,7 +104,7 @@ public abstract class SmsProxyFactory {
             log.info("{}:加载SmsDao成功，使用{}", frameworkName,smsDao.getClass().getName());
             return smsDao;
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            log.info("{}:加载SmsDao失败，尝试其他框架加载......", frameworkName);
+            log.debug("{}:尝试其他框架加载......", frameworkName);
         }
         return null;
     }

@@ -71,13 +71,16 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
     @Override
     public SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages) {
         if (Objects.isNull(messages)){
-            messages = new LinkedHashMap<String, String>();
+            messages = new LinkedHashMap<>();
         }
         return sendMessage(phone, getConfig().getTemplateId(), messages);
     }
 
     @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<>();
+        }
         return getSmsResponseTemplate(templateId, phone, messages);
     }
 
@@ -96,6 +99,9 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
 
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<>();
+        }
         return getSmsResponseTemplate(templateId, phones, messages);
     }
 
@@ -144,7 +150,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
         headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
         SmsResponse smsResponse;
         try {
-            smsResponse = getResponse(http.postJson(requestUrl, headers, json));
+            smsResponse = getResponse(http.postJson(url, headers, json));
         } catch (SmsBlendException e) {
             smsResponse = new SmsResponse();
             smsResponse.setSuccess(false);
@@ -160,7 +166,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
     private SmsResponse requestRetry(List<String> phones, String content) {
         http.safeSleep(getConfig().getRetryInterval());
         retry++;
-        log.warn("短信第 {" + retry + "} 次重新发送");
+        log.warn("短信第 {} 次重新发送", retry);
         return getSmsResponse(phones, content);
     }
 
@@ -232,7 +238,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
         headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
         SmsResponse smsResponse;
         try {
-            smsResponse = getResponse(http.postJson(requestUrl, headers, requestJson.toString()));
+            smsResponse = getResponse(http.postJson(url, headers, requestJson.toString()));
         } catch (SmsBlendException e) {
             smsResponse = new SmsResponse();
             smsResponse.setSuccess(false);
@@ -248,7 +254,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
     private SmsResponse requestRetry(String templateId, List<String> phones, LinkedHashMap<String, String> messages) {
         http.safeSleep(getConfig().getRetryInterval());
         retry++;
-        log.warn("短信第 {" + retry + "} 次重新发送");
+        log.warn("短信第 {} 次重新发送", retry);
         return getSmsResponseTemplate(templateId, phones, messages);
     }
 

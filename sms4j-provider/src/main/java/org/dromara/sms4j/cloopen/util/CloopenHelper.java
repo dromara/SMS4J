@@ -14,7 +14,6 @@ import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsHttpUtils;
 
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -66,7 +65,7 @@ public class CloopenHelper {
     private SmsResponse requestRetry(Map<String, Object> paramMap) {
         http.safeSleep(config.getRetryInterval());
         retry++;
-        log.warn("短信第 {" + retry + "} 次重新发送");
+        log.warn("短信第 {} 次重新发送", retry);
         return smsResponse(paramMap);
     }
 

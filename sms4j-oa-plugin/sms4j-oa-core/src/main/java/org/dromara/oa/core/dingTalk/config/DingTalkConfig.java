@@ -13,10 +13,10 @@ import org.dromara.oa.core.provider.config.OaBaseConfig;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class DingTalkConfig extends OaBaseConfig {
-    private final String requestUrl = OaType.DINGTALK.getUrl();
+    private final String requestUrl = OaType.DING_TALK.getUrl();
 
     @Override
     public String getSupplier() {
-        return OaType.DINGTALK.getType();
+        return OaType.DING_TALK.getType();
     }
 }

@@ -104,7 +104,7 @@ public class ZhangJunSmsImpl extends AbstractSmsBlend<ZhangJunConfig> {
     private SmsResponse requestRetry(String phone, String message, String templateId) {
         http.safeSleep(getConfig().getRetryInterval());
         retry++;
-        log.warn("短信第 {" + retry + "} 次重新发送");
+        log.warn("短信第 {} 次重新发送", retry);
         return getSmsResponse(phone, message, templateId);
     }
 

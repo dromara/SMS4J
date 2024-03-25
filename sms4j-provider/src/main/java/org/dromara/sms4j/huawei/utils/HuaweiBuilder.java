@@ -1,6 +1,7 @@
 package org.dromara.sms4j.huawei.utils;
 
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.date.DateUtil;
 import org.dromara.sms4j.comm.constant.Constant;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -12,8 +13,6 @@ import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -21,20 +20,23 @@ import java.util.Map;
 import java.util.UUID;
 
 public class HuaweiBuilder {
-    private HuaweiBuilder(){}
+    private HuaweiBuilder() {
+    }
 
     /**
-     *  buildWsseHeader
+     * buildWsseHeader
      * <p>构造X-WSSE参数值
+     *
      * @author :Wind
-    */
+     */
     public static String buildWsseHeader(String appKey, String appSecret) {
         if (null == appKey || null == appSecret || appKey.isEmpty() || appSecret.isEmpty()) {
             System.out.println("buildWsseHeader(): appKey or appSecret is null.");
             return null;
         }
         String time = dateFormat(new Date());
-        String nonce = UUID.randomUUID().toString().replace("-", ""); //Nonce
+        // Nonce
+        String nonce = UUID.randomUUID().toString().replace("-", "");
         MessageDigest md;
         byte[] passwordDigest = null;
 
@@ -45,20 +47,25 @@ public class HuaweiBuilder {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-
-        String passwordDigestBase64Str = Base64.encode(passwordDigest); //PasswordDigest
+        // PasswordDigest
+        String passwordDigestBase64Str = Base64.encode(passwordDigest);
         //若passwordDigestBase64Str中包含换行符,请执行如下代码进行修正
         //passwordDigestBase64Str = passwordDigestBase64Str.replaceAll("[\\s*\t\n\r]", "");
         return String.format(Constant.HUAWEI_WSSE_HEADER_FORMAT, appKey, passwordDigestBase64Str, nonce, time);
     }
 
     static void trustAllHttpsCertificates() throws Exception {
-        TrustManager[] trustAllCerts = new TrustManager[] {
+        TrustManager[] trustAllCerts = new TrustManager[]{
                 new X509TrustManager() {
+                    @Override
                     public void checkClientTrusted(X509Certificate[] chain, String authType) {
                     }
+
+                    @Override
                     public void checkServerTrusted(X509Certificate[] chain, String authType) {
                     }
+
+                    @Override
                     public X509Certificate[] getAcceptedIssuers() {
                         return null;
                     }
@@ -70,16 +77,17 @@ public class HuaweiBuilder {
     }
 
     /**
-     *  buildRequestBody
+     * buildRequestBody
      * <p>构造请求Body体
-     * @param sender 国内短信签名通道号
-     * @param receiver 短信接收者
-     * @param templateId 短信模板id
-     * @param templateParas 模板参数
+     *
+     * @param sender         国内短信签名通道号
+     * @param receiver       短信接收者
+     * @param templateId     短信模板id
+     * @param templateParas  模板参数
      * @param statusCallBack 短信状态报告接收地
-     * @param signature | 签名名称,使用国内短信通用模板时填写
+     * @param signature      | 签名名称,使用国内短信通用模板时填写
      * @author :Wind
-    */
+     */
     public static String buildRequestBody(String sender, String receiver, String templateId, String templateParas,
                                           String statusCallBack, String signature) {
         if (null == sender || null == receiver || null == templateId || sender.isEmpty() || receiver.isEmpty()
@@ -87,7 +95,7 @@ public class HuaweiBuilder {
             System.out.println("buildRequestBody(): sender, receiver or templateId is null.");
             return null;
         }
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
 
         map.put("from", sender);
         map.put("to", receiver);
@@ -114,10 +122,10 @@ public class HuaweiBuilder {
             sb.append(s).append("=").append(temp).append("&");
         }
 
-        return sb.deleteCharAt(sb.length()-1).toString();
+        return sb.deleteCharAt(sb.length() - 1).toString();
     }
 
-    public static String listToString(List<String> list){
+    public static String listToString(List<String> list) {
         StringBuilder stringBuffer = new StringBuilder();
         stringBuffer.append("[\"");
         for (String s : list) {
@@ -126,22 +134,13 @@ public class HuaweiBuilder {
             stringBuffer.append(",");
             stringBuffer.append("\"");
         }
-        stringBuffer.delete(stringBuffer.length()-3,stringBuffer.length()-1);
+        stringBuffer.delete(stringBuffer.length() - 3, stringBuffer.length() - 1);
         stringBuffer.append("]");
         return stringBuffer.toString();
     }
 
-    static String dateFormat(Date date){
-       return SDF.format(date);
+    private static String dateFormat(Date date) {
+        return DateUtil.format(date, Constant.HUAWEI_JAVA_DATE);
     }
 
-    static Date strForDate(String date){
-        try {
-           return SDF.parse(date);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static final SimpleDateFormat SDF = new SimpleDateFormat(Constant.HUAWEI_JAVA_DATE);
 }

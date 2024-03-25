@@ -8,7 +8,7 @@ public class Uni {
     /** 模仿SDK版本*/
     public static final String VERSION = "0.0.4";
 
-    public static String signingAlgorithm = "hmac-sha256";
+    public static final String signingAlgorithm = "hmac-sha256";
     public static String endpoint = System.getenv().getOrDefault("UNI_ENDPOINT", "https://uni.apistd.com");
     public static String accessKeyId = System.getenv("UNI_ACCESS_KEY_ID");
 

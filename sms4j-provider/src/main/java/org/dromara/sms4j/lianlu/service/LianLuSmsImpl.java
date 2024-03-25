@@ -11,7 +11,13 @@ import org.dromara.sms4j.lianlu.req.LianLuRequest;
 import org.dromara.sms4j.lianlu.utils.LianLuUtils;
 import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.TreeMap;
 import java.util.concurrent.Executor;
 
 @Slf4j
@@ -28,6 +34,7 @@ public class LianLuSmsImpl extends AbstractSmsBlend<LianLuConfig> {
         super(config);
     }
 
+    @Override
     public String getSupplier() {
         return SupplierConstant.LIANLU;
     }
@@ -41,6 +48,7 @@ public class LianLuSmsImpl extends AbstractSmsBlend<LianLuConfig> {
      * @param templateParam 模板变量
      * @return
      */
+    @Override
     public SmsResponse sendMessage(String phone, String templateParam) {
         return this.massTexting(Collections.singletonList(phone), templateParam);
     }
@@ -48,7 +56,7 @@ public class LianLuSmsImpl extends AbstractSmsBlend<LianLuConfig> {
     @Override
     public SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages) {
         if (Objects.isNull(messages)){
-            messages = new LinkedHashMap<String, String>();
+            messages = new LinkedHashMap<>();
         }
         return sendMessage(phone, getConfig().getTemplateId(), messages);
     }
@@ -61,17 +69,23 @@ public class LianLuSmsImpl extends AbstractSmsBlend<LianLuConfig> {
      * @param messages   key无实际意义，value为模板变量值
      * @return
      */
+    @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
         return this.massTexting(Collections.singletonList(phone), templateId, messages);
     }
 
+    @Override
     public SmsResponse massTexting(List<String> phones, String templateParam) {
         LinkedHashMap<String, String> map = new LinkedHashMap<>(1);
         map.put("", templateParam);
         return massTexting(phones, getConfig().getTemplateId(), map);
     }
 
+    @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<>();
+        }
         LianLuRequest req = getRequest();
         req.setType(TEMPLATE_MSG)
                 .setPhoneNumberSet(phones)

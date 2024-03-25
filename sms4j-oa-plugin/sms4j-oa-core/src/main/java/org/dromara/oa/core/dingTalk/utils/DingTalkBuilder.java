@@ -1,25 +1,23 @@
 package org.dromara.oa.core.dingTalk.utils;
 
+import cn.hutool.core.codec.Base64;
+import cn.hutool.crypto.digest.HMac;
+import cn.hutool.crypto.digest.HmacAlgorithm;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.oa.comm.entity.Request;
 import org.dromara.oa.comm.enums.MessageType;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 
-import static org.dromara.oa.comm.enums.MessageType.DINGTALK_MARKDOWN;
-import static org.dromara.oa.comm.enums.MessageType.DINGTALK_TEXT;
-import static org.dromara.oa.comm.enums.MessageType.DINGTALK_LINK;
+import static org.dromara.oa.comm.enums.MessageType.DING_TALK_LINK;
+import static org.dromara.oa.comm.enums.MessageType.DING_TALK_MARKDOWN;
+import static org.dromara.oa.comm.enums.MessageType.DING_TALK_TEXT;
 
 /**
  * 钉钉通知签名和信息构建
@@ -32,17 +30,11 @@ public class DingTalkBuilder {
         Long timestamp = System.currentTimeMillis();
 
         String stringToSign = timestamp + "\n" + secret;
-        Mac mac = null;
+        HMac mac = new HMac(HmacAlgorithm.HmacSHA256, secret.getBytes(StandardCharsets.UTF_8));
+        byte[] signData = mac.digest(stringToSign.getBytes(StandardCharsets.UTF_8));
+        String sign;
         try {
-            mac = Mac.getInstance("HmacSHA256");
-            mac.init(new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256"));
-        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
-            throw new RuntimeException(e);
-        }
-        byte[] signData = mac.doFinal(stringToSign.getBytes(StandardCharsets.UTF_8));
-        String sign = null;
-        try {
-            sign = URLEncoder.encode(new String(Base64.getEncoder().encode(signData)), StandardCharsets.UTF_8.toString());
+            sign = URLEncoder.encode(Base64.encode(signData), StandardCharsets.UTF_8.toString());
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
@@ -54,18 +46,18 @@ public class DingTalkBuilder {
 
 
         JSONObject message = new JSONObject();
-        if (messageType == DINGTALK_TEXT) {
+        if (messageType == DING_TALK_TEXT) {
             message.set("msgtype", "text");
             JSONObject text = new JSONObject();
             text.set("content", request.getContent());
             message.set("text", text);
-        } else if (messageType == DINGTALK_MARKDOWN) {
+        } else if (messageType == DING_TALK_MARKDOWN) {
             message.set("msgtype", "markdown");
             JSONObject markdown = new JSONObject();
             markdown.set("text", request.getContent());
             markdown.set("title", request.getTitle());
             message.set("markdown", markdown);
-        } else if (messageType == DINGTALK_LINK) {
+        } else if (messageType == DING_TALK_LINK) {
             message.set("msgtype", "link");
             JSONObject link = new JSONObject();
             link.set("text", request.getContent());

@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static org.dromara.oa.comm.enums.OaType.BYTETALK;
+import static org.dromara.oa.comm.enums.OaType.BYTE_TALK;
 
 /**
  * @author dongfeng
@@ -25,7 +25,7 @@ import static org.dromara.oa.comm.enums.OaType.BYTETALK;
 @Slf4j
 public class ByteTalkOaImpl extends AbstractOaBlend<ByteTalkConfig> {
 
-    private HttpClientImpl httpClient = new HttpClientImpl();
+    private final HttpClientImpl httpClient = new HttpClientImpl();
 
     public ByteTalkOaImpl(ByteTalkConfig config) {
         super(config);
@@ -33,7 +33,7 @@ public class ByteTalkOaImpl extends AbstractOaBlend<ByteTalkConfig> {
 
     @Override
     public String getSupplier() {
-        return OaType.BYTETALK.getType();
+        return OaType.BYTE_TALK.getType();
     }
 
     @Override
@@ -45,7 +45,7 @@ public class ByteTalkOaImpl extends AbstractOaBlend<ByteTalkConfig> {
         StringBuilder webhook = new StringBuilder();
         JSONObject message = null;
         ByteTalkConfig config = getConfig();
-        webhook.append(BYTETALK.getUrl());
+        webhook.append(BYTE_TALK.getUrl());
         webhook.append(config.getTokenId());
         long now = System.currentTimeMillis() / 1000;
         String sign = ByteTalkBuilder.byteTalkSign(config.getSign(), now);

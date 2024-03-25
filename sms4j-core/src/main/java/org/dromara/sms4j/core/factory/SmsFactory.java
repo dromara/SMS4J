@@ -33,7 +33,7 @@ public abstract class SmsFactory {
      * <p>key: configId，短信服务对象的唯一标识</p>
      * <p>value: 短信服务对象</p>
      */
-    private final static Map<String, SmsBlend> blends = new ConcurrentHashMap<>();
+    private final static Map<String, SmsBlend> BLENDS = new ConcurrentHashMap<>();
 
     private SmsFactory() {
     }
@@ -170,7 +170,7 @@ public abstract class SmsFactory {
      * @return 返回短信服务对象。如果未找到则返回null
      */
     public static SmsBlend getSmsBlend(String configId) {
-        return blends.get(configId);
+        return BLENDS.get(configId);
     }
 
     /**
@@ -184,7 +184,7 @@ public abstract class SmsFactory {
         if (StrUtil.isEmpty(supplier)) {
             throw new SmsBlendException("供应商标识不能为空");
         }
-        return blends.values().stream().filter(smsBlend -> supplier.equals(smsBlend.getSupplier())).findFirst().orElse(null);
+        return BLENDS.values().stream().filter(smsBlend -> supplier.equals(smsBlend.getSupplier())).findFirst().orElse(null);
     }
 
     /**
@@ -198,7 +198,7 @@ public abstract class SmsFactory {
         if (StrUtil.isEmpty(supplier)) {
             throw new SmsBlendException("供应商标识不能为空");
         }
-        list = blends.values().stream().filter(smsBlend -> supplier.equals(smsBlend.getSupplier())).collect(Collectors.toList());
+        list = BLENDS.values().stream().filter(smsBlend -> supplier.equals(smsBlend.getSupplier())).collect(Collectors.toList());
         return list;
     }
 
@@ -208,7 +208,7 @@ public abstract class SmsFactory {
      * @return 短信服务对象列表
      */
     public static List<SmsBlend> getAll() {
-        return new ArrayList<>(blends.values());
+        return new ArrayList<>(BLENDS.values());
     }
 
     /**
@@ -220,7 +220,7 @@ public abstract class SmsFactory {
         if (smsBlend == null) {
             throw new SmsBlendException("短信服务对象不能为空");
         }
-        blends.put(smsBlend.getConfigId(), smsBlend);
+        BLENDS.put(smsBlend.getConfigId(), smsBlend);
         SmsLoad.starConfig(smsBlend, 1);
     }
 
@@ -233,7 +233,7 @@ public abstract class SmsFactory {
         if (smsBlend == null) {
             throw new SmsBlendException("短信服务对象不能为空");
         }
-        blends.put(smsBlend.getConfigId(), smsBlend);
+        BLENDS.put(smsBlend.getConfigId(), smsBlend);
         SmsLoad.starConfig(smsBlend, weight);
     }
 
@@ -250,10 +250,10 @@ public abstract class SmsFactory {
             throw new SmsBlendException("短信服务对象不能为空");
         }
         String configId = smsBlend.getConfigId();
-        if (blends.containsKey(configId)) {
+        if (BLENDS.containsKey(configId)) {
             return false;
         }
-        blends.put(configId, smsBlend);
+        BLENDS.put(configId, smsBlend);
         SmsLoad.starConfig(smsBlend, 1);
         return true;
     }
@@ -274,10 +274,10 @@ public abstract class SmsFactory {
             throw new SmsBlendException("短信服务对象不能为空");
         }
         String configId = smsBlend.getConfigId();
-        if (blends.containsKey(configId)) {
+        if (BLENDS.containsKey(configId)) {
             return false;
         }
-        blends.put(configId, smsBlend);
+        BLENDS.put(configId, smsBlend);
         SmsLoad.starConfig(smsBlend, weight);
         return true;
     }
@@ -292,7 +292,7 @@ public abstract class SmsFactory {
      * <p>当configId不存在时，返回false</p>
      */
     public static boolean unregister(String configId) {
-        SmsBlend blend = blends.remove(configId);
+        SmsBlend blend = BLENDS.remove(configId);
         SmsLoad.getBeanLoad().removeLoadServer(blend);
         return blend != null;
     }

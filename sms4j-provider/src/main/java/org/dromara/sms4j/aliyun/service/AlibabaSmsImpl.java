@@ -65,13 +65,16 @@ public class AlibabaSmsImpl extends AbstractSmsBlend<AlibabaConfig> {
     @Override
     public SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages) {
         if (Objects.isNull(messages)){
-            messages = new LinkedHashMap<String, String>();
+            messages = new LinkedHashMap<>();
         }
         return sendMessage(phone, getConfig().getTemplateId(), messages);
     }
 
     @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<>();
+        }
         String messageStr = JSONUtil.toJsonStr(messages);
         return getSmsResponse(phone, messageStr, templateId);
     }
@@ -85,6 +88,9 @@ public class AlibabaSmsImpl extends AbstractSmsBlend<AlibabaConfig> {
 
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<>();
+        }
         String messageStr = JSONUtil.toJsonStr(messages);
         return getSmsResponse(SmsUtils.arrayToString(phones), messageStr, templateId);
     }
@@ -121,7 +127,7 @@ public class AlibabaSmsImpl extends AbstractSmsBlend<AlibabaConfig> {
     private SmsResponse requestRetry(String phone, String message, String templateId) {
         http.safeSleep(getConfig().getRetryInterval());
         retry++;
-        log.warn("短信第 {" + retry + "} 次重新发送");
+        log.warn("短信第 {} 次重新发送", retry);
         return getSmsResponse(phone, message, templateId);
     }
 

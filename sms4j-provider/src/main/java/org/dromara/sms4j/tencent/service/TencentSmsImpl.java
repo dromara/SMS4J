@@ -54,14 +54,14 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
 
     @Override
     public SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages) {
-        if (Objects.isNull(messages)){
-            messages = new LinkedHashMap<String, String>();
-        }
         return sendMessage(phone, getConfig().getTemplateId(), messages);
     }
 
     @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<>();
+        }
         List<String> list = new ArrayList<>();
         for (Map.Entry<String, String> entry : messages.entrySet()) {
             list.add(entry.getValue());
@@ -82,6 +82,9 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
 
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<>();
+        }
         List<String> list = new ArrayList<>();
         for (Map.Entry<String, String> entry : messages.entrySet()) {
             list.add(entry.getValue());
@@ -123,7 +126,7 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
     private SmsResponse requestRetry(String[] phones, String[] messages, String templateId) {
         http.safeSleep(getConfig().getRetryInterval());
         retry++;
-        log.warn("短信第 {" + retry + "} 次重新发送");
+        log.warn("短信第 {} 次重新发送", retry);
         return getSmsResponse(phones, messages, templateId);
     }
 

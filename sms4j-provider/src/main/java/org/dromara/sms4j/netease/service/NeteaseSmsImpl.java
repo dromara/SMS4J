@@ -6,6 +6,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.comm.constant.Constant;
@@ -64,7 +65,7 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
     @Override
     public SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages) {
         if (Objects.isNull(messages)){
-            messages = new LinkedHashMap<String, String>();
+            messages = new LinkedHashMap<>();
         }
         return sendMessage(phone, getConfig().getTemplateId(), messages);
     }
@@ -78,6 +79,9 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
      */
     @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<>();
+        }
         Optional.ofNullable(phone).orElseThrow(() -> new SmsBlendException("手机号不能为空"));
         Optional.ofNullable(getConfig().getTemplateId()).orElseThrow(() -> new SmsBlendException("模板ID不能为空"));
         String messageStr = messages.get("params");
@@ -98,6 +102,9 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
 
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<>();
+        }
         if (phones.size() > 100) {
             throw new SmsBlendException("单次发送超过最大发送上限，建议每次群发短信人数低于100");
         }
@@ -115,7 +122,14 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
         JSONArray jsonArray = new JSONArray();
         jsonArray.addAll(phones);
         body.put("mobiles", jsonArray.toString());
-        body.put("params", message);
+        //保证模板变量参数使用jsonarray传递
+        if (!JSONUtil.isTypeJSONArray(message)) {
+            jsonArray = new JSONArray();
+            jsonArray.add(message);
+            body.put("params", jsonArray.toString());
+        }else {
+            body.put("params", message);
+        }
         body.put("needUp", getConfig().getNeedUp());
 
         Map<String, String> headers = MapUtil.newHashMap(5, true);
@@ -126,7 +140,7 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
         headers.put("CheckSum", checkSum);
         SmsResponse smsResponse;
         try {
-            smsResponse = getResponse(http.postJson(requestUrl, headers, body));
+            smsResponse = getResponse(http.postFrom(requestUrl, headers, body));
         } catch (SmsBlendException e) {
             smsResponse = new SmsResponse();
             smsResponse.setSuccess(false);
@@ -142,7 +156,7 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
     private SmsResponse requestRetry(String requestUrl, List<String> phones, String message, String templateId) {
         http.safeSleep(getConfig().getRetryInterval());
         retry++;
-        log.warn("短信第 {" + retry + "} 次重新发送");
+        log.warn("短信第 {} 次重新发送", retry);
         return getSmsResponse(requestUrl, phones, message, templateId);
     }
 

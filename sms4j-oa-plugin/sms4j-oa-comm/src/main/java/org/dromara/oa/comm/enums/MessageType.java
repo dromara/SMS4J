@@ -1,28 +1,31 @@
 package org.dromara.oa.comm.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum MessageType {
     // 钉钉支持类型
-    DINGTALK_TEXT("text"),
+    DING_TALK_TEXT("text"),
 
-    DINGTALK_MARKDOWN("markdown"),
+    DING_TALK_MARKDOWN("markdown"),
 
-    DINGTALK_LINK("link"),
+    DING_TALK_LINK("link"),
+
     // 飞书支持类型
-
-    BYTETALK_TEXT("text"),
-//    BYTETALK_MARKDOWN("markdown"),
-//    BYTETALK_LINK("link"),
+    BYTE_TALK_TEXT("text"),
+//    BYTE_TALK_MARKDOWN("markdown"),
+//    BYTE_TALK_LINK("link"),
 
     // 企业微信支持类型
-    WETETALK_TEXT("text"),
+    WE_TALK_TEXT("text"),
 
-    WETETALK_MARKDOWN("markdown");
+    WE_TALK_MARKDOWN("markdown"),
+    WE_TALK_NEWS("news");
     //暂未支持
-//    WETETALK_IMAGE("image"),
-//    WETETALK_NEWS("news"),
-//    WETETALK_FILE("file"),
-//    WETETALK_VOICE("voice"),
-//    WETETALK_TEMPLATE_CARD("template_card");
+//    WE_TALK_IMAGE("image"),
+//    WE_TALK_FILE("file"),
+//    WE_TALK_VOICE("voice"),
+//    WE_TALK_TEMPLATE_CARD("template_card");
 
     MessageType(String name) {
         this.name = name;
@@ -30,7 +33,4 @@ public enum MessageType {
 
     private final String name;
 
-    public String getName() {
-        return name;
-    }
 }

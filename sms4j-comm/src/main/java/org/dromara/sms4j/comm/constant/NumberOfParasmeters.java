@@ -1,6 +1,9 @@
 package org.dromara.sms4j.comm.constant;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 /**
  * NumberOfParasmeters
  * <p> 重载方法的参数个数
@@ -8,6 +11,8 @@ package org.dromara.sms4j.comm.constant;
  * @author :sh1yu
  * 2023/11/01  19:33
  **/
+@Getter
+@AllArgsConstructor
 public enum NumberOfParasmeters {
     //一个参数
     ONE(1),
@@ -15,11 +20,7 @@ public enum NumberOfParasmeters {
     TWO(2),
     //三个参数
     THREE(3);
-    private int code;
-
-    NumberOfParasmeters(int code) {
-        this.code = code;
-    }
+    private final int code;
 
     public static NumberOfParasmeters getNumberOfParasmetersEnum(int index) {
         switch (index) {
@@ -29,7 +30,10 @@ public enum NumberOfParasmeters {
                 return NumberOfParasmeters.TWO;
             case 3:
                 return NumberOfParasmeters.THREE;
+            default:
+                break;
         }
         throw new IllegalArgumentException("building enum NumberOfParasmeters error,param not match");
     }
+
 }

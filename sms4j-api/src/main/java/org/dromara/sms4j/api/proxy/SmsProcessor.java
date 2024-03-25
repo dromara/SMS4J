@@ -1,7 +1,6 @@
 package org.dromara.sms4j.api.proxy;
 
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 /**
  * 执行器接口
@@ -18,7 +17,7 @@ public interface SmsProcessor extends Order {
         return null;
     }
 
-    default Object exceptionHandleProcessor(Method method, Object source, Object[] param,Exception exception) throws InvocationTargetException, IllegalAccessException {
+    default Object exceptionHandleProcessor(Method method, Object source, Object[] param,Exception exception) {
         return null;
     }
 }

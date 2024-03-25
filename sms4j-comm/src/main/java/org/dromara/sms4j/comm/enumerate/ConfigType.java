@@ -1,11 +1,14 @@
 package org.dromara.sms4j.comm.enumerate;
 
+import lombok.Getter;
+
 /**
  * ConfigType
  * <p>配置文件类型
  * @author :Wind
  * 2023/4/5  19:08
  **/
+@Getter
 public enum ConfigType {
     /** yaml配置文件 */
     YAML("yaml"),
@@ -18,7 +21,4 @@ public enum ConfigType {
         this.name = name;
     }
 
-    public String getName() {
-        return name;
-    }
 }

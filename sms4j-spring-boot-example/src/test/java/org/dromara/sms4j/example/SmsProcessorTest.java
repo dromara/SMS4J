@@ -106,7 +106,7 @@ public class SmsProcessorTest {
         Assert.notNull(knowEx);
         knowEx = null;
         try {
-            SmsFactory.getBySupplier(SupplierConstant.UNISMS).massTexting(new ArrayList<String>(), "321321");
+            SmsFactory.getBySupplier(SupplierConstant.UNISMS).massTexting(new ArrayList<>(), "321321");
         } catch (SmsBlendException e) {
             knowEx = e;
             System.out.println(knowEx.getMessage());

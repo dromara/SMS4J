@@ -1,6 +1,13 @@
 package org.dromara.sms4j.comm.exception;
 
+import lombok.Setter;
+
+@Setter
 public class SmsSqlException extends RuntimeException{
+    /**
+     * -- SETTER --
+     *  设置 message
+     */
     private String message;
     @Override
     public String getMessage() {
@@ -11,10 +18,4 @@ public class SmsSqlException extends RuntimeException{
         this.message = message;
     }
 
-    /**
-     * 设置 message
-     */
-    public void setMessage(String message) {
-        this.message = message;
-    }
 }

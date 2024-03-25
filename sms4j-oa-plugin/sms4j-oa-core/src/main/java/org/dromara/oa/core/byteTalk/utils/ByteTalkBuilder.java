@@ -1,21 +1,18 @@
 package org.dromara.oa.core.byteTalk.utils;
 
+import cn.hutool.core.codec.Base64;
+import cn.hutool.crypto.digest.HMac;
+import cn.hutool.crypto.digest.HmacAlgorithm;
 import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.oa.comm.entity.Request;
 import org.dromara.oa.comm.enums.MessageType;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 
-import static org.dromara.oa.comm.enums.MessageType.BYTETALK_TEXT;
-
+import static org.dromara.oa.comm.enums.MessageType.BYTE_TALK_TEXT;
 
 /**
  * 飞书通知签名和信息构建
@@ -29,22 +26,16 @@ public class ByteTalkBuilder {
         //把timestamp+"\n"+密钥当做签名字符串
         String stringToSign = timestamp + "\n" + secret;
         //使用HmacSHA256算法计算签名
-        Mac mac = null;
-        try {
-            mac = Mac.getInstance("HmacSHA256");
-            mac.init(new SecretKeySpec(stringToSign.getBytes(StandardCharsets.UTF_8), "HmacSHA256"));
-        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
-            throw new RuntimeException(e);
-        }
-        byte[] signData = mac.doFinal(new byte[]{});
-        return new String(Base64.getEncoder().encode(signData));
+        HMac mac = new HMac(HmacAlgorithm.HmacSHA256, stringToSign.getBytes(StandardCharsets.UTF_8));
+        byte[] signData = mac.digest(new byte[]{});
+        return Base64.encode(signData);
     }
 
 
     public static JSONObject createByteTalkMessage(Request request, MessageType messageType, String sign, Long timestamp) {
         JSONObject message = new JSONObject();
         List<String> userIdList = request.getUserIdList();
-        if (messageType == BYTETALK_TEXT) {
+        if (messageType == BYTE_TALK_TEXT) {
             message.set("msg_type", "text");
             message.set("timestamp", timestamp);
             message.set("sign", sign);

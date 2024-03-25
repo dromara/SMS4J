@@ -55,7 +55,7 @@ public class JdCloudSmsImpl extends AbstractSmsBlend<JdCloudConfig> {
     @Override
     public SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages) {
         if (Objects.isNull(messages)){
-            messages = new LinkedHashMap<String, String>();
+            messages = new LinkedHashMap<>();
         }
         return sendMessage(phone, getConfig().getTemplateId(), messages);
     }
@@ -74,6 +74,9 @@ public class JdCloudSmsImpl extends AbstractSmsBlend<JdCloudConfig> {
 
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
+        if (Objects.isNull(messages)){
+            messages = new LinkedHashMap<>();
+        }
         BatchSendRequest request;
         try {
             request = new BatchSendRequest();
@@ -107,7 +110,7 @@ public class JdCloudSmsImpl extends AbstractSmsBlend<JdCloudConfig> {
     private SmsResponse requestRetry(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
         http.safeSleep(getConfig().getRetryInterval());
         retry++;
-        log.warn("短信第 {" + retry + "} 次重新发送");
+        log.warn("短信第 {} 次重新发送", retry);
         return massTexting(phones, templateId, messages);
     }
 

@@ -12,10 +12,14 @@ import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.enumerate.ConfigType;
 import org.dromara.sms4j.comm.utils.SmsUtils;
 import org.dromara.sms4j.core.datainterface.SmsReadConfig;
-import org.dromara.sms4j.core.proxy.EnvirmentHolder;
 import org.dromara.sms4j.core.factory.SmsFactory;
-import org.dromara.sms4j.core.proxy.processor.*;
+import org.dromara.sms4j.core.proxy.EnvirmentHolder;
 import org.dromara.sms4j.core.proxy.SmsProxyFactory;
+import org.dromara.sms4j.core.proxy.processor.BlackListProcessor;
+import org.dromara.sms4j.core.proxy.processor.BlackListRecordingProcessor;
+import org.dromara.sms4j.core.proxy.processor.CoreMethodParamValidateProcessor;
+import org.dromara.sms4j.core.proxy.processor.RestrictedProcessor;
+import org.dromara.sms4j.core.proxy.processor.SingleBlendRestrictedProcessor;
 import org.dromara.sms4j.ctyun.config.CtyunFactory;
 import org.dromara.sms4j.dingzhong.config.DingZhongFactory;
 import org.dromara.sms4j.emay.config.EmayFactory;
@@ -26,6 +30,7 @@ import org.dromara.sms4j.netease.config.NeteaseFactory;
 import org.dromara.sms4j.provider.config.SmsConfig;
 import org.dromara.sms4j.provider.factory.BaseProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
+import org.dromara.sms4j.qiniu.config.QiNiuFactory;
 import org.dromara.sms4j.starter.adepter.ConfigCombineMapAdeptor;
 import org.dromara.sms4j.tencent.config.TencentFactory;
 import org.dromara.sms4j.unisms.config.UniFactory;
@@ -40,7 +45,7 @@ import java.util.Map;
 
 @Slf4j
 public class SmsBlendsInitializer  {
-    private List<BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig>> factoryList;
+    private final List<BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig>> factoryList;
 
     private final SmsConfig smsConfig;
     private final Map<String, Map<String, Object>> blends;
@@ -119,9 +124,11 @@ public class SmsBlendsInitializer  {
         ProviderFactoryHolder.registerFactory(ZhutongFactory.instance());
         ProviderFactoryHolder.registerFactory(LianLuFactory.instance());
         ProviderFactoryHolder.registerFactory(DingZhongFactory.instance());
+        ProviderFactoryHolder.registerFactory(QiNiuFactory.instance());
         if(SmsUtils.isClassExists("com.jdcloud.sdk.auth.CredentialsProvider")) {
             ProviderFactoryHolder.registerFactory(JdCloudFactory.instance());
         }
+        log.debug("加载内置运营商完成！");
     }
 
 }

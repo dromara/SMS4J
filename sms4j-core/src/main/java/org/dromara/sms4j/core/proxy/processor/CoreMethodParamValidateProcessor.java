@@ -1,8 +1,10 @@
 package org.dromara.sms4j.core.proxy.processor;
 
 import cn.hutool.core.util.StrUtil;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.proxy.CoreMethodProcessor;
+import org.dromara.sms4j.api.verify.PhoneVerify;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 
 import java.util.LinkedHashMap;
@@ -16,8 +18,20 @@ import java.util.Objects;
  * @author sh1yu
  * @since 2023/10/27 13:03
  */
+@Setter
 @Slf4j
 public class CoreMethodParamValidateProcessor implements CoreMethodProcessor {
+
+    /**
+     * -- SETTER --
+     *  设置 phoneVerify
+     */
+    private PhoneVerify phoneVerify;
+
+    public CoreMethodParamValidateProcessor(PhoneVerify phoneVerify) {
+        this.phoneVerify = phoneVerify;
+    }
+
     @Override
     public int getOrder() {
         return -1;
@@ -63,6 +77,9 @@ public class CoreMethodParamValidateProcessor implements CoreMethodProcessor {
         if (StrUtil.isBlank(phone)) {
             throw new SmsBlendException("cant send message to null!");
         }
+        if (phoneVerify != null && !phoneVerify.verifyPhone(phone)){
+            throw new SmsBlendException("The mobile phone number format is invalid!");
+        }
     }
 
     public void validatePhones(List<String> phones) {
@@ -71,7 +88,9 @@ public class CoreMethodParamValidateProcessor implements CoreMethodProcessor {
         }
         for (String phone : phones) {
             if (StrUtil.isNotBlank(phone)) {
-                return;
+                if (phoneVerify != null && !phoneVerify.verifyPhone(phone)){
+                    throw new SmsBlendException("The mobile phone number format is invalid!");
+                }
             }
         }
         throw new SmsBlendException("cant send message to null!");

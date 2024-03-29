@@ -3,6 +3,7 @@ package org.dromara.sms4j.huawei.utils;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.DateUtil;
 import org.dromara.sms4j.comm.constant.Constant;
+import org.dromara.sms4j.comm.exception.SmsBlendException;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -38,14 +39,14 @@ public class HuaweiBuilder {
         // Nonce
         String nonce = UUID.randomUUID().toString().replace("-", "");
         MessageDigest md;
-        byte[] passwordDigest = null;
+        byte[] passwordDigest;
 
         try {
             md = MessageDigest.getInstance("SHA-256");
             md.update((nonce + time + appSecret).getBytes());
             passwordDigest = md.digest();
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            throw new SmsBlendException(e);
         }
         // PasswordDigest
         String passwordDigestBase64Str = Base64.encode(passwordDigest);
@@ -111,13 +112,13 @@ public class HuaweiBuilder {
         }
 
         StringBuilder sb = new StringBuilder();
-        String temp = "";
+        String temp;
 
         for (String s : map.keySet()) {
             try {
                 temp = URLEncoder.encode(map.get(s), "UTF-8");
             } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+                throw new SmsBlendException(e);
             }
             sb.append(s).append("=").append(temp).append("&");
         }
@@ -126,6 +127,9 @@ public class HuaweiBuilder {
     }
 
     public static String listToString(List<String> list) {
+        if (null == list || list.isEmpty()) {
+            return null;
+        }
         StringBuilder stringBuffer = new StringBuilder();
         stringBuffer.append("[\"");
         for (String s : list) {

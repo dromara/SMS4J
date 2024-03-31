@@ -22,6 +22,9 @@ public interface CoreMethodProcessor extends SmsProcessor {
                 return param;
             }
             if (NumberOfParasmeters.THREE == NumberOfParasmeters.getNumberOfParasmetersEnum(parameterCount)) {
+                if (null == param[2]){
+                    param[2] = new LinkedHashMap<>();
+                }
                 sendMessageByTemplatePreProcess((String)param[0],(String) param[1],(LinkedHashMap<String, String>)param[2]);
                 return param;
             }
@@ -32,6 +35,9 @@ public interface CoreMethodProcessor extends SmsProcessor {
                 return param;
             }
             if (NumberOfParasmeters.THREE == NumberOfParasmeters.getNumberOfParasmetersEnum(parameterCount)) {
+                if (null == param[2]){
+                    param[2] = new LinkedHashMap<>();
+                }
                 massTextingByTemplatePreProcess((List<String>)param[0],(String)param[1],(LinkedHashMap<String, String>)param[2]);
                 return param;
             }

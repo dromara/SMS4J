@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 
-import static org.dromara.oa.comm.enums.MessageType.BYTETALK_TEXT;
+import static org.dromara.oa.comm.enums.MessageType.BYTE_TALK_TEXT;
 
 /**
  * 飞书通知签名和信息构建
@@ -35,7 +35,7 @@ public class ByteTalkBuilder {
     public static JSONObject createByteTalkMessage(Request request, MessageType messageType, String sign, Long timestamp) {
         JSONObject message = new JSONObject();
         List<String> userIdList = request.getUserIdList();
-        if (messageType == BYTETALK_TEXT) {
+        if (messageType == BYTE_TALK_TEXT) {
             message.set("msg_type", "text");
             message.set("timestamp", timestamp);
             message.set("sign", sign);

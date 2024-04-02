@@ -9,10 +9,10 @@ import org.dromara.oa.core.provider.config.OaBaseConfig;
 @EqualsAndHashCode(callSuper = true)
 public class ByteTalkConfig extends OaBaseConfig {
 
-    private final String requestUrl = OaType.BYTETALK.getUrl();
+    private final String requestUrl = OaType.BYTE_TALK.getUrl();
 
     @Override
     public String getSupplier() {
-        return OaType.BYTETALK.getType();
+        return OaType.BYTE_TALK.getType();
     }
 }

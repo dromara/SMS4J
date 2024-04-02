@@ -22,4 +22,9 @@ public class SmsBlendException extends RuntimeException{
         this.code = code;
         this.requestId = requestId;
     }
+
+    public SmsBlendException(Exception e){
+        super(e);
+        this.message = e.getMessage();
+    }
 }

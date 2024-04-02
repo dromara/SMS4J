@@ -27,7 +27,7 @@ public class DingTalkFactory extends OaAbstractProviderFactory<DingTalkOaImpl, D
 
     @Override
     public String getSupplier() {
-        return OaContent.DINGTALK;
+        return OaContent.DING_TALK;
     }
 
     /**

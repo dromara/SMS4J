@@ -6,6 +6,9 @@ import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
 import org.dromara.sms4j.zhutong.service.ZhutongSmsImpl;
 
+/**
+ * 助通短信
+ * */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ZhutongFactory extends AbstractProviderFactory<ZhutongSmsImpl, ZhutongConfig> {
     private static final ZhutongFactory INSTANCE = new ZhutongFactory();

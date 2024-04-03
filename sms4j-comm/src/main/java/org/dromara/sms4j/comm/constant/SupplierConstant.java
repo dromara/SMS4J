@@ -61,4 +61,9 @@ public abstract class SupplierConstant {
     public static final String DINGZHONG = "dingzhong";
     public static final String QINIU = "qiniu";
 
+    /**
+     * 布丁云V2
+     */
+    public static final String BUDING_V2 = "buding_v2";
+
 }

@@ -57,7 +57,7 @@ public class AlibabaSmsImpl extends AbstractSmsBlend<AlibabaConfig> {
 
     @Override
     public SmsResponse sendMessage(String phone, String message) {
-        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        LinkedHashMap<String, String> map = new LinkedHashMap<>(1);
         map.put(getConfig().getTemplateName(), message);
         return sendMessage(phone, getConfig().getTemplateId(), map);
     }

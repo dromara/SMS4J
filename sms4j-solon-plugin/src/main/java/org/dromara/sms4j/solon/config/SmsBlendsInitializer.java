@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.aliyun.config.AlibabaFactory;
 import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.universal.SupplierConfig;
+import org.dromara.sms4j.api.verify.PhoneVerify;
 import org.dromara.sms4j.cloopen.config.CloopenFactory;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.utils.SmsUtils;
@@ -37,6 +38,7 @@ import org.noear.solon.core.AppContext;
 
 import java.util.List;
 import java.util.Map;
+import java.util.ServiceLoader;
 
 
 @Slf4j
@@ -72,7 +74,15 @@ public class SmsBlendsInitializer {
         SmsProxyFactory.addProcessor(new BlackListProcessor());
         SmsProxyFactory.addProcessor(new BlackListRecordingProcessor());
         SmsProxyFactory.addProcessor(new SingleBlendRestrictedProcessor());
-        SmsProxyFactory.addProcessor(new CoreMethodParamValidateProcessor());
+        //如果手机号校验器存在实现，则注册手机号校验器
+        ServiceLoader<PhoneVerify> loader = ServiceLoader.load(PhoneVerify.class);
+        if (loader.iterator().hasNext()) {
+            loader.forEach(f -> {
+                SmsProxyFactory.addProcessor(new CoreMethodParamValidateProcessor(f));
+            });
+        } else {
+            SmsProxyFactory.addProcessor(new CoreMethodParamValidateProcessor(null));
+        }
         // 解析供应商配置
         for(String configId : blends.keySet()) {
             Map<String, Object> configMap = blends.get(configId);

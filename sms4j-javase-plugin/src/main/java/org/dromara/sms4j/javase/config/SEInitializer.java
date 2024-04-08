@@ -15,6 +15,7 @@ import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.dao.SmsDao;
 import org.dromara.sms4j.api.dao.SmsDaoDefaultImpl;
 import org.dromara.sms4j.api.universal.SupplierConfig;
+import org.dromara.sms4j.api.verify.PhoneVerify;
 import org.dromara.sms4j.cloopen.config.CloopenFactory;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
@@ -51,6 +52,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ServiceLoader;
 
 /**
  * 初始化类
@@ -132,7 +134,15 @@ public class SEInitializer {
             SmsProxyFactory.addProcessor(new BlackListProcessor());
             SmsProxyFactory.addProcessor(new BlackListRecordingProcessor());
             SmsProxyFactory.addProcessor(new SingleBlendRestrictedProcessor());
-            SmsProxyFactory.addProcessor(new CoreMethodParamValidateProcessor());
+            //如果手机号校验器存在实现，则注册手机号校验器
+            ServiceLoader<PhoneVerify> loader = ServiceLoader.load(PhoneVerify.class);
+            if (loader.iterator().hasNext()) {
+                loader.forEach(f -> {
+                    SmsProxyFactory.addProcessor(new CoreMethodParamValidateProcessor(f));
+                });
+            } else {
+                SmsProxyFactory.addProcessor(new CoreMethodParamValidateProcessor(null));
+            }
         }catch (Exception e){
             log.error("配置对象转换配置信息失败，但不影响基础功能的使用。【注意】：未加载SMS4J扩展功能模块，拦截器，参数校验可能失效！");
         }
@@ -198,7 +208,15 @@ public class SEInitializer {
         SmsProxyFactory.addProcessor(new BlackListProcessor());
         SmsProxyFactory.addProcessor(new BlackListRecordingProcessor());
         SmsProxyFactory.addProcessor(new SingleBlendRestrictedProcessor());
-        SmsProxyFactory.addProcessor(new CoreMethodParamValidateProcessor());
+        //如果手机号校验器存在实现，则注册手机号校验器
+        ServiceLoader<PhoneVerify> loader = ServiceLoader.load(PhoneVerify.class);
+        if (loader.iterator().hasNext()) {
+            loader.forEach(f -> {
+                SmsProxyFactory.addProcessor(new CoreMethodParamValidateProcessor(f));
+            });
+        } else {
+            SmsProxyFactory.addProcessor(new CoreMethodParamValidateProcessor(null));
+        }
         for (String configId : blends.keySet()) {
             Map<String, Object> configMap = blends.get(configId);
             Object supplierObj = configMap.get(Constant.SUPPLIER_KEY);

@@ -91,10 +91,10 @@ public class SmsBlendsInitializer {
             //如果手机号校验器存在实现，则注册手机号校验器
             ServiceLoader<PhoneVerify> loader = ServiceLoader.load(PhoneVerify.class);
             if (loader.iterator().hasNext()) {
-                loader.forEach(f->{
+                loader.forEach(f -> {
                     SmsProxyFactory.addProcessor(new CoreMethodParamValidateProcessor(f));
                 });
-            }else {
+            } else {
                 SmsProxyFactory.addProcessor(new CoreMethodParamValidateProcessor(null));
             }
 
@@ -138,11 +138,12 @@ public class SmsBlendsInitializer {
         ProviderFactoryHolder.registerFactory(DingZhongFactory.instance());
         ProviderFactoryHolder.registerFactory(QiNiuFactory.instance());
         ProviderFactoryHolder.registerFactory(BudingV2Factory.instance());
-        if(SmsUtils.isClassExists("com.jdcloud.sdk.auth.CredentialsProvider")) {
         if (SmsUtils.isClassExists("com.jdcloud.sdk.auth.CredentialsProvider")) {
-            ProviderFactoryHolder.registerFactory(JdCloudFactory.instance());
+            if (SmsUtils.isClassExists("com.jdcloud.sdk.auth.CredentialsProvider")) {
+                ProviderFactoryHolder.registerFactory(JdCloudFactory.instance());
+            }
+            log.debug("加载内置运营商完成！");
         }
-        log.debug("加载内置运营商完成！");
-    }
 
+    }
 }

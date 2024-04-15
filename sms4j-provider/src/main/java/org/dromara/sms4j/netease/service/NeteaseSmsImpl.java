@@ -97,7 +97,7 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
             throw new SmsBlendException("单次发送超过最大发送上限，建议每次群发短信人数低于100");
         }
         Optional.ofNullable(getConfig().getTemplateId()).orElseThrow(() -> new SmsBlendException("模板ID不能为空"));
-        return getSmsResponse(getConfig().getTemplateUrl(), phones, getConfig().getTemplateId(), message);
+        return getSmsResponse(getConfig().getTemplateUrl(), phones,message, getConfig().getTemplateId());
     }
 
     @Override

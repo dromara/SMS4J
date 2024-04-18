@@ -43,12 +43,13 @@ public interface SmsBlend {
     SmsResponse sendMessage(String phone, String message);
 
     /**
-     *  sendMessage
+     * sendMessage
      * <p>说明：发送固定消息模板多模板参数短信
-     * @param  phone 接收短信的手机号
+     *
+     * @param phone    接收短信的手机号
      * @param messages 模板内容
      * @author :Wind
-    */
+     */
     SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages);
 
     /**
@@ -190,7 +191,7 @@ public interface SmsBlend {
      * @param phones 需要加入黑名单的手机号数组
      * @author :sh1yu
      */
-    default void batchJoinBlacklist(List<String > phones) {
+    default void batchJoinBlacklist(List<String> phones) {
     }
 
     /**
@@ -200,6 +201,6 @@ public interface SmsBlend {
      * @param phones 需要移除黑名单的手机号数组
      * @author :sh1yu
      */
-    default void batchRemovalFromBlacklist(List<String > phones) {
+    default void batchRemovalFromBlacklist(List<String> phones) {
     }
 }

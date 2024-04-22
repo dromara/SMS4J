@@ -20,7 +20,7 @@ public class SmsLoad {
     // 服务器列表，每个服务器有一个权重和当前权重
     private final List<LoadServer> LoadServers = new ArrayList<>();
 
-    private static final SmsLoad smsLoad = new SmsLoad();
+    private static final SmsLoad SMS_LOAD = new SmsLoad();
 
     private SmsLoad() {
     }
@@ -100,15 +100,15 @@ public class SmsLoad {
     public static void starConfig(SmsBlend smsBlend, SupplierConfig supplierConfig) {
         Map<String, Object> supplierConfigMap = BeanUtil.beanToMap(supplierConfig);
         Object weight = supplierConfigMap.getOrDefault("weight", 1);
-        smsLoad.addLoadServer(smsBlend, Integer.parseInt(weight.toString()));
+        SMS_LOAD.addLoadServer(smsBlend, Integer.parseInt(weight.toString()));
     }
 
     public static void starConfig(SmsBlend smsBlend,Integer weight) {
-        smsLoad.addLoadServer(smsBlend,weight);
+        SMS_LOAD.addLoadServer(smsBlend,weight);
     }
 
     public static SmsLoad getBeanLoad() {
-        return smsLoad;
+        return SMS_LOAD;
     }
 }
 

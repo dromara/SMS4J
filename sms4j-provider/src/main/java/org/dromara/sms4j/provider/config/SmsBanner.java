@@ -1,7 +1,7 @@
 package org.dromara.sms4j.provider.config;
 
 public class SmsBanner {
-    private static final String banner =
+    private static final String BANNER =
     " ________  _____ ______   ________  ___   ___        ___     \n" +
             "|\\   ____\\|\\   _ \\  _   \\|\\   ____\\|\\  \\ |\\  \\      |\\  \\    \n" +
             "\\ \\  \\___|\\ \\  \\\\\\__\\ \\  \\ \\  \\___|\\ \\  \\\\_\\  \\     \\ \\  \\   \n" +
@@ -12,6 +12,6 @@ public class SmsBanner {
             "   \\|_________|             \\|_________|                     \n";
     /** 初始化配置文件时打印banner*/
     public static void PrintBanner(String version) {
-        System.out.println(banner+version);
+        System.out.println(BANNER +version);
     }
 }

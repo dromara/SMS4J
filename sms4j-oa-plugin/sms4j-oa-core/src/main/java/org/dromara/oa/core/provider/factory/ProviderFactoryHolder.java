@@ -16,13 +16,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ProviderFactoryHolder {
 
 
-    private static final Map<String, OaBaseProviderFactory<? extends OaSender, ? extends OaSupplierConfig>> factories = new ConcurrentHashMap<>();
+    private static final Map<String, OaBaseProviderFactory<? extends OaSender, ? extends OaSupplierConfig>> FACTORIES = new ConcurrentHashMap<>();
 
     public static void registerFactory(OaBaseProviderFactory<? extends OaSender, ? extends OaSupplierConfig> factory) {
         if (factory == null) {
             throw new OaException("注册供应商工厂失败，工厂实例不能为空");
         }
-        factories.put(factory.getSupplier(), factory);
+        FACTORIES.put(factory.getSupplier(), factory);
     }
 
     public static void registerFactory(List<OaBaseProviderFactory<? extends OaSender, ? extends OaSupplierConfig>> factoryList) {
@@ -38,6 +38,6 @@ public class ProviderFactoryHolder {
     }
 
     public static OaBaseProviderFactory<? extends OaSender, ? extends OaSupplierConfig> requireForSupplier(String supplier) {
-        return factories.getOrDefault(supplier, null);
+        return FACTORIES.getOrDefault(supplier, null);
     }
 }

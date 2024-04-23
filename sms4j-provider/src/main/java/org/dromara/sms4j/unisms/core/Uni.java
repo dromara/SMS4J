@@ -8,7 +8,7 @@ public class Uni {
     /** 模仿SDK版本*/
     public static final String VERSION = "0.0.4";
 
-    public static final String signingAlgorithm = "hmac-sha256";
+    public static final String SIGNING_ALGORITHM = "hmac-sha256";
     public static String endpoint = System.getenv().getOrDefault("UNI_ENDPOINT", "https://uni.apistd.com");
     public static String accessKeyId = System.getenv("UNI_ACCESS_KEY_ID");
 
@@ -86,7 +86,7 @@ public class Uni {
             builder.isSimple(false);
         }
         builder.endpoint(Uni.endpoint);
-        builder.signingAlgorithm(Uni.signingAlgorithm);
+        builder.signingAlgorithm(Uni.SIGNING_ALGORITHM);
         builder.setRetryInterval(retryInterval);
         builder.setMaxRetries(maxRetries);
         return builder.build();

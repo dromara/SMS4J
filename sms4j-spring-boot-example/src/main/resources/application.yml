@@ -92,6 +92,26 @@ sms:
       templateId: 1752130****15859456
       signatureId: 175185*****1624960
       templateName: code
+    # 中国移动 云MAS
+    mas:
+      supplier: mas
+      # 请求方式默认为 HTTP
+      # 请求方法 默认为 HTTP模式下的 tmpsubmit
+      # norsubmit 无模板接口 不需要配置templateId
+      # tmpsubmit 有模板接口 需要配置templateId
+      # HTTPS 模式下 请求方法有 submit tmpsubmit
+      action: tmpsubmit
+      # 请求地址 HTTP模式下可不配置 默认为 http://112.35.1.155:1992/sms/
+      # HTTPS模式下 请设置 https://****:****/sms/
+      request-url: http://112.35.1.155:1992/sms/
+      sdk-app-id: 接口账号用户名
+      access-key-secret: 用户密码
+      ec-name: 企业名称
+      signature: 签名编码
+      # 当请求方法为 tmpsubmit 时 需要配置templateId
+      template-id:
+      # 可为空 不为空时请遵守中国移动云MAS开发文档中的描述[服务代码加扩展码总长度不能超过20位。]
+      add-serial:
 
 sms-oa:
   config-type: yaml

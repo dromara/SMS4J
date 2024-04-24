@@ -27,7 +27,7 @@ public class CloopenFactory extends AbstractProviderFactory<CloopenSmsImpl, Cloo
     }
 
     /**
-     * 创建容连云短信实现对象
+     * 创建容联云短信实现对象
      *
      * @param cloopenConfig 短信配置对象
      * @return 短信实现对象

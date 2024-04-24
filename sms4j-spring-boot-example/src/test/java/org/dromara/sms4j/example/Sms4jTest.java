@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -276,6 +277,60 @@ class Sms4jTest {
         log.info(JSONUtil.toJsonStr(smsResponse4));
         Assert.isTrue(smsResponse4.isSuccess());
         
+    }
+
+    /**
+     * 中国移动 云MAS
+     */
+    @Test
+    public void masSmsTest() {
+        if (StrUtil.isBlank(PHONE)) {
+            return;
+        }
+        // 发送一对一/一对多普通短信
+        // HTTP模式下 action请配置为 norsubmit
+        // HTTPS模式下 action请配置为 submit
+        SmsResponse oneToMany = SmsFactory.getBySupplier(SupplierConstant.MAS)
+                .sendMessage(PHONE, "测试短信" + SmsUtils.getRandomInt(6));
+        log.info(JSONUtil.toJsonStr(oneToMany));
+
+        // 发送多对多普通短信
+        // HTTP模式下 action请配置为 norsubmit
+        // HTTPS模式下 action请配置为 submit
+        LinkedHashMap<String, String> content = new LinkedHashMap<>();
+        content.put("18***1", "测试短信1");
+        content.put("18***2", "测试短信2");
+        content.put("18***3", "测试短信3");
+        content.put("18***4", "测试短信4");
+        SmsResponse manyToMany1 = SmsFactory.getBySupplier(SupplierConstant.MAS)
+                .sendMessage(PHONE, content);
+        log.info(JSONUtil.toJsonStr(manyToMany1));
+
+        // 或者
+        SmsResponse manyToMany2 = SmsFactory.getBySupplier(SupplierConstant.MAS)
+                .sendMessage(PHONE, JSONUtil.toJsonStr(content));
+        log.info(JSONUtil.toJsonStr(manyToMany2));
+
+        // 发送模板短信
+        // HTTP模式下或者HTTPS模式下 action请都配置为 tmpsubmit
+        // 无参数
+        SmsResponse strRes = SmsFactory.getBySupplier(SupplierConstant.MAS)
+                .sendMessage(PHONE, StrUtil.EMPTY);
+        log.info(JSONUtil.toJsonStr(strRes));
+
+        //数组格式
+        String[] paramsArr = {"param1", "param2"};
+        SmsResponse arrRes = SmsFactory.getBySupplier(SupplierConstant.MAS)
+                .sendMessage(PHONE, JSONUtil.toJsonStr(paramsArr));
+        log.info(JSONUtil.toJsonStr(arrRes));
+
+        //list格式
+        List<String> paramsList = new ArrayList<>();
+        paramsList.add("param1");
+        paramsList.add("param2");
+        SmsResponse listRes = SmsFactory.getBySupplier(SupplierConstant.MAS)
+                .sendMessage(PHONE, JSONUtil.toJsonStr(paramsList));
+        log.info(JSONUtil.toJsonStr(listRes));
     }
 
 }

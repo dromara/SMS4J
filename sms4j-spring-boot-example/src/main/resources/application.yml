@@ -112,6 +112,17 @@ sms:
       template-id:
       # 可为空 不为空时请遵守中国移动云MAS开发文档中的描述[服务代码加扩展码总长度不能超过20位。]
       add-serial:
+  # 中百度智能云 sms
+  baidu:
+    access-key-id: 访问密钥ID
+    access-key-secret: 用户密钥
+    ec-name: 企业名称
+    signature: 签名编码
+    template-id: 模板ID
+    # 模板变量名称
+    template-name: code
+    custom: 用户自定义参数，格式为字符串，状态回调时会回传该值 可不传
+    user-ext-id: 通道自定义扩展码 可不传
 
 sms-oa:
   config-type: yaml

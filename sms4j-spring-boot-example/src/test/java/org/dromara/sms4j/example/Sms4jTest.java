@@ -2,12 +2,14 @@ package org.dromara.sms4j.example;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.UUID;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.baidu.service.BaiduSmsImpl;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.utils.SmsUtils;
 import org.dromara.sms4j.core.factory.SmsFactory;
@@ -333,4 +335,26 @@ class Sms4jTest {
         log.info(JSONUtil.toJsonStr(listRes));
     }
 
+    /**
+     * 百度短信
+     */
+    @Test
+    public void baiduSmsTest() {
+        if (StrUtil.isBlank(PHONE)) {
+            return;
+        }
+
+        // 发送短信
+        SmsResponse resp = SmsFactory.getBySupplier(SupplierConstant.BAIDU)
+                .sendMessage(PHONE, SmsUtils.getRandomInt(6));
+        log.info(JSONUtil.toJsonStr(resp));
+
+        // 发送携带幂等性参数短信
+        BaiduSmsImpl sendWithClientToken = (BaiduSmsImpl) SmsFactory.getBySupplier(SupplierConstant.BAIDU);
+        String clientToken = UUID.fastUUID().toString(true);
+        SmsResponse respWithClientToken = sendWithClientToken.sendMessageWithClientToken(PHONE,
+                SmsUtils.getRandomInt(6),
+                clientToken);
+        log.info(JSONUtil.toJsonStr(respWithClientToken));
+    }
 }

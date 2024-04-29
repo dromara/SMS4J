@@ -8,6 +8,7 @@ import org.dromara.sms4j.aliyun.config.AlibabaFactory;
 import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.api.verify.PhoneVerify;
+import org.dromara.sms4j.baidu.config.BaiduFactory;
 import org.dromara.sms4j.budingyun.config.BudingV2Factory;
 import org.dromara.sms4j.cloopen.config.CloopenFactory;
 import org.dromara.sms4j.comm.constant.Constant;
@@ -125,6 +126,7 @@ public class SmsBlendsInitializer {
         ProviderFactoryHolder.registerFactory(QiNiuFactory.instance());
         ProviderFactoryHolder.registerFactory(BudingV2Factory.instance());
         ProviderFactoryHolder.registerFactory(MasFactory.instance());
+        ProviderFactoryHolder.registerFactory(BaiduFactory.instance());
         if(SmsUtils.isClassExists("com.jdcloud.sdk.auth.CredentialsProvider")) {
             ProviderFactoryHolder.registerFactory(JdCloudFactory.instance());
         }

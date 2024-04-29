@@ -29,7 +29,7 @@ public class BudingV2SmsImpl extends AbstractSmsBlend<BudingV2Config> {
      */
     private int retry = 0;
 
-    private final String URL = "https://smsapi.idcbdy.com";
+    private static final String URL = "https://smsapi.idcbdy.com";
 
     protected BudingV2SmsImpl(BudingV2Config config, Executor pool, DelayedTime delayed) {
         super(config, pool, delayed);

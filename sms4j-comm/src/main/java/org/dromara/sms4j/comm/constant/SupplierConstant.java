@@ -59,6 +59,10 @@ public abstract class SupplierConstant {
      * 鼎众
      */
     public static final String DINGZHONG = "dingzhong";
+
+    /**
+     * 七牛
+     */
     public static final String QINIU = "qiniu";
 
 }

@@ -17,8 +17,9 @@
         <module>sms4j-provider</module>
         <module>sms4j-core</module>
         <module>sms4j-spring-boot-starter</module>
-        <module>sms4j-solon-plugin</module>
         <module>sms4j-spring-boot-example</module>
+        <module>sms4j-solon-plugin</module>
+        <module>sms4j-solon-plugin-example</module>
         <module>sms4j-javase-plugin</module>
         <module>sms4j-Email-plugin</module>
         <module>sms4j-oa-plugin</module>

@@ -1,0 +1,144 @@
+sms:
+  # 标注从yml读取配置
+  config-type: yaml
+  # 账户上限
+  account-max: 1
+  blends:
+    # 阿里短信例子
+    ali:
+      #厂商标识，标定此配置是哪个厂商，详细请看厂商标识介绍部分
+      supplier: alibaba
+      #您的accessKey
+      access-key-id: 您的accessKey
+      #您的accessKeySecret
+      access-key-secret: 您的accessKeySecret
+      #您的短信签名
+      signature: 测试签名
+      #模板ID 非必须配置，如果使用sendMessage的快速发送需此配置
+      template-id: SMS_272470496
+      # 模版名称
+      templateName: code
+    # 腾讯短信例子
+    tx:
+      #厂商标识
+      supplier: tencent
+      #您的accessKey
+      access-key-id: 您的accessKey
+      #您的accessKeySecret
+      access-key-secret: 您的accessKeySecret
+      #您的短信签名
+      signature: 测试签名
+      #模板ID
+      template-id: 1603670
+      #您的sdkAppId
+      sdk-app-id: 1400761645
+    # 华为短信例子
+    hw:
+      #厂商标识
+      supplier: huawei
+      #您的accessKey
+      access-key-id: 您的accessKey
+      #您的accessKeySecret
+      access-key-secret: 您的accessKeySecret
+      #您的短信签名
+      signature: 测试签名
+      #模板ID
+      template-id: ac4888205c274b2a8263479b954c1ab5
+      # APP接入地址
+      url: https://smsapi.cn-north-4.myhuaweicloud.com:443
+      # 模版名称
+      templateName: code
+      # 通道号
+      sender: 8823040504797
+    # 合一短信例子
+    uni:
+      #厂商标识
+      supplier: unisms
+      #您的accessKey
+      access-key-id: 您的accessKey
+      #您的短信签名
+      signature: 测试签名
+      #模板ID
+      template-id: pub_verif_short
+      # 模版名称
+      templateName: code
+      # 渠道上限
+      maximum: 2
+    lianlu:
+      supplier: lianlu
+      templateId: 模板id
+      appId: 100116
+      appKey: d42d7
+      mchId: 100
+      signName: 【test】
+    cloopen:
+      # 短信厂商
+      supplier: cloopen
+      base-url: https://app.cloopen.com:8883/2013-12-26
+      access-key-id: 你的Access Key
+      access-key-secret: 你的Access Key Secret
+      sdkAppId: 你的应用ID
+    #自定义广州掌骏短信，添加factory全路径。config,factory,SmsImpl复制其他默认实现即可，修改对应的supplier和发送核心逻辑即可
+#    zhangjun:
+#      supplier: zhangjun
+#      factory: org.dromara.sms4j.example.zhangjun.ZhangJunFactory
+#      templateId: d2a****777
+#      appId: 64c52d2a****77775fe72e3
+#      sid: d2a****777
+#      url: https://sms.idowe.com/**/**/**/send
+    qiniu:
+      access-key-id: EQcDflLTCYnU1******CmqIYLhog1lkWHb2
+      access-key-secret: NeS2ptvZQoIy*****err2DdLe7wxFfQvji1
+      templateId: 1752130****15859456
+      signatureId: 175185*****1624960
+      templateName: code
+    # 中国移动 云MAS
+    mas:
+      supplier: mas
+      # 请求方式默认为 HTTP
+      # 请求方法 默认为 HTTP模式下的 tmpsubmit
+      # norsubmit 无模板接口 不需要配置templateId
+      # tmpsubmit 有模板接口 需要配置templateId
+      # HTTPS 模式下 请求方法有 submit tmpsubmit
+      action: tmpsubmit
+      # 请求地址 HTTP模式下可不配置 默认为 http://112.35.1.155:1992/sms/
+      # HTTPS模式下 请设置 https://****:****/sms/
+      request-url: http://112.35.1.155:1992/sms/
+      sdk-app-id: 接口账号用户名
+      access-key-secret: 用户密码
+      ec-name: 企业名称
+      signature: 签名编码
+      # 当请求方法为 tmpsubmit 时 需要配置templateId
+      template-id:
+      # 可为空 不为空时请遵守中国移动云MAS开发文档中的描述[服务代码加扩展码总长度不能超过20位。]
+      add-serial:
+  # 中百度智能云 sms
+  baidu:
+    access-key-id: 访问密钥ID
+    access-key-secret: 用户密钥
+    ec-name: 企业名称
+    signature: 签名编码
+    template-id: 模板ID
+    # 模板变量名称
+    template-name: code
+    custom: 用户自定义参数，格式为字符串，状态回调时会回传该值 可不传
+    user-ext-id: 通道自定义扩展码 可不传
+
+sms-oa:
+  config-type: yaml
+  oas:
+    oaDingTalkByYaml: # configId
+      isEnable: true # 表示该配置是否生效(默认生效,false表示不生效)
+      supplier: dingding # 厂商标识
+      tokenId: 您的accessKey
+      sign: 您的sign
+    oaByteTalkByYaml: # configId
+      supplier: feishu # 厂商标识
+      tokenId: 您的accessKey
+      sign: 您的sign
+    oaWeTalkByYaml:
+      supplier: wetalk # 厂商标识
+      tokenId: 您的sign
+  core-pool-size: 20
+  queue-capacity: 20
+  max-pool-size: 20

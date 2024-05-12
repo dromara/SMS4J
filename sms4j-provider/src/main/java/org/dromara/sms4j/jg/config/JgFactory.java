@@ -1,28 +1,28 @@
-package org.dromara.sms4j.jiguang.config;
+package org.dromara.sms4j.jg.config;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
-import org.dromara.sms4j.jiguang.service.JiguangSmsImpl;
+import org.dromara.sms4j.jg.service.JgSmsImpl;
 import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
 
 /**
- * <p>类名: JiguangFactory
+ * <p>类名: JgFactory
  * <p>说明：极光 sms
  *
  * @author :SmartFire
  * 2024/3/15
  **/
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class JiguangFactory extends AbstractProviderFactory<JiguangSmsImpl, JiguangConfig> {
+public class JgFactory extends AbstractProviderFactory<JgSmsImpl, JgConfig> {
 
-    private static final JiguangFactory INSTANCE = new JiguangFactory();
+    private static final JgFactory INSTANCE = new JgFactory();
 
     /**
      * 获取建造者实例
      * @return 建造者实例
      */
-    public static JiguangFactory instance() {
+    public static JgFactory instance() {
         return INSTANCE;
     }
 
@@ -32,8 +32,8 @@ public class JiguangFactory extends AbstractProviderFactory<JiguangSmsImpl, Jigu
      * @return 短信实现对象
      */
     @Override
-    public JiguangSmsImpl createSms(JiguangConfig config) {
-        return new JiguangSmsImpl(config);
+    public JgSmsImpl createSms(JgConfig config) {
+        return new JgSmsImpl(config);
     }
 
     /**

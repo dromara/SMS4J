@@ -14,11 +14,9 @@ import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import org.dromara.sms4j.tencent.config.TencentConfig;
 import org.dromara.sms4j.tencent.utils.TencentUtils;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.Executor;
 
 /**
@@ -44,12 +42,7 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
 
     @Override
     public SmsResponse sendMessage(String phone, String message) {
-        String[] split = message.split("&");
-        LinkedHashMap<String, String> map = new LinkedHashMap<>();
-        for (int i = 0; i < split.length; i++) {
-            map.put(String.valueOf(i), split[i]);
-        }
-        return sendMessage(phone, getConfig().getTemplateId(), map);
+        return sendMessage(phone, getConfig().getTemplateId(), SmsUtils.buildMessageByAmpersand(message));
     }
 
     @Override
@@ -59,38 +52,17 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
 
     @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
-        if (Objects.isNull(messages)){
-            messages = new LinkedHashMap<>();
-        }
-        List<String> list = new ArrayList<>();
-        for (Map.Entry<String, String> entry : messages.entrySet()) {
-            list.add(entry.getValue());
-        }
-        String[] s = new String[list.size()];
-        return getSmsResponse(new String[]{StrUtil.addPrefixIfNot(phone, "+86")}, list.toArray(s), templateId);
+        return getSmsResponse(new String[]{StrUtil.addPrefixIfNot(phone, "+86")}, SmsUtils.toArray(messages.values(), SmsUtils::isNotEmpty, new String[0]), templateId);
     }
 
     @Override
     public SmsResponse massTexting(List<String> phones, String message) {
-        String[] split = message.split("&");
-        LinkedHashMap<String, String> map = new LinkedHashMap<>();
-        for (int i = 0; i < split.length; i++) {
-            map.put(String.valueOf(i), split[i]);
-        }
-        return massTexting(phones, getConfig().getTemplateId(), map);
+        return massTexting(phones, getConfig().getTemplateId(), SmsUtils.buildMessageByAmpersand(message));
     }
 
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
-        if (Objects.isNull(messages)){
-            messages = new LinkedHashMap<>();
-        }
-        List<String> list = new ArrayList<>();
-        for (Map.Entry<String, String> entry : messages.entrySet()) {
-            list.add(entry.getValue());
-        }
-        String[] s = new String[list.size()];
-        return getSmsResponse(SmsUtils.listToArray(phones), list.toArray(s), templateId);
+        return getSmsResponse(SmsUtils.listToArray(phones), SmsUtils.toArray(messages.values(), SmsUtils::isNotEmpty, new String[0]), templateId);
     }
 
     private SmsResponse getSmsResponse(String[] phones, String[] messages, String templateId) {

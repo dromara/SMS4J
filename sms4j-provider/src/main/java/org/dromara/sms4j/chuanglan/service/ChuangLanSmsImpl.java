@@ -6,6 +6,7 @@ import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.chuanglan.config.ChuangLanConfig;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
+import org.dromara.sms4j.comm.utils.SmsUtils;
 import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 
 import java.util.Collection;
@@ -38,12 +39,7 @@ public class ChuangLanSmsImpl extends AbstractSmsBlend<ChuangLanConfig> {
 
     @Override
     public SmsResponse sendMessage(String phone, String message) {
-        String[] split = message.split("&");
-        LinkedHashMap<String, String> map = new LinkedHashMap<>();
-        for (int i = 0; i < split.length; i++) {
-            map.put(String.valueOf(i), split[i]);
-        }
-        return sendMessage(phone, getConfig().getTemplateId(), map);
+        return sendMessage(phone, getConfig().getTemplateId(), SmsUtils.buildMessageByAmpersand(message));
     }
 
     @Override
@@ -70,12 +66,7 @@ public class ChuangLanSmsImpl extends AbstractSmsBlend<ChuangLanConfig> {
 
     @Override
     public SmsResponse massTexting(List<String> phones, String message) {
-        LinkedHashMap<String, String> messages = new LinkedHashMap<>();
-        String[] split = message.split("&");
-        for (int i = 0; i < split.length; i++) {
-            messages.put(String.valueOf(i), split[i]);
-        }
-        return massTexting(phones, getConfig().getTemplateId(), messages);
+        return massTexting(phones, getConfig().getTemplateId(), SmsUtils.buildMessageByAmpersand(message));
     }
 
     @Override
@@ -86,9 +77,7 @@ public class ChuangLanSmsImpl extends AbstractSmsBlend<ChuangLanConfig> {
         String message = String.join(",", values);
 
         StringBuilder param = new StringBuilder();
-        phones.forEach(phone -> {
-            param.append(phone).append(",").append(message).append(";");
-        });
+        phones.forEach(phone -> param.append(phone).append(",").append(message).append(";"));
 
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("account", getConfig().getAccessKeyId());

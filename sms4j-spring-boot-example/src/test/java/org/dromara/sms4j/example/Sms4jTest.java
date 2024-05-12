@@ -358,32 +358,60 @@ class Sms4jTest {
         log.info(JSONUtil.toJsonStr(respWithClientToken));
     }
 
+    /**
+     * 创蓝短信
+     */
+    @Test
+    public void chungLanTest() {
+        if (StrUtil.isBlank(PHONE)) {
+            return;
+        }
+
+        //测试群发【模板】
+        List<String> arrayList1 = new ArrayList<>();
+        arrayList.add(PHONE);
+        arrayList.add("135****000");
+        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        map.put("1", "1544");
+        map.put("2", "2222");
+        SmsResponse smsResponse2 = SmsFactory.getBySupplier(SupplierConstant.CHUANGLAN).massTexting(arrayList, "[test]你的验证码是{$val},{$val}", map);
+        log.info("smsResponse:{}", smsResponse);
+
+        //测试单条发送
+        SmsResponse smsResponse1 = SmsFactory.getBySupplier(SupplierConstant.CHUANGLAN).sendMessage(PHONE, "1544&2222");
+        log.info("smsResponse1:{}", smsResponse1);
+
+        //测试单条模板发送
+        LinkedHashMap<String, String> map3 = new LinkedHashMap<>();
+        map3.put("1", "1544");
+        map3.put("2", "2222");
+        SmsResponse smsResponse3 = SmsFactory.getBySupplier(SupplierConstant.CHUANGLAN).sendMessage(PHONE, "[test]你的验证码是{$val},{$val}", map);
+        log.info("smsResponse2:{}", smsResponse2);
+    }
+
+    /**
+     * 极光短信
+     */
     @Test
     public void jiguangSmsTest_SendSMSCode() {
         // 极光 发送文本验证码短信 API 不需要传入具体验证码，如果想传入自定义验证码，可通过模板短信方法，这里message为空即可
         SmsResponse smsResponse = SmsFactory.getBySupplier(SupplierConstant.JIGUANG).sendMessage(PHONE, "111");
         Assert.isTrue(smsResponse.isSuccess());
-    }
-    @Test
-    public void jiguangSmsTest_sendTemplateSMS() {
-        // 极光 发送单条模板短信 API 发送自定义验证码
+
+        // 极光 发送单条模板短信 API 发送自定义验证码 sendTemplateSMS
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
         map.put("code", "123456");
         SmsResponse smsResponse = SmsFactory.getBySupplier(SupplierConstant.JIGUANG).sendMessage(PHONE, map);
         Assert.isTrue(smsResponse.isSuccess());
-    }
-    @Test
-    public void jiguangSmsTest_sendTemplateSMS_with_multipleParameters() {
-        // 极光 发送单条模板短信 API 发送多参数自定义模板短信
+
+        // 极光 发送单条模板短信 API 发送多参数自定义模板短信 sendTemplateSMS_with_multipleParameters
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
         map.put("name", "test");
         map.put("password", "test");
         SmsResponse smsResponse = SmsFactory.getBySupplier(SupplierConstant.JIGUANG).sendMessage(PHONE, "226992", map);
         Assert.isTrue(smsResponse.isSuccess());
-    }
-    @Test
-    public void jiguangSmsTest_sendBatchTemplateSMS() {
-        // 极光
+
+        // sendBatchTemplateSMS
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
         map.put("name", "test");
         map.put("password", "test");
@@ -393,4 +421,5 @@ class Sms4jTest {
         SmsResponse smsResponse = SmsFactory.getBySupplier(SupplierConstant.JIGUANG).massTexting(phones, "226992", map);
         Assert.isTrue(smsResponse.isSuccess());
     }
+
 }

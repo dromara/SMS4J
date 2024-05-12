@@ -123,6 +123,11 @@ sms:
     template-name: code
     custom: 用户自定义参数，格式为字符串，状态回调时会回传该值 可不传
     user-ext-id: 通道自定义扩展码 可不传
+  # 创蓝
+  chuanglan:
+      access-key-id: 111111
+      access-key-secret: 111111
+      templateId: 【253云通讯】{$var}您的验证码是：{$var}，{$var}分钟内有效
   # 极光
   jiguang:
         supplier: jiguang

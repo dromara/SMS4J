@@ -26,6 +26,7 @@ import org.dromara.sms4j.dingzhong.config.DingZhongFactory;
 import org.dromara.sms4j.emay.config.EmayFactory;
 import org.dromara.sms4j.huawei.config.HuaweiFactory;
 import org.dromara.sms4j.jdcloud.config.JdCloudFactory;
+import org.dromara.sms4j.chuanglan.config.ChuangLanFactory;
 import org.dromara.sms4j.jiguang.config.JiguangFactory;
 import org.dromara.sms4j.lianlu.config.LianLuFactory;
 import org.dromara.sms4j.mas.config.MasFactory;
@@ -123,6 +124,7 @@ public class SmsBlendsInitializer {
         ProviderFactoryHolder.registerFactory(YunPianFactory.instance());
         ProviderFactoryHolder.registerFactory(ZhutongFactory.instance());
         ProviderFactoryHolder.registerFactory(LianLuFactory.instance());
+        ProviderFactoryHolder.registerFactory(ChuangLanFactory.instance());
         ProviderFactoryHolder.registerFactory(JiguangFactory.instance());
         ProviderFactoryHolder.registerFactory(DingZhongFactory.instance());
         ProviderFactoryHolder.registerFactory(QiNiuFactory.instance());

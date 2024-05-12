@@ -17,7 +17,7 @@ import java.util.Objects;
 import java.util.concurrent.Executor;
 
 /**
- * @author Administrator
+ * @author YYM
  * @Date: 2024/1/30 16:06 59
  * @描述: QiNiuSmsImpl
  **/

@@ -62,6 +62,10 @@ public abstract class SupplierConstant {
      */
     public static final String QINIU = "qiniu";
     /**
+     * 创蓝
+     */
+    public static final String CHUANGLAN = "chuanglan";
+    /**
      * 极光
      */
     public static final String JIGUANG = "jiguang";

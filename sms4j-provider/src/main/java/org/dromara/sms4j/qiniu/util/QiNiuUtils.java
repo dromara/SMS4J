@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.TimeZone;
 
 /**
- * @author Administrator
+ * @author YYM
  * @Date: 2024/1/30 16:37 50
  * @描述: QiNiuUtils
  **/

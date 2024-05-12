@@ -7,7 +7,7 @@ import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
 import org.dromara.sms4j.qiniu.service.QiNiuSmsImpl;
 
 /**
- * @author Administrator
+ * @author YYM
  * @Date: 2024/1/30 16:06 29
  * @描述: QiNiuFactory
  **/

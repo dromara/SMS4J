@@ -52,7 +52,7 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
 
     @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
-        return getSmsResponse(new String[]{StrUtil.addPrefixIfNot(phone, "+86")}, SmsUtils.toArray(messages.values(), SmsUtils::isNotEmpty, new String[0]), templateId);
+        return getSmsResponse(new String[]{StrUtil.addPrefixIfNot(phone, "+86")}, toArray(messages), templateId);
     }
 
     @Override
@@ -62,7 +62,11 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
 
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
-        return getSmsResponse(SmsUtils.listToArray(phones), SmsUtils.toArray(messages.values(), SmsUtils::isNotEmpty, new String[0]), templateId);
+        return getSmsResponse(SmsUtils.listToArray(phones), toArray(messages), templateId);
+    }
+
+    private String[] toArray(LinkedHashMap<String, String> messages){
+        return SmsUtils.toArray(messages.values(), SmsUtils::isNotEmpty, s -> s, new String[0]);
     }
 
     private SmsResponse getSmsResponse(String[] phones, String[] messages, String templateId) {

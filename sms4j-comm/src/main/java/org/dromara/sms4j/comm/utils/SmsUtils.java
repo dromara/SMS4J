@@ -8,6 +8,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -191,10 +192,10 @@ public class SmsUtils {
      * @param <T> 集合泛型
      * @param <E> 想要的数组类型
      */
-    public static <E, T> E[] toArray(Collection<T> list, Predicate<T> predicate, E[] array) {
+    public static <E, T> E[] toArray(Collection<T> list, Predicate<T> predicate, Function<? super T, ? extends E> mapper, E[] array) {
         if (isEmpty(list)) {
             return array.clone();
         }
-        return list.stream().filter(predicate).toArray(size -> array.clone());
+        return list.stream().filter(predicate).map(mapper).toArray(size -> array.clone());
     }
 }

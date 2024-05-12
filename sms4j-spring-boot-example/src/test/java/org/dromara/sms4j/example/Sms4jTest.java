@@ -357,4 +357,40 @@ class Sms4jTest {
                 clientToken);
         log.info(JSONUtil.toJsonStr(respWithClientToken));
     }
+
+    @Test
+    public void jiguangSmsTest_SendSMSCode() {
+        // 极光 发送文本验证码短信 API 不需要传入具体验证码，如果想传入自定义验证码，可通过模板短信方法，这里message为空即可
+        SmsResponse smsResponse = SmsFactory.getBySupplier(SupplierConstant.JIGUANG).sendMessage(PHONE, "111");
+        Assert.isTrue(smsResponse.isSuccess());
+    }
+    @Test
+    public void jiguangSmsTest_sendTemplateSMS() {
+        // 极光 发送单条模板短信 API 发送自定义验证码
+        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        map.put("code", "123456");
+        SmsResponse smsResponse = SmsFactory.getBySupplier(SupplierConstant.JIGUANG).sendMessage(PHONE, map);
+        Assert.isTrue(smsResponse.isSuccess());
+    }
+    @Test
+    public void jiguangSmsTest_sendTemplateSMS_with_multipleParameters() {
+        // 极光 发送单条模板短信 API 发送多参数自定义模板短信
+        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        map.put("name", "test");
+        map.put("password", "test");
+        SmsResponse smsResponse = SmsFactory.getBySupplier(SupplierConstant.JIGUANG).sendMessage(PHONE, "226992", map);
+        Assert.isTrue(smsResponse.isSuccess());
+    }
+    @Test
+    public void jiguangSmsTest_sendBatchTemplateSMS() {
+        // 极光
+        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        map.put("name", "test");
+        map.put("password", "test");
+        List<String> phones = new ArrayList<>();
+        phones.add(PHONE);
+        phones.add("xxx");
+        SmsResponse smsResponse = SmsFactory.getBySupplier(SupplierConstant.JIGUANG).massTexting(phones, "226992", map);
+        Assert.isTrue(smsResponse.isSuccess());
+    }
 }

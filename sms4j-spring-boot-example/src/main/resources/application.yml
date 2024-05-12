@@ -123,7 +123,13 @@ sms:
     template-name: code
     custom: 用户自定义参数，格式为字符串，状态回调时会回传该值 可不传
     user-ext-id: 通道自定义扩展码 可不传
-
+  # 极光
+  jiguang:
+        supplier: jiguang
+        appKey: 1
+        masterSecret: 1
+        templateId: 1
+        signId: 26897
 sms-oa:
   config-type: yaml
   oas:

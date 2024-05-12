@@ -36,6 +36,7 @@ import org.dromara.sms4j.emay.config.EmayFactory;
 import org.dromara.sms4j.huawei.config.HuaweiFactory;
 import org.dromara.sms4j.javase.util.YamlUtils;
 import org.dromara.sms4j.jdcloud.config.JdCloudFactory;
+import org.dromara.sms4j.jiguang.config.JiguangFactory;
 import org.dromara.sms4j.lianlu.config.LianLuFactory;
 import org.dromara.sms4j.mas.config.MasFactory;
 import org.dromara.sms4j.netease.config.NeteaseFactory;
@@ -255,6 +256,7 @@ public class SEInitializer {
         ProviderFactoryHolder.registerFactory(ZhutongFactory.instance());
         ProviderFactoryHolder.registerFactory(LianLuFactory.instance());
         ProviderFactoryHolder.registerFactory(DingZhongFactory.instance());
+        ProviderFactoryHolder.registerFactory(JiguangFactory.instance());
         ProviderFactoryHolder.registerFactory(QiNiuFactory.instance());
         ProviderFactoryHolder.registerFactory(BudingV2Factory.instance());
         ProviderFactoryHolder.registerFactory(MasFactory.instance());

@@ -187,6 +187,7 @@ public class SmsUtils {
      * 将任意类型集合转成想要的数组
      * @param list 需要转换的集合
      * @param predicate 过滤条件
+     * @param mapper 对此流的元素执行函数
      * @param array 想要的数组
      * @return 数组
      * @param <T> 集合泛型

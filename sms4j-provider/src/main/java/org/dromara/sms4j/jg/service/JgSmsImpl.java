@@ -3,6 +3,7 @@ package org.dromara.sms4j.jg.service;
 import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.api.utils.SmsRespUtils;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
@@ -115,9 +116,7 @@ public class JgSmsImpl extends AbstractSmsBlend<JgConfig> {
         try {
             smsResponse = getResponse(http.postJson(url, headers, body), jsonKey);
         } catch (SmsBlendException e) {
-            smsResponse = new SmsResponse();
-            smsResponse.setSuccess(false);
-            smsResponse.setData(e.getMessage());
+            smsResponse = SmsRespUtils.error(e.message, config.getConfigId());
         }
 
         if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
@@ -136,10 +135,6 @@ public class JgSmsImpl extends AbstractSmsBlend<JgConfig> {
     }
 
     private SmsResponse getResponse(JSONObject resJson, String jsonKey) {
-        SmsResponse smsResponse = new SmsResponse();
-        smsResponse.setSuccess(resJson.getObj(jsonKey) != null);
-        smsResponse.setData(resJson);
-        smsResponse.setConfigId(getConfigId());
-        return smsResponse;
+        return SmsRespUtils.resp(resJson, resJson.getObj(jsonKey) != null, getConfigId());
     }
 }

@@ -3,6 +3,7 @@ package org.dromara.sms4j.yunpian.service;
 import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.api.utils.SmsRespUtils;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
@@ -40,15 +41,10 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
     }
 
     private SmsResponse getResponse(JSONObject execute) {
-        SmsResponse smsResponse = new SmsResponse();
         if (execute == null) {
-            smsResponse.setSuccess(false);
-            return smsResponse;
+            return SmsRespUtils.error(getConfigId());
         }
-        smsResponse.setSuccess(execute.getInt("code") == 0);
-        smsResponse.setData(execute);
-        smsResponse.setConfigId(getConfigId());
-        return smsResponse;
+        return SmsRespUtils.resp(execute, execute.getInt("code") == 0, getConfigId());
     }
 
     @Override
@@ -60,9 +56,7 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
         try {
             smsResponse = getResponse(http.postFrom(Constant.YUNPIAN_URL + "/sms/tpl_single_send.json", headers, body));
         } catch (SmsBlendException e) {
-            smsResponse = new SmsResponse();
-            smsResponse.setSuccess(false);
-            smsResponse.setData(e.getMessage());
+            smsResponse = SmsRespUtils.error(e.getMessage(), getConfigId());
         }
         if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
             retry = 0;

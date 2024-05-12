@@ -4,6 +4,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.api.utils.SmsRespUtils;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
@@ -44,8 +45,9 @@ public class EmaySmsImpl extends AbstractSmsBlend<EmayConfig> {
 
     @Override
     public SmsResponse sendMessage(String phone, String message) {
-        String url = getConfig().getRequestUrl();
-        Map<String, Object> params = EmayBuilder.buildRequestBody(getConfig().getAccessKeyId(), getConfig().getAccessKeySecret(), phone, message);
+        EmayConfig config = getConfig();
+        String url = config.getRequestUrl();
+        Map<String, Object> params = EmayBuilder.buildRequestBody(config.getAccessKeyId(), config.getAccessKeySecret(), phone, message);
 
         Map<String, String> headers = MapUtil.newHashMap(1, true);
         headers.put("Content-Type", Constant.FROM_URLENCODED);
@@ -53,11 +55,9 @@ public class EmaySmsImpl extends AbstractSmsBlend<EmayConfig> {
         try {
             smsResponse = getResponse(http.postUrl(url, headers, params));
         } catch (SmsBlendException e) {
-            smsResponse = new SmsResponse();
-            smsResponse.setSuccess(false);
-            smsResponse.setData(e.getMessage());
+            smsResponse = SmsRespUtils.error(e.message, config.getConfigId());
         }
-        if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
+        if (smsResponse.isSuccess() || retry == config.getMaxRetries()) {
             retry = 0;
             return smsResponse;
         }
@@ -113,11 +113,7 @@ public class EmaySmsImpl extends AbstractSmsBlend<EmayConfig> {
     }
 
     private SmsResponse getResponse(JSONObject resJson) {
-        SmsResponse smsResponse = new SmsResponse();
-        smsResponse.setSuccess("success".equalsIgnoreCase(resJson.getStr("code")));
-        smsResponse.setData(resJson);
-        smsResponse.setConfigId(getConfigId());
-        return smsResponse;
+        return SmsRespUtils.resp(resJson, "success".equalsIgnoreCase(resJson.getStr("code")), getConfigId());
     }
 
 }

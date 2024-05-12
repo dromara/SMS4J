@@ -5,6 +5,7 @@ import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.api.utils.SmsRespUtils;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
@@ -88,9 +89,7 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
         try {
             smsResponse = getResponse(http.postJson(url, headsMap, requestBody));
         } catch (SmsBlendException e) {
-            smsResponse = new SmsResponse();
-            smsResponse.setSuccess(false);
-            smsResponse.setData(e.getMessage());
+            smsResponse = SmsRespUtils.error(e.getMessage(), getConfigId());
         }
         if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
             retry = 0;
@@ -107,15 +106,12 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
     }
 
     private SmsResponse getResponse(JSONObject resJson) {
-        SmsResponse smsResponse = new SmsResponse();
         JSONObject response = resJson.getJSONObject("Response");
         // 根据 Error 判断是否配置错误
-        String error = response.getStr("Error");
-        smsResponse.setSuccess(StrUtil.isBlank(error));
+        boolean success = StrUtil.isBlank(response.getStr("Error"));
         // 根据 SendStatusSet 判断是否不为Ok
         JSONArray sendStatusSet = response.getJSONArray("SendStatusSet");
         if (sendStatusSet != null) {
-            boolean success = true;
             for (Object obj : sendStatusSet) {
                 JSONObject jsonObject = (JSONObject) obj;
                 String code = jsonObject.getStr("Code");
@@ -124,11 +120,8 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
                     break;
                 }
             }
-            smsResponse.setSuccess(success);
         }
-        smsResponse.setData(resJson);
-        smsResponse.setConfigId(getConfigId());
-        return smsResponse;
+        return SmsRespUtils.resp(resJson, success, getConfigId());
     }
 
 }

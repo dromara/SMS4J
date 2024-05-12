@@ -3,13 +3,14 @@ package org.dromara.sms4j.chuanglan.service;
 import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.api.utils.SmsRespUtils;
 import org.dromara.sms4j.chuanglan.config.ChuangLanConfig;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
+import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtils;
 import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -24,12 +25,12 @@ public class ChuangLanSmsImpl extends AbstractSmsBlend<ChuangLanConfig> {
 
     private int retry = 0;
 
-    public ChuangLanSmsImpl(ChuangLanConfig chuangLanConfig, Executor pool, DelayedTime delayed) {
-        super(chuangLanConfig, pool, delayed);
+    public ChuangLanSmsImpl(ChuangLanConfig config, Executor pool, DelayedTime delayed) {
+        super(config, pool, delayed);
     }
 
-    public ChuangLanSmsImpl(ChuangLanConfig chuangLanConfig) {
-        super(chuangLanConfig);
+    public ChuangLanSmsImpl(ChuangLanConfig config) {
+        super(config);
     }
 
     @Override
@@ -49,19 +50,14 @@ public class ChuangLanSmsImpl extends AbstractSmsBlend<ChuangLanConfig> {
 
     @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
-        String reqUrl = getConfig().getBaseUrl() + getConfig().getMsgUrl();
-        Collection<String> values = messages.values();
-        String message = String.join(",", values);
-        LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("account", getConfig().getAccessKeyId());
-        params.put("password", getConfig().getAccessKeySecret());
-        params.put("msg", templateId);
-        params.put("params", phone + "," + message);
-
-        LinkedHashMap<String, String> headers = new LinkedHashMap<>();
-        headers.put("Content-Type", "application/json");
-
-        return resProcessing(reqUrl, headers, params);
+        if (SmsUtils.isEmpty(messages)){
+            messages = new LinkedHashMap<>();
+        }
+        String message = String.join(",", messages.values());
+        ChuangLanConfig config = getConfig();
+        LinkedHashMap<String, Object> body = buildBody(config.getAccessKeyId(), config.getAccessKeySecret(), templateId);
+        body.put("params", phone + "," + message);
+        return getSmsResponse(body);
     }
 
     @Override
@@ -71,32 +67,45 @@ public class ChuangLanSmsImpl extends AbstractSmsBlend<ChuangLanConfig> {
 
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
-        String reqUrl = getConfig().getBaseUrl() + getConfig().getMsgUrl();
-
-        Collection<String> values = messages.values();
-        String message = String.join(",", values);
-
+        if (SmsUtils.isEmpty(messages)){
+            messages = new LinkedHashMap<>();
+        }
+        String message = String.join(",", messages.values());
         StringBuilder param = new StringBuilder();
         phones.forEach(phone -> param.append(phone).append(",").append(message).append(";"));
-
-        LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("account", getConfig().getAccessKeyId());
-        params.put("password", getConfig().getAccessKeySecret());
-        params.put("msg", templateId);
+        ChuangLanConfig config = getConfig();
+        LinkedHashMap<String, Object> params = buildBody(config.getAccessKeyId(), config.getAccessKeySecret(), templateId);
         params.put("params", param.toString());
-
-        LinkedHashMap<String, String> headers = new LinkedHashMap<>();
-        headers.put("Content-Type", "application/json");
-
-        return resProcessing(reqUrl, headers, params);
+        return getSmsResponse(params);
     }
 
-    private SmsResponse resProcessing(String reqUrl, LinkedHashMap<String, String> headers, LinkedHashMap<String, Object> params) {
-        JSONObject jsonObject = http.postJson(reqUrl, headers, params);
-        SmsResponse smsResponse = new SmsResponse();
-        smsResponse.setSuccess(jsonObject.containsKey("code") && "0".equals(jsonObject.getStr("code")));
-        smsResponse.setData(jsonObject);
-        smsResponse.setConfigId(getConfigId());
+    private static String buildUrl(String baseUrl, String msgUrl){
+        return baseUrl + msgUrl;
+    }
+
+    private static LinkedHashMap<String, String> buildHeaders(){
+        LinkedHashMap<String, String> headers = new LinkedHashMap<>(1);
+        headers.put("Content-Type", "application/json");
+        return headers;
+    }
+
+    private static LinkedHashMap<String, Object> buildBody(String accessKeyId, String accessKeySecret, String templateId){
+        LinkedHashMap<String, Object> body = new LinkedHashMap<>(3);
+        body.put("account", accessKeyId);
+        body.put("password", accessKeySecret);
+        body.put("msg", templateId);
+        return body;
+    }
+
+    private SmsResponse getSmsResponse(LinkedHashMap<String, Object> body) {
+        ChuangLanConfig config = getConfig();
+        SmsResponse smsResponse;
+        String reqUrl = buildUrl(config.getBaseUrl(), config.getMsgUrl());
+        try {
+            smsResponse = getResponse(http.postJson(reqUrl, buildHeaders(), body));
+        }catch (SmsBlendException e) {
+            smsResponse = SmsRespUtils.error(e.getMessage(), getConfigId());
+        }
         if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
             retry = 0;
             return smsResponse;
@@ -104,7 +113,18 @@ public class ChuangLanSmsImpl extends AbstractSmsBlend<ChuangLanConfig> {
         http.safeSleep(getConfig().getRetryInterval());
         retry++;
         log.warn("短信第 {" + retry + "} 次重新发送");
-        return resProcessing(reqUrl, headers, params);
+        return requestRetry(body);
+    }
+
+    private SmsResponse requestRetry(LinkedHashMap<String, Object> body) {
+        http.safeSleep(getConfig().getRetryInterval());
+        retry ++;
+        log.warn("短信第 {} 次重新发送", retry);
+        return getSmsResponse(body);
+    }
+
+    private SmsResponse getResponse(JSONObject resJson) {
+        return SmsRespUtils.resp(resJson, resJson.containsKey("code") && "0".equals(resJson.getStr("code")), getConfigId());
     }
 
 }

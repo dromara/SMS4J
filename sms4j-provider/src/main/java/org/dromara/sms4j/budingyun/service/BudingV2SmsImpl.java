@@ -3,6 +3,7 @@ package org.dromara.sms4j.budingyun.service;
 import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.api.utils.SmsRespUtils;
 import org.dromara.sms4j.budingyun.config.BudingV2Config;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
@@ -46,7 +47,6 @@ public class BudingV2SmsImpl extends AbstractSmsBlend<BudingV2Config> {
 
     @Override
     public SmsResponse sendMessage(String phone, String message) {
-        System.out.println("sendMessage");
         Map<String, Object> body = new HashMap<>();
 
         System.out.println(getConfig().getSignKey());
@@ -70,9 +70,7 @@ public class BudingV2SmsImpl extends AbstractSmsBlend<BudingV2Config> {
         try {
             smsResponse = getResponse(http.postFrom(URL + "/Api/Sent", headers, body));
         } catch (SmsBlendException e) {
-            smsResponse = new SmsResponse();
-            smsResponse.setSuccess(false);
-            smsResponse.setData(e.getMessage());
+            smsResponse = SmsRespUtils.error(e.getMessage(), getConfigId());
         }
         if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
             retry = 0;
@@ -88,17 +86,11 @@ public class BudingV2SmsImpl extends AbstractSmsBlend<BudingV2Config> {
         return sendMessage(phone, message);
     }
 
-    private SmsResponse getResponse(JSONObject entries) {
-        System.out.println(entries);
-        SmsResponse smsResponse = new SmsResponse();
-        if (entries == null) {
-            smsResponse.setSuccess(false);
-            return smsResponse;
+    private SmsResponse getResponse(JSONObject resJson) {
+        if (resJson == null) {
+            return SmsRespUtils.error(getConfigId());
         }
-        smsResponse.setSuccess(entries.getBool("bool"));
-        smsResponse.setData(entries);
-        smsResponse.setConfigId(getConfigId());
-        return smsResponse;
+        return SmsRespUtils.resp(resJson, resJson.getBool("bool"), getConfigId());
     }
 
     /**
@@ -116,9 +108,7 @@ public class BudingV2SmsImpl extends AbstractSmsBlend<BudingV2Config> {
                 failed++;
             }
         }
-        SmsResponse smsResponse = new SmsResponse();
-        smsResponse.setSuccess(failed == 0);
-        return smsResponse;
+        return SmsRespUtils.resp(failed == 0, getConfigId());
     }
 
     /**
@@ -148,9 +138,7 @@ public class BudingV2SmsImpl extends AbstractSmsBlend<BudingV2Config> {
                 failed++;
             }
         }
-        SmsResponse smsResponse = new SmsResponse();
-        smsResponse.setSuccess(failed == 0);
-        return smsResponse;
+        return SmsRespUtils.resp(failed == 0, getConfigId());
     }
 
     /**

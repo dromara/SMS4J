@@ -10,6 +10,7 @@ import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.api.utils.SmsRespUtils;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
@@ -152,9 +153,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
         try {
             smsResponse = getResponse(http.postJson(url, headers, json));
         } catch (SmsBlendException e) {
-            smsResponse = new SmsResponse();
-            smsResponse.setSuccess(false);
-            smsResponse.setData(e.getMessage());
+            smsResponse = SmsRespUtils.error(e.getMessage(), getConfigId());
         }
         if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
             retry = 0;
@@ -240,9 +239,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
         try {
             smsResponse = getResponse(http.postJson(url, headers, requestJson.toString()));
         } catch (SmsBlendException e) {
-            smsResponse = new SmsResponse();
-            smsResponse.setSuccess(false);
-            smsResponse.setData(e.getMessage());
+            smsResponse = SmsRespUtils.error(e.getMessage(), getConfigId());
         }
         if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
             retry = 0;
@@ -263,11 +260,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
     }
 
     private SmsResponse getResponse(JSONObject jsonObject) {
-        SmsResponse smsResponse = new SmsResponse();
-        smsResponse.setSuccess(jsonObject.getInt("code", -1) <= 200);
-        smsResponse.setData(jsonObject);
-        smsResponse.setConfigId(getConfigId());
-        return smsResponse;
+        return SmsRespUtils.resp(jsonObject, jsonObject.getInt("code", -1) <= 200, getConfigId());
     }
 
     private void validator(String requestUrl, String username, String password) {

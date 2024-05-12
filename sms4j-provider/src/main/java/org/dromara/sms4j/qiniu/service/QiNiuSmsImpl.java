@@ -1,11 +1,13 @@
 package org.dromara.sms4j.qiniu.service;
 
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.api.utils.SmsRespUtils;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
+import org.dromara.sms4j.comm.exception.SmsBlendException;
+import org.dromara.sms4j.comm.utils.SmsUtils;
 import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import org.dromara.sms4j.qiniu.config.QiNiuConfig;
 import org.dromara.sms4j.qiniu.util.QiNiuUtils;
@@ -71,7 +73,6 @@ public class QiNiuSmsImpl extends AbstractSmsBlend<QiNiuConfig> {
         return senMassMsg(phones, templateId, messages);
     }
 
-
     /**
      * @return SmsResponse
      * @author 初拥。
@@ -79,11 +80,14 @@ public class QiNiuSmsImpl extends AbstractSmsBlend<QiNiuConfig> {
      * @Description: 统一处理返回结果
      */
     public SmsResponse handleRes(String url, HashMap<String, Object> params) {
-        JSONObject jsonObject = http.postJson(url, QiNiuUtils.getHeaderAndSign(url, params, getConfig()), params);
-        SmsResponse smsResponse = new SmsResponse();
-        smsResponse.setSuccess(ObjectUtil.isEmpty(jsonObject.getStr("error")));
-        smsResponse.setData(jsonObject);
-        smsResponse.setConfigId(getConfigId());
+        JSONObject jsonObject;
+        SmsResponse smsResponse;
+        try {
+            jsonObject = http.postJson(url, QiNiuUtils.getHeaderAndSign(url, params, getConfig()), params);
+            smsResponse = SmsRespUtils.resp(jsonObject, SmsUtils.isEmpty(jsonObject.getStr("error")), getConfigId());
+        }catch (SmsBlendException e){
+            smsResponse = SmsRespUtils.error(e.getMessage(), getConfigId());
+        }
         if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
             retry = 0;
             return smsResponse;

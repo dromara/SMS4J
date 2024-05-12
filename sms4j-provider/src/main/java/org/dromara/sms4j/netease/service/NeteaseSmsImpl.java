@@ -9,6 +9,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.api.utils.SmsRespUtils;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
@@ -142,9 +143,7 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
         try {
             smsResponse = getResponse(http.postFrom(requestUrl, headers, body));
         } catch (SmsBlendException e) {
-            smsResponse = new SmsResponse();
-            smsResponse.setSuccess(false);
-            smsResponse.setData(e.getMessage());
+            smsResponse = SmsRespUtils.error(e.getMessage(), getConfigId());
         }
         if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
             retry = 0;
@@ -161,11 +160,7 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
     }
 
     private SmsResponse getResponse(JSONObject jsonObject) {
-        SmsResponse smsResponse = new SmsResponse();
-        smsResponse.setSuccess(jsonObject.getInt("code") <= 200);
-        smsResponse.setData(jsonObject);
-        smsResponse.setConfigId(getConfigId());
-        return smsResponse;
+        return SmsRespUtils.resp(jsonObject, jsonObject.getInt("code") <= 200, getConfigId());
     }
 
 }

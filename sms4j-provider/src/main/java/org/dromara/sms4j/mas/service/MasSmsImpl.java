@@ -5,6 +5,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.api.utils.SmsRespUtils;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
@@ -94,9 +95,7 @@ public class MasSmsImpl extends AbstractSmsBlend<MasConfig> {
         try {
             smsResponse = getResponse(http.postJson(requestUrl, null, base64Code));
         } catch (SmsBlendException e) {
-            smsResponse = new SmsResponse();
-            smsResponse.setSuccess(false);
-            smsResponse.setData(e.getMessage());
+            smsResponse = SmsRespUtils.error(e.getMessage(), getConfigId());
         }
         if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
             retry = 0;
@@ -113,11 +112,7 @@ public class MasSmsImpl extends AbstractSmsBlend<MasConfig> {
     }
 
     private SmsResponse getResponse(JSONObject resJson) {
-        SmsResponse smsResponse = new SmsResponse();
-        smsResponse.setSuccess("success".equals(resJson.getStr("rspcod")) && resJson.getBool("success"));
-        smsResponse.setData(resJson);
-        smsResponse.setConfigId(getConfigId());
-        return smsResponse;
+        return SmsRespUtils.resp(resJson, "success".equals(resJson.getStr("rspcod")) && resJson.getBool("success"), getConfigId());
     }
 
 }

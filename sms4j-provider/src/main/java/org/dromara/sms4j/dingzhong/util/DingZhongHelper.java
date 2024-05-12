@@ -4,6 +4,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.api.utils.SmsRespUtils;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsHttpUtils;
@@ -35,13 +36,11 @@ public class DingZhongHelper {
         Map<String, String> headers = MapUtil.newHashMap(2, true);
         headers.put("Accept", Constant.ACCEPT);
         headers.put("Content-Type", Constant.FROM_URLENCODED);
-        SmsResponse smsResponse = null;
+        SmsResponse smsResponse;
         try {
             smsResponse = getResponse(http.postFrom(url, headers, paramMap));
         } catch (SmsBlendException e) {
-            smsResponse = new SmsResponse();
-            smsResponse.setSuccess(false);
-            smsResponse.setData(e.getMessage());
+            smsResponse = SmsRespUtils.error(e.message, config.getConfigId());
         }
         if (smsResponse.isSuccess() || retry == config.getMaxRetries()) {
             retry = 0;
@@ -59,10 +58,6 @@ public class DingZhongHelper {
     }
 
     private SmsResponse getResponse(JSONObject resJson) {
-        SmsResponse smsResponse = new SmsResponse();
-        smsResponse.setSuccess("0".equals(resJson.getStr("resCode")));
-        smsResponse.setData(resJson);
-        smsResponse.setConfigId(this.config.getConfigId());
-        return smsResponse;
+        return SmsRespUtils.resp(resJson, "0".equals(resJson.getStr("resCode")), config.getConfigId());
     }
 }

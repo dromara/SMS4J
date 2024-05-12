@@ -5,6 +5,13 @@ import lombok.EqualsAndHashCode;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.provider.config.BaseConfig;
 
+/**
+ * <p>类名: JiguangConfig
+ * <p>说明：极光 sms
+ *
+ * @author :SmartFire
+ * 2024/3/15
+ **/
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class JiguangConfig extends BaseConfig {

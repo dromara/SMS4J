@@ -13,11 +13,12 @@ import org.dromara.sms4j.jiguang.config.JiguangConfig;
 import java.util.Map;
 
 /**
- *  Helper
+ * <p>类名: JiGuangHelper
+ * <p>说明：极光 sms
  *
- * @author dy
- * @since 2023/12/26 20:57
- */
+ * @author :SmartFire
+ * 2024/3/15
+ **/
 @Slf4j
 public class JiGuangHelper {
 

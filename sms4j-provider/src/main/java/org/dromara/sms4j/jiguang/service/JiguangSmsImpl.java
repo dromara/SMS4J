@@ -17,11 +17,12 @@ import java.util.*;
 import java.util.concurrent.Executor;
 
 /**
- * 极光短信实现
+ * <p>类名: JiguangSmsImpl
+ * <p>说明：极光 sms
  *
- * @author Charles7c
- * @since 2023/4/10 20:01
- */
+ * @author :SmartFire
+ * 2024/3/15
+ **/
 @Slf4j
 public class JiguangSmsImpl extends AbstractSmsBlend<JiguangConfig> {
 

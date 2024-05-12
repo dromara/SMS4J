@@ -7,10 +7,10 @@ import org.dromara.sms4j.jiguang.service.JiguangSmsImpl;
 import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
 
 /**
- * JiguangConfig
- * <p> 极光对象建造者
+ * <p>类名: JiguangFactory
+ * <p>说明：极光 sms
  *
- * @author :dy
+ * @author :SmartFire
  * 2024/3/15
  **/
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

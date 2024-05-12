@@ -13,6 +13,7 @@ import org.dromara.sms4j.baidu.service.BaiduSmsImpl;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.utils.SmsUtils;
 import org.dromara.sms4j.core.factory.SmsFactory;
+import org.dromara.sms4j.jg.service.JgSmsImpl;
 import org.dromara.sms4j.lianlu.service.LianLuSmsImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -397,6 +398,17 @@ class Sms4jTest {
         // 极光 发送文本验证码短信 API 不需要传入具体验证码 返回 {"msg_id": "288193860302"}
         SmsResponse smsResponse1 = SmsFactory.getBySupplier(SupplierConstant.JIGUANG).sendMessage(PHONE, "");
         Assert.isTrue(smsResponse1.isSuccess());
+
+        // 极光 发送语音验证码短信 请确保action配置为voice_codes
+        JgSmsImpl voiceCode = (JgSmsImpl) SmsFactory.getBySupplier(SupplierConstant.JIGUANG);
+        SmsResponse voiceResp = voiceCode.sendVoiceCode(PHONE,
+                SmsUtils.getRandomInt(6));
+        Assert.isTrue(voiceResp.isSuccess());
+
+        // 验证验证码是否有效 请确保action配置为voice_codes
+        JgSmsImpl verify = (JgSmsImpl) SmsFactory.getBySupplier(SupplierConstant.JIGUANG);
+        SmsResponse verifyResp = verify.verifyCode("123456", "288193860302");
+        Assert.isTrue(verifyResp.isSuccess());
 
         // 极光 发送单条模板短信 API 发送自定义验证码 sendTemplateSMS
         LinkedHashMap<String, String> map1 = new LinkedHashMap<>();

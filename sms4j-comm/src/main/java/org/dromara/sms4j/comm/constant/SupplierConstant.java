@@ -6,6 +6,10 @@ package org.dromara.sms4j.comm.constant;
 public abstract class SupplierConstant {
 
     /**
+     * 无，用于测试
+     */
+    public static final String LOCAL = "local";
+    /**
      * 阿里
      */
     public static final String ALIBABA = "alibaba";

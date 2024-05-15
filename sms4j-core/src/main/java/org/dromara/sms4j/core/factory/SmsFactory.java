@@ -4,7 +4,8 @@ import cn.hutool.core.util.StrUtil;
 import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
-import org.dromara.sms4j.core.datainterface.SmsReadConfig;
+import org.dromara.sms4j.comm.utils.SmsUtils;
+import org.dromara.sms4j.core.datainterface.*;
 import org.dromara.sms4j.core.load.SmsLoad;
 import org.dromara.sms4j.core.proxy.SmsProxyFactory;
 import org.dromara.sms4j.provider.config.BaseConfig;
@@ -46,6 +47,9 @@ public abstract class SmsFactory {
      * @author :Wind
      */
     public static void createSmsBlend(SupplierConfig config) {
+        if(!SmsUtils.isTesting() && "local".equals(config.getConfigId())){
+            throw new RuntimeException("非测试环境不能使用【LOCAL】");
+        }
         SmsBlend smsBlend = create(config);
         register(smsBlend);
     }
@@ -57,12 +61,15 @@ public abstract class SmsFactory {
      * <p>该方法创建的短信实例将会交给框架进行托管，后续可以通过getSmsBlend获取
      * <p>该方法会直接调用接口实现
      *
-     * @param smsReadConfig 读取额外配置接口
+     * @param smsBlendsSelectedConfig 读取额外配置选择接口
      * @param configId      配置ID
      * @author :Wind
      */
-    public static void createSmsBlend(SmsReadConfig smsReadConfig, String configId) {
-        BaseConfig supplierConfig = smsReadConfig.getSupplierConfig(configId);
+    public static void createSmsBlend(SmsBlendsSelectedConfig smsBlendsSelectedConfig, String configId) {
+        BaseConfig supplierConfig = smsBlendsSelectedConfig.getSupplierConfig(configId);
+        if (null == supplierConfig) {
+            return;
+        }
         SmsBlend smsBlend = create(supplierConfig);
         register(smsBlend);
     }
@@ -73,11 +80,14 @@ public abstract class SmsFactory {
      * <p>该方法创建的短信实例将会交给框架进行托管，后续可以通过getSmsBlend获取
      * <p>该方法会直接调用接口实现
      *
-     * @param smsReadConfig 读取额外配置接口
+     * @param smsBlendsBeanConfig 读取额外配置接口
      * @author :Wind
      */
-    public static void createSmsBlend(SmsReadConfig smsReadConfig) {
-        List<BaseConfig> supplierConfigList = smsReadConfig.getSupplierConfigList();
+    public static void createSmsBlend(SmsBlendsBeanConfig smsBlendsBeanConfig) {
+        List<BaseConfig> supplierConfigList = smsBlendsBeanConfig.getSupplierConfigList();
+        if (null == supplierConfigList) {
+            return;
+        }
         supplierConfigList.forEach(supplierConfig -> {
             SmsBlend smsBlend = create(supplierConfig);
             register(smsBlend);
@@ -103,13 +113,16 @@ public abstract class SmsFactory {
      * <p>该方法创建的短信实例将会交给框架进行托管，后续可以通过getSmsBlend获取
      * <p>该方法会直接调用接口实现
      *
-     * @param smsReadConfig 读取额外配置接口
+     * @param smsBlendsSelectedConfig 读取额外配置选择接口
      * @param configId      配置ID
      * @author :Wind
      */
     @Deprecated
-    public static void createRestrictedSmsBlend(SmsReadConfig smsReadConfig, String configId) {
-        BaseConfig supplierConfig = smsReadConfig.getSupplierConfig(configId);
+    public static void createRestrictedSmsBlend(SmsBlendsSelectedConfig smsBlendsSelectedConfig, String configId) {
+        BaseConfig supplierConfig = smsBlendsSelectedConfig.getSupplierConfig(configId);
+        if (null == supplierConfig){
+            return;
+        }
         SmsBlend smsBlend = create(supplierConfig);
         register(smsBlend);
     }
@@ -120,12 +133,15 @@ public abstract class SmsFactory {
      * <p>该方法创建的短信实例将会交给框架进行托管，后续可以通过getSmsBlend获取
      * <p>该方法会直接调用接口实现
      *
-     * @param smsReadConfig 读取额外配置接口
+     * @param smsBlendsBeanConfig 读取额外配置接口
      * @author :Wind
      */
     @Deprecated
-    public static void createRestrictedSmsBlend(SmsReadConfig smsReadConfig) {
-        List<BaseConfig> supplierConfigList = smsReadConfig.getSupplierConfigList();
+    public static void createRestrictedSmsBlend(SmsBlendsBeanConfig smsBlendsBeanConfig) {
+        List<BaseConfig> supplierConfigList = smsBlendsBeanConfig.getSupplierConfigList();
+        if (null == supplierConfigList){
+            return;
+        }
         supplierConfigList.forEach(supplierConfig -> {
             SmsBlend smsBlend = create(supplierConfig);
             register(smsBlend);
@@ -151,7 +167,7 @@ public abstract class SmsFactory {
      */
     @Deprecated
     private static SmsBlend renderWithProxy(SmsBlend sms) {
-        return SmsProxyFactory.getProxySmsBlend(sms);
+        return SmsProxyFactory.getProxiedSmsBlend(sms);
     }
 
     /**
@@ -302,25 +318,26 @@ public abstract class SmsFactory {
      * <p> 重新读取并刷新缓存内短信实例
      *
      * @param configId      配置标识
-     * @param smsReadConfig 配置接口实现对象
+     * @param smsBlendsSelectedConfig 额外配置选择接口实现对象
      * @author :Wind
      */
-    public static void reload(String configId, SmsReadConfig smsReadConfig) {
+    public static void reload(String configId, SmsBlendsSelectedConfig smsBlendsSelectedConfig) {
         SmsFactory.unregister(configId);
-        SmsFactory.createRestrictedSmsBlend(smsReadConfig, configId);
+        SmsFactory.createRestrictedSmsBlend(smsBlendsSelectedConfig, configId);
     }
 
     /**
      *  reloadAll
      * <p> 重新读取并刷新全部短信实例
-     * @param smsReadConfig 配置接口实现对象
+     * @param smsBlendsBeanConfig 配置接口实现对象
      * @author :Wind
     */
-    public static void reloadAll(SmsReadConfig smsReadConfig) {
-        List<BaseConfig> supplierConfigList = smsReadConfig.getSupplierConfigList();
+    public static void reloadAll(SmsBlendsBeanConfig smsBlendsBeanConfig) {
+        List<BaseConfig> supplierConfigList = smsBlendsBeanConfig.getSupplierConfigList();
         for (BaseConfig baseConfig : supplierConfigList) {
-          reload(baseConfig.getConfigId(),smsReadConfig);
+            SmsFactory.unregister(baseConfig.getConfigId());
         }
+        createRestrictedSmsBlend(smsBlendsBeanConfig);
     }
 
 }

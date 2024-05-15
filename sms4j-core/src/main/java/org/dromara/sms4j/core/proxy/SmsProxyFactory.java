@@ -1,22 +1,18 @@
 package org.dromara.sms4j.core.proxy;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.SmsBlend;
-import org.dromara.sms4j.api.dao.SmsDao;
-import org.dromara.sms4j.api.dao.SmsDaoDefaultImpl;
+import org.dromara.sms4j.api.manage.InterceptorStrategySmsManager;
 import org.dromara.sms4j.api.proxy.Order;
-import org.dromara.sms4j.api.proxy.SmsProcessor;
-import org.dromara.sms4j.api.proxy.SuppotFilter;
-import org.dromara.sms4j.api.proxy.aware.SmsBlendConfigAware;
-import org.dromara.sms4j.api.proxy.aware.SmsConfigAware;
-import org.dromara.sms4j.api.proxy.aware.SmsDaoAware;
+import org.dromara.sms4j.api.proxy.Restricted;
+import org.dromara.sms4j.api.proxy.SmsMethodInterceptor;
+import org.dromara.sms4j.api.proxy.SupplierSupportedMethodInterceptor;
+import org.dromara.sms4j.provider.config.SmsConfig;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -24,89 +20,73 @@ import java.util.stream.Collectors;
  *
  * @author sh1yu
  * @since 2023/10/27 13:03
+ * @see SmsMethodInterceptor
+ * @see SmsInvocationHandler
  */
 @Slf4j
-public abstract class SmsProxyFactory {
-    private static final LinkedList<SmsProcessor> processors = new LinkedList<>();
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class SmsProxyFactory {
 
-    public static SmsBlend getProxySmsBlend(SmsBlend smsBlend) {
-        LinkedList<SmsProcessor> ownerProcessors = processors.stream().filter(processor -> !shouldSkipProcess(processor,smsBlend)).collect(Collectors.toCollection(LinkedList::new));
-        return (SmsBlend) Proxy.newProxyInstance(smsBlend.getClass().getClassLoader(), new Class[]{SmsBlend.class}, new SmsInvocationHandler(smsBlend, ownerProcessors));
+    public static final int BLACK_LIST_RECORDING_INTERCEPTOR_ORDER = -2;
+    public static final int CORE_PARAM_VALIDATE_METHOD_INTERCEPTOR_ORDER = -1;
+    public static final int BLACK_LIST_METHOD_INTERCEPTOR_ORDER = 0;
+    public static final int ACCT_RESTRICTED_METHOD_INTERCEPTOR = 3;
+    public static final int SPAN_RESTRICTED_METHOD_INTERCEPTOR = 4;
+    public static final int SINGLE_BLEND_RESTRICTED_METHOD_INTERCEPTOR_ORDER = 2;
+    private static final List<SmsMethodInterceptor> INTERCEPTORS = new ArrayList<>();
+
+    public static SmsBlend getProxiedSmsBlend(SmsBlend smsBlend) {
+        //获取当前渠道的拦截开关是否开启
+        Objects.requireNonNull(smsBlend);
+        // 若已被代理则直接返回，避免重复代理
+        if (smsBlend instanceof Proxied) {
+            return smsBlend;
+        }
+        List<SmsMethodInterceptor> appliedInterceptors = INTERCEPTORS.stream()
+                .filter(interceptor -> canApply(interceptor, smsBlend))
+                .filter(interceptor -> isRestricted(interceptor.getClass().getInterfaces(),((SmsConfig)InterceptorStrategySmsManager.getSmsConfig()).getRestricted()))
+                .collect(Collectors.toList());
+        return (SmsBlend) Proxy.newProxyInstance(
+                smsBlend.getClass().getClassLoader(),
+                new Class[]{SmsBlend.class, Proxied.class},
+                new SmsInvocationHandler(smsBlend, appliedInterceptors)
+        );
+    }
+
+    private static boolean isRestricted( Class<?>[] interfaces,boolean restricted) {
+        if (restricted){
+            return true;
+        }
+        for (Class<?> anInterface : interfaces) {
+            if (anInterface.equals(Restricted.class)){
+                return false;
+            }
+            for (Class<?> anInterfaceInterface : anInterface.getInterfaces()) {
+                if (!isRestricted(anInterfaceInterface.getInterfaces(),restricted)){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
      * 增加拦截器
      */
-    public static void addProcessor(SmsProcessor processor) {
-        //校验拦截器是否正确
-        processorValidate(processor);
-        awareTransfer(processor);
-        processors.add(processor);
-        processors.sort(Comparator.comparingInt(Order::getOrder));
+    public static void addInterceptor(SmsMethodInterceptor interceptor) {
+        Objects.requireNonNull(interceptor);
+        // 尝试移除旧拦截器避免重复添加
+        INTERCEPTORS.remove(interceptor);
+        INTERCEPTORS.add(interceptor);
+        INTERCEPTORS.sort(Comparator.comparingInt(Order::getOrder));
     }
 
-    /*
-     *   @see SuppotFilter
-     */
-    public static boolean shouldSkipProcess(SmsProcessor processor, SmsBlend smsBlend) {
-        //判断当前的执行器有没有开厂商过滤，支不支持当前厂商
-        if (processor instanceof SuppotFilter) {
-            List<String> supports = ((SuppotFilter) processor).getSupports();
-            boolean exsit = supports.stream().anyMatch(support -> support.equals(smsBlend.getSupplier()));
-            return !exsit;
-        }
-        return false;
+    private static boolean canApply(SmsMethodInterceptor interceptor, SmsBlend smsBlend) {
+        // 判断当前的执行器有没有开厂商过滤，支不支持当前厂商
+        return !(interceptor instanceof SupplierSupportedMethodInterceptor)
+                || ((SupplierSupportedMethodInterceptor) interceptor).getSupportedSuppliers().contains(smsBlend.getSupplier());
     }
 
-    //所有处理器需要的各个参数可以通过这种aware接口形式传给对象
-    private static void awareTransfer(SmsProcessor processor) {
-        if (processor instanceof SmsDaoAware){
-            ((SmsDaoAware) processor).setSmsDao(getSmsDaoFromFramework());
-        }
-        if (processor instanceof SmsConfigAware){
-            ((SmsConfigAware) processor).setSmsConfig(EnvirmentHolder.getSmsConfig());
-        }
-        if (processor instanceof SmsBlendConfigAware){
-            ((SmsBlendConfigAware) processor).setSmsBlendsConfig(EnvirmentHolder.getBlends());
-        }
+    public interface Proxied {
     }
-
-    //校验拦截器是否正确
-    private static void processorValidate(SmsProcessor processor) {
-
-    }
-
-    //获取Sms的实现
-    private static SmsDao getSmsDaoFromFramework() {
-        SmsDao smsDao;
-        smsDao = getSmsDaoFromFramework("org.dromara.sms4j.javase.config.SESmsDaoHolder", "JavaSE");
-        if (null != smsDao) {
-            return smsDao;
-        }
-        smsDao = getSmsDaoFromFramework("org.dromara.sms4j.starter.holder.SpringSmsDaoHolder", "SpringBoot");
-        if (null != smsDao) {
-            return smsDao;
-        }
-        smsDao = getSmsDaoFromFramework("org.dromara.sms4j.solon.holder.SolonSmsDaoHolder", "Solon");
-        if (null != smsDao) {
-            return smsDao;
-        }
-        log.debug("未找到合适框架加载，最终使用默认SmsDao！如无自实现SmsDao请忽略本消息！");
-        return SmsDaoDefaultImpl.getInstance();
-    }
-
-    //获取Sms的实现
-    private static SmsDao getSmsDaoFromFramework(String className, String frameworkName) {
-        try {
-            Class<?> clazz = Class.forName(className);
-            Method getSmsDao = clazz.getMethod("getSmsDao", null);
-            SmsDao smsDao = (SmsDao) getSmsDao.invoke(null, null);
-            log.info("{}:加载SmsDao成功，使用{}", frameworkName,smsDao.getClass().getName());
-            return smsDao;
-        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            log.debug("{}:尝试其他框架加载......", frameworkName);
-        }
-        return null;
-    }
-
 }

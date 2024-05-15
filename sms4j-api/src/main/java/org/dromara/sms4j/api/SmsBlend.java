@@ -3,6 +3,7 @@ package org.dromara.sms4j.api;
 import org.dromara.sms4j.api.callback.CallBack;
 import org.dromara.sms4j.api.entity.SmsResponse;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -201,5 +202,24 @@ public interface SmsBlend {
      * @author :sh1yu
      */
     default void batchRemovalFromBlacklist(List<String > phones) {
+    }
+
+    /**
+     * <p>说明：获取黑名单命中记录【为了sms4j组件有统一入口，同时这个需要有全局操作的同时需要操作缓存，那么不给smsblend实际处理，代理部分处理】
+     * getTriggerRecording
+     *
+     * @author :sh1yu
+     */
+    default List<String> getTriggerRecord() {
+        return new ArrayList<>();
+    }
+
+    /**
+     * <p>说明：清理黑名单命中记录【为了sms4j组件有统一入口，同时这个需要有全局操作的同时需要操作缓存，那么不给smsblend实际处理，代理部分处理】
+     * clearTriggerRecording
+     *
+     * @author :sh1yu
+     */
+    default void clearTriggerRecord() {
     }
 }

@@ -1,41 +1,21 @@
 package org.dromara.sms4j.starter.config;
 
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.sms4j.aliyun.config.AlibabaFactory;
 import org.dromara.sms4j.api.SmsBlend;
+import org.dromara.sms4j.api.dao.SmsDao;
+import org.dromara.sms4j.api.proxy.SmsMethodInterceptor;
+import org.dromara.sms4j.api.strategy.IInterceptorStrategy;
 import org.dromara.sms4j.api.universal.SupplierConfig;
-import org.dromara.sms4j.cloopen.config.CloopenFactory;
-import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.enumerate.ConfigType;
-import org.dromara.sms4j.comm.utils.SmsUtils;
+import org.dromara.sms4j.core.datainterface.SmsBlendsBeanConfig;
+import org.dromara.sms4j.core.datainterface.SmsBlendsSelectedConfig;
 import org.dromara.sms4j.core.datainterface.SmsReadConfig;
 import org.dromara.sms4j.core.factory.SmsFactory;
-import org.dromara.sms4j.core.proxy.EnvirmentHolder;
-import org.dromara.sms4j.core.proxy.SmsProxyFactory;
-import org.dromara.sms4j.core.proxy.processor.BlackListProcessor;
-import org.dromara.sms4j.core.proxy.processor.BlackListRecordingProcessor;
-import org.dromara.sms4j.core.proxy.processor.CoreMethodParamValidateProcessor;
-import org.dromara.sms4j.core.proxy.processor.RestrictedProcessor;
-import org.dromara.sms4j.core.proxy.processor.SingleBlendRestrictedProcessor;
-import org.dromara.sms4j.ctyun.config.CtyunFactory;
-import org.dromara.sms4j.dingzhong.config.DingZhongFactory;
-import org.dromara.sms4j.emay.config.EmayFactory;
-import org.dromara.sms4j.huawei.config.HuaweiFactory;
-import org.dromara.sms4j.jdcloud.config.JdCloudFactory;
-import org.dromara.sms4j.lianlu.config.LianLuFactory;
-import org.dromara.sms4j.netease.config.NeteaseFactory;
+import org.dromara.sms4j.core.initalize.AbstractInitalizer;
 import org.dromara.sms4j.provider.config.SmsConfig;
 import org.dromara.sms4j.provider.factory.BaseProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
-import org.dromara.sms4j.qiniu.config.QiNiuFactory;
 import org.dromara.sms4j.starter.adepter.ConfigCombineMapAdeptor;
-import org.dromara.sms4j.tencent.config.TencentFactory;
-import org.dromara.sms4j.unisms.config.UniFactory;
-import org.dromara.sms4j.yunpian.config.YunPianFactory;
-import org.dromara.sms4j.zhutong.config.ZhutongFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import java.util.HashMap;
@@ -44,91 +24,74 @@ import java.util.Map;
 
 
 @Slf4j
-public class SmsBlendsInitializer  {
-    private final List<BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig>> factoryList;
+public class SmsBlendsInitializer extends AbstractInitalizer {
 
-    private final SmsConfig smsConfig;
-    private final Map<String, Map<String, Object>> blends;
-    private final ObjectProvider<SmsReadConfig> extendsSmsConfigs;
 
     public SmsBlendsInitializer(List<BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig>> factoryList,
                                 SmsConfig smsConfig,
                                 Map<String, Map<String, Object>> blends,
-                                ObjectProvider<SmsReadConfig> extendsSmsConfigs){
-        this.factoryList = factoryList;
-        this.smsConfig = smsConfig;
-        this.blends = blends;
-        this.extendsSmsConfigs = extendsSmsConfigs;
-        onApplicationEvent();
-    }
-
-    public void onApplicationEvent() {
+                                ObjectProvider<SmsDao> smsDaos,
+                                ObjectProvider<SmsBlendsBeanConfig> beanConfigs,
+                                ObjectProvider<SmsBlendsSelectedConfig> selectedConfigs,
+                                ObjectProvider<SmsMethodInterceptor> smsMethodInterceptorObjectProvider,
+                                ObjectProvider<IInterceptorStrategy> interceptorStrategyObjectProvider) {
+        //注册预置工厂
         this.registerDefaultFactory();
-        // 注册短信对象工厂
+
+        // 注册自定义工厂
         ProviderFactoryHolder.registerFactory(factoryList);
 
-        if(ConfigType.YAML.equals(this.smsConfig.getConfigType())) {
-            //持有初始化配置信息
-            Map<String, Map<String, Object>> blendsInclude = new ConfigCombineMapAdeptor<String, Map<String, Object>>();
-            blendsInclude.putAll(this.blends);
-            int num = 0;
-            for (SmsReadConfig smsReadConfig : extendsSmsConfigs) {
-                String key = SmsReadConfig.class.getSimpleName() + num;
-                Map<String, Object> insideMap = new HashMap<>();
-                insideMap.put(key,smsReadConfig);
-                blendsInclude.put(key,insideMap);
-                num++;
-            }
-            EnvirmentHolder.frozenEnvirmet(smsConfig, blendsInclude);
-            //注册执行器实现
-            SmsProxyFactory.addProcessor(new RestrictedProcessor());
-            SmsProxyFactory.addProcessor(new BlackListProcessor());
-            SmsProxyFactory.addProcessor(new BlackListRecordingProcessor());
-            SmsProxyFactory.addProcessor(new SingleBlendRestrictedProcessor());
-            SmsProxyFactory.addProcessor(new CoreMethodParamValidateProcessor());
-            // 解析供应商配置
-            for(String configId : blends.keySet()) {
-                Map<String, Object> configMap = blends.get(configId);
-                Object supplierObj = configMap.get(Constant.SUPPLIER_KEY);
-                String supplier = supplierObj == null ? "" : String.valueOf(supplierObj);
-                supplier = StrUtil.isEmpty(supplier) ? configId : supplier;
-                BaseProviderFactory<SmsBlend, SupplierConfig> providerFactory = (BaseProviderFactory<SmsBlend, org.dromara.sms4j.api.universal.SupplierConfig>) ProviderFactoryHolder.requireForSupplier(supplier);
-                if(providerFactory == null) {
-                    log.warn("创建\"{}\"的短信服务失败，未找到供应商为\"{}\"的服务", configId, supplier);
-                    continue;
+        // 注册缓存实现
+        doRegisterSmsDao(smsDaos.getIfAvailable());
+
+        //注册缓存实现
+        for (SmsMethodInterceptor smsMethodInterceptor : smsMethodInterceptorObjectProvider) {
+            doRegisterSmsMethodInterceptor(smsMethodInterceptor);
+        }
+
+        //注册拦截器策略
+        for (IInterceptorStrategy interceptorStrategy : interceptorStrategyObjectProvider) {
+            doRegisterIInterceptorStrategy(interceptorStrategy);
+        }
+
+        //按照配置的配置文件类型处理加载及实例化
+        switch (smsConfig.getConfigType()) {
+            //yaml 只需处理yml中的配置信息
+            case YAML:
+                //装载拦截器和策略
+                initInterceptor(blends, smsConfig);
+                // 解析供应商配置
+                doParseChannelConfigWithCreate(blends);
+                break;
+
+            //yaml 只需要处理实现了，SmsBlendsBeanConfig、 SmsBlendsSelectedConfig这两种接口的配置信息
+            case INTERFACE:
+                //如果是INTERFACE的情况，那么blends里面等于没有东西，同时配置的信息获取不到，所以需要进行转换，但是SmsBlendsSelectedConfig存在参数，只能懒转换，下方ConfigCombineMapAdeptor实现懒转换
+                Map<String, Map<String, Object>> blendsInclude = new ConfigCombineMapAdeptor<String, Map<String, Object>>();
+                blendsInclude.putAll(blends);
+                //给一个序号区别需要懒转换的配置信息
+                int num = 0;
+                for (SmsBlendsBeanConfig smsBlendsBeanConfig : beanConfigs) {
+                    String key = SmsReadConfig.class.getSimpleName() + num;
+                    Map<String, Object> insideMap = new HashMap<>();
+                    insideMap.put(key, smsBlendsBeanConfig);
+                    blendsInclude.put(key, insideMap);
+                    num++;
                 }
-                configMap.put("config-id", configId);
-                SmsUtils.replaceKeysSeperator(configMap, "-", "_");
-                JSONObject configJson = new JSONObject(configMap);
-                org.dromara.sms4j.api.universal.SupplierConfig supplierConfig = JSONUtil.toBean(configJson, providerFactory.getConfigClass());
-                SmsFactory.createSmsBlend(supplierConfig);
-            }
+                for (SmsBlendsSelectedConfig smsBlendsSelectedConfig : selectedConfigs) {
+                    String key = SmsReadConfig.class.getSimpleName() + num;
+                    Map<String, Object> insideMap = new HashMap<>();
+                    insideMap.put(key, smsBlendsSelectedConfig);
+                    blendsInclude.put(key, insideMap);
+                    num++;
+                }
+                //装载拦截器和策略
+                initInterceptor(blendsInclude, smsConfig);
+                //SmsBlendsBeanConfig接口实现类的配置信息处理
+                for (SmsBlendsBeanConfig beanConfig : beanConfigs) {
+                    SmsFactory.createSmsBlend(beanConfig);
+                }
+                break;
         }
-
-
     }
-
-    /**
-     * 注册默认工厂实例
-     */
-    private void registerDefaultFactory() {
-        ProviderFactoryHolder.registerFactory(AlibabaFactory.instance());
-        ProviderFactoryHolder.registerFactory(CloopenFactory.instance());
-        ProviderFactoryHolder.registerFactory(CtyunFactory.instance());
-        ProviderFactoryHolder.registerFactory(EmayFactory.instance());
-        ProviderFactoryHolder.registerFactory(HuaweiFactory.instance());
-        ProviderFactoryHolder.registerFactory(NeteaseFactory.instance());
-        ProviderFactoryHolder.registerFactory(TencentFactory.instance());
-        ProviderFactoryHolder.registerFactory(UniFactory.instance());
-        ProviderFactoryHolder.registerFactory(YunPianFactory.instance());
-        ProviderFactoryHolder.registerFactory(ZhutongFactory.instance());
-        ProviderFactoryHolder.registerFactory(LianLuFactory.instance());
-        ProviderFactoryHolder.registerFactory(DingZhongFactory.instance());
-        ProviderFactoryHolder.registerFactory(QiNiuFactory.instance());
-        if(SmsUtils.isClassExists("com.jdcloud.sdk.auth.CredentialsProvider")) {
-            ProviderFactoryHolder.registerFactory(JdCloudFactory.instance());
-        }
-        log.debug("加载内置运营商完成！");
-    }
-
 }

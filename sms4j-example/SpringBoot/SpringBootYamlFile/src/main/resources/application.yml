@@ -1,0 +1,23 @@
+sms:
+  # 标注从yml读取配置
+  config-type: yaml
+  # 标注所有的限制是否开启，黑名单和调用参数校验无法关闭
+  restricted: true
+  # 时段级限制
+  minute-max: 5
+  # 账号级限制
+  account-max: 6
+  # sms渠道配置
+  blends:
+    # ID
+    a1:
+      # 渠道ID，如果是自定义要和自定义的supplierID是一样的
+      supplier: a
+      # 渠道级限制
+      maximum: 8
+    b1:
+      supplier: b
+      maximum: 8
+    c1:
+      supplier: c
+      maximum: 8

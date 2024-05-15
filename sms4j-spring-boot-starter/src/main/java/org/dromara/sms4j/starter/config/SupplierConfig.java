@@ -3,9 +3,13 @@ package org.dromara.sms4j.starter.config;
 import cn.hutool.core.util.ObjectUtil;
 import lombok.SneakyThrows;
 import org.dromara.sms4j.api.SmsBlend;
+import org.dromara.sms4j.api.dao.SmsDao;
+import org.dromara.sms4j.api.proxy.SmsMethodInterceptor;
+import org.dromara.sms4j.api.strategy.IInterceptorStrategy;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.enumerate.ConfigType;
-import org.dromara.sms4j.core.datainterface.SmsReadConfig;
+import org.dromara.sms4j.core.datainterface.SmsBlendsBeanConfig;
+import org.dromara.sms4j.core.datainterface.SmsBlendsSelectedConfig;
 import org.dromara.sms4j.provider.config.SmsConfig;
 import org.dromara.sms4j.provider.factory.BaseProviderFactory;
 import org.springframework.beans.factory.ObjectProvider;
@@ -56,8 +60,12 @@ public class SupplierConfig {
     protected SmsBlendsInitializer smsBlendsInitializer(List<BaseProviderFactory<? extends SmsBlend, ? extends org.dromara.sms4j.api.universal.SupplierConfig>> factoryList,
                                                         SmsConfig smsConfig,
                                                         Map<String, Map<String, Object>> blends,
-                                                        ObjectProvider<SmsReadConfig> extendsSmsConfigs) {
-        return new SmsBlendsInitializer(factoryList, smsConfig, blends, extendsSmsConfigs);
+                                                        ObjectProvider<SmsDao> smsDaos,
+                                                        ObjectProvider<SmsBlendsBeanConfig> beanConfigs,
+                                                        ObjectProvider<SmsBlendsSelectedConfig> selectedConfigs,
+                                                        ObjectProvider<SmsMethodInterceptor> smsMethodInterceptors,
+                                                        ObjectProvider<IInterceptorStrategy> interceptorStrategies){
+        return new SmsBlendsInitializer(factoryList, smsConfig, blends, smsDaos, beanConfigs,selectedConfigs,smsMethodInterceptors,interceptorStrategies);
     }
 
 }

@@ -1,0 +1,7 @@
+sms:
+  # 标注从yml读取配置
+  config-type: interface
+  #restricted: true
+  account-max: 4
+
+  minute-max: 3

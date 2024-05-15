@@ -18,7 +18,8 @@ import java.util.Map;
 public class SmsUtils {
     private SmsUtils() {
     }   //私有构造防止实例化
-
+	//测试环境标志的包头
+    private final static String JUNIT_MAIN_CLASS = "org.junit";
     /**
      * <p>说明：生成一个指定长度的随机字符串，包含大小写英文字母和数字但不包含符号
      *
@@ -172,4 +173,12 @@ public class SmsUtils {
         }
     }
 
+    public static boolean isTesting() {
+        for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
+            if (element.getClassName().startsWith(JUNIT_MAIN_CLASS)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

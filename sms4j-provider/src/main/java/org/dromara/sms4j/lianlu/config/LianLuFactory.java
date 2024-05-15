@@ -4,6 +4,9 @@ import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.lianlu.service.LianLuSmsImpl;
 import org.dromara.sms4j.provider.factory.BaseProviderFactory;
 
+/**
+ * 联鹿短信
+ * */
 public class LianLuFactory implements BaseProviderFactory<LianLuSmsImpl, LianLuConfig> {
     private static final LianLuFactory INSTANCE = new LianLuFactory();
 

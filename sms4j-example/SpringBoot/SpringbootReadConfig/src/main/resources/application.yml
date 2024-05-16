@@ -1,7 +1,9 @@
 sms:
   # 标注从yml读取配置
   config-type: interface
-  #restricted: true
+  # 是否开启拦截
+  restricted: true
+  # 账户发送上限
   account-max: 4
-
+  # 分钟发送上限
   minute-max: 3

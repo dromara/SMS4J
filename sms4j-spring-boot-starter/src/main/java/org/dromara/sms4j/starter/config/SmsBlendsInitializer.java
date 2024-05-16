@@ -90,6 +90,7 @@ public class SmsBlendsInitializer extends AbstractInitalizer {
                 //SmsBlendsBeanConfig接口实现类的配置信息处理
                 for (SmsBlendsBeanConfig beanConfig : beanConfigs) {
                     SmsFactory.createSmsBlend(beanConfig);
+
                 }
                 break;
         }

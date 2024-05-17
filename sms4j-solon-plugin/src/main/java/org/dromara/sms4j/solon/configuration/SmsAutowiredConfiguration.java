@@ -1,4 +1,4 @@
-package org.dromara.sms4j.solon.config;
+package org.dromara.sms4j.solon.configuration;
 
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.comm.constant.Constant;
@@ -16,7 +16,7 @@ import java.util.concurrent.Executor;
 
 @Slf4j
 @Configuration
-public class SmsAutowiredConfig implements LifecycleBean {
+public class SmsAutowiredConfiguration implements LifecycleBean {
 
     @Inject
     AppContext context;

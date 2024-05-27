@@ -13,6 +13,7 @@ import org.dromara.sms4j.baidu.service.BaiduSmsImpl;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.utils.SmsUtils;
 import org.dromara.sms4j.core.factory.SmsFactory;
+import org.dromara.sms4j.jg.service.JgSmsImpl;
 import org.dromara.sms4j.lianlu.service.LianLuSmsImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -357,4 +358,80 @@ class Sms4jTest {
                 clientToken);
         log.info(JSONUtil.toJsonStr(respWithClientToken));
     }
+
+    /**
+     * 创蓝短信
+     */
+    @Test
+    public void chungLanTest() {
+        if (StrUtil.isBlank(PHONE)) {
+            return;
+        }
+
+        //测试群发【模板】
+        List<String> arrayList = new ArrayList<>();
+        arrayList.add(PHONE);
+        arrayList.add("135****000");
+        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        map.put("1", "1544");
+        map.put("2", "2222");
+        SmsResponse smsResponse2 = SmsFactory.getBySupplier(SupplierConstant.CHUANGLAN).massTexting(arrayList, "[test]你的验证码是{$val},{$val}", map);
+        log.info("smsResponse2:{}", smsResponse2);
+
+        //测试单条发送
+        SmsResponse smsResponse1 = SmsFactory.getBySupplier(SupplierConstant.CHUANGLAN).sendMessage(PHONE, "1544&2222");
+        log.info("smsResponse1:{}", smsResponse1);
+
+        //测试单条模板发送
+        LinkedHashMap<String, String> map3 = new LinkedHashMap<>();
+        map3.put("1", "1544");
+        map3.put("2", "2222");
+        SmsResponse smsResponse3 = SmsFactory.getBySupplier(SupplierConstant.CHUANGLAN).sendMessage(PHONE, "[test]你的验证码是{$val},{$val}", map3);
+        log.info("smsResponse3:{}", smsResponse3);
+    }
+
+    /**
+     * 极光短信
+     */
+    @Test
+    public void jgSmsTest() {
+        // 极光 发送文本验证码短信 API 不需要传入具体验证码 返回 {"msg_id": "288193860302"}
+        SmsResponse smsResponse1 = SmsFactory.getBySupplier(SupplierConstant.JIGUANG).sendMessage(PHONE, "");
+        Assert.isTrue(smsResponse1.isSuccess());
+
+        // 极光 发送语音验证码短信 请确保action配置为voice_codes
+        JgSmsImpl voiceCode = (JgSmsImpl) SmsFactory.getBySupplier(SupplierConstant.JIGUANG);
+        SmsResponse voiceResp = voiceCode.sendVoiceCode(PHONE,
+                SmsUtils.getRandomInt(6));
+        Assert.isTrue(voiceResp.isSuccess());
+
+        // 验证验证码是否有效 请确保action配置为voice_codes
+        JgSmsImpl verify = (JgSmsImpl) SmsFactory.getBySupplier(SupplierConstant.JIGUANG);
+        SmsResponse verifyResp = verify.verifyCode("123456", "288193860302");
+        Assert.isTrue(verifyResp.isSuccess());
+
+        // 极光 发送单条模板短信 API 发送自定义验证码 sendTemplateSMS
+        LinkedHashMap<String, String> map1 = new LinkedHashMap<>();
+        map1.put("code", "123456");
+        SmsResponse smsResponse2 = SmsFactory.getBySupplier(SupplierConstant.JIGUANG).sendMessage(PHONE, map1);
+        Assert.isTrue(smsResponse2.isSuccess());
+
+        // 极光 发送单条模板短信 API 发送多参数自定义模板短信 sendTemplateSMS_with_multipleParameters
+        LinkedHashMap<String, String> map2 = new LinkedHashMap<>();
+        map2.put("name", "test");
+        map2.put("password", "test");
+        SmsResponse smsResponse3 = SmsFactory.getBySupplier(SupplierConstant.JIGUANG).sendMessage(PHONE, "226992", map2);
+        Assert.isTrue(smsResponse3.isSuccess());
+
+        // sendBatchTemplateSMS
+        LinkedHashMap<String, String> map3 = new LinkedHashMap<>();
+        map3.put("name", "test");
+        map3.put("password", "test");
+        List<String> phones = new ArrayList<>();
+        phones.add(PHONE);
+        phones.add("xxx");
+        SmsResponse smsResponse4 = SmsFactory.getBySupplier(SupplierConstant.JIGUANG).massTexting(phones, "226992", map3);
+        Assert.isTrue(smsResponse4.isSuccess());
+    }
+
 }

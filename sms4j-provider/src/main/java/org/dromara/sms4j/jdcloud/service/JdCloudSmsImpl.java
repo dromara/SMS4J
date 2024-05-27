@@ -6,6 +6,7 @@ import com.jdcloud.sdk.service.sms.model.BatchSendRequest;
 import com.jdcloud.sdk.service.sms.model.BatchSendResult;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.api.utils.SmsRespUtils;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
@@ -96,9 +97,7 @@ public class JdCloudSmsImpl extends AbstractSmsBlend<JdCloudConfig> {
         try {
             smsResponse = getSmsResponse(result);
         } catch (SmsBlendException e) {
-            smsResponse = new SmsResponse();
-            smsResponse.setSuccess(false);
-            smsResponse.setData(e.getMessage());
+            smsResponse = SmsRespUtils.error(e.getMessage(), getConfigId());
         }
         if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
             retry = 0;
@@ -121,10 +120,6 @@ public class JdCloudSmsImpl extends AbstractSmsBlend<JdCloudConfig> {
      * @return 发送短信返回信息
      */
     private SmsResponse getSmsResponse(BatchSendResult res) {
-        SmsResponse smsResponse = new SmsResponse();
-        smsResponse.setSuccess(res.getStatus() != null && res.getStatus());
-        smsResponse.setData(res);
-        smsResponse.setConfigId(getConfigId());
-        return smsResponse;
+        return SmsRespUtils.resp(res, res.getStatus() != null && res.getStatus(), getConfigId());
     }
 }

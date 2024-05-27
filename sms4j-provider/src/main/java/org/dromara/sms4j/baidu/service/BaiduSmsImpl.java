@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.api.utils.SmsRespUtils;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
@@ -157,9 +158,7 @@ public class BaiduSmsImpl extends AbstractSmsBlend<BaiduConfig> {
         try {
             smsResponse = getResponse(http.postJson(config.getHost() + config.getAction(), headers, body));
         } catch (SmsBlendException e) {
-            smsResponse = new SmsResponse();
-            smsResponse.setSuccess(false);
-            smsResponse.setData(e.getMessage());
+            smsResponse = SmsRespUtils.error(e.getMessage(), getConfigId());
         }
         if (smsResponse.isSuccess() || retry == config.getMaxRetries()) {
             retry = 0;
@@ -176,11 +175,7 @@ public class BaiduSmsImpl extends AbstractSmsBlend<BaiduConfig> {
     }
 
     private SmsResponse getResponse(JSONObject resJson) {
-        SmsResponse smsResponse = new SmsResponse();
-        smsResponse.setSuccess("1000".equals(resJson.getStr("code")));
-        smsResponse.setData(resJson);
-        smsResponse.setConfigId(getConfigId());
-        return smsResponse;
+        return SmsRespUtils.resp(resJson, "1000".equals(resJson.getStr("code")), getConfigId());
     }
 
 }

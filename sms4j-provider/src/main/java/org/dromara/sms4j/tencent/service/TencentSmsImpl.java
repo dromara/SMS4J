@@ -5,6 +5,7 @@ import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.api.utils.SmsRespUtils;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
@@ -14,11 +15,9 @@ import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import org.dromara.sms4j.tencent.config.TencentConfig;
 import org.dromara.sms4j.tencent.utils.TencentUtils;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.Executor;
 
 /**
@@ -44,12 +43,7 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
 
     @Override
     public SmsResponse sendMessage(String phone, String message) {
-        String[] split = message.split("&");
-        LinkedHashMap<String, String> map = new LinkedHashMap<>();
-        for (int i = 0; i < split.length; i++) {
-            map.put(String.valueOf(i), split[i]);
-        }
-        return sendMessage(phone, getConfig().getTemplateId(), map);
+        return sendMessage(phone, getConfig().getTemplateId(), SmsUtils.buildMessageByAmpersand(message));
     }
 
     @Override
@@ -59,38 +53,21 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
 
     @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
-        if (Objects.isNull(messages)){
-            messages = new LinkedHashMap<>();
-        }
-        List<String> list = new ArrayList<>();
-        for (Map.Entry<String, String> entry : messages.entrySet()) {
-            list.add(entry.getValue());
-        }
-        String[] s = new String[list.size()];
-        return getSmsResponse(new String[]{StrUtil.addPrefixIfNot(phone, "+86")}, list.toArray(s), templateId);
+        return getSmsResponse(new String[]{StrUtil.addPrefixIfNot(phone, "+86")}, toArray(messages), templateId);
     }
 
     @Override
     public SmsResponse massTexting(List<String> phones, String message) {
-        String[] split = message.split("&");
-        LinkedHashMap<String, String> map = new LinkedHashMap<>();
-        for (int i = 0; i < split.length; i++) {
-            map.put(String.valueOf(i), split[i]);
-        }
-        return massTexting(phones, getConfig().getTemplateId(), map);
+        return massTexting(phones, getConfig().getTemplateId(), SmsUtils.buildMessageByAmpersand(message));
     }
 
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
-        if (Objects.isNull(messages)){
-            messages = new LinkedHashMap<>();
-        }
-        List<String> list = new ArrayList<>();
-        for (Map.Entry<String, String> entry : messages.entrySet()) {
-            list.add(entry.getValue());
-        }
-        String[] s = new String[list.size()];
-        return getSmsResponse(SmsUtils.listToArray(phones), list.toArray(s), templateId);
+        return getSmsResponse(SmsUtils.listToArray(phones), toArray(messages), templateId);
+    }
+
+    private String[] toArray(LinkedHashMap<String, String> messages){
+        return SmsUtils.toArray(messages.values(), SmsUtils::isNotEmpty, s -> s, new String[0]);
     }
 
     private SmsResponse getSmsResponse(String[] phones, String[] messages, String templateId) {
@@ -112,9 +89,7 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
         try {
             smsResponse = getResponse(http.postJson(url, headsMap, requestBody));
         } catch (SmsBlendException e) {
-            smsResponse = new SmsResponse();
-            smsResponse.setSuccess(false);
-            smsResponse.setData(e.getMessage());
+            smsResponse = SmsRespUtils.error(e.getMessage(), getConfigId());
         }
         if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
             retry = 0;
@@ -131,15 +106,12 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
     }
 
     private SmsResponse getResponse(JSONObject resJson) {
-        SmsResponse smsResponse = new SmsResponse();
         JSONObject response = resJson.getJSONObject("Response");
         // 根据 Error 判断是否配置错误
-        String error = response.getStr("Error");
-        smsResponse.setSuccess(StrUtil.isBlank(error));
+        boolean success = StrUtil.isBlank(response.getStr("Error"));
         // 根据 SendStatusSet 判断是否不为Ok
         JSONArray sendStatusSet = response.getJSONArray("SendStatusSet");
         if (sendStatusSet != null) {
-            boolean success = true;
             for (Object obj : sendStatusSet) {
                 JSONObject jsonObject = (JSONObject) obj;
                 String code = jsonObject.getStr("Code");
@@ -148,11 +120,8 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
                     break;
                 }
             }
-            smsResponse.setSuccess(success);
         }
-        smsResponse.setData(resJson);
-        smsResponse.setConfigId(getConfigId());
-        return smsResponse;
+        return SmsRespUtils.resp(resJson, success, getConfigId());
     }
 
 }

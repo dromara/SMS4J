@@ -1,4 +1,4 @@
-package org.dromara.sms4j.test;
+package org.dromara.sms4j.test.blacklist;
 
 import org.dromara.sms4j.test.validate.BlackListValidate;
 import org.springframework.boot.SpringApplication;

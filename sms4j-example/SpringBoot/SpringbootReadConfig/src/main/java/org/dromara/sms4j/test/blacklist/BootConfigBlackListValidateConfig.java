@@ -1,4 +1,4 @@
-package org.dromara.sms4j.test;
+package org.dromara.sms4j.test.blacklist;
 
 import org.dromara.sms4j.core.datainterface.SmsBlendsSelectedConfig;
 import org.dromara.sms4j.core.factory.SmsFactory;

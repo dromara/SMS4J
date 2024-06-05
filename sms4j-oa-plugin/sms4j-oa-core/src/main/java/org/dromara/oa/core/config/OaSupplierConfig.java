@@ -3,6 +3,7 @@ package org.dromara.oa.core.config;
 import org.dromara.oa.api.OaSender;
 import org.dromara.oa.core.provider.config.OaConfig;
 import org.dromara.oa.core.provider.factory.OaBaseProviderFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -31,7 +32,7 @@ public class OaSupplierConfig {
     protected OaBlendsInitializer smsOasInitializer(
             List<OaBaseProviderFactory<? extends OaSender, ? extends org.dromara.oa.comm.config.OaSupplierConfig>> factoryList,
             OaConfig oaConfig,
-            Map<String, Map<String, Object>> oas) {
+            @Qualifier("oas") Map<String, Map<String, Object>> oas) {
         return new OaBlendsInitializer(factoryList,oaConfig,oas);
     }
 }

@@ -13,6 +13,7 @@ import org.dromara.sms4j.core.datainterface.SmsBlendsSelectedConfig;
 import org.dromara.sms4j.provider.config.SmsConfig;
 import org.dromara.sms4j.provider.factory.BaseProviderFactory;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -38,7 +39,7 @@ public class SupplierConfig {
     @Bean
     @ConditionalOnBean({SmsConfig.class})
     @SneakyThrows
-    protected List<BaseProviderFactory<? extends SmsBlend, ? extends org.dromara.sms4j.api.universal.SupplierConfig>> factoryList(Map<String, Map<String, Object>> blends, SmsConfig smsConfig) {
+    protected List<BaseProviderFactory<? extends SmsBlend, ? extends org.dromara.sms4j.api.universal.SupplierConfig>> factoryList(@Qualifier("blends") Map<String, Map<String, Object>> blends, SmsConfig smsConfig) {
         //注入自定义实现工厂
         List<BaseProviderFactory<? extends SmsBlend, ? extends org.dromara.sms4j.api.universal.SupplierConfig>> factoryList = new ArrayList<>();
         if (ConfigType.YAML.equals(smsConfig.getConfigType())) {
@@ -59,7 +60,7 @@ public class SupplierConfig {
     @Bean
     protected SmsBlendsInitializer smsBlendsInitializer(List<BaseProviderFactory<? extends SmsBlend, ? extends org.dromara.sms4j.api.universal.SupplierConfig>> factoryList,
                                                         SmsConfig smsConfig,
-                                                        Map<String, Map<String, Object>> blends,
+                                                        @Qualifier("blends") Map<String, Map<String, Object>> blends,
                                                         ObjectProvider<SmsDao> smsDaos,
                                                         ObjectProvider<SmsBlendsBeanConfig> beanConfigs,
                                                         ObjectProvider<SmsBlendsSelectedConfig> selectedConfigs,

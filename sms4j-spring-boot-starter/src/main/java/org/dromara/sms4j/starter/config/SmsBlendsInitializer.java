@@ -114,7 +114,7 @@ public class SmsBlendsInitializer {
                     continue;
                 }
                 configMap.put("config-id", configId);
-                SmsUtils.replaceKeysSeperator(configMap, "-", "_");
+                SmsUtils.replaceKeysSeparator(configMap, "-", "_");
                 JSONObject configJson = new JSONObject(configMap);
                 org.dromara.sms4j.api.universal.SupplierConfig supplierConfig = JSONUtil.toBean(configJson, providerFactory.getConfigClass());
                 SmsFactory.createSmsBlend(supplierConfig);

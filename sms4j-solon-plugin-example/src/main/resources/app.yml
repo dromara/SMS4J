@@ -112,17 +112,49 @@ sms:
       template-id:
       # 可为空 不为空时请遵守中国移动云MAS开发文档中的描述[服务代码加扩展码总长度不能超过20位。]
       add-serial:
-  # 中百度智能云 sms
-  baidu:
-    access-key-id: 访问密钥ID
-    access-key-secret: 用户密钥
-    ec-name: 企业名称
-    signature: 签名编码
-    template-id: 模板ID
-    # 模板变量名称
-    template-name: code
-    custom: 用户自定义参数，格式为字符串，状态回调时会回传该值 可不传
-    user-ext-id: 通道自定义扩展码 可不传
+    # 百度智能云 sms
+    baidu:
+      access-key-id: 访问密钥ID
+      access-key-secret: 用户密钥
+      ec-name: 企业名称
+      signature: 签名编码
+      template-id: 模板ID
+      # 模板变量名称
+      template-name: code
+      custom: 用户自定义参数，格式为字符串，状态回调时会回传该值 可不传
+      user-ext-id: 通道自定义扩展码 可不传
+    # 创蓝
+    chuanglan:
+      access-key-id: 111111
+      access-key-secret: 111111
+      templateId: 【253云通讯】{$var}您的验证码是：{$var}，{$var}分钟内有效
+    # 极光
+    jiguang:
+      supplier: jiguang
+      signId: 签名 ID，该字段为空则使用应用默认签名
+      action: 默认请求方法 messages
+      templateName: 模板变量名称
+      voice: action设置为voice_codes有效 语音验证码播报语言选择，0：中文播报，1：英文播报，2：中英混合播报
+      ttl: action设置为voice_codes有效 验证码有效期，默认为 60 秒
+      tag: action设置为messages/batch有效 标签
+    # 螺丝帽
+    luosimao:
+      accessKeyId: 后台提取的API key
+      action: 默认请求方法 send.json
+    # submail
+    submail:
+      accessKeyId: APPID
+      accessKeySecret: APPKEY
+      action: 默认请求方法 send.json
+      signType: MD5 或 SHA-1 默认MD5 填写任意值，不为即为 密匙明文验证模式
+      signVersion: signature加密计算方式 为2时会忽略某些字段
+      templateId: 模板ID
+      signature: 签名
+    # danmi
+    danmi:
+      accessKeyId: ACCOUNT SID
+      accessKeySecret: AUTH TOKEN
+      action: 默认请求方法 distributor/sendSMS
 
 sms-oa:
   config-type: yaml

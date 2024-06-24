@@ -1,20 +1,19 @@
 package org.dromara.sms4j.tencent.utils;
 
+import cn.hutool.crypto.digest.DigestUtil;
 import cn.hutool.crypto.digest.HMac;
 import cn.hutool.crypto.digest.HmacAlgorithm;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.sms4j.comm.constant.Constant;
+import org.dromara.sms4j.comm.utils.SmsDateUtils;
 import org.dromara.sms4j.tencent.config.TencentConfig;
 
 import javax.xml.bind.DatatypeConverter;
 import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TimeZone;
-
 
 /**
  * @author Richard
@@ -31,18 +30,14 @@ public class TencentUtils {
      */
     private static final String HTTP_REQUEST_METHOD = "POST";
 
-    private static final String CT_JSON = "application/json; charset=utf-8";
-
 
     private static byte[] hmac256(byte[] key, String msg) {
         HMac hMac = new HMac(HmacAlgorithm.HmacSHA256, key);
-        return hMac.digest(msg.getBytes(StandardCharsets.UTF_8));
+        return hMac.digest(msg);
     }
 
     private static String sha256Hex(String s) throws Exception {
-        MessageDigest md = MessageDigest.getInstance("SHA-256");
-        byte[] d = md.digest(s.getBytes(StandardCharsets.UTF_8));
-        return DatatypeConverter.printHexBinary(d).toLowerCase();
+        return DatatypeConverter.printHexBinary(DigestUtil.sha256(s)).toLowerCase();
     }
 
     /**
@@ -52,13 +47,11 @@ public class TencentUtils {
      * @param messages   短信内容
      * @param phones     手机号
      * @param timestamp  时间戳
-     * @throws Exception
+     * @throws Exception Exception
      */
     public static String generateSignature(TencentConfig tencentConfig, String templateId, String[] messages, String[] phones,
                                            String timestamp) throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        String date = sdf.format(new Date(Long.parseLong(timestamp + "000")));
+        String date = SmsDateUtils.normDateGmt(new Date(Long.parseLong(timestamp + "000")));
         String canonicalUri = "/";
         String canonicalQueryString = "";
         String canonicalHeaders = "content-type:application/json; charset=utf-8\nhost:" + tencentConfig.getRequestUrl() + "\n";
@@ -95,8 +88,8 @@ public class TencentUtils {
     public static Map<String, String> generateHeadsMap(String authorization, String timestamp, String action,
                                                        String version, String territory, String requestUrl) {
         Map<String, String> headers = new HashMap<>();
-        headers.put("Authorization", authorization);
-        headers.put("Content-Type", CT_JSON);
+        headers.put(Constant.AUTHORIZATION, authorization);
+        headers.put(Constant.CONTENT_TYPE, Constant.APPLICATION_JSON_UTF8);
         headers.put("Host", requestUrl);
         headers.put("X-TC-Action", action);
         headers.put("X-TC-Timestamp", timestamp);
@@ -113,7 +106,7 @@ public class TencentUtils {
      * @param signatureName    短信签名
      * @param templateId       模板id
      * @param templateParamSet 模板参数
-     * @return
+     * @return Map
      */
     public static Map<String, Object> generateRequestBody(String[] phones, String sdkAppId, String signatureName,
                                                           String templateId, String[] templateParamSet) {

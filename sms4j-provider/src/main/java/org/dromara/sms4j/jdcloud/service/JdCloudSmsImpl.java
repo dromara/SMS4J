@@ -97,7 +97,7 @@ public class JdCloudSmsImpl extends AbstractSmsBlend<JdCloudConfig> {
         try {
             smsResponse = getSmsResponse(result);
         } catch (SmsBlendException e) {
-            smsResponse = SmsRespUtils.error(e.getMessage(), getConfigId());
+            smsResponse = errorResp(e.message);
         }
         if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
             retry = 0;

@@ -10,7 +10,7 @@ import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
  * <p>类名: BaiduFactory
  * <p>说明：百度智能云 sms
  *
- * @author :bleachhtred
+ * @author :bleachtred
  * 2024/4/25  13:40
  **/
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -30,7 +30,7 @@ public class BaiduFactory extends AbstractProviderFactory<BaiduSmsImpl, BaiduCon
      * createSms
      * <p> 建造一个短信实现对像
      *
-     * @author :bleachhtred
+     * @author :bleachtred
      */
     @Override
     public BaiduSmsImpl createSms(BaiduConfig baiduConfig) {

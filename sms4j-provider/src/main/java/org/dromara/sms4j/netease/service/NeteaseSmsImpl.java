@@ -134,7 +134,7 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
         body.put("needUp", getConfig().getNeedUp());
 
         Map<String, String> headers = MapUtil.newHashMap(5, true);
-        headers.put("Content-Type", Constant.FROM_URLENCODED);
+        headers.put(Constant.CONTENT_TYPE, Constant.APPLICATION_FROM_URLENCODED);
         headers.put("AppKey", getConfig().getAccessKeyId());
         headers.put("Nonce", nonce);
         headers.put("CurTime", curTime);
@@ -143,7 +143,7 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
         try {
             smsResponse = getResponse(http.postFrom(requestUrl, headers, body));
         } catch (SmsBlendException e) {
-            smsResponse = SmsRespUtils.error(e.getMessage(), getConfigId());
+            smsResponse = errorResp(e.message);
         }
         if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
             retry = 0;

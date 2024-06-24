@@ -34,8 +34,8 @@ public class DingZhongHelper {
     public SmsResponse smsResponse(Map<String, Object> paramMap) {
         String url = String.format("%s/%s", config.getRequestUrl(), SmsUtils.isEmpty(paramMap.get("templateId"))?config.getBaseAction():config.getTemplateAction());
         Map<String, String> headers = MapUtil.newHashMap(2, true);
-        headers.put("Accept", Constant.ACCEPT);
-        headers.put("Content-Type", Constant.FROM_URLENCODED);
+        headers.put(Constant.ACCEPT, Constant.APPLICATION_JSON);
+        headers.put(Constant.CONTENT_TYPE, Constant.APPLICATION_FROM_URLENCODED);
         SmsResponse smsResponse;
         try {
             smsResponse = getResponse(http.postFrom(url, headers, paramMap));

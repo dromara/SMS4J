@@ -30,7 +30,7 @@ public class BudingV2SmsImpl extends AbstractSmsBlend<BudingV2Config> {
      */
     private int retry = 0;
 
-    private static final String URL = "https://smsapi.idcbdy.com";
+    private static final String URL = Constant.HTTPS_PREFIX + "smsapi.idcbdy.com";
 
     protected BudingV2SmsImpl(BudingV2Config config, Executor pool, DelayedTime delayed) {
         super(config, pool, delayed);
@@ -70,7 +70,7 @@ public class BudingV2SmsImpl extends AbstractSmsBlend<BudingV2Config> {
         try {
             smsResponse = getResponse(http.postFrom(URL + "/Api/Sent", headers, body));
         } catch (SmsBlendException e) {
-            smsResponse = SmsRespUtils.error(e.getMessage(), getConfigId());
+            smsResponse = errorResp(e.message);
         }
         if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
             retry = 0;
@@ -155,8 +155,8 @@ public class BudingV2SmsImpl extends AbstractSmsBlend<BudingV2Config> {
 
     private Map<String, String> getHeaders() {
         Map<String, String> headers = new HashMap<>();
-        headers.put("Accept", Constant.APPLICATION_JSON_UTF8);
-        headers.put("Content-Type", Constant.FROM_URLENCODED);
+        headers.put(Constant.ACCEPT, Constant.APPLICATION_JSON_UTF8);
+        headers.put(Constant.CONTENT_TYPE, Constant.APPLICATION_FROM_URLENCODED);
         return headers;
     }
 }

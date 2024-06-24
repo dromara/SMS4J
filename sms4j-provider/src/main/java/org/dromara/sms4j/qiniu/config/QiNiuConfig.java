@@ -2,6 +2,7 @@ package org.dromara.sms4j.qiniu.config;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.provider.config.BaseConfig;
 
@@ -18,7 +19,7 @@ public class QiNiuConfig extends BaseConfig {
     /**
      * 请求地址
      */
-    private String baseUrl = "https://sms.qiniuapi.com";
+    private String baseUrl = Constant.HTTPS_PREFIX + "sms.qiniuapi.com";
 
     /**
      * 模板变量名称

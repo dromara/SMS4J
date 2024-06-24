@@ -83,7 +83,7 @@ public class ZhangJunSmsImpl extends AbstractSmsBlend<ZhangJunConfig> {
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
         String messageStr = JSONUtil.toJsonStr(messages);
-        return getSmsResponse(SmsUtils.arrayToString(phones), messageStr, templateId);
+        return getSmsResponse(SmsUtils.addCodePrefixIfNot(phones), messageStr, templateId);
     }
 
     private SmsResponse getSmsResponse(String phone, String message, String templateId) {
@@ -91,7 +91,7 @@ public class ZhangJunSmsImpl extends AbstractSmsBlend<ZhangJunConfig> {
         try {
             smsResponse = getResponse(http.postJson(getConfig().getUrl(), null, message));
         } catch (SmsBlendException e) {
-            smsResponse = SmsRespUtils.error(e.getMessage(), getConfigId());
+            smsResponse = errorResp(e.message);
         }
         if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
             retry = 0;

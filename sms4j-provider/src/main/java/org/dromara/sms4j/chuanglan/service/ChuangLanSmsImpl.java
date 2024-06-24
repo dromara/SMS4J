@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.api.utils.SmsRespUtils;
 import org.dromara.sms4j.chuanglan.config.ChuangLanConfig;
+import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
@@ -85,7 +86,7 @@ public class ChuangLanSmsImpl extends AbstractSmsBlend<ChuangLanConfig> {
 
     private static LinkedHashMap<String, String> buildHeaders(){
         LinkedHashMap<String, String> headers = new LinkedHashMap<>(1);
-        headers.put("Content-Type", "application/json");
+        headers.put(Constant.CONTENT_TYPE, Constant.APPLICATION_JSON);
         return headers;
     }
 
@@ -104,7 +105,7 @@ public class ChuangLanSmsImpl extends AbstractSmsBlend<ChuangLanConfig> {
         try {
             smsResponse = getResponse(http.postJson(reqUrl, buildHeaders(), body));
         }catch (SmsBlendException e) {
-            smsResponse = SmsRespUtils.error(e.getMessage(), getConfigId());
+            smsResponse = errorResp(e.message);
         }
         if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
             retry = 0;

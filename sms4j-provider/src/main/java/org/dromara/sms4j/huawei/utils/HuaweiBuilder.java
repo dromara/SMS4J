@@ -2,6 +2,11 @@ package org.dromara.sms4j.huawei.utils;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.UUID;
+import cn.hutool.core.net.URLEncodeUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.digest.DigestUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 
@@ -9,17 +14,13 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
+@Slf4j
 public class HuaweiBuilder {
     private HuaweiBuilder() {
     }
@@ -32,22 +33,13 @@ public class HuaweiBuilder {
      */
     public static String buildWsseHeader(String appKey, String appSecret) {
         if (null == appKey || null == appSecret || appKey.isEmpty() || appSecret.isEmpty()) {
-            System.out.println("buildWsseHeader(): appKey or appSecret is null.");
-            return null;
+            log.error("buildWsseHeader(): appKey or appSecret is null.");
+            throw new SmsBlendException("buildWsseHeader(): appKey or appSecret is null.");
         }
         String time = dateFormat(new Date());
         // Nonce
-        String nonce = UUID.randomUUID().toString().replace("-", "");
-        MessageDigest md;
-        byte[] passwordDigest;
-
-        try {
-            md = MessageDigest.getInstance("SHA-256");
-            md.update((nonce + time + appSecret).getBytes());
-            passwordDigest = md.digest();
-        } catch (NoSuchAlgorithmException e) {
-            throw new SmsBlendException(e);
-        }
+        String nonce = UUID.fastUUID().toString(true);
+        byte[] passwordDigest = DigestUtil.sha256(nonce + time + appSecret);
         // PasswordDigest
         String passwordDigestBase64Str = Base64.encode(passwordDigest);
         //若passwordDigestBase64Str中包含换行符,请执行如下代码进行修正
@@ -91,12 +83,11 @@ public class HuaweiBuilder {
      */
     public static String buildRequestBody(String sender, String receiver, String templateId, String templateParas,
                                           String statusCallBack, String signature) {
-        if (null == sender || null == receiver || null == templateId || sender.isEmpty() || receiver.isEmpty()
-                || templateId.isEmpty()) {
-            System.out.println("buildRequestBody(): sender, receiver or templateId is null.");
-            return null;
+        if (StrUtil.hasBlank(sender, receiver, templateId)) {
+            log.error("buildRequestBody(): sender, receiver or templateId is null.");
+            throw new SmsBlendException("buildRequestBody(): sender, receiver or templateId is null.");
         }
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>(3);
 
         map.put("from", sender);
         map.put("to", receiver);
@@ -112,17 +103,7 @@ public class HuaweiBuilder {
         }
 
         StringBuilder sb = new StringBuilder();
-        String temp;
-
-        for (String s : map.keySet()) {
-            try {
-                temp = URLEncoder.encode(map.get(s), "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                throw new SmsBlendException(e);
-            }
-            sb.append(s).append("=").append(temp).append("&");
-        }
-
+        map.keySet().forEach(s -> sb.append(s).append("=").append(URLEncodeUtil.encode(map.get(s))).append("&"));
         return sb.deleteCharAt(sb.length() - 1).toString();
     }
 

@@ -2,6 +2,7 @@ package org.dromara.sms4j.zhutong.config;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.provider.config.BaseConfig;
 
@@ -20,15 +21,15 @@ import org.dromara.sms4j.provider.config.BaseConfig;
 public class ZhutongConfig extends BaseConfig  {
     /**
      * 模板变量名称
-     * 查看地址：https://mix2.zthysms.com/index.html#/TemplateManagement
+     * 查看地址：Constant.HTTPS_PREFIX + mix2.zthysms.com/index.html#/TemplateManagement
      * 允许为空，为空，使用无模板形式，发送短信
      */
     private String templateName;
     /**
      * 默认请求地址
-     * 不同区域，可切换请求地址，也可以不修改，请参考官方文档：https://doc.zthysms.com/web/#/1/236
+     * 不同区域，可切换请求地址，也可以不修改，请参考官方文档：Constant.HTTPS_PREFIX + doc.zthysms.com/web/#/1/236
      */
-    private String requestUrl = "https://api.mix2.zthysms.com/";
+    private String requestUrl = Constant.HTTPS_PREFIX + "api.mix2.zthysms.com/";
 
     /**
      * 获取供应商

@@ -50,12 +50,12 @@ public class EmaySmsImpl extends AbstractSmsBlend<EmayConfig> {
         Map<String, Object> params = EmayBuilder.buildRequestBody(config.getAccessKeyId(), config.getAccessKeySecret(), phone, message);
 
         Map<String, String> headers = MapUtil.newHashMap(1, true);
-        headers.put("Content-Type", Constant.FROM_URLENCODED);
+        headers.put(Constant.CONTENT_TYPE, Constant.APPLICATION_FROM_URLENCODED);
         SmsResponse smsResponse;
         try {
             smsResponse = getResponse(http.postUrl(url, headers, params));
         } catch (SmsBlendException e) {
-            smsResponse = SmsRespUtils.error(e.message, config.getConfigId());
+            smsResponse = errorResp(e.message);
         }
         if (smsResponse.isSuccess() || retry == config.getMaxRetries()) {
             retry = 0;
@@ -97,7 +97,7 @@ public class EmaySmsImpl extends AbstractSmsBlend<EmayConfig> {
         if (phones.size() > 500) {
             throw new SmsBlendException("单次发送超过最大发送上限，建议每次群发短信人数低于500");
         }
-        return sendMessage(SmsUtils.listToString(phones), message);
+        return sendMessage(SmsUtils.joinComma(phones), message);
     }
 
     @Override
@@ -109,7 +109,7 @@ public class EmaySmsImpl extends AbstractSmsBlend<EmayConfig> {
         for (Map.Entry<String, String> entry : messages.entrySet()) {
             list.add(entry.getValue());
         }
-        return sendMessage(SmsUtils.listToString(phones), EmayBuilder.listToString(list));
+        return sendMessage(SmsUtils.joinComma(phones), EmayBuilder.listToString(list));
     }
 
     private SmsResponse getResponse(JSONObject resJson) {

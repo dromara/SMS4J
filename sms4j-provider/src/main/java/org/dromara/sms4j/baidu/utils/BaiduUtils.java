@@ -8,16 +8,15 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.baidu.config.BaiduConfig;
+import org.dromara.sms4j.comm.constant.Constant;
+import org.dromara.sms4j.comm.utils.SmsDateUtils;
 
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BaiduUtils {
-
-    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     /**
      * 创建前缀字符串
@@ -25,8 +24,7 @@ public class BaiduUtils {
      * @return bce-auth-v1/{accessKeyId}/{timestamp}/{expirationPeriodInSeconds }
      */
     private static String authStringPrefix(String accessKeyId){
-        SDF.setTimeZone(new SimpleTimeZone(0, "GMT"));
-        return "bce-auth-v1/" + accessKeyId + "/" + SDF.format(new Date()) + "/1800";
+        return "bce-auth-v1/" + accessKeyId + "/" + SmsDateUtils.utcGmt(new Date()) + "/1800";
     }
 
     /**
@@ -98,7 +96,7 @@ public class BaiduUtils {
         String authorization = authStringPrefix + "/" + "/" + signature;
 
         Map<String, String> headers = new HashMap<>(2);
-        headers.put("Authorization", authorization);
+        headers.put(Constant.AUTHORIZATION, authorization);
         headers.put("host", config.getHost());
         return headers;
     }

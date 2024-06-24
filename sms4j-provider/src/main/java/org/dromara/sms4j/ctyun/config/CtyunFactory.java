@@ -10,7 +10,7 @@ import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
  * <p>类名: CtyunSmsConfig
  * <p>说明： 天翼云 云通信短信配置器
  *
- * @author :bleachhtred
+ * @author :bleachtred
  * 2023/5/12  15:06
  **/
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -30,7 +30,7 @@ public class CtyunFactory extends AbstractProviderFactory<CtyunSmsImpl, CtyunCon
      * getCtyunSms
      * <p> 建造一个短信实现对像
      *
-     * @author :bleachhtred
+     * @author :bleachtred
      */
     @Override
     public CtyunSmsImpl createSms(CtyunConfig ctyunConfig) {

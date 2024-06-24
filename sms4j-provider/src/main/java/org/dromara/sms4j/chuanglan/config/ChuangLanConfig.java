@@ -2,6 +2,7 @@ package org.dromara.sms4j.chuanglan.config;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.provider.config.BaseConfig;
 
@@ -17,7 +18,7 @@ public class ChuangLanConfig extends BaseConfig {
     /**
      * 基础路径
      */
-    private String baseUrl = "https://smssh1.253.com/msg";
+    private String baseUrl = Constant.HTTPS_PREFIX + "smssh1.253.com/msg";
 
     /**
      * 短信发送路径

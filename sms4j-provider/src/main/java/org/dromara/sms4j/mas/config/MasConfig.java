@@ -9,7 +9,7 @@ import org.dromara.sms4j.provider.config.BaseConfig;
  * <p>类名: MasConfig
  * <p>说明：中国移动 云MAS
  *
- * @author :bleachhtred
+ * @author :bleachtred
  * 2024/4/22  13:40
  **/
 @Data

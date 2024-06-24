@@ -2,6 +2,7 @@ package org.dromara.sms4j.baidu.config;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.provider.config.BaseConfig;
 
@@ -9,7 +10,7 @@ import org.dromara.sms4j.provider.config.BaseConfig;
  * <p>类名: BaiduConfig
  * <p>说明：百度智能云 sms
  *
- * @author :bleachhtred
+ * @author :bleachtred
  * 2024/4/25  13:40
  **/
 @Data
@@ -19,7 +20,7 @@ public class BaiduConfig extends BaseConfig {
     /**
      * 请求地址
      */
-    private String host = "https://smsv3.bj.baidubce.com";
+    private String host = Constant.HTTPS_PREFIX + "smsv3.bj.baidubce.com";
 
     /**
      * 接口名称

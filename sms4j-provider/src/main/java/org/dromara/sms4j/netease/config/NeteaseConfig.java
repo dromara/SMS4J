@@ -2,6 +2,7 @@ package org.dromara.sms4j.netease.config;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.provider.config.BaseConfig;
 
@@ -21,18 +22,17 @@ public class NeteaseConfig extends BaseConfig {
     /**
      * 模板短信请求地址
      */
-    private String templateUrl = "https://api.netease.im/sms/sendtemplate.action";
-
+    private String templateUrl = Constant.HTTPS_PREFIX + "api.netease.im/sms/sendtemplate.action";
 
     /**
      * 验证码短信请求地址
      */
-    private String codeUrl = "https://api.netease.im/sms/sendcode.action";
+    private String codeUrl = Constant.HTTPS_PREFIX + "api.netease.im/sms/sendcode.action";
 
     /**
      * 验证码验证请求地址
      */
-    private String verifyUrl = "https://api.netease.im/sms/verifycode.action";
+    private String verifyUrl = Constant.HTTPS_PREFIX + "api.netease.im/sms/verifycode.action";
 
     /**
      * 是否需要支持短信上行。true:需要，false:不需要

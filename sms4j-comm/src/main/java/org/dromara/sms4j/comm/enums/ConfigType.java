@@ -1,4 +1,4 @@
-package org.dromara.sms4j.comm.enumerate;
+package org.dromara.sms4j.comm.enums;
 
 import lombok.Getter;
 

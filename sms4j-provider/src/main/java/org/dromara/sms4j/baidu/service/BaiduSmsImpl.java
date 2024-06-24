@@ -23,7 +23,7 @@ import java.util.concurrent.Executor;
  * <p>类名: BaiduSmsImpl
  * <p>说明：百度智能云 sms
  *
- * @author :bleachhtred
+ * @author :bleachtred
  * 2024/4/25  13:40
  **/
 @Slf4j
@@ -79,7 +79,7 @@ public class BaiduSmsImpl extends AbstractSmsBlend<BaiduConfig> {
         if (CollUtil.isEmpty(messages)){
             messages = new LinkedHashMap<>();
         }
-        return getSmsResponse(SmsUtils.arrayToString(phones), templateId, messages);
+        return getSmsResponse(SmsUtils.addCodePrefixIfNot(phones), templateId, messages);
     }
 
     private SmsResponse getSmsResponse(String phone, String templateId, LinkedHashMap<String, String> messages) {
@@ -128,7 +128,7 @@ public class BaiduSmsImpl extends AbstractSmsBlend<BaiduConfig> {
         if (CollUtil.isEmpty(messages)){
             messages = new LinkedHashMap<>();
         }
-        return getSmsResponseWithClientToken(SmsUtils.arrayToString(phones), templateId, messages, clientToken);
+        return getSmsResponseWithClientToken(SmsUtils.addCodePrefixIfNot(phones), templateId, messages, clientToken);
     }
 
     private SmsResponse getSmsResponseWithClientToken(String phone, String templateId, LinkedHashMap<String, String> messages, String clientToken) {
@@ -158,7 +158,7 @@ public class BaiduSmsImpl extends AbstractSmsBlend<BaiduConfig> {
         try {
             smsResponse = getResponse(http.postJson(config.getHost() + config.getAction(), headers, body));
         } catch (SmsBlendException e) {
-            smsResponse = SmsRespUtils.error(e.getMessage(), getConfigId());
+            smsResponse = errorResp(e.message);
         }
         if (smsResponse.isSuccess() || retry == config.getMaxRetries()) {
             retry = 0;

@@ -22,7 +22,7 @@ import java.util.concurrent.Executor;
  * <p>类名: CtyunSmsImpl
  * <p>说明： 天翼云短信实现
  *
- * @author :bleachhtred
+ * @author :bleachtred
  * 2023/5/12  15:06
  **/
 @Slf4j
@@ -80,7 +80,7 @@ public class CtyunSmsImpl extends AbstractSmsBlend<CtyunConfig> {
             messages = new LinkedHashMap<>();
         }
         String messageStr = JSONUtil.toJsonStr(messages);
-        return getSmsResponse(SmsUtils.arrayToString(phones), messageStr, templateId);
+        return getSmsResponse(SmsUtils.addCodePrefixIfNot(phones), messageStr, templateId);
     }
 
     private SmsResponse getSmsResponse(String phone, String message, String templateId) {
@@ -101,7 +101,7 @@ public class CtyunSmsImpl extends AbstractSmsBlend<CtyunConfig> {
                     CtyunUtils.signHeader(paramStr, config.getAccessKeyId(), config.getAccessKeySecret()),
                     paramStr));
         } catch (SmsBlendException e) {
-            smsResponse = SmsRespUtils.error(e.message, config.getConfigId());
+            smsResponse = errorResp(e.message);
         }
         if (smsResponse.isSuccess() || retry == config.getMaxRetries()) {
             retry = 0;

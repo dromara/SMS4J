@@ -4,15 +4,14 @@ import cn.hutool.crypto.digest.HMac;
 import cn.hutool.crypto.digest.HmacAlgorithm;
 import org.dromara.sms4j.aliyun.config.AlibabaConfig;
 import org.dromara.sms4j.comm.constant.Constant;
+import org.dromara.sms4j.comm.utils.SmsDateUtils;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.SimpleTimeZone;
 import java.util.TreeMap;
 import java.util.UUID;
 
@@ -27,18 +26,15 @@ public class AliyunUtils {
      */
     private static final String ALGORITHM = "HMAC-SHA1";
 
-    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-
     public static String generateSendSmsRequestUrl(AlibabaConfig alibabaConfig, String message, String phone, String templateId) throws Exception {
         // 这里一定要设置GMT时区
-        SDF.setTimeZone(new SimpleTimeZone(0, "GMT"));
         Map<String, String> paras = new HashMap<>();
         // 1. 公共请求参数
         paras.put("SignatureMethod", ALGORITHM);
         paras.put("SignatureNonce", UUID.randomUUID().toString());
         paras.put("AccessKeyId", alibabaConfig.getAccessKeyId());
         paras.put("SignatureVersion", "1.0");
-        paras.put("Timestamp", SDF.format(new Date()));
+        paras.put("Timestamp", SmsDateUtils.utcGmt(new Date()));
         paras.put("Format", "JSON");
         paras.put("Action", alibabaConfig.getAction());
         paras.put("Version", alibabaConfig.getVersion());
@@ -110,10 +106,10 @@ public class AliyunUtils {
     /**
      * 生成请求参数body字符串
      *
-     * @param alibabaConfig
-     * @param phone
-     * @param message
-     * @param templateId
+     * @param alibabaConfig 配置数据
+     * @param phone         手机号
+     * @param message       短信内容
+     * @param templateId    模板id
      */
     public static String generateParamBody(AlibabaConfig alibabaConfig, String phone, String message, String templateId) throws Exception {
         Map<String, String> paramMap = generateParamMap(alibabaConfig, phone, message, templateId);

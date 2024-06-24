@@ -10,7 +10,7 @@ import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
  * <p>类名: MasFactory
  * <p>说明：中国移动 云MAS短信配置器
  *
- * @author :bleachhtred
+ * @author :bleachtred
  * 2024/4/22  13:40
  **/
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -30,7 +30,7 @@ public class MasFactory extends AbstractProviderFactory<MasSmsImpl, MasConfig> {
      * createSms
      * <p> 建造一个短信实现对像
      *
-     * @author :bleachhtred
+     * @author :bleachtred
      */
     @Override
     public MasSmsImpl createSms(MasConfig masConfig) {

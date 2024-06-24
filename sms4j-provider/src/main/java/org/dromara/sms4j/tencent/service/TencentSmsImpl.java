@@ -53,7 +53,7 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
 
     @Override
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
-        return getSmsResponse(new String[]{StrUtil.addPrefixIfNot(phone, "+86")}, toArray(messages), templateId);
+        return getSmsResponse(new String[]{StrUtil.addPrefixIfNot(phone, "+86")}, SmsUtils.toArray(messages), templateId);
     }
 
     @Override
@@ -63,11 +63,7 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
 
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
-        return getSmsResponse(SmsUtils.listToArray(phones), toArray(messages), templateId);
-    }
-
-    private String[] toArray(LinkedHashMap<String, String> messages){
-        return SmsUtils.toArray(messages.values(), SmsUtils::isNotEmpty, s -> s, new String[0]);
+        return getSmsResponse(SmsUtils.addCodePrefixIfNotToArray(phones), SmsUtils.toArray(messages), templateId);
     }
 
     private SmsResponse getSmsResponse(String[] phones, String[] messages, String templateId) {
@@ -89,7 +85,7 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
         try {
             smsResponse = getResponse(http.postJson(url, headsMap, requestBody));
         } catch (SmsBlendException e) {
-            smsResponse = SmsRespUtils.error(e.getMessage(), getConfigId());
+            smsResponse = errorResp(e.message);
         }
         if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
             retry = 0;

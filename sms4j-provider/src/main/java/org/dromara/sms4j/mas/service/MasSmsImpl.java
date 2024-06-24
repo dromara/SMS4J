@@ -22,7 +22,7 @@ import java.util.concurrent.Executor;
  * <p>类名: MasSmsImpl
  * <p>说明：中国移动 云MAS短信实现
  *
- * @author :bleachhtred
+ * @author :bleachtred
  * 2024/4/22  13:40
  **/
 @Slf4j
@@ -67,7 +67,7 @@ public class MasSmsImpl extends AbstractSmsBlend<MasConfig> {
 
     @Override
     public SmsResponse massTexting(List<String> phones, String message) {
-        return getSmsResponse(SmsUtils.arrayToString(phones), message, getConfig().getTemplateId());
+        return getSmsResponse(SmsUtils.addCodePrefixIfNot(phones), message, getConfig().getTemplateId());
     }
 
     @Override
@@ -76,7 +76,7 @@ public class MasSmsImpl extends AbstractSmsBlend<MasConfig> {
             messages = new LinkedHashMap<>();
         }
         String messageStr = JSONUtil.toJsonStr(messages);
-        return getSmsResponse(SmsUtils.arrayToString(phones), messageStr, templateId);
+        return getSmsResponse(SmsUtils.addCodePrefixIfNot(phones), messageStr, templateId);
     }
 
     private SmsResponse getSmsResponse(String phone, String message, String templateId) {
@@ -95,7 +95,7 @@ public class MasSmsImpl extends AbstractSmsBlend<MasConfig> {
         try {
             smsResponse = getResponse(http.postJson(requestUrl, null, base64Code));
         } catch (SmsBlendException e) {
-            smsResponse = SmsRespUtils.error(e.getMessage(), getConfigId());
+            smsResponse = errorResp(e.message);
         }
         if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
             retry = 0;

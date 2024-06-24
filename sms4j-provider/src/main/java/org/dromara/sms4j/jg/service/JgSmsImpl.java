@@ -9,7 +9,7 @@ import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtils;
 import org.dromara.sms4j.jg.config.JgConfig;
-import org.dromara.sms4j.jg.util.JgHelper;
+import org.dromara.sms4j.jg.util.JgUtils;
 import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 
 import java.util.LinkedHashMap;
@@ -82,7 +82,7 @@ public class JgSmsImpl extends AbstractSmsBlend<JgConfig> {
         if (SmsUtils.isEmpty(messages)){
             messages = new LinkedHashMap<>();
         }
-        return getSmsResponse(SmsUtils.arrayToString(phones), messages, templateId, null, null);
+        return getSmsResponse(SmsUtils.addCodePrefixIfNot(phones), messages, templateId, null, null);
     }
 
     /**
@@ -109,14 +109,14 @@ public class JgSmsImpl extends AbstractSmsBlend<JgConfig> {
                                        String templateId, String code, String msgId) {
         SmsResponse smsResponse;
         JgConfig config = getConfig();
-        String url = JgHelper.buildUrl(config.getRequestUrl(), config.getAction(), msgId);
-        Map<String, String> headers = JgHelper.buildHeaders(config.getAccessKeyId(), config.getAccessKeySecret());
-        Map<String, Object> body= JgHelper.buildBody(phone, messages, templateId, config, code);
-        String jsonKey = JgHelper.buildJsonKey(config.getAction());
+        String url = JgUtils.buildUrl(config.getRequestUrl(), config.getAction(), msgId);
+        Map<String, String> headers = JgUtils.buildHeaders(config.getAccessKeyId(), config.getAccessKeySecret());
+        Map<String, Object> body= JgUtils.buildBody(phone, messages, templateId, config, code);
+        String jsonKey = JgUtils.buildJsonKey(config.getAction());
         try {
             smsResponse = getResponse(http.postJson(url, headers, body), jsonKey);
         } catch (SmsBlendException e) {
-            smsResponse = SmsRespUtils.error(e.message, config.getConfigId());
+            smsResponse = errorResp(e.message);
         }
 
         if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {

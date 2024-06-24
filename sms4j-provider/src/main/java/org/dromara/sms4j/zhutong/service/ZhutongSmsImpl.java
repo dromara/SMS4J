@@ -148,12 +148,12 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
         json.put("content", content);
 
         Map<String, String> headers = MapUtil.newHashMap(1, true);
-        headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
+        headers.put(Constant.CONTENT_TYPE, Constant.APPLICATION_JSON_UTF8);
         SmsResponse smsResponse;
         try {
             smsResponse = getResponse(http.postJson(url, headers, json));
         } catch (SmsBlendException e) {
-            smsResponse = SmsRespUtils.error(e.getMessage(), getConfigId());
+            smsResponse = errorResp(e.message);
         }
         if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
             retry = 0;
@@ -234,12 +234,12 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
         requestJson.set("records", records);
 
         Map<String, String> headers = MapUtil.newHashMap(1, true);
-        headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
+        headers.put(Constant.CONTENT_TYPE, Constant.APPLICATION_JSON_UTF8);
         SmsResponse smsResponse;
         try {
             smsResponse = getResponse(http.postJson(url, headers, requestJson.toString()));
         } catch (SmsBlendException e) {
-            smsResponse = SmsRespUtils.error(e.getMessage(), getConfigId());
+            smsResponse = errorResp(e.message);
         }
         if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
             retry = 0;

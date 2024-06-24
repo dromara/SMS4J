@@ -81,4 +81,16 @@ public abstract class SupplierConstant {
      * 百度云 sms
      */
     public static final String BAIDU = "baidu";
+    /**
+     * 螺丝帽 sms
+     */
+    public static final String LUO_SI_MAO = "luosimao";
+    /**
+     * SUBMAIL sms
+     */
+    public static final String MY_SUBMAIL = "mysubmail";
+    /**
+     * danmi sms
+     */
+    public static final String DAN_MI = "danmi";
 }

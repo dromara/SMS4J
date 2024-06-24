@@ -2,6 +2,7 @@ package org.dromara.sms4j.ctyun.config;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.provider.config.BaseConfig;
 
@@ -9,7 +10,7 @@ import org.dromara.sms4j.provider.config.BaseConfig;
  * <p>类名: CtyunConfig
  * <p>说明： 天翼云短信差异配置
  *
- * @author :bleachhtred
+ * @author :bleachtred
  * 2023/5/12  15:06
  **/
 @Data
@@ -24,7 +25,7 @@ public class CtyunConfig extends BaseConfig {
     /**
      * 请求地址
      */
-    private String requestUrl = "https://sms-global.ctapi.ctyun.cn/sms/api/v1";
+    private String requestUrl = Constant.HTTPS_PREFIX + "sms-global.ctapi.ctyun.cn/sms/api/v1";
 
     /**
      * 接口名称

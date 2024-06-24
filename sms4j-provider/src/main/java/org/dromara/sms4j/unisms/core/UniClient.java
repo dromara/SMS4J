@@ -85,8 +85,8 @@ public class UniClient {
     public UniResponse request(final String action, final Map<String, Object> data) throws SmsBlendException {
         Map<String, String> headers = new HashMap<>();
         headers.put("User-Agent", USER_AGENT);
-        headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
-        headers.put("Accept", Constant.ACCEPT);
+        headers.put(Constant.CONTENT_TYPE, Constant.APPLICATION_JSON_UTF8);
+        headers.put(Constant.ACCEPT, Constant.APPLICATION_JSON);
         String url;
         if (this.isSimple) {
             url = this.endpoint + "?action=" + action + "&accessKeyId=" + this.accessKeyId;

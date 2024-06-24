@@ -179,8 +179,8 @@ public class LianLuSmsImpl extends AbstractSmsBlend<LianLuConfig> {
 
         try {
             Map<String, String> headers = new HashMap<>(2);
-            headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
-            headers.put("Accept", Constant.ACCEPT);
+            headers.put(Constant.CONTENT_TYPE, Constant.APPLICATION_JSON_UTF8);
+            headers.put(Constant.ACCEPT, Constant.APPLICATION_JSON);
             SmsResponse smsResponse = this.getResponse(this.http.postJson(reqUrl, headers, requestBody));
             if (!smsResponse.isSuccess() && this.retry != this.getConfig().getMaxRetries()) {
                 return this.requestRetry(req);

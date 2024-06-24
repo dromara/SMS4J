@@ -4,7 +4,7 @@ import cn.hutool.core.util.ObjectUtil;
 import lombok.SneakyThrows;
 import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.comm.constant.Constant;
-import org.dromara.sms4j.comm.enumerate.ConfigType;
+import org.dromara.sms4j.comm.enums.ConfigType;
 import org.dromara.sms4j.core.datainterface.SmsReadConfig;
 import org.dromara.sms4j.provider.config.SmsConfig;
 import org.dromara.sms4j.provider.factory.BaseProviderFactory;

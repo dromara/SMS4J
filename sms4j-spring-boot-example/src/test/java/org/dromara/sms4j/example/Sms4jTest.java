@@ -13,19 +13,18 @@ import org.dromara.sms4j.baidu.service.BaiduSmsImpl;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.utils.SmsUtils;
 import org.dromara.sms4j.core.factory.SmsFactory;
+import org.dromara.sms4j.danmi.service.DanMiSmsImpl;
 import org.dromara.sms4j.jg.service.JgSmsImpl;
 import org.dromara.sms4j.lianlu.service.LianLuSmsImpl;
+import org.dromara.sms4j.luosimao.service.LuoSiMaoSmsImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @SpringBootTest
-class Sms4jTest {
+public class Sms4jTest {
 
     /**
      * 填测试手机号
@@ -432,6 +431,99 @@ class Sms4jTest {
         phones.add("xxx");
         SmsResponse smsResponse4 = SmsFactory.getBySupplier(SupplierConstant.JIGUANG).massTexting(phones, "226992", map3);
         Assert.isTrue(smsResponse4.isSuccess());
+    }
+
+    /**
+     * 螺丝帽短信
+     */
+    @Test
+    public void luosimaoSmsTest() {
+        // 螺丝帽 发送短信接口详细 发送短信接口详细 send.json
+        SmsResponse smsResponse1 = SmsFactory.getBySupplier(SupplierConstant.LUO_SI_MAO).sendMessage(PHONE, "");
+        Assert.isTrue(smsResponse1.isSuccess());
+
+        // 螺丝帽 批量发送接口详细 send_batch.json
+        SmsResponse smsResponse2 = SmsFactory.getBySupplier(SupplierConstant.LUO_SI_MAO).massTexting(Collections.singletonList(PHONE), "");
+        Assert.isTrue(smsResponse2.isSuccess());
+
+        // 螺丝帽 定时批量发送接口详细 send_batch.json
+        LuoSiMaoSmsImpl luoSiMao = (LuoSiMaoSmsImpl) SmsFactory.getBySupplier(SupplierConstant.LUO_SI_MAO);
+        SmsResponse smsResponse3 = luoSiMao.massTextingOnTime(Collections.singletonList(PHONE), "", new Date());
+        Assert.isTrue(smsResponse3.isSuccess());
+
+        // 螺丝帽 查询账户余额 status.json
+        SmsResponse smsResponse4 = luoSiMao.queryAccountBalance();
+        Assert.isTrue(smsResponse4.isSuccess());
+    }
+
+    /**
+     * SUBMAIL短信
+     */
+    @Test
+    public void mysubmailSmsTest() {
+        // 短信发送 send.json 【xxxx】签名可配置 系统自动带入
+        SmsResponse smsResponse1 = SmsFactory.getBySupplier(SupplierConstant.MY_SUBMAIL).sendMessage(PHONE, "【SUBMAIL】你好，你的验证码是2257");
+        Assert.isTrue(smsResponse1.isSuccess());
+
+        // 短信模板发送 xsend.json
+        LinkedHashMap<String, String> vars = new LinkedHashMap<>();
+        vars.put("code", "123456");
+        SmsResponse smsResponse2 = SmsFactory.getBySupplier(SupplierConstant.MY_SUBMAIL).sendMessage(PHONE, "xxx", vars);
+        Assert.isTrue(smsResponse2.isSuccess());
+
+        // 短信一对多发送 multisend.json 【xxxx】签名可配置 系统自动带入 content字段说明：短信正文 案例没有说明无需传
+        LinkedHashMap<String, String> vars1 = new LinkedHashMap<>();
+        vars1.put("content", "【SUBMAIL】您的短信验证码：4438，请在10分钟内输入。");
+        vars1.put("code", "123456");
+        vars1.put("time", "10");
+        SmsResponse smsResponse3 = SmsFactory.getBySupplier(SupplierConstant.MY_SUBMAIL).massTexting(Collections.singletonList(PHONE), JSONUtil.toJsonStr(vars1));
+        Assert.isTrue(smsResponse3.isSuccess());
+
+        // 短信模板一对多发送 multixsend.json
+        LinkedHashMap<String, String> vars2 = new LinkedHashMap<>();
+        vars2.put("code", "123456");
+        SmsResponse smsResponse4 = SmsFactory.getBySupplier(SupplierConstant.MY_SUBMAIL).massTexting(Collections.singletonList(PHONE), "xxx", vars2);
+        Assert.isTrue(smsResponse4.isSuccess());
+
+        // 短信批量群发 batchsend.json 【xxxx】签名可配置 系统自动带入 content字段说明：短信正文 案例没有说明无需传
+        LinkedHashMap<String, String> vars3 = new LinkedHashMap<>();
+        vars3.put("content", "123456");
+        SmsResponse smsResponse5 = SmsFactory.getBySupplier(SupplierConstant.MY_SUBMAIL).massTexting(Collections.singletonList(PHONE), JSONUtil.toJsonStr(vars3));
+        Assert.isTrue(smsResponse5.isSuccess());
+
+        // 短信批量模板群发 batchxsend.json
+        LinkedHashMap<String, String> vars4 = new LinkedHashMap<>();
+        vars4.put("code", "123456");
+        vars4.put("time", "10");
+        SmsResponse smsResponse6 = SmsFactory.getBySupplier(SupplierConstant.MY_SUBMAIL).massTexting(Collections.singletonList(PHONE), "xxx", vars4);
+        Assert.isTrue(smsResponse6.isSuccess());
+    }
+
+    /**
+     * danmi短信
+     */
+    @Test
+    public void danmiSmsTest() {
+        // 短信发送 distributor/sendSMS 群发 massTexting
+        SmsResponse smsResponse1 = SmsFactory.getBySupplier(SupplierConstant.DAN_MI).sendMessage(PHONE, "【danmi】你好，你的验证码是666");
+        Assert.isTrue(smsResponse1.isSuccess());
+
+        DanMiSmsImpl danMiSms = (DanMiSmsImpl) SmsFactory.getBySupplier(SupplierConstant.DAN_MI);
+        // 短信余额查询 distributor/user/query
+        SmsResponse smsResponse2 = danMiSms.queryBalance();
+        Assert.isTrue(smsResponse2.isSuccess());
+
+        // 语音验证码发送 voice/voiceCode
+        SmsResponse smsResponse3 = danMiSms.voiceCode(PHONE, "666");
+        Assert.isTrue(smsResponse3.isSuccess());
+
+        // 语音通知文件发送 voice/voiceNotify
+        SmsResponse smsResponse4 = danMiSms.voiceNotify(PHONE, "sjkhduiq");
+        Assert.isTrue(smsResponse4.isSuccess());
+
+        // 语音模板通知发送 voice/voiceTemplate
+        SmsResponse smsResponse5 = danMiSms.voiceTemplate(PHONE, "opipedlqza", "111,222,333");
+        Assert.isTrue(smsResponse5.isSuccess());
     }
 
 }

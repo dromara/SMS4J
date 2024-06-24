@@ -44,9 +44,9 @@ public class CloopenHelper {
                 config.getAccessKeyId(),
                 this.generateSign(config.getAccessKeyId(), config.getAccessKeySecret(), timestamp));
         Map<String, String> headers = MapUtil.newHashMap(3, true);
-        headers.put("Accept", Constant.ACCEPT);
-        headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
-        headers.put("Authorization", this.generateAuthorization(config.getAccessKeyId(), timestamp));
+        headers.put(Constant.ACCEPT, Constant.APPLICATION_JSON);
+        headers.put(Constant.CONTENT_TYPE, Constant.APPLICATION_JSON_UTF8);
+        headers.put(Constant.AUTHORIZATION, this.generateAuthorization(config.getAccessKeyId(), timestamp));
         SmsResponse smsResponse;
         try {
             smsResponse = getResponse(http.postJson(url, headers, paramMap));

@@ -31,6 +31,7 @@ import org.dromara.sms4j.core.proxy.processor.CoreMethodParamValidateProcessor;
 import org.dromara.sms4j.core.proxy.processor.RestrictedProcessor;
 import org.dromara.sms4j.core.proxy.processor.SingleBlendRestrictedProcessor;
 import org.dromara.sms4j.ctyun.config.CtyunFactory;
+import org.dromara.sms4j.danmi.config.DanMiFactory;
 import org.dromara.sms4j.dingzhong.config.DingZhongFactory;
 import org.dromara.sms4j.emay.config.EmayFactory;
 import org.dromara.sms4j.huawei.config.HuaweiFactory;
@@ -39,6 +40,7 @@ import org.dromara.sms4j.jdcloud.config.JdCloudFactory;
 import org.dromara.sms4j.chuanglan.config.ChuangLanFactory;
 import org.dromara.sms4j.jg.config.JgFactory;
 import org.dromara.sms4j.lianlu.config.LianLuFactory;
+import org.dromara.sms4j.luosimao.config.LuoSiMaoFactory;
 import org.dromara.sms4j.mas.config.MasFactory;
 import org.dromara.sms4j.netease.config.NeteaseFactory;
 import org.dromara.sms4j.provider.config.SmsConfig;
@@ -46,6 +48,7 @@ import org.dromara.sms4j.provider.factory.BaseProviderFactory;
 import org.dromara.sms4j.provider.factory.BeanFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 import org.dromara.sms4j.qiniu.config.QiNiuFactory;
+import org.dromara.sms4j.submail.config.SubMailFactory;
 import org.dromara.sms4j.tencent.config.TencentFactory;
 import org.dromara.sms4j.unisms.config.UniFactory;
 import org.dromara.sms4j.yunpian.config.YunPianFactory;
@@ -234,7 +237,7 @@ public class SEInitializer {
                 continue;
             }
             configMap.put("config-id", configId);
-            SmsUtils.replaceKeysSeperator(configMap, "-", "_");
+            SmsUtils.replaceKeysSeparator(configMap, "-", "_");
             JSONObject configJson = new JSONObject(configMap);
             SupplierConfig supplierConfig = JSONUtil.toBean(configJson, providerFactory.getConfigClass());
             SmsFactory.createSmsBlend(supplierConfig);
@@ -257,12 +260,15 @@ public class SEInitializer {
         ProviderFactoryHolder.registerFactory(ZhutongFactory.instance());
         ProviderFactoryHolder.registerFactory(LianLuFactory.instance());
         ProviderFactoryHolder.registerFactory(DingZhongFactory.instance());
+        ProviderFactoryHolder.registerFactory(QiNiuFactory.instance());
         ProviderFactoryHolder.registerFactory(ChuangLanFactory.instance());
         ProviderFactoryHolder.registerFactory(JgFactory.instance());
-        ProviderFactoryHolder.registerFactory(QiNiuFactory.instance());
         ProviderFactoryHolder.registerFactory(BudingV2Factory.instance());
         ProviderFactoryHolder.registerFactory(MasFactory.instance());
         ProviderFactoryHolder.registerFactory(BaiduFactory.instance());
+        ProviderFactoryHolder.registerFactory(LuoSiMaoFactory.instance());
+        ProviderFactoryHolder.registerFactory(SubMailFactory.instance());
+        ProviderFactoryHolder.registerFactory(DanMiFactory.instance());
         if (SmsUtils.isClassExists("com.jdcloud.sdk.auth.CredentialsProvider")) {
             ProviderFactoryHolder.registerFactory(JdCloudFactory.instance());
         }

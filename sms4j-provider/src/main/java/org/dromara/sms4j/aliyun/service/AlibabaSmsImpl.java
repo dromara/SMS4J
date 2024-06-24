@@ -93,7 +93,7 @@ public class AlibabaSmsImpl extends AbstractSmsBlend<AlibabaConfig> {
             messages = new LinkedHashMap<>();
         }
         String messageStr = JSONUtil.toJsonStr(messages);
-        return getSmsResponse(SmsUtils.arrayToString(phones), messageStr, templateId);
+        return getSmsResponse(SmsUtils.addCodePrefixIfNot(phones), messageStr, templateId);
     }
 
     private SmsResponse getSmsResponse(String phone, String message, String templateId) {
@@ -109,12 +109,12 @@ public class AlibabaSmsImpl extends AbstractSmsBlend<AlibabaConfig> {
         log.debug("requestUrl {}", requestUrl);
 
         Map<String, String> headers = MapUtil.newHashMap(1, true);
-        headers.put("Content-Type", Constant.FROM_URLENCODED);
+        headers.put(Constant.CONTENT_TYPE, Constant.APPLICATION_FROM_URLENCODED);
         SmsResponse smsResponse;
         try {
             smsResponse = getResponse(http.postJson(requestUrl, headers, paramStr));
         } catch (SmsBlendException e) {
-            smsResponse = SmsRespUtils.error(e.getMessage(), getConfigId());
+            smsResponse = errorResp(e.message);
         }
         if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
             retry = 0;

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class ConfigCombineMapAdeptor<S, M> extends HashMap {
+public class ConfigCombineMapAdaptor<S, M> extends HashMap {
     @Override
     public M get(Object key) {
         Object o = super.get(key);
@@ -41,6 +41,4 @@ public class ConfigCombineMapAdeptor<S, M> extends HashMap {
         }
         return (M)o;
     }
-
-
 }

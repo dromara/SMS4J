@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * 2024/3/15
  **/
 @Slf4j
-public class JgHelper {
+public class JgUtils {
 
     /**
      * 构造请求地址
@@ -48,9 +48,9 @@ public class JgHelper {
         check(accessKeyId);
         check(accessKeySecret);
         Map<String, String> headers = new LinkedHashMap<>(3);
-        headers.put("Accept", Constant.ACCEPT);
-        headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
-        headers.put("Authorization", "Basic " + Base64.encode(accessKeyId + ":" + accessKeySecret, StandardCharsets.UTF_8));
+        headers.put(Constant.ACCEPT, Constant.APPLICATION_JSON);
+        headers.put(Constant.CONTENT_TYPE, Constant.APPLICATION_JSON_UTF8);
+        headers.put(Constant.AUTHORIZATION, "Basic " + Base64.encode(accessKeyId + ":" + accessKeySecret, StandardCharsets.UTF_8));
         return headers;
     }
 
@@ -208,6 +208,7 @@ public class JgHelper {
         List<Map<String, Object>> recipients = new ArrayList<>(phones.size());
         phones.forEach(mobile -> {
             Map<String, Object> params = new LinkedHashMap<>(1);
+            params.put("mobile", StrUtil.addPrefixIfNot(mobile, "+86"));
             params.put("temp_para", messages);
             recipients.add(params);
         });

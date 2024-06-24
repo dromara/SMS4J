@@ -86,7 +86,7 @@ public class QiNiuSmsImpl extends AbstractSmsBlend<QiNiuConfig> {
             jsonObject = http.postJson(url, QiNiuUtils.getHeaderAndSign(url, params, getConfig()), params);
             smsResponse = SmsRespUtils.resp(jsonObject, SmsUtils.isEmpty(jsonObject.getStr("error")), getConfigId());
         }catch (SmsBlendException e){
-            smsResponse = SmsRespUtils.error(e.getMessage(), getConfigId());
+            smsResponse = errorResp(e.message);
         }
         if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
             retry = 0;

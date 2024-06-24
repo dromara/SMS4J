@@ -2,6 +2,7 @@ package org.dromara.sms4j.jg.config;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.provider.config.BaseConfig;
 
@@ -23,7 +24,7 @@ public class JgConfig extends BaseConfig {
     /**
      * 调用地址
      */
-    private String requestUrl = "https://api.sms.jpush.cn/v1/";
+    private String requestUrl = Constant.HTTPS_PREFIX + "api.sms.jpush.cn/v1/";
 
     /**
      * 默认请求方法 messages

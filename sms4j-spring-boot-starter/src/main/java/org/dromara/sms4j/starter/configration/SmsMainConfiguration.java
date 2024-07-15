@@ -1,4 +1,4 @@
-package org.dromara.sms4j.starter.config;
+package org.dromara.sms4j.starter.configration;
 
 import lombok.Data;
 import org.dromara.sms4j.comm.constant.Constant;
@@ -17,7 +17,7 @@ import org.springframework.core.env.Environment;
 
 
 @Data
-public class SmsMainConfig {
+public class SmsMainConfiguration {
 
     @Bean
     public SmsSpringUtils smsSpringUtil(DefaultListableBeanFactory defaultListableBeanFactory){

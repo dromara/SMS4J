@@ -26,7 +26,7 @@ class Sms4jTest {
     /**
      * 填测试手机号
      */
-    private static final String PHONE = "";
+    private static final String PHONE = "18988889999";
 
     @Test
     public void byLoadTest() {

@@ -1,7 +1,7 @@
 package org.dromara.sms4j.solon;
 
-import org.dromara.sms4j.solon.config.SmsAutowiredConfig;
-import org.dromara.sms4j.solon.config.SupplierConfig;
+import org.dromara.sms4j.solon.configuration.SmsAutowiredConfiguration;
+import org.dromara.sms4j.solon.configuration.SupplierConfiguration;
 import org.noear.solon.core.AppContext;
 import org.noear.solon.core.Plugin;
 
@@ -11,7 +11,7 @@ import org.noear.solon.core.Plugin;
 public class XPluginImpl implements Plugin {
     @Override
     public void start(AppContext context) {
-        context.beanMake(SmsAutowiredConfig.class);
-        context.beanMake(SupplierConfig.class);
+        context.beanMake(SmsAutowiredConfiguration.class);
+        context.beanMake(SupplierConfiguration.class);
     }
 }

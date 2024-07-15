@@ -1,2 +1,2 @@
-org.dromara.sms4j.starter.config.SmsMainConfig
-org.dromara.sms4j.starter.config.SupplierConfig
+org.dromara.sms4j.starter.configration.SmsMainConfiguration
+org.dromara.sms4j.starter.configration.SupplierConfiguration

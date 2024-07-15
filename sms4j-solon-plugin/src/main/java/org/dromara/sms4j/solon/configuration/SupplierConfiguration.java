@@ -1,4 +1,4 @@
-package org.dromara.sms4j.solon.config;
+package org.dromara.sms4j.solon.configuration;
 
 import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.provider.config.SmsConfig;
@@ -18,7 +18,7 @@ import java.util.Map;
  */
 @Condition(onProperty = "${sms.configType}=config_file")
 @Configuration
-public class SupplierConfig {
+public class SupplierConfiguration {
     @Inject
     AppContext context;
 

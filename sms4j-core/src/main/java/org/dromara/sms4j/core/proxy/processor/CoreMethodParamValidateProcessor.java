@@ -93,7 +93,6 @@ public class CoreMethodParamValidateProcessor implements CoreMethodProcessor {
                 }
             }
         }
-        throw new SmsBlendException("cant send message to null!");
     }
 
     public void validateMessages(String templateId, LinkedHashMap<String, String> messages) {

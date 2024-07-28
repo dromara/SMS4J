@@ -2,6 +2,7 @@ package org.dromara.sms4j.cloopen.config;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.provider.config.BaseConfig;
 
@@ -18,7 +19,7 @@ public class CloopenConfig extends BaseConfig {
     /**
      * REST API Base URL
      */
-    private String baseUrl = "https://app.cloopen.com:8883/2013-12-26";
+    private String baseUrl = Constant.HTTPS_PREFIX + "app.cloopen.com:8883/2013-12-26";
 
     /**
      * 获取供应商

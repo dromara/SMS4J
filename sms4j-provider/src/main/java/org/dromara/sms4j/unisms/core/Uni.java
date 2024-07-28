@@ -1,5 +1,6 @@
 package org.dromara.sms4j.unisms.core;
 
+import org.dromara.sms4j.comm.constant.Constant;
 
 /**
  * 初始化统一环境的单例类.
@@ -8,8 +9,8 @@ public class Uni {
     /** 模仿SDK版本*/
     public static final String VERSION = "0.0.4";
 
-    public static final String signingAlgorithm = "hmac-sha256";
-    public static String endpoint = System.getenv().getOrDefault("UNI_ENDPOINT", "https://uni.apistd.com");
+    public static final String SIGNING_ALGORITHM = "hmac-sha256";
+    public static String endpoint = System.getenv().getOrDefault("UNI_ENDPOINT", Constant.HTTPS_PREFIX + "uni.apistd.com");
     public static String accessKeyId = System.getenv("UNI_ACCESS_KEY_ID");
 
     private static String accessKeySecret = System.getenv("UNI_ACCESS_KEY_SECRET");
@@ -86,7 +87,7 @@ public class Uni {
             builder.isSimple(false);
         }
         builder.endpoint(Uni.endpoint);
-        builder.signingAlgorithm(Uni.signingAlgorithm);
+        builder.signingAlgorithm(Uni.SIGNING_ALGORITHM);
         builder.setRetryInterval(retryInterval);
         builder.setMaxRetries(maxRetries);
         return builder.build();

@@ -10,6 +10,7 @@ import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.api.utils.SmsRespUtils;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
@@ -147,14 +148,12 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
         json.put("content", content);
 
         Map<String, String> headers = MapUtil.newHashMap(1, true);
-        headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
+        headers.put(Constant.CONTENT_TYPE, Constant.APPLICATION_JSON_UTF8);
         SmsResponse smsResponse;
         try {
             smsResponse = getResponse(http.postJson(url, headers, json));
         } catch (SmsBlendException e) {
-            smsResponse = new SmsResponse();
-            smsResponse.setSuccess(false);
-            smsResponse.setData(e.getMessage());
+            smsResponse = errorResp(e.message);
         }
         if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
             retry = 0;
@@ -235,14 +234,12 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
         requestJson.set("records", records);
 
         Map<String, String> headers = MapUtil.newHashMap(1, true);
-        headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
+        headers.put(Constant.CONTENT_TYPE, Constant.APPLICATION_JSON_UTF8);
         SmsResponse smsResponse;
         try {
             smsResponse = getResponse(http.postJson(url, headers, requestJson.toString()));
         } catch (SmsBlendException e) {
-            smsResponse = new SmsResponse();
-            smsResponse.setSuccess(false);
-            smsResponse.setData(e.getMessage());
+            smsResponse = errorResp(e.message);
         }
         if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
             retry = 0;
@@ -263,11 +260,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
     }
 
     private SmsResponse getResponse(JSONObject jsonObject) {
-        SmsResponse smsResponse = new SmsResponse();
-        smsResponse.setSuccess(jsonObject.getInt("code", -1) <= 200);
-        smsResponse.setData(jsonObject);
-        smsResponse.setConfigId(getConfigId());
-        return smsResponse;
+        return SmsRespUtils.resp(jsonObject, jsonObject.getInt("code", -1) <= 200, getConfigId());
     }
 
     private void validator(String requestUrl, String username, String password) {

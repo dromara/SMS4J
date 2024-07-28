@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.aliyun.config.AlibabaConfig;
 import org.dromara.sms4j.aliyun.utils.AliyunUtils;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.api.utils.SmsRespUtils;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
@@ -57,7 +58,7 @@ public class AlibabaSmsImpl extends AbstractSmsBlend<AlibabaConfig> {
 
     @Override
     public SmsResponse sendMessage(String phone, String message) {
-        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        LinkedHashMap<String, String> map = new LinkedHashMap<>(1);
         map.put(getConfig().getTemplateName(), message);
         return sendMessage(phone, getConfig().getTemplateId(), map);
     }
@@ -92,7 +93,7 @@ public class AlibabaSmsImpl extends AbstractSmsBlend<AlibabaConfig> {
             messages = new LinkedHashMap<>();
         }
         String messageStr = JSONUtil.toJsonStr(messages);
-        return getSmsResponse(SmsUtils.arrayToString(phones), messageStr, templateId);
+        return getSmsResponse(SmsUtils.addCodePrefixIfNot(phones), messageStr, templateId);
     }
 
     private SmsResponse getSmsResponse(String phone, String message, String templateId) {
@@ -108,14 +109,12 @@ public class AlibabaSmsImpl extends AbstractSmsBlend<AlibabaConfig> {
         log.debug("requestUrl {}", requestUrl);
 
         Map<String, String> headers = MapUtil.newHashMap(1, true);
-        headers.put("Content-Type", Constant.FROM_URLENCODED);
+        headers.put(Constant.CONTENT_TYPE, Constant.APPLICATION_FROM_URLENCODED);
         SmsResponse smsResponse;
         try {
             smsResponse = getResponse(http.postJson(requestUrl, headers, paramStr));
         } catch (SmsBlendException e) {
-            smsResponse = new SmsResponse();
-            smsResponse.setSuccess(false);
-            smsResponse.setData(e.getMessage());
+            smsResponse = errorResp(e.message);
         }
         if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
             retry = 0;
@@ -132,11 +131,7 @@ public class AlibabaSmsImpl extends AbstractSmsBlend<AlibabaConfig> {
     }
 
     private SmsResponse getResponse(JSONObject resJson) {
-        SmsResponse smsResponse = new SmsResponse();
-        smsResponse.setSuccess("OK".equals(resJson.getStr("Code")));
-        smsResponse.setData(resJson);
-        smsResponse.setConfigId(getConfigId());
-        return smsResponse;
+        return SmsRespUtils.resp(resJson, "OK".equals(resJson.getStr("Code")), getConfigId());
     }
 
 }

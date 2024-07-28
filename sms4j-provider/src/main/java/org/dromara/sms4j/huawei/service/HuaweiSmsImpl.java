@@ -5,6 +5,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.api.utils.SmsRespUtils;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
@@ -70,16 +71,14 @@ public class HuaweiSmsImpl extends AbstractSmsBlend<HuaweiConfig> {
         String requestBody = HuaweiBuilder.buildRequestBody(getConfig().getSender(), phone, templateId, mess, getConfig().getStatusCallBack(), getConfig().getSignature());
 
         Map<String, String> headers = MapUtil.newHashMap(3, true);
-        headers.put("Authorization", Constant.HUAWEI_AUTH_HEADER_VALUE);
+        headers.put(Constant.AUTHORIZATION, Constant.HUAWEI_AUTH_HEADER_VALUE);
         headers.put("X-WSSE", HuaweiBuilder.buildWsseHeader(getConfig().getAccessKeyId(), getConfig().getAccessKeySecret()));
-        headers.put("Content-Type", Constant.FROM_URLENCODED);
+        headers.put(Constant.CONTENT_TYPE, Constant.APPLICATION_FROM_URLENCODED);
         SmsResponse smsResponse;
         try {
             smsResponse = getResponse(http.postJson(url, headers, requestBody));
         } catch (SmsBlendException e) {
-            smsResponse = new SmsResponse();
-            smsResponse.setSuccess(false);
-            smsResponse.setData(e.getMessage());
+            smsResponse = errorResp(e.message);
         }
         if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
             retry = 0;
@@ -109,11 +108,7 @@ public class HuaweiSmsImpl extends AbstractSmsBlend<HuaweiConfig> {
     }
 
     private SmsResponse getResponse(JSONObject resJson) {
-        SmsResponse smsResponse = new SmsResponse();
-        smsResponse.setSuccess("000000".equals(resJson.getStr("code")));
-        smsResponse.setData(resJson);
-        smsResponse.setConfigId(getConfigId());
-        return smsResponse;
+        return SmsRespUtils.resp(resJson, "000000".equals(resJson.getStr("code")), getConfigId());
     }
 
 }

@@ -4,6 +4,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.api.utils.SmsRespUtils;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
@@ -21,7 +22,7 @@ import java.util.concurrent.Executor;
  * <p>类名: CtyunSmsImpl
  * <p>说明： 天翼云短信实现
  *
- * @author :bleachhtred
+ * @author :bleachtred
  * 2023/5/12  15:06
  **/
 @Slf4j
@@ -79,15 +80,16 @@ public class CtyunSmsImpl extends AbstractSmsBlend<CtyunConfig> {
             messages = new LinkedHashMap<>();
         }
         String messageStr = JSONUtil.toJsonStr(messages);
-        return getSmsResponse(SmsUtils.arrayToString(phones), messageStr, templateId);
+        return getSmsResponse(SmsUtils.addCodePrefixIfNot(phones), messageStr, templateId);
     }
 
     private SmsResponse getSmsResponse(String phone, String message, String templateId) {
+        CtyunConfig config = getConfig();
         String requestUrl;
         String paramStr;
         try {
-            requestUrl = getConfig().getRequestUrl();
-            paramStr = CtyunUtils.generateParamJsonStr(getConfig(), phone, message, templateId);
+            requestUrl = config.getRequestUrl();
+            paramStr = CtyunUtils.generateParamJsonStr(config, phone, message, templateId);
         } catch (Exception e) {
             log.error("ctyun send message error", e);
             throw new SmsBlendException(e.getMessage());
@@ -96,14 +98,12 @@ public class CtyunSmsImpl extends AbstractSmsBlend<CtyunConfig> {
         SmsResponse smsResponse;
         try {
             smsResponse = getResponse(http.postJson(requestUrl,
-                    CtyunUtils.signHeader(paramStr, getConfig().getAccessKeyId(), getConfig().getAccessKeySecret()),
+                    CtyunUtils.signHeader(paramStr, config.getAccessKeyId(), config.getAccessKeySecret()),
                     paramStr));
         } catch (SmsBlendException e) {
-            smsResponse = new SmsResponse();
-            smsResponse.setSuccess(false);
-            smsResponse.setData(e.getMessage());
+            smsResponse = errorResp(e.message);
         }
-        if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
+        if (smsResponse.isSuccess() || retry == config.getMaxRetries()) {
             retry = 0;
             return smsResponse;
         }
@@ -118,11 +118,7 @@ public class CtyunSmsImpl extends AbstractSmsBlend<CtyunConfig> {
     }
 
     private SmsResponse getResponse(JSONObject resJson) {
-        SmsResponse smsResponse = new SmsResponse();
-        smsResponse.setSuccess("OK".equals(resJson.getStr("code")));
-        smsResponse.setData(resJson);
-        smsResponse.setConfigId(getConfigId());
-        return smsResponse;
+        return SmsRespUtils.resp(resJson, "OK".equals(resJson.getStr("code")), getConfigId());
     }
 
 }

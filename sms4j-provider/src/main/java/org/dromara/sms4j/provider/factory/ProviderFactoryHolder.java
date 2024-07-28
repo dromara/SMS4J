@@ -17,13 +17,13 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ProviderFactoryHolder {
 
-    private static final Map<String, BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig>> factories = new ConcurrentHashMap<>();
+    private static final Map<String, BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig>> FACTORIES = new ConcurrentHashMap<>();
 
     public static void registerFactory(BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig> factory) {
         if(factory == null) {
             throw new SmsBlendException("注册供应商工厂失败，工厂实例不能为空");
         }
-        factories.put(factory.getSupplier(), factory);
+        FACTORIES.put(factory.getSupplier(), factory);
     }
 
     public static void registerFactory(List<BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig>> factoryList) {
@@ -39,7 +39,7 @@ public class ProviderFactoryHolder {
     }
 
     public static BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig> requireForSupplier(String supplier) {
-        return factories.getOrDefault(supplier, null);
+        return FACTORIES.getOrDefault(supplier, null);
     }
 
 }

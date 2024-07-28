@@ -3,6 +3,7 @@ package org.dromara.sms4j.unisms.service;
 import cn.hutool.core.map.MapUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.api.utils.SmsRespUtils;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
@@ -96,16 +97,12 @@ public class UniSmsImpl extends AbstractSmsBlend<UniConfig> {
     }
 
     private SmsResponse getSmsResponse(Map<String, Object> data) {
-        SmsResponse smsResponse = new SmsResponse();
         try {
             UniResponse send = Uni.getClient(getConfig().getRetryInterval(), getConfig().getMaxRetries()).request("sms.message.send", data);
-            smsResponse.setSuccess("0".equals(send.code));
-            smsResponse.setData(send);
-            smsResponse.setConfigId(getConfigId());
+            return SmsRespUtils.resp(send, "0".equals(send.code), getConfigId());
         } catch (Exception e) {
-            smsResponse.setSuccess(false);
+            return errorResp(e.getMessage());
         }
-        return smsResponse;
     }
 
 }

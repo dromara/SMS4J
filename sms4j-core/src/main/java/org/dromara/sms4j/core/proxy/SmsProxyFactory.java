@@ -27,10 +27,10 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public abstract class SmsProxyFactory {
-    private static final LinkedList<SmsProcessor> processors = new LinkedList<>();
+    private static final LinkedList<SmsProcessor> PROCESSORS = new LinkedList<>();
 
     public static SmsBlend getProxySmsBlend(SmsBlend smsBlend) {
-        LinkedList<SmsProcessor> ownerProcessors = processors.stream().filter(processor -> !shouldSkipProcess(processor,smsBlend)).collect(Collectors.toCollection(LinkedList::new));
+        LinkedList<SmsProcessor> ownerProcessors = PROCESSORS.stream().filter(processor -> !shouldSkipProcess(processor,smsBlend)).collect(Collectors.toCollection(LinkedList::new));
         return (SmsBlend) Proxy.newProxyInstance(smsBlend.getClass().getClassLoader(), new Class[]{SmsBlend.class}, new SmsInvocationHandler(smsBlend, ownerProcessors));
     }
 
@@ -41,8 +41,8 @@ public abstract class SmsProxyFactory {
         //校验拦截器是否正确
         processorValidate(processor);
         awareTransfer(processor);
-        processors.add(processor);
-        processors.sort(Comparator.comparingInt(Order::getOrder));
+        PROCESSORS.add(processor);
+        PROCESSORS.sort(Comparator.comparingInt(Order::getOrder));
     }
 
     /*

@@ -3,6 +3,8 @@ package org.dromara.sms4j.lianlu.service;
 import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.api.utils.SmsRespUtils;
+import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
@@ -177,8 +179,8 @@ public class LianLuSmsImpl extends AbstractSmsBlend<LianLuConfig> {
 
         try {
             Map<String, String> headers = new HashMap<>(2);
-            headers.put("Content-Type", "application/json;charset=utf-8");
-            headers.put("Accept", "application/json");
+            headers.put(Constant.CONTENT_TYPE, Constant.APPLICATION_JSON_UTF8);
+            headers.put(Constant.ACCEPT, Constant.APPLICATION_JSON);
             SmsResponse smsResponse = this.getResponse(this.http.postJson(reqUrl, headers, requestBody));
             if (!smsResponse.isSuccess() && this.retry != this.getConfig().getMaxRetries()) {
                 return this.requestRetry(req);
@@ -199,10 +201,6 @@ public class LianLuSmsImpl extends AbstractSmsBlend<LianLuConfig> {
     }
 
     private SmsResponse getResponse(JSONObject resJson) {
-        SmsResponse smsResponse = new SmsResponse();
-        smsResponse.setSuccess("00".equals(resJson.getStr("status")));
-        smsResponse.setData(resJson);
-        smsResponse.setConfigId(this.getConfigId());
-        return smsResponse;
+        return SmsRespUtils.resp(resJson, "00".equals(resJson.getStr("status")), getConfigId());
     }
 }

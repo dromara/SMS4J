@@ -2,7 +2,7 @@ package org.dromara.sms4j.provider.config;
 
 
 import lombok.Data;
-import org.dromara.sms4j.comm.enumerate.ConfigType;
+import org.dromara.sms4j.comm.enums.ConfigType;
 
 import java.util.ArrayList;
 

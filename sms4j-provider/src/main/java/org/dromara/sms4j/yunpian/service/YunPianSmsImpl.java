@@ -3,6 +3,7 @@ package org.dromara.sms4j.yunpian.service;
 import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.api.utils.SmsRespUtils;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
@@ -40,15 +41,10 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
     }
 
     private SmsResponse getResponse(JSONObject execute) {
-        SmsResponse smsResponse = new SmsResponse();
         if (execute == null) {
-            smsResponse.setSuccess(false);
-            return smsResponse;
+            return SmsRespUtils.error(getConfigId());
         }
-        smsResponse.setSuccess(execute.getInt("code") == 0);
-        smsResponse.setData(execute);
-        smsResponse.setConfigId(getConfigId());
-        return smsResponse;
+        return SmsRespUtils.resp(execute, execute.getInt("code") == 0, getConfigId());
     }
 
     @Override
@@ -60,9 +56,7 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
         try {
             smsResponse = getResponse(http.postFrom(Constant.YUNPIAN_URL + "/sms/tpl_single_send.json", headers, body));
         } catch (SmsBlendException e) {
-            smsResponse = new SmsResponse();
-            smsResponse.setSuccess(false);
-            smsResponse.setData(e.getMessage());
+            smsResponse = errorResp(e.message);
         }
         if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
             retry = 0;
@@ -119,7 +113,7 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
         if (phones.size() > 1000) {
             throw new SmsBlendException("单次发送超过最大发送上限，建议每次群发短信人数低于1000");
         }
-        return sendMessage(SmsUtils.listToString(phones), message);
+        return sendMessage(SmsUtils.joinComma(phones), message);
     }
 
     @Override
@@ -130,7 +124,7 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
         if (phones.size() > 1000) {
             throw new SmsBlendException("单次发送超过最大发送上限，建议每次群发短信人数低于1000");
         }
-        return sendMessage(SmsUtils.listToString(phones), templateId, messages);
+        return sendMessage(SmsUtils.joinComma(phones), templateId, messages);
     }
 
     private String formattingMap(Map<String, String> messages) {
@@ -170,8 +164,8 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
 
     private Map<String, String> getHeaders() {
         Map<String, String> headers = new HashMap<>();
-        headers.put("Accept", Constant.APPLICATION_JSON_UTF8);
-        headers.put("Content-Type", Constant.FROM_URLENCODED);
+        headers.put(Constant.ACCEPT, Constant.APPLICATION_JSON_UTF8);
+        headers.put(Constant.CONTENT_TYPE, Constant.APPLICATION_FROM_URLENCODED);
         return headers;
     }
 }

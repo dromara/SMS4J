@@ -6,7 +6,6 @@ import org.dromara.sms4j.comm.exception.SmsBlendException;
 import java.util.Objects;
 
 public class UniResponse {
-    public static final String REQUEST_ID_HEADER_KEY = "x-uni-request-id";
     public String requestId;
     public String code;
     public String message;

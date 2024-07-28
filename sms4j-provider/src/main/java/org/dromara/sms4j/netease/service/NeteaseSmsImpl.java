@@ -9,6 +9,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.api.utils.SmsRespUtils;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
@@ -97,7 +98,7 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
             throw new SmsBlendException("单次发送超过最大发送上限，建议每次群发短信人数低于100");
         }
         Optional.ofNullable(getConfig().getTemplateId()).orElseThrow(() -> new SmsBlendException("模板ID不能为空"));
-        return getSmsResponse(getConfig().getTemplateUrl(), phones, getConfig().getTemplateId(), message);
+        return getSmsResponse(getConfig().getTemplateUrl(), phones,message, getConfig().getTemplateId());
     }
 
     @Override
@@ -133,7 +134,7 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
         body.put("needUp", getConfig().getNeedUp());
 
         Map<String, String> headers = MapUtil.newHashMap(5, true);
-        headers.put("Content-Type", Constant.FROM_URLENCODED);
+        headers.put(Constant.CONTENT_TYPE, Constant.APPLICATION_FROM_URLENCODED);
         headers.put("AppKey", getConfig().getAccessKeyId());
         headers.put("Nonce", nonce);
         headers.put("CurTime", curTime);
@@ -142,9 +143,7 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
         try {
             smsResponse = getResponse(http.postFrom(requestUrl, headers, body));
         } catch (SmsBlendException e) {
-            smsResponse = new SmsResponse();
-            smsResponse.setSuccess(false);
-            smsResponse.setData(e.getMessage());
+            smsResponse = errorResp(e.message);
         }
         if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
             retry = 0;
@@ -161,11 +160,7 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
     }
 
     private SmsResponse getResponse(JSONObject jsonObject) {
-        SmsResponse smsResponse = new SmsResponse();
-        smsResponse.setSuccess(jsonObject.getInt("code") <= 200);
-        smsResponse.setData(jsonObject);
-        smsResponse.setConfigId(getConfigId());
-        return smsResponse;
+        return SmsRespUtils.resp(jsonObject, jsonObject.getInt("code") <= 200, getConfigId());
     }
 
 }

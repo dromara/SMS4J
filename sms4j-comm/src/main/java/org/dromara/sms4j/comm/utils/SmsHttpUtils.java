@@ -73,6 +73,27 @@ public class SmsHttpUtils {
         }
     }
 
+    /**
+     * 发送post form 请求
+     *
+     * @param url     请求地址
+     * @param headers 请求头
+     * @param body    请求体(map格式请求体)
+     * @param username 用户名
+     * @param password 密码
+     * @return 返回体
+     */
+    public JSONObject postBasicFrom(String url, Map<String, String> headers, String username, String password, Map<String, Object> body) {
+        try (HttpResponse response = HttpRequest.post(url)
+                .addHeaders(headers)
+                .basicAuth(username, password)
+                .form(body)
+                .execute()) {
+            return JSONUtil.parseObj(response.body());
+        } catch (Exception e) {
+            throw new SmsBlendException(e.getMessage());
+        }
+    }
 
     /**
      * 发送post url 参数拼装url传输
@@ -86,6 +107,37 @@ public class SmsHttpUtils {
         String urlWithParams = url + "?" + URLUtil.buildQuery(params, null);
         try (HttpResponse response = HttpRequest.post(urlWithParams)
                 .addHeaders(headers)
+                .execute()) {
+            return JSONUtil.parseObj(response.body());
+        } catch (Exception e) {
+            throw new SmsBlendException(e.getMessage());
+        }
+    }
+
+    /**
+     * 发送get
+     *
+     * @param url 请求地址
+     * @return 返回体
+     */
+    public JSONObject getBasic(String url, String username, String password) {
+        try (HttpResponse response = HttpRequest.get(url)
+                .basicAuth(username, password)
+                .execute()) {
+            return JSONUtil.parseObj(response.body());
+        } catch (Exception e) {
+            throw new SmsBlendException(e.getMessage());
+        }
+    }
+
+    /**
+     * 发送get
+     *
+     * @param url 请求地址
+     * @return 返回体
+     */
+    public JSONObject getUrl(String url) {
+        try (HttpResponse response = HttpRequest.get(url)
                 .execute()) {
             return JSONUtil.parseObj(response.body());
         } catch (Exception e) {

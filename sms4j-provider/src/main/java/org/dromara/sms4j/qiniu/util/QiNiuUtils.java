@@ -8,19 +8,18 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
+import org.dromara.sms4j.comm.utils.SmsDateUtils;
 import org.dromara.sms4j.qiniu.config.QiNiuConfig;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TimeZone;
 
 /**
- * @author Administrator
+ * @author YYM
  * @Date: 2024/1/30 16:37 50
  * @描述: QiNiuUtils
  **/
@@ -35,7 +34,7 @@ public class QiNiuUtils {
         StringBuilder dataToSign = new StringBuilder();
         dataToSign.append(method.toUpperCase()).append(" ").append(reqUrl.getPath());
         dataToSign.append("\nHost: ").append(reqUrl.getHost());
-        dataToSign.append("\n").append("Content-Type").append(": ").append(Constant.ACCEPT);
+        dataToSign.append("\n").append(Constant.CONTENT_TYPE).append(": ").append(Constant.APPLICATION_JSON);
         dataToSign.append("\n").append("X-Qiniu-Date").append(": ").append(signDate);
         dataToSign.append("\n\n");
         if (ObjectUtil.isNotEmpty(body)) {
@@ -50,9 +49,7 @@ public class QiNiuUtils {
 
     public static Map<String, String> getHeaderAndSign(String url, HashMap<String, Object> hashMap, QiNiuConfig qiNiuConfig) {
         String signature;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
-        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-        String signDate = dateFormat.format(new Date());
+        String signDate = SmsDateUtils.pureDateUtcGmt(new Date());
         try {
             signature = getSignature("POST", url, qiNiuConfig, JSONUtil.toJsonStr(hashMap), signDate);
         } catch (Exception e) {
@@ -62,9 +59,9 @@ public class QiNiuUtils {
 
         //请求头
         Map<String, String> header = new HashMap<>(3);
-        header.put("Authorization", signature);
+        header.put(Constant.AUTHORIZATION, signature);
         header.put("X-Qiniu-Date", signDate);
-        header.put("Content-Type", "application/json");
+        header.put(Constant.CONTENT_TYPE, "application/json");
         return header;
     }
 }

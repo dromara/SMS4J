@@ -3,6 +3,7 @@ package org.dromara.sms4j.lianlu.config;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.lianlu.req.LianLuRequest;
 import org.dromara.sms4j.lianlu.utils.LianLuUtils;
@@ -10,7 +11,7 @@ import org.dromara.sms4j.provider.config.BaseConfig;
 
 /**
  * 联麓短信：
- * <a href="https://console.shlianlu.com/#/document/smsDoc">官方文档</a>
+ * <a href=Constant.HTTPS_PREFIX + "console.shlianlu.com/#/document/smsDoc">官方文档</a>
  *
  * @author lym
  */
@@ -35,7 +36,7 @@ public class LianLuConfig extends BaseConfig {
      */
     private String signType = LianLuUtils.SIGN_TYPE_MD5;
 
-    private String requestUrl = "https://apis.shlianlu.com/sms/trade";
+    private String requestUrl = Constant.HTTPS_PREFIX + "apis.shlianlu.com/sms/trade";
 
     @Override
     public String getSupplier() {

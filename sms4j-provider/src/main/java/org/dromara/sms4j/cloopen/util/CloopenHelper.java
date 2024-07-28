@@ -8,6 +8,7 @@ import cn.hutool.crypto.SecureUtil;
 import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.api.utils.SmsRespUtils;
 import org.dromara.sms4j.cloopen.config.CloopenConfig;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
@@ -43,16 +44,14 @@ public class CloopenHelper {
                 config.getAccessKeyId(),
                 this.generateSign(config.getAccessKeyId(), config.getAccessKeySecret(), timestamp));
         Map<String, String> headers = MapUtil.newHashMap(3, true);
-        headers.put("Accept", Constant.ACCEPT);
-        headers.put("Content-Type", Constant.APPLICATION_JSON_UTF8);
-        headers.put("Authorization", this.generateAuthorization(config.getAccessKeyId(), timestamp));
-        SmsResponse smsResponse = null;
+        headers.put(Constant.ACCEPT, Constant.APPLICATION_JSON);
+        headers.put(Constant.CONTENT_TYPE, Constant.APPLICATION_JSON_UTF8);
+        headers.put(Constant.AUTHORIZATION, this.generateAuthorization(config.getAccessKeyId(), timestamp));
+        SmsResponse smsResponse;
         try {
             smsResponse = getResponse(http.postJson(url, headers, paramMap));
         } catch (SmsBlendException e) {
-            smsResponse = new SmsResponse();
-            smsResponse.setSuccess(false);
-            smsResponse.setData(e.getMessage());
+            smsResponse = SmsRespUtils.error(e.message, config.getConfigId());
         }
         if (smsResponse.isSuccess() || retry == config.getMaxRetries()) {
             retry = 0;
@@ -70,11 +69,7 @@ public class CloopenHelper {
     }
 
     private SmsResponse getResponse(JSONObject resJson) {
-        SmsResponse smsResponse = new SmsResponse();
-        smsResponse.setSuccess("000000".equals(resJson.getStr("statusCode")));
-        smsResponse.setData(resJson);
-        smsResponse.setConfigId(this.config.getConfigId());
-        return smsResponse;
+        return SmsRespUtils.resp(resJson, "000000".equals(resJson.getStr("statusCode")), config.getConfigId());
     }
 
     /**

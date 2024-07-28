@@ -6,7 +6,7 @@ import cn.hutool.json.JSONUtil;
 import lombok.SneakyThrows;
 import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.comm.constant.Constant;
-import org.dromara.sms4j.comm.enumerate.ConfigType;
+import org.dromara.sms4j.comm.enums.ConfigType;
 import org.dromara.sms4j.core.datainterface.SmsReadConfig;
 import org.dromara.sms4j.provider.config.BaseConfig;
 import org.dromara.sms4j.provider.config.SmsConfig;

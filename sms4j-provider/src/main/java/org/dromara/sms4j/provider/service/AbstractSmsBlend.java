@@ -6,6 +6,7 @@ import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.callback.CallBack;
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.api.universal.SupplierConfig;
+import org.dromara.sms4j.api.utils.SmsRespUtils;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.utils.SmsHttpUtils;
 import org.dromara.sms4j.provider.factory.BeanFactory;
@@ -62,7 +63,6 @@ public abstract class AbstractSmsBlend<C extends SupplierConfig> implements SmsB
      *              message 消息内容
      * @author :Wind
      */
-
     @Override
     public abstract SmsResponse sendMessage(String phone, String message);
 
@@ -84,7 +84,6 @@ public abstract class AbstractSmsBlend<C extends SupplierConfig> implements SmsB
      * @param messages   key为模板变量名称 value为模板变量值
      * @author :Wind
      */
-
     @Override
     public abstract SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages);
 
@@ -94,7 +93,6 @@ public abstract class AbstractSmsBlend<C extends SupplierConfig> implements SmsB
      *
      * @author :Wind
      */
-
     @Override
     public abstract SmsResponse massTexting(List<String> phones, String message);
 
@@ -104,7 +102,6 @@ public abstract class AbstractSmsBlend<C extends SupplierConfig> implements SmsB
      *
      * @author :Wind
      */
-
     @Override
     public abstract SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages);
 
@@ -145,7 +142,6 @@ public abstract class AbstractSmsBlend<C extends SupplierConfig> implements SmsB
      * @param callBack   回调
      * @author :Wind
      */
-
     @Override
     public final void sendMessageAsync(String phone, String templateId, LinkedHashMap<String, String> messages, CallBack callBack){
         CompletableFuture<SmsResponse> smsResponseCompletableFuture = CompletableFuture.supplyAsync(() -> sendMessage(phone,templateId, messages), pool);
@@ -239,5 +235,14 @@ public abstract class AbstractSmsBlend<C extends SupplierConfig> implements SmsB
                 massTexting(phones, templateId, messages);
             }
         }, delayedTime);
+    }
+
+    /**
+     * 返回异常
+     * @param errorMsg 异常信息
+     * @return SmsResponse
+     */
+    public SmsResponse errorResp(String errorMsg){
+        return SmsRespUtils.error(errorMsg, config.getConfigId());
     }
 }

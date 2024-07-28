@@ -68,31 +68,31 @@ public class SmsUtilsTest {
     }
 
     @Test
-    public void listToString() {
+    public void joinComma() {
         List<String> list = new ArrayList<>();
         list.add("12312341234");
         list.add("12312341235");
-        String str = SmsUtils.listToString(list);
+        String str = SmsUtils.joinComma(list);
         log.info(str);
         Assert.isTrue(str.equals("12312341234,12312341235"));
     }
 
     @Test
-    public void arrayToString() {
+    public void addCodePrefixIfNot() {
         List<String> list = new ArrayList<>();
         list.add("12312341234");
         list.add("12312341235");
-        String str = SmsUtils.arrayToString(list);
+        String str = SmsUtils.addCodePrefixIfNot(list);
         log.info(str);
         Assert.isTrue(str.equals("+8612312341234,+8612312341235"));
     }
 
     @Test
-    public void listToArray() {
+    public void addCodePrefixIfNotToArray() {
         List<String> list = new ArrayList<>();
         list.add("12312341234");
         list.add("12312341235");
-        String[] str = SmsUtils.listToArray(list);
+        String[] str = SmsUtils.addCodePrefixIfNotToArray(list);
         Assert.isTrue(str[0].equals("+8612312341234") && str[1].equals("+8612312341235"));
     }
 

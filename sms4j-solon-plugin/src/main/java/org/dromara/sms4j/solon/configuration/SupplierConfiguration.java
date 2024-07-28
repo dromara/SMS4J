@@ -36,9 +36,9 @@ public class SupplierConfiguration {
 
 
     @Bean
-    protected SmsBlendsInitializer smsBlendsInitializer(List<BaseProviderFactory> factoryList,
-                                                        SmsConfig smsConfig,
-                                                        Map<String, Map<String, Object>> blends) {
+    protected org.dromara.sms4j.solon.config.SmsBlendsInitializer smsBlendsInitializer(List<BaseProviderFactory> factoryList,
+                                                                                       SmsConfig smsConfig,
+                                                                                       Map<String, Map<String, Object>> blends) {
 
         //todo: solon 不支持泛型的 List[Bean] 注入
         List<BaseProviderFactory<? extends SmsBlend, ? extends org.dromara.sms4j.api.universal.SupplierConfig>> factoryList2 = new ArrayList<>(factoryList.size());
@@ -47,6 +47,6 @@ public class SupplierConfiguration {
         }
 
 
-        return new SmsBlendsInitializer(factoryList2, smsConfig, blends, context);
+        return new org.dromara.sms4j.solon.config.SmsBlendsInitializer(factoryList2, smsConfig, blends, context);
     }
 }

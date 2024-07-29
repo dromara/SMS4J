@@ -32,9 +32,20 @@ public class CoreMethodParamValidateProcessor implements CoreMethodProcessor {
         this.phoneVerify = phoneVerify;
     }
 
+    /**
+     *  setter
+     * <p> 用于设置手机号验证器，可以在通过重写验证器规则来实现自己的验证器逻辑
+     * <p> 默认验证规则仅仅验证手机号是否为空和手机号是否为11位
+     * @param phoneVerify 手机号验证器
+     * @author :Wind
+    */
+    public void setPhoneVerify(PhoneVerify phoneVerify) {
+        this.phoneVerify = phoneVerify;
+    }
+
     @Override
     public int getOrder() {
-        return -1;
+        return -100;
     }
 
     @Override

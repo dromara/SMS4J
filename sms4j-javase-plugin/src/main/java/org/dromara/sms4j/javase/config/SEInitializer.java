@@ -139,18 +139,18 @@ public class SEInitializer {
             EnvirmentHolder.frozenEnvirmet(smsConfig, blends);
 
             //注册执行器实现
-            SmsProxyFactory.addProcessor(new RestrictedProcessor());
-            SmsProxyFactory.addProcessor(new BlackListProcessor());
-            SmsProxyFactory.addProcessor(new BlackListRecordingProcessor());
-            SmsProxyFactory.addProcessor(new SingleBlendRestrictedProcessor());
+            SmsProxyFactory.addPreProcessor(new RestrictedProcessor());
+            SmsProxyFactory.addPreProcessor(new BlackListProcessor());
+            SmsProxyFactory.addPreProcessor(new BlackListRecordingProcessor());
+            SmsProxyFactory.addPreProcessor(new SingleBlendRestrictedProcessor());
             //如果手机号校验器存在实现，则注册手机号校验器
             ServiceLoader<PhoneVerify> loader = ServiceLoader.load(PhoneVerify.class);
             if (loader.iterator().hasNext()) {
                 loader.forEach(f -> {
-                    SmsProxyFactory.addProcessor(new CoreMethodParamValidateProcessor(f));
+                    SmsProxyFactory.addPreProcessor(new CoreMethodParamValidateProcessor(f));
                 });
             } else {
-                SmsProxyFactory.addProcessor(new CoreMethodParamValidateProcessor(null));
+                SmsProxyFactory.addPreProcessor(new CoreMethodParamValidateProcessor(null));
             }
         }catch (Exception e){
             log.error("配置对象转换配置信息失败，但不影响基础功能的使用。【注意】：未加载SMS4J扩展功能模块，拦截器，参数校验可能失效！");
@@ -213,18 +213,18 @@ public class SEInitializer {
         EnvirmentHolder.frozenEnvirmet(smsConfig, blends);
 
         //注册执行器实现
-        SmsProxyFactory.addProcessor(new RestrictedProcessor());
-        SmsProxyFactory.addProcessor(new BlackListProcessor());
-        SmsProxyFactory.addProcessor(new BlackListRecordingProcessor());
-        SmsProxyFactory.addProcessor(new SingleBlendRestrictedProcessor());
+        SmsProxyFactory.addPreProcessor(new RestrictedProcessor());
+        SmsProxyFactory.addPreProcessor(new BlackListProcessor());
+        SmsProxyFactory.addPreProcessor(new BlackListRecordingProcessor());
+        SmsProxyFactory.addPreProcessor(new SingleBlendRestrictedProcessor());
         //如果手机号校验器存在实现，则注册手机号校验器
         ServiceLoader<PhoneVerify> loader = ServiceLoader.load(PhoneVerify.class);
         if (loader.iterator().hasNext()) {
             loader.forEach(f -> {
-                SmsProxyFactory.addProcessor(new CoreMethodParamValidateProcessor(f));
+                SmsProxyFactory.addPreProcessor(new CoreMethodParamValidateProcessor(f));
             });
         } else {
-            SmsProxyFactory.addProcessor(new CoreMethodParamValidateProcessor(null));
+            SmsProxyFactory.addPreProcessor(new CoreMethodParamValidateProcessor(null));
         }
         for (String configId : blends.keySet()) {
             Map<String, Object> configMap = blends.get(configId);

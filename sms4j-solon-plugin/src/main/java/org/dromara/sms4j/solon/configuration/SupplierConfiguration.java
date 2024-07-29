@@ -36,7 +36,7 @@ public class SupplierConfiguration {
 
 
     @Bean
-    protected org.dromara.sms4j.solon.config.SmsBlendsInitializer smsBlendsInitializer(List<BaseProviderFactory> factoryList,
+    protected SmsBlendsInitializer smsBlendsInitializer(List<BaseProviderFactory> factoryList,
                                                                                        SmsConfig smsConfig,
                                                                                        Map<String, Map<String, Object>> blends) {
 
@@ -47,6 +47,6 @@ public class SupplierConfiguration {
         }
 
 
-        return new org.dromara.sms4j.solon.config.SmsBlendsInitializer(factoryList2, smsConfig, blends, context);
+        return new SmsBlendsInitializer(factoryList2, smsConfig, blends, context);
     }
 }

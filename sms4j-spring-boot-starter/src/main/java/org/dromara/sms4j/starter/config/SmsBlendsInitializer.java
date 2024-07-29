@@ -76,14 +76,7 @@ public class SmsBlendsInitializer {
         this.registerDefaultFactory();
         // 注册短信对象工厂
         ProviderFactoryHolder.registerFactory(factoryList);
-        //注册执行器实现
-        if(this.smsConfig.getRestricted()){
-            SmsProxyFactory.addPreProcessor(new RestrictedProcessor());
-            SmsProxyFactory.addPreProcessor(new BlackListProcessor());
-            SmsProxyFactory.addPreProcessor(new BlackListRecordingProcessor());
-            SmsProxyFactory.addPreProcessor(new SingleBlendRestrictedProcessor());
-        }
-        //如果手机号校验器存在实现，则注册手机号校验器
+        //如果手机号校验器存在实现，则注册手机号校验器（暂不可用）
         ServiceLoader<PhoneVerify> loader = ServiceLoader.load(PhoneVerify.class);
         if (loader.iterator().hasNext()) {
             loader.forEach(f -> {
@@ -91,6 +84,13 @@ public class SmsBlendsInitializer {
             });
         } else {
             SmsProxyFactory.addPreProcessor(new CoreMethodParamValidateProcessor(null));
+        }
+        //注册执行器实现
+        if(this.smsConfig.getRestricted()){
+            SmsProxyFactory.addPreProcessor(new RestrictedProcessor());
+            SmsProxyFactory.addPreProcessor(new BlackListProcessor());
+            SmsProxyFactory.addPreProcessor(new BlackListRecordingProcessor());
+            SmsProxyFactory.addPreProcessor(new SingleBlendRestrictedProcessor());
         }
         if (ConfigType.YAML.equals(this.smsConfig.getConfigType())) {
             //持有初始化配置信息

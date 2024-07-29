@@ -17,7 +17,6 @@ import java.lang.reflect.Proxy;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * SmsBlend代理工厂
@@ -30,19 +29,38 @@ public abstract class SmsProxyFactory {
     private static final LinkedList<SmsProcessor> PROCESSORS = new LinkedList<>();
 
     public static SmsBlend getProxySmsBlend(SmsBlend smsBlend) {
-        LinkedList<SmsProcessor> ownerProcessors = PROCESSORS.stream().filter(processor -> !shouldSkipProcess(processor,smsBlend)).collect(Collectors.toCollection(LinkedList::new));
-        return (SmsBlend) Proxy.newProxyInstance(smsBlend.getClass().getClassLoader(), new Class[]{SmsBlend.class}, new SmsInvocationHandler(smsBlend, ownerProcessors));
+//        LinkedList<SmsProcessor> ownerProcessors = PROCESSORS.stream().filter(processor -> !shouldSkipProcess(processor,smsBlend)).collect(Collectors.toCollection(LinkedList::new));
+        return (SmsBlend) Proxy.newProxyInstance(smsBlend.getClass().getClassLoader(), new Class[]{SmsBlend.class}, new SmsInvocationHandler(smsBlend));
     }
 
     /**
      * 增加拦截器
      */
-    public static void addProcessor(SmsProcessor processor) {
+    public static void addPreProcessor(SmsProcessor processor) {
         //校验拦截器是否正确
         processorValidate(processor);
         awareTransfer(processor);
         PROCESSORS.add(processor);
         PROCESSORS.sort(Comparator.comparingInt(Order::getOrder));
+    }
+
+    /**
+     *  removeProcessor
+     * <p> 移除拦截器
+     * @param processor 拦截器对象
+     * @author :Wind
+    */
+    public static void removePreProcessor(SmsProcessor processor) {
+        PROCESSORS.remove(processor);
+    }
+
+    /**
+     *  getProcessors
+     * <p> 获取全部拦截器
+     * @author :Wind
+    */
+    public static LinkedList<SmsProcessor> getProcessors() {
+        return PROCESSORS;
     }
 
     /*

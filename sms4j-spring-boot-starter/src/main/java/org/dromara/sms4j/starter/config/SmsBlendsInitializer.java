@@ -7,9 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.aliyun.config.AlibabaFactory;
 import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.universal.SupplierConfig;
+import org.dromara.sms4j.api.verify.PhoneVerify;
 import org.dromara.sms4j.baidu.config.BaiduFactory;
 import org.dromara.sms4j.budingyun.config.BudingV2Factory;
-import org.dromara.sms4j.api.verify.PhoneVerify;
+import org.dromara.sms4j.chuanglan.config.ChuangLanFactory;
 import org.dromara.sms4j.cloopen.config.CloopenFactory;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.enums.ConfigType;
@@ -29,7 +30,6 @@ import org.dromara.sms4j.dingzhong.config.DingZhongFactory;
 import org.dromara.sms4j.emay.config.EmayFactory;
 import org.dromara.sms4j.huawei.config.HuaweiFactory;
 import org.dromara.sms4j.jdcloud.config.JdCloudFactory;
-import org.dromara.sms4j.chuanglan.config.ChuangLanFactory;
 import org.dromara.sms4j.jg.config.JgFactory;
 import org.dromara.sms4j.lianlu.config.LianLuFactory;
 import org.dromara.sms4j.luosimao.config.LuoSiMaoFactory;
@@ -76,7 +76,22 @@ public class SmsBlendsInitializer {
         this.registerDefaultFactory();
         // 注册短信对象工厂
         ProviderFactoryHolder.registerFactory(factoryList);
-
+        //注册执行器实现
+        if(this.smsConfig.getRestricted()){
+            SmsProxyFactory.addPreProcessor(new RestrictedProcessor());
+            SmsProxyFactory.addPreProcessor(new BlackListProcessor());
+            SmsProxyFactory.addPreProcessor(new BlackListRecordingProcessor());
+            SmsProxyFactory.addPreProcessor(new SingleBlendRestrictedProcessor());
+        }
+        //如果手机号校验器存在实现，则注册手机号校验器
+        ServiceLoader<PhoneVerify> loader = ServiceLoader.load(PhoneVerify.class);
+        if (loader.iterator().hasNext()) {
+            loader.forEach(f -> {
+                SmsProxyFactory.addPreProcessor(new CoreMethodParamValidateProcessor(f));
+            });
+        } else {
+            SmsProxyFactory.addPreProcessor(new CoreMethodParamValidateProcessor(null));
+        }
         if (ConfigType.YAML.equals(this.smsConfig.getConfigType())) {
             //持有初始化配置信息
             Map<String, Map<String, Object>> blendsInclude = new ConfigCombineMapAdaptor<String, Map<String, Object>>();
@@ -90,21 +105,6 @@ public class SmsBlendsInitializer {
                 num++;
             }
             EnvirmentHolder.frozenEnvirmet(smsConfig, blendsInclude);
-            //注册执行器实现
-            SmsProxyFactory.addProcessor(new RestrictedProcessor());
-            SmsProxyFactory.addProcessor(new BlackListProcessor());
-            SmsProxyFactory.addProcessor(new BlackListRecordingProcessor());
-            SmsProxyFactory.addProcessor(new SingleBlendRestrictedProcessor());
-            //如果手机号校验器存在实现，则注册手机号校验器
-            ServiceLoader<PhoneVerify> loader = ServiceLoader.load(PhoneVerify.class);
-            if (loader.iterator().hasNext()) {
-                loader.forEach(f -> {
-                    SmsProxyFactory.addProcessor(new CoreMethodParamValidateProcessor(f));
-                });
-            } else {
-                SmsProxyFactory.addProcessor(new CoreMethodParamValidateProcessor(null));
-            }
-
             // 解析供应商配置
             for (String configId : blends.keySet()) {
                 Map<String, Object> configMap = blends.get(configId);

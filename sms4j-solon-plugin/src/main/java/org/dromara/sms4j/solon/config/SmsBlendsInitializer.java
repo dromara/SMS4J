@@ -79,18 +79,18 @@ public class SmsBlendsInitializer {
         //框架依赖持有缓存扩展
         new SolonSmsDaoHolder(context);
         //注册执行器实现
-        SmsProxyFactory.addProcessor(new RestrictedProcessor());
-        SmsProxyFactory.addProcessor(new BlackListProcessor());
-        SmsProxyFactory.addProcessor(new BlackListRecordingProcessor());
-        SmsProxyFactory.addProcessor(new SingleBlendRestrictedProcessor());
+        SmsProxyFactory.addPreProcessor(new RestrictedProcessor());
+        SmsProxyFactory.addPreProcessor(new BlackListProcessor());
+        SmsProxyFactory.addPreProcessor(new BlackListRecordingProcessor());
+        SmsProxyFactory.addPreProcessor(new SingleBlendRestrictedProcessor());
         //如果手机号校验器存在实现，则注册手机号校验器
         ServiceLoader<PhoneVerify> loader = ServiceLoader.load(PhoneVerify.class);
         if (loader.iterator().hasNext()) {
             loader.forEach(f -> {
-                SmsProxyFactory.addProcessor(new CoreMethodParamValidateProcessor(f));
+                SmsProxyFactory.addPreProcessor(new CoreMethodParamValidateProcessor(f));
             });
         } else {
-            SmsProxyFactory.addProcessor(new CoreMethodParamValidateProcessor(null));
+            SmsProxyFactory.addPreProcessor(new CoreMethodParamValidateProcessor(null));
         }
         // 解析供应商配置
         for(String configId : blends.keySet()) {

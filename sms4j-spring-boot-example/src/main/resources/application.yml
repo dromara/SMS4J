@@ -161,6 +161,7 @@ sms:
       access-key-id: xxxxxx #(必填)用户名
       access-key-secret: 324gaxxxxxxxxxxxxxxxxx9sdf89 #(必填)接口密钥（正式帐户需要登陆平台，接口业务-接口申请右侧钥匙状图标查看或获取，接口密钥获取后十分钟生效）
       template-id:  #(可选)模板编号(若配置此参数，则会默认使用该模板，以便提高服务方性能)
+      sign-code: #(可选)短信前置签名编号（登陆平台-接口业务-我的签名查看）
       f: 1 #(可选)默认为1，提交时检测方式
 
 sms-oa:

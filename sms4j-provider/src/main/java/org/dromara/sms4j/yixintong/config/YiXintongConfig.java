@@ -8,7 +8,7 @@ import org.dromara.sms4j.provider.config.BaseConfig;
 /**
  * <p>类名: YiXintongConfig
  * <p>说明：联通一信通平台配置类
- * <p>所用到配置项：spCode、f、accessKeyId(用户名)、accessKeySecret（接口密钥）、templateId、retryInterval、maxRetries
+ * <p>所用到配置项：spCode、f、accessKeyId(用户名)、accessKeySecret（接口密钥）、signCode、templateId、retryInterval、maxRetries
  *
  * @author moat
  * @create 2024-07-30 16:50
@@ -26,6 +26,11 @@ public class YiXintongConfig extends BaseConfig {
      *  企业编号
      */
     private String spCode;
+
+    /**
+     * 签名编号
+     */
+    private String signCode;
 
     /**
      * 提交时检测方式

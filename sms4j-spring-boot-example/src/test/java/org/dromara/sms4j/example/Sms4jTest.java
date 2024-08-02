@@ -547,7 +547,7 @@ public class Sms4jTest {
         Assert.isTrue(smsResponse1.isSuccess());
 
         // 群发
-        List<String> phones = CollectionUtil.toList("2222222222");
+        List<String> phones = CollectionUtil.toList(PHONE);
         String message2 = StrUtil.format("你有一项编号为{}的事务需要处理。", SmsUtils.getRandomInt(6));
         SmsResponse smsResponse2 = SmsFactory.getBySupplier(SupplierConstant.YIXINTONG).massTexting(phones, message2);
         log.info(JSONUtil.toJsonStr(smsResponse2));

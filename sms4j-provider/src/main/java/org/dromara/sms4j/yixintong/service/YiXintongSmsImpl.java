@@ -92,6 +92,7 @@ public class YiXintongSmsImpl extends AbstractSmsBlend<YiXintongConfig> {
         forms.put("SerialNumber", serialNumber);
         forms.put("ScheduleTime", ""); // 立即发送
         forms.put("f", config.getF());
+        forms.put("signCode", config.getSignCode());
 
         SmsResponse smsResponse;
         try {

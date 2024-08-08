@@ -29,7 +29,6 @@ import org.dromara.sms4j.core.proxy.processor.BlackListProcessor;
 import org.dromara.sms4j.core.proxy.processor.BlackListRecordingProcessor;
 import org.dromara.sms4j.core.proxy.processor.CoreMethodParamValidateProcessor;
 import org.dromara.sms4j.core.proxy.processor.RestrictedProcessor;
-import org.dromara.sms4j.core.proxy.processor.SingleBlendRestrictedProcessor;
 import org.dromara.sms4j.ctyun.config.CtyunFactory;
 import org.dromara.sms4j.danmi.config.DanMiFactory;
 import org.dromara.sms4j.dingzhong.config.DingZhongFactory;
@@ -142,7 +141,6 @@ public class SEInitializer {
             SmsProxyFactory.addPreProcessor(new RestrictedProcessor());
             SmsProxyFactory.addPreProcessor(new BlackListProcessor());
             SmsProxyFactory.addPreProcessor(new BlackListRecordingProcessor());
-            SmsProxyFactory.addPreProcessor(new SingleBlendRestrictedProcessor());
             //如果手机号校验器存在实现，则注册手机号校验器
             ServiceLoader<PhoneVerify> loader = ServiceLoader.load(PhoneVerify.class);
             if (loader.iterator().hasNext()) {
@@ -216,7 +214,6 @@ public class SEInitializer {
         SmsProxyFactory.addPreProcessor(new RestrictedProcessor());
         SmsProxyFactory.addPreProcessor(new BlackListProcessor());
         SmsProxyFactory.addPreProcessor(new BlackListRecordingProcessor());
-        SmsProxyFactory.addPreProcessor(new SingleBlendRestrictedProcessor());
         //如果手机号校验器存在实现，则注册手机号校验器
         ServiceLoader<PhoneVerify> loader = ServiceLoader.load(PhoneVerify.class);
         if (loader.iterator().hasNext()) {

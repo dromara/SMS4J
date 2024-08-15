@@ -18,7 +18,7 @@
 [github](https://github.com/dromara/sms4j)
 [gitcode](https://gitcode.com/dromara/SMS4J)
 
-#### [官方文档](http://wind.kim)
+#### [官方文档](http://sms4j.com)
 #### [JavaDoc文档](https://apidoc.gitee.com/dromara/sms4j/)
 
 ## 支持厂商一览

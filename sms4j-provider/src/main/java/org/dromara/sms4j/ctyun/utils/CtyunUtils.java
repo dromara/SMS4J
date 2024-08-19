@@ -24,7 +24,7 @@ public class CtyunUtils {
      * 获取签名时间戳
      */
     private static String signatureTime(){
-        return SmsDateUtils.pureDateUtcGmt(new Date());
+        return SmsDateUtils.pureDateUtcGmt8(new Date());
     }
 
     /**
@@ -34,7 +34,7 @@ public class CtyunUtils {
         Map<String, String> map = new ConcurrentHashMap<>(4);
 
         // 构造时间戳
-        String signatureDate = SmsDateUtils.pureDateGmt(new Date());
+        String signatureDate = SmsDateUtils.pureDateGmt8(new Date());
         String signatureTime = signatureTime();
         // 构造请求流水号
         String uuid = UUID.randomUUID().toString();

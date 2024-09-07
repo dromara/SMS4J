@@ -11,7 +11,7 @@ public abstract class Constant {
     /**
      * 项目版本号
      */
-    public static final String VERSION = "V 3.3.2";
+    public static final String VERSION = "V 3.3.3";
 
     /**
      * 用于格式化鉴权头域,给"Authorization"参数赋值

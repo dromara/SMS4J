@@ -2,6 +2,7 @@ package org.dromara.sms4j.api.proxy;
 
 
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.comm.exception.SmsBlendException;
 
 import java.lang.reflect.Method;
 /**
@@ -45,5 +46,6 @@ public interface SmsProcessor extends Order {
      * @author :Wind
     */
     default void exceptionHandleProcessor(Method method, Object source, Object[] param, Exception exception) throws RuntimeException {
+        throw new SmsBlendException(exception);
     }
 }

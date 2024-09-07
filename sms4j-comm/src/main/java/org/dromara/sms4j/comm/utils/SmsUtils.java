@@ -232,7 +232,7 @@ public class SmsUtils {
         if (isEmpty(map)) {
             return new String[0];
         }
-        return toArray(map.values(), SmsUtils::isNotEmpty, s -> s, new String[0]);
+        return toArray(map.values(), SmsUtils::isNotEmpty, s -> s, new String[map.size()]);
     }
 
     /**

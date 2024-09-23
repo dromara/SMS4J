@@ -93,4 +93,8 @@ public abstract class SupplierConstant {
      * danmi sms
      */
     public static final String DAN_MI = "danmi";
+    /**
+     * 联通一信通 sms
+     */
+    public static final String YIXINTONG = "yixintong";
 }

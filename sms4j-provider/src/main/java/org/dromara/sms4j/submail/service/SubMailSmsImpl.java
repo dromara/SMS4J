@@ -360,6 +360,6 @@ public class SubMailSmsImpl extends AbstractSmsBlend<SubMailConfig> {
 
     private String timestamp(){
         JSONObject resp = http.getUrl("https://api-v4.mysubmail.com/service/timestamp");
-        return resp.getStr("resp");
+        return resp.getStr("timestamp");
     }
 }

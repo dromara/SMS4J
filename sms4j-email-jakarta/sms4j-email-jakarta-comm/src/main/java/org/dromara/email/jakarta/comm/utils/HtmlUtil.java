@@ -2,11 +2,7 @@ package org.dromara.email.jakarta.comm.utils;
 
 import org.dromara.email.jakarta.comm.errors.MailException;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +28,8 @@ public final class HtmlUtil {
      * @param name 模板文件名
      * @author :Wind
      */
-    public static List<String> readHtml(String name) throws MailException {
-        try (InputStream is = HtmlUtil.class.getResourceAsStream("/template/" + name)) {
+    public static List<String> readHtml(String name,Class<?> clazz) throws MailException {
+        try (InputStream is = clazz.getResourceAsStream("/template/" + name)) {
             return readHtml(is);
         } catch (IOException e) {
             throw new MailException(e);
@@ -75,6 +71,12 @@ public final class HtmlUtil {
             }
         } catch (IOException e) {
             throw new MailException(e);
+        } finally {
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return data;
     }

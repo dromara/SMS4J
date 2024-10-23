@@ -1,4 +1,4 @@
-package org.dromara.sms4j.starter.adepter;
+package org.dromara.sms4j.starter.adaptor;
 
 import cn.hutool.core.bean.BeanUtil;
 import org.dromara.sms4j.core.datainterface.SmsReadConfig;

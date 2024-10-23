@@ -38,7 +38,7 @@ import org.dromara.sms4j.provider.config.SmsConfig;
 import org.dromara.sms4j.provider.factory.BaseProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 import org.dromara.sms4j.qiniu.config.QiNiuFactory;
-import org.dromara.sms4j.starter.adepter.ConfigCombineMapAdaptor;
+import org.dromara.sms4j.starter.adaptor.ConfigCombineMapAdaptor;
 import org.dromara.sms4j.submail.config.SubMailFactory;
 import org.dromara.sms4j.tencent.config.TencentFactory;
 import org.dromara.sms4j.unisms.config.UniFactory;

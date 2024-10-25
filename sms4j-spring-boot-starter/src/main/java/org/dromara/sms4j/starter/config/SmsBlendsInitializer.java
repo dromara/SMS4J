@@ -79,9 +79,7 @@ public class SmsBlendsInitializer {
         //如果手机号校验器存在实现，则注册手机号校验器（暂不可用）
         ServiceLoader<PhoneVerify> loader = ServiceLoader.load(PhoneVerify.class);
         if (loader.iterator().hasNext()) {
-            loader.forEach(f -> {
-                SmsProxyFactory.addPreProcessor(new CoreMethodParamValidateProcessor(f));
-            });
+            loader.forEach(f -> SmsProxyFactory.addPreProcessor(new CoreMethodParamValidateProcessor(f)));
         } else {
             SmsProxyFactory.addPreProcessor(new CoreMethodParamValidateProcessor(null));
         }

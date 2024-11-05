@@ -17,7 +17,10 @@ import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import org.dromara.sms4j.submail.config.SubMailConfig;
 import org.dromara.sms4j.submail.utils.SubMailUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.concurrent.Executor;
 
 /**

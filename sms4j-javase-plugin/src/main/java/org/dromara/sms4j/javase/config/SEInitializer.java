@@ -18,6 +18,7 @@ import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.api.verify.PhoneVerify;
 import org.dromara.sms4j.baidu.config.BaiduFactory;
 import org.dromara.sms4j.budingyun.config.BudingV2Factory;
+import org.dromara.sms4j.chuanglan.config.ChuangLanFactory;
 import org.dromara.sms4j.cloopen.config.CloopenFactory;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
@@ -36,7 +37,6 @@ import org.dromara.sms4j.emay.config.EmayFactory;
 import org.dromara.sms4j.huawei.config.HuaweiFactory;
 import org.dromara.sms4j.javase.util.YamlUtils;
 import org.dromara.sms4j.jdcloud.config.JdCloudFactory;
-import org.dromara.sms4j.chuanglan.config.ChuangLanFactory;
 import org.dromara.sms4j.jg.config.JgFactory;
 import org.dromara.sms4j.lianlu.config.LianLuFactory;
 import org.dromara.sms4j.luosimao.config.LuoSiMaoFactory;
@@ -145,9 +145,7 @@ public class SEInitializer {
             //如果手机号校验器存在实现，则注册手机号校验器
             ServiceLoader<PhoneVerify> loader = ServiceLoader.load(PhoneVerify.class);
             if (loader.iterator().hasNext()) {
-                loader.forEach(f -> {
-                    SmsProxyFactory.addPreProcessor(new CoreMethodParamValidateProcessor(f));
-                });
+                loader.forEach(f -> SmsProxyFactory.addPreProcessor(new CoreMethodParamValidateProcessor(f)));
             } else {
                 SmsProxyFactory.addPreProcessor(new CoreMethodParamValidateProcessor(null));
             }
@@ -218,9 +216,7 @@ public class SEInitializer {
         //如果手机号校验器存在实现，则注册手机号校验器
         ServiceLoader<PhoneVerify> loader = ServiceLoader.load(PhoneVerify.class);
         if (loader.iterator().hasNext()) {
-            loader.forEach(f -> {
-                SmsProxyFactory.addPreProcessor(new CoreMethodParamValidateProcessor(f));
-            });
+            loader.forEach(f -> SmsProxyFactory.addPreProcessor(new CoreMethodParamValidateProcessor(f)));
         } else {
             SmsProxyFactory.addPreProcessor(new CoreMethodParamValidateProcessor(null));
         }

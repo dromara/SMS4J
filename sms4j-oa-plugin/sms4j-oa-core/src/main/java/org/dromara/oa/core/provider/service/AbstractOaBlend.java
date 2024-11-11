@@ -2,6 +2,7 @@ package org.dromara.oa.core.provider.service;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.dromara.oa.api.OaCallBack;
 import org.dromara.oa.api.OaSender;
 import org.dromara.oa.comm.config.OaSupplierConfig;
@@ -19,6 +20,7 @@ import java.util.concurrent.PriorityBlockingQueue;
  * @author dongfeng
  * 2023-10-22 21:03
  */
+@Slf4j
 public abstract class AbstractOaBlend<C extends OaSupplierConfig> implements OaSender {
 
     @Getter
@@ -57,12 +59,16 @@ public abstract class AbstractOaBlend<C extends OaSupplierConfig> implements OaS
             pool.execute(() -> {
                 Thread.currentThread().setName("oa-priorityQueueMap-thread");
                 while (!Thread.currentThread().isInterrupted()) {
-                    Request request = priorityQueueMap.poll();
-                    if (!Objects.isNull(request)) {
+                    try{
+                        Request request = priorityQueueMap.take() ;
                         pool.execute(() -> {
-                            System.out.println("优先级为"+request.getPriority()+"已发送");
+                            log.info("优先级为"+request.getPriority()+"已发送");
                             sender(request, request.getMessageType());
                         });
+                    }catch (InterruptedException e){
+                        log.info("[Dispatcher]-priorityQueueMap-task-dispatcher has been interrupt to close.");
+                        Thread.currentThread().interrupt();
+                        break;
                     }
                 }
             });

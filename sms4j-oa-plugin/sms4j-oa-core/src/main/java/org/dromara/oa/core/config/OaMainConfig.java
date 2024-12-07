@@ -5,7 +5,6 @@ import org.dromara.oa.comm.task.delayed.DelayedTime;
 import org.dromara.oa.core.provider.config.OaConfig;
 import org.dromara.oa.core.provider.factory.OaBeanFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 
@@ -19,10 +18,14 @@ import java.util.concurrent.Executor;
 public class OaMainConfig {
 
     @Bean
-    @ConfigurationProperties(prefix = "sms-oa")     //指定配置文件注入属性前缀
     @ConditionalOnProperty(prefix = "sms-oa", name = "config-type", havingValue = "yaml")
-    protected OaConfig oaConfig() {
-        return OaBeanFactory.getSmsConfig();
+    protected OaConfig oaConfig(OaConfigProperties properties) {
+        OaConfig smsConfig = OaBeanFactory.getSmsConfig();
+        smsConfig.setCorePoolSize(properties.getCorePoolSize());
+        smsConfig.setMaxPoolSize(properties.getMaxPoolSize());
+        smsConfig.setQueueCapacity(properties.getQueueCapacity());
+        smsConfig.setShutdownStrategy(properties.getShutdownStrategy());
+        return smsConfig;
     }
 
     /**
@@ -38,6 +41,7 @@ public class OaMainConfig {
      * 注入线程池
      */
     @Bean("oaExecutor")
+    @ConditionalOnProperty(prefix = "sms-oa", name = "config-type", havingValue = "yaml")
     protected Executor taskExecutor(OaConfig config) {
         return OaBeanFactory.setExecutor(config);
     }

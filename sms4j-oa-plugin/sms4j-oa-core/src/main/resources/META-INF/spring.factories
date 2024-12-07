@@ -1,3 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  org.dromara.oa.core.config.OaConfigProperties,\
   org.dromara.oa.core.config.OaMainConfig,\
   org.dromara.oa.core.config.OaSupplierConfig

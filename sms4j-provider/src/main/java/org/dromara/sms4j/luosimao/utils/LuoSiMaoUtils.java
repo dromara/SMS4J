@@ -1,6 +1,5 @@
 package org.dromara.sms4j.luosimao.utils;
 
-import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.utils.SmsDateUtils;
@@ -13,24 +12,24 @@ import java.util.List;
 @Slf4j
 public class LuoSiMaoUtils {
 
-    public static LinkedHashMap<String, String> buildHeaders(){
+    public static LinkedHashMap<String, String> buildHeaders() {
         LinkedHashMap<String, String> headers = new LinkedHashMap<>(1);
         headers.put(Constant.CONTENT_TYPE, Constant.APPLICATION_FROM_URLENCODED);
         return headers;
     }
 
-    public static LinkedHashMap<String, Object> buildBody(String phone, String message){
+    public static LinkedHashMap<String, Object> buildBody(String phone, String message) {
         LinkedHashMap<String, Object> body = new LinkedHashMap<>(2);
-        body.put("mobile",  StrUtil.addPrefixIfNot(phone, "+86"));
+        body.put("mobile", phone);
         body.put("message", message);
         return body;
     }
 
-    public static LinkedHashMap<String, Object> buildBody(List<String> phones, String message, Date date){
+    public static LinkedHashMap<String, Object> buildBody(List<String> phones, String message, Date date) {
         LinkedHashMap<String, Object> body = new LinkedHashMap<>(2);
-        body.put("mobile",  SmsUtils.addCodePrefixIfNot(phones));
+        body.put("mobile", SmsUtils.joinComma(phones));
         body.put("message", message);
-        if (date != null){
+        if (date != null) {
             body.put("time", SmsDateUtils.normDatetimeGmt8(date));
         }
         return body;

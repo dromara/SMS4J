@@ -17,10 +17,7 @@ import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import org.dromara.sms4j.submail.config.SubMailConfig;
 import org.dromara.sms4j.submail.utils.SubMailUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.Executor;
 
 /**
@@ -188,10 +185,9 @@ public class SubMailSmsImpl extends AbstractSmsBlend<SubMailConfig> {
         body.put("appid", config.getAccessKeyId());
         body.put("to", StrUtil.addPrefixIfNot(phone, "+86"));
         if (StrUtil.isNotBlank(config.getSignature())){
-            content = StrUtil.addPrefixIfNot(content, "【 " + config.getSignature() + "】") + StrUtil.sub(content, 0, 1000);
-        }else {
-            content = StrUtil.sub(content, 0, 1000);
+            content = StrUtil.addPrefixIfNot(content, "【 " + config.getSignature() + "】");
         }
+        content = StrUtil.sub(content, 0, 1000);
         body.put("content", content);
         body.put("timestamp", timestamp());
         body.put("sign_type", config.getSignType());
@@ -244,10 +240,9 @@ public class SubMailSmsImpl extends AbstractSmsBlend<SubMailConfig> {
         LinkedHashMap<String, Object> body = new LinkedHashMap<>();
         body.put("appid", config.getAccessKeyId());
         if (StrUtil.isNotBlank(config.getSignature())){
-            content = StrUtil.addPrefixIfNot(content, "【 " + config.getSignature() + "】") + StrUtil.sub(content, 0, 1000);
-        }else {
-            content = StrUtil.sub(content, 0, 1000);
+            content = StrUtil.addPrefixIfNot(content, "【 " + config.getSignature() + "】");
         }
+        content = StrUtil.sub(content, 0, 1000);
         body.put("content", content);
         phones = CollUtil.sub(phones, 0, 50);
         List<LinkedHashMap<String, Object>> multi = new ArrayList<>(phones.size());
@@ -316,10 +311,9 @@ public class SubMailSmsImpl extends AbstractSmsBlend<SubMailConfig> {
         phones = CollUtil.sub(phones, 0, 10000);
         body.put("to", SmsUtils.addCodePrefixIfNot(phones));
         if (StrUtil.isNotBlank(config.getSignature())){
-            content = StrUtil.addPrefixIfNot(content, "【 " + config.getSignature() + "】") + StrUtil.sub(content, 0, 1000);
-        }else {
-            content = StrUtil.sub(content, 0, 1000);
+            content = StrUtil.addPrefixIfNot(content, "【 " + config.getSignature() + "】");
         }
+        content = StrUtil.sub(content, 0, 1000);
         body.put("content", content);
         body.put("timestamp", timestamp());
         body.put("sign_type", config.getSignType());

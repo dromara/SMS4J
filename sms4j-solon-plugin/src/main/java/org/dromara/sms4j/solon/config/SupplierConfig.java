@@ -30,13 +30,13 @@ public class SupplierConfig {
     }
 
     @Bean
-    protected Map<String, Map<String, Object>> blends() {
+    public Map<String, Map<String, Object>> blends() {
         return injectObj("sms.blends", new LinkedHashMap<>());
     }
 
 
     @Bean
-    protected SmsBlendsInitializer smsBlendsInitializer(List<BaseProviderFactory> factoryList,
+    public SmsBlendsInitializer smsBlendsInitializer(List<BaseProviderFactory> factoryList,
                                                         SmsConfig smsConfig,
                                                         Map<String, Map<String, Object>> blends) {
 

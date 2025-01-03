@@ -18,8 +18,6 @@ import org.dromara.sms4j.jg.service.JgSmsImpl;
 import org.dromara.sms4j.lianlu.service.LianLuSmsImpl;
 import org.dromara.sms4j.luosimao.service.LuoSiMaoSmsImpl;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.noear.solon.test.SolonJUnit5Extension;
 import org.noear.solon.test.SolonTest;
 
 import java.util.ArrayList;
@@ -30,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
-@ExtendWith(SolonJUnit5Extension.class)
 @SolonTest
 public class Sms4jTest {
 

@@ -9,8 +9,6 @@ import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.comm.utils.SmsUtils;
 import org.dromara.sms4j.core.factory.SmsFactory;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.noear.solon.test.SolonJUnit5Extension;
 import org.noear.solon.test.SolonTest;
 
 import java.util.ArrayList;
@@ -21,7 +19,6 @@ import java.util.LinkedHashMap;
  * @author sh1yu
  */
 @Slf4j
-@ExtendWith(SolonJUnit5Extension.class)
 @SolonTest
 public class SmsProcessorTest {
     /**

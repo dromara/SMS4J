@@ -1,6 +1,9 @@
 package org.dromara.sms4j.solon.config;
 
+import cn.hutool.core.util.ObjectUtil;
 import org.dromara.sms4j.api.SmsBlend;
+import org.dromara.sms4j.comm.constant.Constant;
+import org.dromara.sms4j.comm.enums.ConfigType;
 import org.dromara.sms4j.provider.config.SmsConfig;
 import org.dromara.sms4j.provider.factory.BaseProviderFactory;
 import org.noear.solon.annotation.Bean;
@@ -29,16 +32,37 @@ public class SupplierConfig {
         return obj;
     }
 
-    @Bean
+    @Bean("blends")
     public Map<String, Map<String, Object>> blends() {
         return injectObj("sms.blends", new LinkedHashMap<>());
+    }
+
+    @Bean
+    @Condition(onBean = SmsConfig.class)
+    public List<BaseProviderFactory> factoryList(@Inject("blends") Map<String, Map<String, Object>> blends, SmsConfig smsConfig) throws Exception {
+        //注入自定义实现工厂
+        List<BaseProviderFactory> factoryList = new ArrayList<>();
+        if (ConfigType.YAML.equals(smsConfig.getConfigType())) {
+            for (String configId : blends.keySet()) {
+                Map<String, Object> configMap = blends.get(configId);
+                Object factoryPath = configMap.get(Constant.FACTORY_PATH);
+                if (ObjectUtil.isNotEmpty(factoryPath)) {
+                    //反射创建实例
+                    Class<BaseProviderFactory<? extends SmsBlend, ? extends org.dromara.sms4j.api.universal.SupplierConfig>> newClass = (Class<BaseProviderFactory<? extends SmsBlend, ? extends org.dromara.sms4j.api.universal.SupplierConfig>>) Class.forName(factoryPath.toString());
+                    BaseProviderFactory<? extends SmsBlend, ? extends org.dromara.sms4j.api.universal.SupplierConfig> factory = newClass.newInstance();
+                    factoryList.add(factory);
+                }
+            }
+        }
+
+        return factoryList;
     }
 
 
     @Bean
     public SmsBlendsInitializer smsBlendsInitializer(List<BaseProviderFactory> factoryList,
-                                                        SmsConfig smsConfig,
-                                                        Map<String, Map<String, Object>> blends) {
+                                                     SmsConfig smsConfig,
+                                                     @Inject("blends") Map<String, Map<String, Object>> blends) {
 
         //todo: solon 不支持泛型的 List[Bean] 注入
         List<BaseProviderFactory<? extends SmsBlend, ? extends org.dromara.sms4j.api.universal.SupplierConfig>> factoryList2 = new ArrayList<>(factoryList.size());

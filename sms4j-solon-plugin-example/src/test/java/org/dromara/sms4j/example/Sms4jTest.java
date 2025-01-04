@@ -1,5 +1,6 @@
 package org.dromara.sms4j.example;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.UUID;
@@ -18,8 +19,6 @@ import org.dromara.sms4j.jg.service.JgSmsImpl;
 import org.dromara.sms4j.lianlu.service.LianLuSmsImpl;
 import org.dromara.sms4j.luosimao.service.LuoSiMaoSmsImpl;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.noear.solon.test.SolonJUnit5Extension;
 import org.noear.solon.test.SolonTest;
 
 import java.util.ArrayList;
@@ -30,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
-@ExtendWith(SolonJUnit5Extension.class)
 @SolonTest
 public class Sms4jTest {
 
@@ -532,5 +530,32 @@ public class Sms4jTest {
         // 语音模板通知发送 voice/voiceTemplate
         SmsResponse smsResponse5 = danMiSms.voiceTemplate(PHONE, "opipedlqza", "111,222,333");
         Assert.isTrue(smsResponse5.isSuccess());
+    }
+
+
+    /**
+     * 联通一信通模板
+     */
+    @Test
+    public void yixintongSmsTest() {
+        if (StrUtil.isBlank(PHONE)) {
+            return;
+        }
+
+        //短信发送模板：你有一项编号为{xxxxxxxxx}的事务需要处理{x}
+        //其中的{xxxxxx}代表短信模板中的变量部分，可变化，一个x代表一个字或者字符，{}为变量标识，在发送时不用传。实发变量字数小于等于x的个数。
+
+        // 单发
+        String message1 = StrUtil.format("你有一项编号为{}的事务需要处理。", SmsUtils.getRandomInt(6));
+        SmsResponse smsResponse1 = SmsFactory.getBySupplier(SupplierConstant.YIXINTONG).sendMessage(PHONE, message1);
+        log.info(JSONUtil.toJsonStr(smsResponse1));
+        Assert.isTrue(smsResponse1.isSuccess());
+
+        // 群发
+        List<String> phones = CollectionUtil.toList(PHONE);
+        String message2 = StrUtil.format("你有一项编号为{}的事务需要处理。", SmsUtils.getRandomInt(6));
+        SmsResponse smsResponse2 = SmsFactory.getBySupplier(SupplierConstant.YIXINTONG).massTexting(phones, message2);
+        log.info(JSONUtil.toJsonStr(smsResponse2));
+        Assert.isTrue(smsResponse2.isSuccess());
     }
 }

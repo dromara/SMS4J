@@ -22,7 +22,6 @@ import java.util.Map;
 /**
  * smsConfig 参数意义为确保注入时 smsConfig 已经存在
  */
-@Condition(onProperty = "${sms.configType}=yaml")
 @Configuration
 public class SupplierConfigure {
     @Inject
@@ -35,8 +34,8 @@ public class SupplierConfigure {
     }
 
     @Bean("blends")
-    @Condition(onProperty = "${sms.configType} = yaml")
     public Map<String, Map<String, Object>> blends() {
+        //确保能产生（给下面用）//springboot 就算没产生，也会给个默认
         return context.cfg().getProp("sms.blends").bindTo(new LinkedHashMap<>());
     }
 
@@ -67,11 +66,7 @@ public class SupplierConfigure {
     public SmsBlendsInitializer smsBlendsInitializer(List<BaseProviderFactory<? extends SmsBlend, ? extends SupplierConfig>> factoryList,
                                                      SmsConfig smsConfig,
                                                      @Inject("blends") Map<String, Map<String, Object>> blends,
-                                                     @Inject(required = false) List<SmsReadConfig> extendsSmsConfigs) {
-        if (extendsSmsConfigs == null) {
-            extendsSmsConfigs = new ArrayList<>();
-        }
-
+                                                     List<SmsReadConfig> extendsSmsConfigs) {
         return new SmsBlendsInitializer(factoryList, smsConfig, blends, extendsSmsConfigs);
     }
 }

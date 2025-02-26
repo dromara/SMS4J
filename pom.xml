@@ -53,7 +53,7 @@
     </scm>
 
     <properties>
-        <revision>3.3.1-SNAPSHOT</revision>
+        <revision>3.3.4-SNAPSHOT</revision>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>

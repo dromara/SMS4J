@@ -97,7 +97,7 @@ public class MasSmsImpl extends AbstractSmsBlend<MasConfig> {
         } catch (SmsBlendException e) {
             smsResponse = errorResp(e.message);
         }
-        if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
+        if (smsResponse.isSuccess() || retry >= getConfig().getMaxRetries()) {
             retry = 0;
             return smsResponse;
         }

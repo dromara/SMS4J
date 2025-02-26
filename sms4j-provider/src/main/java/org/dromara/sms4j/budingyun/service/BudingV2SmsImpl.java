@@ -11,6 +11,7 @@ import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -72,7 +73,7 @@ public class BudingV2SmsImpl extends AbstractSmsBlend<BudingV2Config> {
         } catch (SmsBlendException e) {
             smsResponse = errorResp(e.message);
         }
-        if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
+        if (smsResponse.isSuccess() || retry >= getConfig().getMaxRetries()) {
             retry = 0;
             return smsResponse;
         }
@@ -150,7 +151,12 @@ public class BudingV2SmsImpl extends AbstractSmsBlend<BudingV2Config> {
      */
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
-        throw new SmsBlendException("布丁云V2暂不支持多条短信发送");
+        List<SmsResponse> list = new ArrayList<>();
+        for (String phone : phones) {
+            SmsResponse smsResponse = sendMessage(phone, templateId, messages);
+            list.add(smsResponse);
+        }
+        return SmsRespUtils.resp(list, true, getConfigId());
     }
 
     private Map<String, String> getHeaders() {

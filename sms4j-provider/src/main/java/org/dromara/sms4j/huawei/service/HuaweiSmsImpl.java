@@ -21,13 +21,14 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.Executor;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.dromara.sms4j.huawei.utils.HuaweiBuilder.listToString;
 
 @Slf4j
 public class HuaweiSmsImpl extends AbstractSmsBlend<HuaweiConfig> {
 
-    private int retry = 0;
+    private volatile int retry = 0;
 
     public HuaweiSmsImpl(HuaweiConfig config, Executor pool, DelayedTime delayed) {
         super(config, pool, delayed);
@@ -80,7 +81,7 @@ public class HuaweiSmsImpl extends AbstractSmsBlend<HuaweiConfig> {
         } catch (SmsBlendException e) {
             smsResponse = errorResp(e.message);
         }
-        if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
+        if (smsResponse.isSuccess() || retry >= getConfig().getMaxRetries()) {
             retry = 0;
             return smsResponse;
         }

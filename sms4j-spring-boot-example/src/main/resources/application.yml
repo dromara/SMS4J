@@ -18,6 +18,12 @@ sms:
       template-id: SMS_272470496
       # 模版名称
       templateName: code
+      # 代理
+      proxy:
+        # 是否启用代理 默认关闭 需手动开启
+        enable: true
+        host: 127.0.0.1
+        port: 8080
     # 腾讯短信例子
     tx:
       #厂商标识

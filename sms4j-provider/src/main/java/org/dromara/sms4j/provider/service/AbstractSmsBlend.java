@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.dromara.sms4j.api.SmsBlend;
 import org.dromara.sms4j.api.callback.CallBack;
 import org.dromara.sms4j.api.entity.SmsResponse;
+import org.dromara.sms4j.api.universal.ProxyConfig;
 import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.api.utils.SmsRespUtils;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
@@ -32,13 +33,19 @@ public abstract class AbstractSmsBlend<C extends SupplierConfig> implements SmsB
 
     protected final DelayedTime delayed;
 
-    protected final SmsHttpUtils http = SmsHttpUtils.instance();
+    protected final SmsHttpUtils http;
 
     protected AbstractSmsBlend(C config, Executor pool, DelayedTime delayed) {
         this.configId = StrUtil.isEmpty(config.getConfigId()) ? getSupplier() : config.getConfigId();
         this.config = config;
         this.pool = pool;
         this.delayed = delayed;
+        ProxyConfig proxy = config.getProxy();
+        if (proxy != null && proxy.getEnable()){
+            this.http = SmsHttpUtils.instance(proxy.getHost(), proxy.getPort());
+        }else {
+            this.http = SmsHttpUtils.instance();
+        }
     }
 
     protected AbstractSmsBlend(C config) {
@@ -46,6 +53,12 @@ public abstract class AbstractSmsBlend<C extends SupplierConfig> implements SmsB
         this.config = config;
         this.pool = BeanFactory.getExecutor();
         this.delayed = BeanFactory.getDelayedTime();
+        ProxyConfig proxy = config.getProxy();
+        if (proxy != null && proxy.getEnable()){
+            this.http = SmsHttpUtils.instance(proxy.getHost(), proxy.getPort());
+        }else {
+            this.http = SmsHttpUtils.instance();
+        }
     }
 
     protected C getConfig() {

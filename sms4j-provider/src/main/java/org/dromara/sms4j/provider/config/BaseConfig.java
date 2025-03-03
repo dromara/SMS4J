@@ -1,6 +1,7 @@
 package org.dromara.sms4j.provider.config;
 
 import lombok.Data;
+import org.dromara.sms4j.api.universal.ProxyConfig;
 import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 
@@ -55,6 +56,12 @@ public abstract class BaseConfig implements SupplierConfig {
      * @since 3.0.0
      */
     private String configId;
+
+    /**
+     * 代理配置
+     *
+     */
+    private ProxyConfig proxy;
 
     /**
      * 重试间隔（单位：秒），默认为5秒

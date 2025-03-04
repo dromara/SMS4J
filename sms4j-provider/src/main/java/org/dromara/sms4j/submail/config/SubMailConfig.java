@@ -36,13 +36,13 @@ public class SubMailConfig extends BaseConfig {
     /**
      * MD5 或 SHA-1 默认MD5 填写任意值，不为即为 密匙明文验证模式
      */
-    private String signType = "MD5";
+    private String signType = "md5";
 
     /**
      * signature加密计算方式
      * (当sign_version传2时，会忽略某些字段)
      */
-    private String signVersion;
+    private String signVersion = "2";
 
     /**
      * 获取供应商

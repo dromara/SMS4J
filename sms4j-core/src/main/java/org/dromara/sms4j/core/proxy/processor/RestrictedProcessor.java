@@ -10,6 +10,8 @@ import org.dromara.sms4j.comm.utils.SmsUtils;
 import org.dromara.sms4j.provider.config.SmsConfig;
 import org.dromara.sms4j.provider.factory.BeanFactory;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -26,7 +28,6 @@ import java.util.Objects;
 @Slf4j
 public class RestrictedProcessor implements CoreMethodProcessor, SmsDaoAware {
     static Long minTimer = 60 * 1000L;
-    static Long accTimer = 24 * 60 * 60 * 1000L;
     private static final String REDIS_KEY = "sms:restricted:";
 
     /**
@@ -59,6 +60,13 @@ public class RestrictedProcessor implements CoreMethodProcessor, SmsDaoAware {
         doRestricted(phones);
     }
 
+    private long calculateExpiryTime() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime tomorrowMidnight = now.toLocalDate().plusDays(1).atStartOfDay();
+        Duration duration = Duration.between(now, tomorrowMidnight);
+        return duration.getSeconds();
+    }
+
     public void doRestricted(List<String> phones) {
         if (Objects.isNull(smsDao)) {
             throw new SmsBlendException("The smsDao tool could not be found");
@@ -86,12 +94,12 @@ public class RestrictedProcessor implements CoreMethodProcessor, SmsDaoAware {
             if (dailyMaxLimitExists) {
                 Integer dailyCount = (Integer) smsDao.get(accountMaxKey);
                 if (SmsUtils.isEmpty(dailyCount)) {
-                    smsDao.set(accountMaxKey, 1, accTimer / 1000);
+                    smsDao.set(accountMaxKey, 1, calculateExpiryTime());
                 } else if (dailyCount >= accountMax) {
                     log.info("The phone: {},number of short messages reached the maximum today", phone);
                     throw new SmsBlendException("The phone: {},number of short messages reached the maximum today", phone);
                 } else {
-                    smsDao.set(accountMaxKey, dailyCount + 1, accTimer / 1000);
+                    smsDao.set(accountMaxKey, dailyCount + 1, calculateExpiryTime());
                 }
             }
             // 是否配置了每分钟最大限制
@@ -105,7 +113,7 @@ public class RestrictedProcessor implements CoreMethodProcessor, SmsDaoAware {
                         if (dailyMaxLimitExists) {
                             Integer dailyCount = (Integer) smsDao.get(accountMaxKey);
                             if (dailyCount > 1) {
-                                smsDao.set(accountMaxKey, dailyCount - 1, accTimer / 1000);
+                                smsDao.set(accountMaxKey, dailyCount - 1, calculateExpiryTime());
                             } else {
                                 smsDao.remove(accountMaxKey);
                             }

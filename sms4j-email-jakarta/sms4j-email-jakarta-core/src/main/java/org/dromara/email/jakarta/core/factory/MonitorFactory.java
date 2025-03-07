@@ -28,7 +28,7 @@ public class MonitorFactory {
      * @param config 监听配置
      * @param monitor 回调对象
      * @author :Wind
-    */
+     */
     public static void put(String key, MailImapConfig config, Monitor monitor){
         SERVICES.put(key,new MonitorService(config,monitor));
     }
@@ -38,9 +38,9 @@ public class MonitorFactory {
      * <p> 开始监听指定标识的邮箱
      * @param  key 标识
      * @author :Wind
-    */
+     */
     public static void start(String key){
-       SERVICES.get(key).start();
+        SERVICES.get(key).start();
     }
 
     /**
@@ -48,7 +48,7 @@ public class MonitorFactory {
      * <p> 停止监听指定标识的邮箱
      * @param key 标识
      * @author :Wind
-    */
+     */
     public static void stop(String key){
         SERVICES.get(key).stop();
     }
@@ -58,7 +58,7 @@ public class MonitorFactory {
      * <p> 获取指定标识的配置信息
      * @param key 标识
      * @author :Wind
-    */
+     */
     public static MailImapConfig getConfig(String key) {
         return SERVICES.get(key).getMailImapConfig();
     }

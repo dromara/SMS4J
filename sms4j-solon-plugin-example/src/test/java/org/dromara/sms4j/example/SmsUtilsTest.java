@@ -5,8 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.aliyun.config.AlibabaConfig;
 import org.dromara.sms4j.comm.utils.SmsUtils;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.noear.solon.test.SolonJUnit5Extension;
 import org.noear.solon.test.SolonTest;
 
 import java.util.ArrayList;
@@ -16,7 +14,6 @@ import java.util.List;
  * @author handy
  */
 @Slf4j
-@ExtendWith(SolonJUnit5Extension.class)
 @SolonTest
 public class SmsUtilsTest {
 

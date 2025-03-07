@@ -38,10 +38,11 @@ import org.dromara.sms4j.provider.config.SmsConfig;
 import org.dromara.sms4j.provider.factory.BaseProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
 import org.dromara.sms4j.qiniu.config.QiNiuFactory;
-import org.dromara.sms4j.starter.adepter.ConfigCombineMapAdaptor;
+import org.dromara.sms4j.starter.adaptor.ConfigCombineMapAdaptor;
 import org.dromara.sms4j.submail.config.SubMailFactory;
 import org.dromara.sms4j.tencent.config.TencentFactory;
 import org.dromara.sms4j.unisms.config.UniFactory;
+import org.dromara.sms4j.yixintong.config.YiXintongFactory;
 import org.dromara.sms4j.yunpian.config.YunPianFactory;
 import org.dromara.sms4j.zhutong.config.ZhutongFactory;
 import org.springframework.beans.factory.ObjectProvider;
@@ -78,9 +79,7 @@ public class SmsBlendsInitializer {
         //如果手机号校验器存在实现，则注册手机号校验器（暂不可用）
         ServiceLoader<PhoneVerify> loader = ServiceLoader.load(PhoneVerify.class);
         if (loader.iterator().hasNext()) {
-            loader.forEach(f -> {
-                SmsProxyFactory.addPreProcessor(new CoreMethodParamValidateProcessor(f));
-            });
+            loader.forEach(f -> SmsProxyFactory.addPreProcessor(new CoreMethodParamValidateProcessor(f)));
         } else {
             SmsProxyFactory.addPreProcessor(new CoreMethodParamValidateProcessor(null));
         }
@@ -150,6 +149,7 @@ public class SmsBlendsInitializer {
         ProviderFactoryHolder.registerFactory(LuoSiMaoFactory.instance());
         ProviderFactoryHolder.registerFactory(SubMailFactory.instance());
         ProviderFactoryHolder.registerFactory(DanMiFactory.instance());
+        ProviderFactoryHolder.registerFactory(YiXintongFactory.instance());
         if (SmsUtils.isClassExists("com.jdcloud.sdk.auth.CredentialsProvider")) {
             if (SmsUtils.isClassExists("com.jdcloud.sdk.auth.CredentialsProvider")) {
                 ProviderFactoryHolder.registerFactory(JdCloudFactory.instance());

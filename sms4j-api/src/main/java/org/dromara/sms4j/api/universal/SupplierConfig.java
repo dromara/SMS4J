@@ -22,4 +22,9 @@ public interface SupplierConfig {
      */
     String getSupplier();
 
+    /**
+     * 获取代理配置
+     *
+     */
+    ProxyConfig getProxy();
 }

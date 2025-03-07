@@ -58,7 +58,7 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
         } catch (SmsBlendException e) {
             smsResponse = errorResp(e.message);
         }
-        if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
+        if (smsResponse.isSuccess() || retry >= getConfig().getMaxRetries()) {
             retry = 0;
             return smsResponse;
         }
@@ -92,9 +92,9 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
         try {
             smsResponse = getResponse(http.postFrom(Constant.YUNPIAN_URL + "/sms/tpl_single_send.json", headers, body));
         } catch (SmsBlendException e) {
-            return requestRetry(phone, templateId, messages);
+            smsResponse = errorResp(e.message);
         }
-        if (smsResponse.isSuccess() || retry == getConfig().getMaxRetries()) {
+        if (smsResponse.isSuccess() || retry >= getConfig().getMaxRetries()) {
             retry = 0;
             return smsResponse;
         }

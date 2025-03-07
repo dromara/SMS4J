@@ -99,7 +99,7 @@ public class MailBuild {
         return MailService.instance(new MailBuild(config));
     }
     public static MailClient build(MailSmtpConfig config,Blacklist blacklist)throws MessagingException {
-       return MailService.instance(new MailBuild(config,blacklist));
+        return MailService.instance(new MailBuild(config,blacklist));
     }
 
     /**
@@ -120,7 +120,7 @@ public class MailBuild {
                     list.add(s);
                 }
             }
-           return InternetAddress.parse(CollUtil.join(list, ","));
+            return InternetAddress.parse(CollUtil.join(list, ","));
         } catch (AddressException e) {
             throw new MailException(e);
         }

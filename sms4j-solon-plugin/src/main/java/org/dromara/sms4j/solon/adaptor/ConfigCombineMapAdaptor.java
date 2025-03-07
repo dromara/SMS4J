@@ -1,14 +1,10 @@
-package org.dromara.sms4j.starter.adepter;
+package org.dromara.sms4j.solon.adaptor;
 
 import cn.hutool.core.bean.BeanUtil;
 import org.dromara.sms4j.core.datainterface.SmsReadConfig;
 import org.dromara.sms4j.provider.config.BaseConfig;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ConfigCombineMapAdaptor<S, M> extends HashMap {
     @Override

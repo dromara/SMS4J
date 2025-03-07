@@ -12,7 +12,10 @@ import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.utils.SmsDateUtils;
 
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -98,6 +101,7 @@ public class BaiduUtils {
         Map<String, String> headers = new HashMap<>(2);
         headers.put(Constant.AUTHORIZATION, authorization);
         headers.put("host", config.getHost());
+        headers.put("x-bce-date", SmsDateUtils.normDateGmt8(new Date()));
         return headers;
     }
 

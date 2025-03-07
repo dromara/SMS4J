@@ -2,8 +2,8 @@ package org.dromara.sms4j.baidu.config;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.baidu.service.BaiduSmsImpl;
+import org.dromara.sms4j.comm.constant.SupplierConstant;
 import org.dromara.sms4j.provider.factory.AbstractProviderFactory;
 
 /**

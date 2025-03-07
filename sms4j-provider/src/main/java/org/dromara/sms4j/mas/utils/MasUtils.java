@@ -65,6 +65,8 @@ public class MasUtils {
         if (StrUtil.isNotEmpty(config.getAddSerial())){
             map.put("addSerial", config.getAddSerial().trim());
             sb.append(config.getAddSerial().trim());
+        }else {
+            map.put("addSerial", "");
         }
 
         map.put("mac", DigestUtil.md5Hex(sb.toString(), StandardCharsets.UTF_8));

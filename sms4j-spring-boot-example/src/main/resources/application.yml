@@ -18,6 +18,12 @@ sms:
       template-id: SMS_272470496
       # 模版名称
       templateName: code
+      # 代理
+      proxy:
+        # 是否启用代理 默认关闭 需手动开启
+        enable: true
+        host: 127.0.0.1
+        port: 8080
     # 腾讯短信例子
     tx:
       #厂商标识
@@ -155,21 +161,29 @@ sms:
       accessKeyId: ACCOUNT SID
       accessKeySecret: AUTH TOKEN
       action: 默认请求方法 distributor/sendSMS
+    # 一信通
+    yixintong:
+      sp-code: xxxxxx #(必填)企业编号
+      access-key-id: xxxxxx #(必填)用户名
+      access-key-secret: 324gaxxxxxxxxxxxxxxxxx9sdf89 #(必填)接口密钥（正式帐户需要登陆平台，接口业务-接口申请右侧钥匙状图标查看或获取，接口密钥获取后十分钟生效）
+      template-id:  #(可选)模板编号(若配置此参数，则会默认使用该模板，以便提高服务方性能)
+      sign-code: #(可选)短信前置签名编号（登陆平台-接口业务-我的签名查看）
+      f: 1 #(可选)默认为1，提交时检测方式
 
 sms-oa:
   config-type: yaml
   oas:
     oaDingTalkByYaml: # configId
       isEnable: true # 表示该配置是否生效(默认生效,false表示不生效)
-      supplier: dingding # 厂商标识
+      supplier: ding_ding # 厂商标识
       tokenId: 您的accessKey
       sign: 您的sign
     oaByteTalkByYaml: # configId
-      supplier: feishu # 厂商标识
+      supplier: byte_talk # 厂商标识
       tokenId: 您的accessKey
       sign: 您的sign
     oaWeTalkByYaml:
-      supplier: wetalk # 厂商标识
+      supplier: we_talk # 厂商标识
       tokenId: 您的sign
   core-pool-size: 20
   queue-capacity: 20

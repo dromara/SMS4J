@@ -17,7 +17,10 @@ import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 import org.dromara.sms4j.submail.config.SubMailConfig;
 import org.dromara.sms4j.submail.utils.SubMailUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.concurrent.Executor;
 
 /**
@@ -360,6 +363,6 @@ public class SubMailSmsImpl extends AbstractSmsBlend<SubMailConfig> {
 
     private String timestamp(){
         JSONObject resp = http.getUrl("https://api-v4.mysubmail.com/service/timestamp");
-        return resp.getStr("resp");
+        return resp.getStr("timestamp");
     }
 }

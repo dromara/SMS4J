@@ -10,8 +10,6 @@ import org.dromara.oa.core.dingTalk.config.DingTalkConfig;
 import org.dromara.oa.core.provider.factory.OaFactory;
 import org.dromara.oa.core.weTalk.config.WeTalkConfig;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.noear.solon.test.SolonJUnit5Extension;
 import org.noear.solon.test.SolonTest;
 
 import java.util.ArrayList;
@@ -20,7 +18,6 @@ import java.util.concurrent.CountDownLatch;
 
 
 @Slf4j
-@ExtendWith(SolonJUnit5Extension.class)
 @SolonTest
 public class SmsOaTest {
     //***********************DingTalk-Test************************//

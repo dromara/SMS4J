@@ -1,9 +1,9 @@
 package org.dromara.sms4j.mas.service;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
-import lombok.extern.slf4j.Slf4j;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.concurrent.Executor;
+
 import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.api.utils.SmsRespUtils;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
@@ -14,9 +14,10 @@ import org.dromara.sms4j.mas.config.MasConfig;
 import org.dromara.sms4j.mas.utils.MasUtils;
 import org.dromara.sms4j.provider.service.AbstractSmsBlend;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.concurrent.Executor;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>类名: MasSmsImpl
@@ -53,7 +54,8 @@ public class MasSmsImpl extends AbstractSmsBlend<MasConfig> {
         if (CollUtil.isEmpty(messages)){
             messages = new LinkedHashMap<>();
         }
-        return getSmsResponse(phone, JSONUtil.toJsonStr(messages), getConfig().getTemplateId());
+
+        return getSmsResponse(phone, JSONUtil.toJsonStr(messages.values()), getConfig().getTemplateId());
     }
 
     @Override
@@ -61,7 +63,7 @@ public class MasSmsImpl extends AbstractSmsBlend<MasConfig> {
         if (CollUtil.isEmpty(messages)){
             messages = new LinkedHashMap<>();
         }
-        String messageStr = JSONUtil.toJsonStr(messages);
+        String messageStr = JSONUtil.toJsonStr(messages.values());
         return getSmsResponse(phone, messageStr, templateId);
     }
 
@@ -75,7 +77,7 @@ public class MasSmsImpl extends AbstractSmsBlend<MasConfig> {
         if (CollUtil.isEmpty(messages)){
             messages = new LinkedHashMap<>();
         }
-        String messageStr = JSONUtil.toJsonStr(messages);
+        String messageStr = JSONUtil.toJsonStr(messages.values());
         return getSmsResponse(SmsUtils.addCodePrefixIfNot(phones), messageStr, templateId);
     }
 

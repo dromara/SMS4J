@@ -55,7 +55,7 @@ public class BlackListProcessor implements CoreMethodProcessor, SmsDaoAware {
         }
         for (String phone : phones) {
             if (blackList.stream().anyMatch(black -> black.replace("-","").equals(phone))) {
-                throw new SmsBlendException("The phone:", phone + " hit global blacklist！");
+                throw new SmsBlendException(String.format("The phone: %s hit global blacklist！", phone));
             }
         }
     }

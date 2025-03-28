@@ -96,8 +96,8 @@ public class RestrictedProcessor implements CoreMethodProcessor, SmsDaoAware {
                 if (SmsUtils.isEmpty(dailyCount)) {
                     smsDao.set(accountMaxKey, 1, calculateExpiryTime());
                 } else if (dailyCount >= accountMax) {
-                    log.info("The phone: {},number of short messages reached the maximum today", phone);
-                    throw new SmsBlendException("The phone: {},number of short messages reached the maximum today", phone);
+                    log.info("The phone: {} number of short messages reached the maximum today", phone);
+                    throw new SmsBlendException(String.format("The phone: %s number of short messages reached the maximum today", phone));
                 } else {
                     smsDao.set(accountMaxKey, dailyCount + 1, calculateExpiryTime());
                 }
@@ -118,8 +118,8 @@ public class RestrictedProcessor implements CoreMethodProcessor, SmsDaoAware {
                                 smsDao.remove(accountMaxKey);
                             }
                         }
-                        log.info("The phone: {} Text messages are sent too often！", phone);
-                        throw new SmsBlendException("The phone: {} Text messages are sent too often！", phone);
+                        log.info("The phone: {} text messages are sent too often！", phone);
+                        throw new SmsBlendException(String.format("The phone: %s text messages are sent too often！", phone));
                     }
                 } else {
                     smsDao.set(minuteMaxKey, 1, minTimer / 1000);

@@ -195,7 +195,7 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
             signature = signature + "】";
         }
         if (StrUtil.isBlank(templateId)) {
-            throw new SmsBlendException("助通短信：模板短信模板id不能为空！！");
+            throw new SmsBlendException("助通短信：模板短信模板id不能为空！");
         }
 
         //地址

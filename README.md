@@ -1,9 +1,9 @@
-<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">sms4j v3.2.0</h1>
+<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">sms4j v3.3.4</h1>
 <h4 align="center" style="margin: 30px 0 30px; font-weight: bold;">sms4j -- 让发送短信变的更简单</h4>
 <p align="center">
 <a href="https://gitee.com/dromara/sms4j/stargazers"><img src="https://gitee.com/dromara/sms4j/badge/star.svg?theme=gvp"></a>
 <a href="https://gitee.com/dromara/sms4j/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-green"></a>
-<a href="https://gitee.com/dromara/sms4j"><img src="https://img.shields.io/badge/version-v3.2.0-blue"></a>
+<a href="https://gitee.com/dromara/sms4j"><img src="https://img.shields.io/badge/version-v3.3.4-blue"></a>
 </p>
 <img src="/public/logo.png">
 
@@ -16,6 +16,7 @@
 如果我们的项目对你产生了帮助，或者你觉得还算值得鼓励，请用你发财的小手帮助点上一个start  
 [gitee](https://gitee.com/dromara/sms4j)
 [github](https://github.com/dromara/sms4j)
+[gitcode](https://gitcode.com/dromara/SMS4J)
 
 #### [官方文档](https://sms4j.com)
 #### [JavaDoc文档](https://apidoc.gitee.com/dromara/sms4j/)
@@ -35,6 +36,13 @@
 - **[助通短信](https://www.ztinfo.cn/products/sms)**
 - **[联麓短信](https://console.shlianlu.com/#/document/smsDoc)**
 - **[鼎众短信](http://demoapi.321sms.com:8201/index.html)**
+- **[创蓝短信](https://doc.chuanglan.com/document/HAQYSZKH9HT5Z50L)**
+- **[极光短信](https://docs.jiguang.cn/jsms)**
+- **[布丁云短信](https://console-docs.apipost.cn/preview/986c24caf79228ed/d3d8a6d5faf6ef51)**
+- **[中国移动 云MAS短信](https://mas.10086.cn/)**
+- **[螺丝帽短信](https://luosimao.com)**
+- **[SUBMAIL短信](https://www.mysubmail.com/)**
+- **[单米科技短信](https://www.danmi.com/)**
 
 ## 在SpringBoot环境集成
 
@@ -145,6 +153,7 @@ sms:
 ## 贡献原则
 - 我们原则上欢迎任何人为sms4j添加加瓦贡献代码
 - 贡献代码应注释完备，按照javaDoc标准对 类，方法，变量，参数，返回值等信息说明
+- 如新增短信厂商需要同時以MD格式编写厂商的使用文档
 - 新增的方法模块不能破坏原有结构和兼容性
 - 如果我们关闭了你的issues或者pr请查看回复内容，我们会在回复中做出解释
 

@@ -169,6 +169,20 @@ sms:
       template-id:  #(可选)模板编号(若配置此参数，则会默认使用该模板，以便提高服务方性能)
       sign-code: #(可选)短信前置签名编号（登陆平台-接口业务-我的签名查看）
       f: 1 #(可选)默认为1，提交时检测方式
+    # 梦网
+    montnets:
+      # 您的accessKey
+      access-key-id: 您的accessKey
+      # 您的accessKeySecret
+      access-key-secret: 您的accessKeySecret
+      # 服务地址
+      url: 服务地址 http://ip:port
+      # 接口地址
+      api: 接口地址 /sms/v2/std/send_template
+      # 默认模板id
+      templateId: 默认模板id
+      # 默认模板参数名
+      templateParam: 默认模板参数名
 
 sms-oa:
   config-type: yaml

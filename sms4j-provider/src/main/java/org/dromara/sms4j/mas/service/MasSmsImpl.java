@@ -69,7 +69,7 @@ public class MasSmsImpl extends AbstractSmsBlend<MasConfig> {
 
     @Override
     public SmsResponse massTexting(List<String> phones, String message) {
-        return getSmsResponse(SmsUtils.addCodePrefixIfNot(phones), message, getConfig().getTemplateId());
+        return getSmsResponse(SmsUtils.addCodePrefixIfNot(phones, false), message, getConfig().getTemplateId());
     }
 
     @Override
@@ -78,7 +78,7 @@ public class MasSmsImpl extends AbstractSmsBlend<MasConfig> {
             messages = new LinkedHashMap<>();
         }
         String messageStr = JSONUtil.toJsonStr(messages.values());
-        return getSmsResponse(SmsUtils.addCodePrefixIfNot(phones), messageStr, templateId);
+        return getSmsResponse(SmsUtils.addCodePrefixIfNot(phones, false), messageStr, templateId);
     }
 
     private SmsResponse getSmsResponse(String phone, String message, String templateId) {

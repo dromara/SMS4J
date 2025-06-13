@@ -281,10 +281,10 @@ public class Sms4jTest {
         log.info(JSONUtil.toJsonStr(smsResponse3));
         Assert.isTrue(smsResponse3.isSuccess());
 
-        SmsResponse smsResponse4 = dz.massTexting(phones, "" ,messages);
+        SmsResponse smsResponse4 = dz.massTexting(phones, "", messages);
         log.info(JSONUtil.toJsonStr(smsResponse4));
         Assert.isTrue(smsResponse4.isSuccess());
-        
+
     }
 
     /**
@@ -557,6 +557,16 @@ public class Sms4jTest {
         SmsResponse smsResponse2 = SmsFactory.getBySupplier(SupplierConstant.YIXINTONG).massTexting(phones, message2);
         log.info(JSONUtil.toJsonStr(smsResponse2));
         Assert.isTrue(smsResponse2.isSuccess());
+    }
+
+    /**
+     * 梦网短信
+     */
+    @Test
+    public void montnetsSmsTest() {
+        // 梦网
+        SmsResponse smsResponse = SmsFactory.getBySupplier(SupplierConstant.MONTNETS).sendMessage(PHONE, SmsUtils.getRandomInt(6));
+        Assert.isTrue(smsResponse.isSuccess());
     }
 
 }

@@ -97,6 +97,10 @@ public abstract class SupplierConstant {
      * 联通一信通 sms
      */
     public static final String YIXINTONG = "yixintong";
+    /**
+     * 梦网 sms
+     */
+    public static final String MONTNETS = "montnets";
 
     /**
      * 互亿无线 sms

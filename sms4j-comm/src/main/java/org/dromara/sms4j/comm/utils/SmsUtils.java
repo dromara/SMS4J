@@ -138,10 +138,11 @@ public class SmsUtils {
      * 将手机号码 添加+86中国的电话国际区号前缀
      *
      * @param phones 手机号码集合
+     * @param isChinese 是否是中国区手机号，如果为true则自动添加+86前缀
      * @return 结果字符串
      */
-    public static String addCodePrefixIfNot(List<String> phones) {
-        return CollUtil.join(phones, StrUtil.COMMA, SmsUtils::addCodePrefixIfNot);
+    public static String addCodePrefixIfNot(List<String> phones, boolean isChinese) {
+        return isChinese ? CollUtil.join(phones, StrUtil.COMMA, SmsUtils::addCodePrefixIfNot) : CollUtil.join(phones, StrUtil.COMMA);
     }
 
     /**

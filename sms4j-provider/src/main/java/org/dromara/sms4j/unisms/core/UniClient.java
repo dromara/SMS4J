@@ -92,6 +92,8 @@ public class UniClient {
             url = this.endpoint + "?action=" + action + "&accessKeyId=" + this.accessKeyId;
         } else {
             Map<String, Object> d = new HashMap<>();
+            d.put("action", action);
+            d.put("accessKeyId", this.accessKeyId);
             Map<String, Object> signed = sign(d);
             url = this.endpoint + "?action=" + action + "&accessKeyId=" + this.accessKeyId + "&algorithm=" + signed.get("algorithm") +
                     "&timestamp=" + signed.get("timestamp") + "&nonce=" + signed.get("nonce") + "&signature=" + signed.get("signature");

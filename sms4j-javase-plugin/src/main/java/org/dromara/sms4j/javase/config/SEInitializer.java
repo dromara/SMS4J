@@ -35,6 +35,7 @@ import org.dromara.sms4j.danmi.config.DanMiFactory;
 import org.dromara.sms4j.dingzhong.config.DingZhongFactory;
 import org.dromara.sms4j.emay.config.EmayFactory;
 import org.dromara.sms4j.huawei.config.HuaweiFactory;
+import org.dromara.sms4j.huyi.config.HuYiFactory;
 import org.dromara.sms4j.javase.util.YamlUtils;
 import org.dromara.sms4j.jdcloud.config.JdCloudFactory;
 import org.dromara.sms4j.jg.config.JgFactory;
@@ -266,6 +267,7 @@ public class SEInitializer {
         ProviderFactoryHolder.registerFactory(DanMiFactory.instance());
         ProviderFactoryHolder.registerFactory(YiXintongFactory.instance());
         ProviderFactoryHolder.registerFactory(MontnetsFactory.instance());
+        ProviderFactoryHolder.registerFactory(HuYiFactory.instance());
         if (SmsUtils.isClassExists("com.jdcloud.sdk.auth.CredentialsProvider")) {
             ProviderFactoryHolder.registerFactory(JdCloudFactory.instance());
         }

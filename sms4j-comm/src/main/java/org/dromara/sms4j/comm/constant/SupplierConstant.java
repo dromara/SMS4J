@@ -101,4 +101,9 @@ public abstract class SupplierConstant {
      * 梦网 sms
      */
     public static final String MONTNETS = "montnets";
+
+    /**
+     * 互亿无线 sms
+     */
+    public static final String HUYI = "huyi";
 }

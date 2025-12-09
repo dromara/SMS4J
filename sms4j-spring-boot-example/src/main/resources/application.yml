@@ -183,6 +183,12 @@ sms:
       templateId: 默认模板id
       # 默认模板参数名
       templateParam: 默认模板参数名
+    # 互亿无线
+    huyi:
+      supplier: huyi
+      access-key-id: APPID
+      access-key-secret: APIKEY
+      enableMd5: false #(可选)默认为 false，提交时检测加密方式
 
 sms-oa:
   config-type: yaml

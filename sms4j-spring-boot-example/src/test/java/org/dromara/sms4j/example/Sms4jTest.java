@@ -21,12 +21,7 @@ import org.dromara.sms4j.luosimao.service.LuoSiMaoSmsImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @SpringBootTest
@@ -36,6 +31,11 @@ public class Sms4jTest {
      * 填测试手机号
      */
     private static final String PHONE = "";
+
+    /**
+     * 填第 2 个手机号
+     */
+    private static final String PHONE2 = "";
 
     @Test
     public void byLoadTest() {
@@ -567,6 +567,38 @@ public class Sms4jTest {
         // 梦网
         SmsResponse smsResponse = SmsFactory.getBySupplier(SupplierConstant.MONTNETS).sendMessage(PHONE, SmsUtils.getRandomInt(6));
         Assert.isTrue(smsResponse.isSuccess());
+    }
+
+    /**
+     * 互亿无线模板
+     */
+    @Test
+    public void huYiSmsTest() {
+        if (StrUtil.isBlank(PHONE)) {
+            return;
+        }
+        List<String> phones = new ArrayList<>();
+        phones.add(PHONE);
+        if (!StrUtil.isBlank(PHONE2)) {
+            phones.add(PHONE2);
+        }
+        LinkedHashMap<String, String> params = new LinkedHashMap<>();
+        params.put("code", "1");
+        SmsBlend smsBlend = SmsFactory.getBySupplier(SupplierConstant.HUYI);
+        SmsResponse smsResponse = null;
+        // 发送单条短信
+        smsResponse = smsBlend.sendMessage(PHONE, "您的验证码是：1。请不要把验证码泄露给其他人。");
+
+        // 发送 带模板 ID 的短信
+//        smsResponse = smsBlend.sendMessage(PHONE, "1", params);
+
+        // 发送群发短信
+//        smsResponse = smsBlend.massTexting(phones, "您的验证码是：1。请不要把验证码泄露给其他人。");
+
+        // 发送带模板 ID 的群发短信
+//        smsResponse = smsBlend.massTexting(phones, "1", params);
+
+        log.info(JSONUtil.toJsonStr(smsResponse));
     }
 
 }

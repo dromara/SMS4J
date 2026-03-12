@@ -101,7 +101,7 @@ public class BaiduUtils {
         Map<String, String> headers = new HashMap<>(2);
         headers.put(Constant.AUTHORIZATION, authorization);
         headers.put("host", config.getHost());
-        headers.put("x-bce-date", SmsDateUtils.normDateGmt8(new Date()));
+        headers.put("x-bce-date", SmsDateUtils.utcGmt(new Date()));
         return headers;
     }
 

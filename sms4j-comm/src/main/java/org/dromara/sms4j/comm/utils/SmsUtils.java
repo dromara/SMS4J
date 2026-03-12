@@ -156,6 +156,20 @@ public class SmsUtils {
     }
 
     /**
+     * 将手机号码 添加+86电话区号前缀
+     *
+     * @param phones 手机号码
+     * @return 结果字符串集
+     */
+    public static List<String>addCodePrefixIfNot(List<String> phones) {
+        if (CollUtil.isEmpty(phones)){
+            return Collections.emptyList();
+        }
+        phones.replaceAll(SmsUtils::addCodePrefixIfNot);
+        return phones;
+    }
+
+    /**
      * List +86后转 数组
      *
      * @param list 集合

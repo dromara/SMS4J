@@ -60,4 +60,22 @@ public class MailFactory{
         CONFIGS.put(key,config);
     }
 
+    /**
+     *  <p>从工厂获取标识所对应的配置
+     * @param key 标识
+     * @author :Wind
+    */
+    public static void get(Object key){
+        CONFIGS.get(key);
+    }
+
+    /**
+     *  <p>从工厂删除一个标识所对应的配置
+     * @param key 标识
+     * @author :Wind
+    */
+    public static void remove(Object key){
+        CONFIGS.remove(key);
+    }
+
 }

@@ -93,7 +93,7 @@ public class AlibabaSmsImpl extends AbstractSmsBlend<AlibabaConfig> {
             messages = new LinkedHashMap<>();
         }
         String messageStr = JSONUtil.toJsonStr(messages);
-        return getSmsResponse(SmsUtils.addCodePrefixIfNot(phones), messageStr, templateId);
+        return getSmsResponse(SmsUtils.joinComma(SmsUtils.addCodePrefixIfNot(phones)), messageStr, templateId);
     }
 
     private SmsResponse getSmsResponse(String phone, String message, String templateId) {

@@ -79,7 +79,7 @@ public class BaiduSmsImpl extends AbstractSmsBlend<BaiduConfig> {
         if (CollUtil.isEmpty(messages)){
             messages = new LinkedHashMap<>();
         }
-        return getSmsResponse(SmsUtils.addCodePrefixIfNot(phones), templateId, messages);
+        return getSmsResponse(SmsUtils.joinComma(SmsUtils.addCodePrefixIfNot(phones)), templateId, messages);
     }
 
     private SmsResponse getSmsResponse(String phone, String templateId, LinkedHashMap<String, String> messages) {
@@ -128,7 +128,7 @@ public class BaiduSmsImpl extends AbstractSmsBlend<BaiduConfig> {
         if (CollUtil.isEmpty(messages)){
             messages = new LinkedHashMap<>();
         }
-        return getSmsResponseWithClientToken(SmsUtils.addCodePrefixIfNot(phones), templateId, messages, clientToken);
+        return getSmsResponseWithClientToken(SmsUtils.joinComma(SmsUtils.addCodePrefixIfNot(phones)), templateId, messages, clientToken);
     }
 
     private SmsResponse getSmsResponseWithClientToken(String phone, String templateId, LinkedHashMap<String, String> messages, String clientToken) {

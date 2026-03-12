@@ -49,7 +49,7 @@ public class QiNiuUtils {
 
     public static Map<String, String> getHeaderAndSign(String url, HashMap<String, Object> hashMap, QiNiuConfig qiNiuConfig) {
         String signature;
-        String signDate = SmsDateUtils.pureDateUtcGmt(new Date());
+        String signDate = SmsDateUtils.utcGmt(new Date());
         try {
             signature = getSignature("POST", url, qiNiuConfig, JSONUtil.toJsonStr(hashMap), signDate);
         } catch (Exception e) {

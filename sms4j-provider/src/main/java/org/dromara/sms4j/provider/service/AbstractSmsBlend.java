@@ -27,6 +27,7 @@ public abstract class AbstractSmsBlend<C extends SupplierConfig> implements SmsB
     @Getter
     private final String configId;
 
+    @Getter
     private final C config;
 
     protected final Executor pool;
@@ -59,10 +60,6 @@ public abstract class AbstractSmsBlend<C extends SupplierConfig> implements SmsB
         }else {
             this.http = SmsHttpUtils.instance();
         }
-    }
-
-    protected C getConfig() {
-        return config;
     }
 
     /**

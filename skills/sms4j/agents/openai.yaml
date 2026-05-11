@@ -1,0 +1,4 @@
+interface:
+  display_name: "sms4j"
+  short_description: "在业务项目中接入和使用 sms4j"
+  default_prompt: "Use $sms4j to add sms4j SMS sending to my Java, Spring Boot, JavaSE, or Solon project."

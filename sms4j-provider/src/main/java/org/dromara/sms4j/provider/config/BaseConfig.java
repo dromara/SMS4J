@@ -91,4 +91,17 @@ public abstract class BaseConfig implements SupplierConfig {
      * 最大发送数量，默认integer上限
      */
     private int maximum = Integer.MAX_VALUE;
+
+    /**
+     * HTTP 请求超时时间（单位：毫秒），默认为10秒
+     * 外部短信供应商网络不可控，配置超时可避免异步线程池被长时间占用。
+     */
+    private int timeout = 10000;
+
+    public void setTimeout(int timeout) {
+        if (timeout <= 0){
+            throw new SmsBlendException("HTTP请求超时时间必须大于0毫秒");
+        }
+        this.timeout = timeout;
+    }
 }

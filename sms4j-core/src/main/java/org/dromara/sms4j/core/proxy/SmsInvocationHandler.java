@@ -6,6 +6,7 @@ import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.api.proxy.SmsProcessor;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
@@ -33,8 +34,8 @@ public class SmsInvocationHandler implements InvocationHandler {
         try {
             result = method.invoke(smsBlend, objects);
         } catch (Exception e) {
-            //错误执行器
-            doErrorHandleProcess(smsBlend, method, objects,e);
+            // method.invoke 会包装真实业务异常，异常处理器需要看到原始异常类型和消息。
+            doErrorHandleProcess(smsBlend, method, objects, unwrapException(e));
         }
         //后置执行器
         return doPostrocess(smsBlend, method, objects, result);
@@ -57,6 +58,17 @@ public class SmsInvocationHandler implements InvocationHandler {
         for (SmsProcessor processor : SmsProxyFactory.getProcessors()) {
             processor.exceptionHandleProcessor(method, o, objects,e);
         }
+    }
+
+    private Exception unwrapException(Exception e) {
+        if (e instanceof InvocationTargetException) {
+            Throwable target = ((InvocationTargetException) e).getTargetException();
+            if (target instanceof Exception) {
+                return (Exception) target;
+            }
+            return new RuntimeException(target);
+        }
+        return e;
     }
 
     /**

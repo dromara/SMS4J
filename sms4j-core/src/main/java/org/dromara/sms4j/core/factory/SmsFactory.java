@@ -250,10 +250,10 @@ public abstract class SmsFactory {
             throw new SmsBlendException("短信服务对象不能为空");
         }
         String configId = smsBlend.getConfigId();
-        if (BLENDS.containsKey(configId)) {
+        // containsKey + put 不是原子操作；并发初始化时必须只让首次注册进入负载均衡器。
+        if (BLENDS.putIfAbsent(configId, smsBlend) != null) {
             return false;
         }
-        BLENDS.put(configId, smsBlend);
         SmsLoad.starConfig(smsBlend, 1);
         return true;
     }
@@ -274,10 +274,10 @@ public abstract class SmsFactory {
             throw new SmsBlendException("短信服务对象不能为空");
         }
         String configId = smsBlend.getConfigId();
-        if (BLENDS.containsKey(configId)) {
+        // containsKey + put 不是原子操作；并发初始化时必须只让首次注册进入负载均衡器。
+        if (BLENDS.putIfAbsent(configId, smsBlend) != null) {
             return false;
         }
-        BLENDS.put(configId, smsBlend);
         SmsLoad.starConfig(smsBlend, weight);
         return true;
     }

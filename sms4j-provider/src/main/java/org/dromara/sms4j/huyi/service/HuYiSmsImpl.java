@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class HuYiSmsImpl extends AbstractSmsBlend<HuYiConfig> {
 
-    private int retry = 0;
+    private final ThreadLocal<Integer> retry = ThreadLocal.withInitial(() -> 0);
 
     protected HuYiSmsImpl(HuYiConfig config, Executor pool, DelayedTime delayed) {
         super(config, pool, delayed);
@@ -145,8 +145,8 @@ public class HuYiSmsImpl extends AbstractSmsBlend<HuYiConfig> {
         } catch (SmsBlendException e) {
             smsResponse = errorResp(e.message);
         }
-        if (smsResponse.isSuccess() || retry >= getConfig().getMaxRetries()) {
-            retry = 0;
+        if (smsResponse.isSuccess() || retry.get() >= getConfig().getMaxRetries()) {
+            retry.remove();
             return smsResponse;
         }
         return requestRetry(url, params);
@@ -161,8 +161,8 @@ public class HuYiSmsImpl extends AbstractSmsBlend<HuYiConfig> {
      */
     private SmsResponse requestRetry(String url, Map<String, String> params) {
         http.safeSleep(getConfig().getRetryInterval());
-        retry++;
-        log.warn("短信第 {} 次重新发送", retry);
+        retry.set(retry.get() + 1);
+        log.warn("短信第 {} 次重新发送", retry.get());
         return handleRes(url, params);
     }
 }

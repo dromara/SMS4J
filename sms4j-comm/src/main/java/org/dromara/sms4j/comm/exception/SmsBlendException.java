@@ -10,6 +10,11 @@ public class SmsBlendException extends RuntimeException{
         this.message = message;
     }
 
+    public SmsBlendException(String message, Throwable cause) {
+        super(message, cause);
+        this.message = message;
+    }
+
     public SmsBlendException(String code, String message) {
         super("[" + code + "] " + message);
         this.message = message;

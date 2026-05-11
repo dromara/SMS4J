@@ -26,7 +26,7 @@ import java.util.concurrent.Executor;
  **/
 @Slf4j
 public class JgSmsImpl extends AbstractSmsBlend<JgConfig> {
-    private int retry = 0;
+    private final ThreadLocal<Integer> retry = ThreadLocal.withInitial(() -> 0);
 
     public JgSmsImpl(JgConfig config, Executor pool, DelayedTime delayedTime) {
         super(config, pool, delayedTime);
@@ -82,7 +82,7 @@ public class JgSmsImpl extends AbstractSmsBlend<JgConfig> {
         if (SmsUtils.isEmpty(messages)){
             messages = new LinkedHashMap<>();
         }
-        return getSmsResponse(SmsUtils.addCodePrefixIfNot(phones), messages, templateId, null, null);
+        return getSmsResponse(SmsUtils.joinComma(SmsUtils.addCodePrefixIfNot(phones)), messages, templateId, null, null);
     }
 
     /**
@@ -119,8 +119,8 @@ public class JgSmsImpl extends AbstractSmsBlend<JgConfig> {
             smsResponse = errorResp(e.message);
         }
 
-        if (smsResponse.isSuccess() || retry >= getConfig().getMaxRetries()) {
-            retry = 0;
+        if (smsResponse.isSuccess() || retry.get() >= getConfig().getMaxRetries()) {
+            retry.remove();
             return smsResponse;
         }
         return requestRetry(phone, messages, templateId, code, msgId);
@@ -129,8 +129,8 @@ public class JgSmsImpl extends AbstractSmsBlend<JgConfig> {
     private SmsResponse requestRetry(String phone, LinkedHashMap<String, String> messages,
                                      String templateId, String code, String msgId) {
         http.safeSleep(getConfig().getRetryInterval());
-        retry ++;
-        log.warn("短信第 {} 次重新发送", retry);
+        retry.set(retry.get() + 1);
+        log.warn("短信第 {} 次重新发送", retry.get());
         return getSmsResponse(phone, messages, templateId, code, msgId);
     }
 

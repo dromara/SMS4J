@@ -32,7 +32,7 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class SubMailSmsImpl extends AbstractSmsBlend<SubMailConfig> {
 
-    private int retry = 0;
+    private final ThreadLocal<Integer> retry = ThreadLocal.withInitial(() -> 0);
 
     public SubMailSmsImpl(SubMailConfig config, Executor pool, DelayedTime delayedTime) {
         super(config, pool, delayedTime);
@@ -158,8 +158,8 @@ public class SubMailSmsImpl extends AbstractSmsBlend<SubMailConfig> {
             log.error(e.message, e);
             smsResponse = errorResp(e.message);
         }
-        if (smsResponse.isSuccess() || retry == config.getMaxRetries()) {
-            retry = 0;
+        if (smsResponse.isSuccess() || retry.get() == config.getMaxRetries()) {
+            retry.remove();
             return smsResponse;
         }
         return requestRetry(phones, content, templateId, vars);
@@ -167,8 +167,8 @@ public class SubMailSmsImpl extends AbstractSmsBlend<SubMailConfig> {
 
     private SmsResponse requestRetry(List<String> phones, String content, String templateId, LinkedHashMap<String, String> vars) {
         http.safeSleep(getConfig().getRetryInterval());
-        retry ++;
-        log.warn("短信第 {} 次重新发送", retry);
+        retry.set(retry.get() + 1);
+        log.warn("短信第 {} 次重新发送", retry.get());
         return getSmsResponse(phones, content, templateId, vars);
     }
 

@@ -24,7 +24,7 @@ public class DingZhongHelper {
 
     private final DingZhongConfig config;
     private final SmsHttpUtils http;
-    private int retry = 0;
+    private final ThreadLocal<Integer> retry = ThreadLocal.withInitial(() -> 0);
 
     public DingZhongHelper(DingZhongConfig config, SmsHttpUtils http) {
         this.config = config;
@@ -42,8 +42,8 @@ public class DingZhongHelper {
         } catch (SmsBlendException e) {
             smsResponse = SmsRespUtils.error(e.message, config.getConfigId());
         }
-        if (smsResponse.isSuccess() || retry == config.getMaxRetries()) {
-            retry = 0;
+        if (smsResponse.isSuccess() || retry.get() == config.getMaxRetries()) {
+            retry.remove();
             return smsResponse;
         }
         return requestRetry(paramMap);
@@ -52,8 +52,8 @@ public class DingZhongHelper {
 
     private SmsResponse requestRetry(Map<String, Object> paramMap) {
         http.safeSleep(config.getRetryInterval());
-        retry++;
-        log.warn("短信第 {} 次重新发送", retry);
+        retry.set(retry.get() + 1);
+        log.warn("短信第 {} 次重新发送", retry.get());
         return smsResponse(paramMap);
     }
 

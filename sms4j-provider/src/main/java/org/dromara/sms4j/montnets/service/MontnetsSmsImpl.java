@@ -30,7 +30,7 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class MontnetsSmsImpl extends AbstractSmsBlend<MontnetsConfig> {
 
-    private int retry = 0;
+    private final ThreadLocal<Integer> retry = ThreadLocal.withInitial(() -> 0);
 
     /**
      * MontnetsSmsImpl
@@ -92,7 +92,7 @@ public class MontnetsSmsImpl extends AbstractSmsBlend<MontnetsConfig> {
             messages = new LinkedHashMap<>();
         }
         String messageStr = formatMessage(messages);
-        return getSmsResponse(SmsUtils.addCodePrefixIfNot(phones), messageStr, templateId);
+        return getSmsResponse(SmsUtils.joinComma(SmsUtils.addCodePrefixIfNot(phones)), messageStr, templateId);
     }
 
     private SmsResponse getSmsResponse(String phone, String message, String templateId) {
@@ -117,18 +117,18 @@ public class MontnetsSmsImpl extends AbstractSmsBlend<MontnetsConfig> {
             smsResponse = this.errorResp(e.message);
         }
 
-        if (!smsResponse.isSuccess() && this.retry != this.getConfig().getMaxRetries()) {
+        if (!smsResponse.isSuccess() && this.retry.get() != this.getConfig().getMaxRetries()) {
             return this.requestRetry(phone, message, templateId);
         } else {
-            this.retry = 0;
+            this.retry.remove();
             return smsResponse;
         }
     }
 
     private SmsResponse requestRetry(String phone, String message, String templateId) {
         this.http.safeSleep(this.getConfig().getRetryInterval());
-        ++this.retry;
-        log.warn("短信第 {} 次重新发送", this.retry);
+        this.retry.set(this.retry.get() + 1);
+        log.warn("短信第 {} 次重新发送", this.retry.get());
         return this.getSmsResponse(phone, message, templateId);
     }
 

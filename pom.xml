@@ -270,6 +270,11 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.2</version>
+            </plugin>
             <!--Release -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

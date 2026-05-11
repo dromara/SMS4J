@@ -28,7 +28,7 @@ import static org.dromara.sms4j.huawei.utils.HuaweiBuilder.listToString;
 @Slf4j
 public class HuaweiSmsImpl extends AbstractSmsBlend<HuaweiConfig> {
 
-    private volatile int retry = 0;
+    private final ThreadLocal<Integer> retry = ThreadLocal.withInitial(() -> 0);
 
     public HuaweiSmsImpl(HuaweiConfig config, Executor pool, DelayedTime delayed) {
         super(config, pool, delayed);
@@ -81,8 +81,8 @@ public class HuaweiSmsImpl extends AbstractSmsBlend<HuaweiConfig> {
         } catch (SmsBlendException e) {
             smsResponse = errorResp(e.message);
         }
-        if (smsResponse.isSuccess() || retry >= getConfig().getMaxRetries()) {
-            retry = 0;
+        if (smsResponse.isSuccess() || retry.get() >= getConfig().getMaxRetries()) {
+            retry.remove();
             return smsResponse;
         }
         return requestRetry(phone, templateId, messages);
@@ -90,8 +90,8 @@ public class HuaweiSmsImpl extends AbstractSmsBlend<HuaweiConfig> {
 
     private SmsResponse requestRetry(String phone, String templateId, LinkedHashMap<String, String> messages) {
         http.safeSleep(getConfig().getRetryInterval());
-        retry++;
-        log.warn("短信第 {} 次重新发送", retry);
+        retry.set(retry.get() + 1);
+        log.warn("短信第 {} 次重新发送", retry.get());
         return sendMessage(phone, templateId, messages);
     }
 

@@ -5,8 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.event.ContextClosedEvent;
 
 import java.util.Map;
 
@@ -18,7 +20,7 @@ import java.util.Map;
  * 2023/3/25  0:13
  **/
 @Slf4j
-public class SmsSpringUtils implements ApplicationContextAware {
+public class SmsSpringUtils implements ApplicationContextAware, ApplicationListener<ContextClosedEvent> {
 
     @Getter
     private static ApplicationContext applicationContext;
@@ -31,8 +33,15 @@ public class SmsSpringUtils implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        if (SmsSpringUtils.applicationContext == null) {
-            SmsSpringUtils.applicationContext = applicationContext;
+        // 多 context 或热重启场景下应使用最新上下文，避免静态引用停留在旧容器。
+        SmsSpringUtils.applicationContext = applicationContext;
+    }
+
+    @Override
+    public void onApplicationEvent(ContextClosedEvent event) {
+        // 当前上下文关闭时释放静态引用，降低测试和重启场景中的残留风险。
+        if (event.getApplicationContext() == SmsSpringUtils.applicationContext) {
+            SmsSpringUtils.applicationContext = null;
         }
     }
 

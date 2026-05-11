@@ -11,6 +11,7 @@ import cn.hutool.json.JSONUtil;
 import org.dromara.sms4j.comm.exception.SmsBlendException;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SmsHttpUtils {
 
@@ -29,24 +30,31 @@ public class SmsHttpUtils {
      */
     private final Integer port;
 
+    /**
+     * 请求超时时间，单位毫秒
+     */
+    private final Integer timeout;
+
     // 无代理单例（饿汉式加载）
     private static final SmsHttpUtils NON_PROXY_INSTANCE = new SmsHttpUtils();
 
-    // 代理单例（双重校验锁延迟加载）
-    private static volatile SmsHttpUtils PROXY_INSTANCE;
+    // 代理实例按代理地址和超时隔离，避免不同短信供应商配置不同网络参数时互相冲突。
+    private static final Map<String, SmsHttpUtils> PROXY_INSTANCES = new ConcurrentHashMap<>();
 
     // 无代理构造方法
     private SmsHttpUtils() {
         this.enable = false;
         this.host = null;
         this.port = null;
+        this.timeout = null;
     }
 
     // 代理构造方法
-    private SmsHttpUtils(String host, Integer port) {
-        this.enable = true;
+    private SmsHttpUtils(String host, Integer port, Integer timeout) {
+        this.enable = StrUtil.isNotBlank(host) && port != null;
         this.host = host;
         this.port = port;
+        this.timeout = timeout;
     }
 
     /**
@@ -56,30 +64,37 @@ public class SmsHttpUtils {
         return NON_PROXY_INSTANCE;
     }
 
-    /**
-     * 获取代理单例（线程安全 + 参数校验）
-     */
+    public static SmsHttpUtils instance(Integer timeout) {
+        validateTimeout(timeout);
+        // 直连场景也要按 timeout 隔离，否则后创建的配置会复用错误的请求超时。
+        String key = "direct:" + timeout;
+        return PROXY_INSTANCES.computeIfAbsent(key, item -> new SmsHttpUtils(null, null, timeout));
+    }
+
     public static SmsHttpUtils instance(String host, Integer port) {
-        if (PROXY_INSTANCE == null) {
-            synchronized (SmsHttpUtils.class) {
-                if (PROXY_INSTANCE == null) {
-                    validateProxyParams(host, port);
-                    PROXY_INSTANCE = new SmsHttpUtils(host, port);
-                }
-            }
-        } else {
-            // 二次调用时校验参数一致性
-            if (!PROXY_INSTANCE.host.equals(host) || !PROXY_INSTANCE.port.equals(port)) {
-                throw new IllegalStateException("Proxy parameters cannot be modified after initialization");
-            }
+        return instance(host, port, null);
+    }
+
+    public static SmsHttpUtils instance(String host, Integer port, Integer timeout) {
+        validateProxyParams(host, port);
+        if (timeout != null) {
+            validateTimeout(timeout);
         }
-        return PROXY_INSTANCE;
+        // 同一代理但不同 timeout 代表不同 HTTP 行为，不能复用同一个实例。
+        String key = host + ":" + port + ":" + timeout;
+        return PROXY_INSTANCES.computeIfAbsent(key, item -> new SmsHttpUtils(host, port, timeout));
     }
 
     // 代理参数校验
     private static void validateProxyParams(String host, Integer port) {
         if (StrUtil.isBlank(host) || port == null || port <= 0) {
             throw new IllegalArgumentException("Invalid proxy host or port");
+        }
+    }
+
+    private static void validateTimeout(Integer timeout) {
+        if (timeout == null || timeout <= 0) {
+            throw new IllegalArgumentException("Invalid http timeout");
         }
     }
 
@@ -92,6 +107,10 @@ public class SmsHttpUtils {
         HttpRequest request = HttpRequest.of(url);
         if (enable){
             request.setHttpProxy(host, port);
+        }
+        if (timeout != null) {
+            // 外部短信供应商网络不可控，必须允许配置请求超时，避免线程池长期被阻塞。
+            request.timeout(timeout);
         }
         return request;
     }
@@ -133,7 +152,7 @@ public class SmsHttpUtils {
                 .execute()) {
             return JSONUtil.parseObj(response.body());
         } catch (Exception e) {
-            throw new SmsBlendException(e.getMessage());
+            throw new SmsBlendException(e.getMessage(), e);
         }
     }
 
@@ -164,7 +183,7 @@ public class SmsHttpUtils {
                 .execute()) {
             return JSONUtil.parseObj(response.body());
         } catch (Exception e) {
-            throw new SmsBlendException(e.getMessage());
+            throw new SmsBlendException(e.getMessage(), e);
         }
     }
 
@@ -186,7 +205,7 @@ public class SmsHttpUtils {
                 .execute()) {
             return JSONUtil.parseObj(response.body());
         } catch (Exception e) {
-            throw new SmsBlendException(e.getMessage());
+            throw new SmsBlendException(e.getMessage(), e);
         }
     }
 
@@ -205,7 +224,7 @@ public class SmsHttpUtils {
                 .execute()) {
             return JSONUtil.parseObj(response.body());
         } catch (Exception e) {
-            throw new SmsBlendException(e.getMessage());
+            throw new SmsBlendException(e.getMessage(), e);
         }
     }
 
@@ -221,7 +240,7 @@ public class SmsHttpUtils {
                 .execute()) {
             return JSONUtil.parseObj(response.body());
         } catch (Exception e) {
-            throw new SmsBlendException(e.getMessage());
+            throw new SmsBlendException(e.getMessage(), e);
         }
     }
 
@@ -236,7 +255,7 @@ public class SmsHttpUtils {
                 .execute()) {
             return JSONUtil.parseObj(response.body());
         } catch (Exception e) {
-            throw new SmsBlendException(e.getMessage());
+            throw new SmsBlendException(e.getMessage(), e);
         }
     }
 

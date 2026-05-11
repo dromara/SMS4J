@@ -36,7 +36,7 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
 
-    private int retry = 0;
+    private final ThreadLocal<Integer> retry = ThreadLocal.withInitial(() -> 0);
 
     public NeteaseSmsImpl(NeteaseConfig config, Executor pool, DelayedTime delayed) {
         super(config, pool, delayed);
@@ -145,8 +145,8 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
         } catch (SmsBlendException e) {
             smsResponse = errorResp(e.message);
         }
-        if (smsResponse.isSuccess() || retry >= getConfig().getMaxRetries()) {
-            retry = 0;
+        if (smsResponse.isSuccess() || retry.get() >= getConfig().getMaxRetries()) {
+            retry.remove();
             return smsResponse;
         }
         return requestRetry(requestUrl, phones, message, templateId);
@@ -154,8 +154,8 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
 
     private SmsResponse requestRetry(String requestUrl, List<String> phones, String message, String templateId) {
         http.safeSleep(getConfig().getRetryInterval());
-        retry++;
-        log.warn("短信第 {} 次重新发送", retry);
+        retry.set(retry.get() + 1);
+        log.warn("短信第 {} 次重新发送", retry.get());
         return getSmsResponse(requestUrl, phones, message, templateId);
     }
 

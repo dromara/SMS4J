@@ -31,7 +31,7 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class AlibabaSmsImpl extends AbstractSmsBlend<AlibabaConfig> {
 
-    private int retry = 0;
+    private final ThreadLocal<Integer> retry = ThreadLocal.withInitial(() -> 0);
 
     /**
      * AlibabaSmsImpl
@@ -116,8 +116,8 @@ public class AlibabaSmsImpl extends AbstractSmsBlend<AlibabaConfig> {
         } catch (SmsBlendException e) {
             smsResponse = errorResp(e.message);
         }
-        if (smsResponse.isSuccess() || retry >= getConfig().getMaxRetries()) {
-            retry = 0;
+        if (smsResponse.isSuccess() || retry.get() >= getConfig().getMaxRetries()) {
+            retry.remove();
             return smsResponse;
         }
         return requestRetry(phone, message, templateId);
@@ -125,8 +125,8 @@ public class AlibabaSmsImpl extends AbstractSmsBlend<AlibabaConfig> {
 
     private SmsResponse requestRetry(String phone, String message, String templateId) {
         http.safeSleep(getConfig().getRetryInterval());
-        retry++;
-        log.warn("短信第 {} 次重新发送", retry);
+        retry.set(retry.get() + 1);
+        log.warn("短信第 {} 次重新发送", retry.get());
         return getSmsResponse(phone, message, templateId);
     }
 

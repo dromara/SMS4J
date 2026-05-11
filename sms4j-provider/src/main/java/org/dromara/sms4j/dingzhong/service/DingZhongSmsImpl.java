@@ -86,11 +86,11 @@ public class DingZhongSmsImpl extends AbstractSmsBlend<DingZhongConfig> {
 
     @Override
     public SmsResponse massTexting(List<String> phones, String message) {
-        return sendMessage(SmsUtils.addCodePrefixIfNot(phones), message);
+        return sendMessage(SmsUtils.joinComma(SmsUtils.addCodePrefixIfNot(phones)), message);
     }
 
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
-        return sendMessage(SmsUtils.addCodePrefixIfNot(phones), templateId, messages);
+        return sendMessage(SmsUtils.joinComma(SmsUtils.addCodePrefixIfNot(phones)), templateId, messages);
     }
 }

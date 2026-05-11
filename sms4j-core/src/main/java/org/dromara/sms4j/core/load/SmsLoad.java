@@ -38,7 +38,9 @@ public class SmsLoad {
      * @param weight     权重
      * @author :Wind
      */
-    public void addLoadServer(SmsBlend LoadServer, int weight) {
+    public synchronized void addLoadServer(SmsBlend LoadServer, int weight) {
+        // 同一 configId 重复注册时先移除旧节点，避免 BLENDS 已覆盖但负载列表仍保留旧对象。
+        removeLoadServer(LoadServer);
         LoadServers.add(new LoadServer(LoadServer, weight, weight));
     }
 
@@ -49,7 +51,11 @@ public class SmsLoad {
      * @param LoadServer 要移除的服务
      * @author :Wind
      */
-    public void removeLoadServer(SmsBlend LoadServer) {
+    public synchronized void removeLoadServer(SmsBlend LoadServer) {
+        // unregister 不存在的 configId 时会传入 null，注销流程应幂等。
+        if (LoadServer == null) {
+            return;
+        }
         Iterator<LoadServer> iterator = LoadServers.iterator();
         while (iterator.hasNext()) {
             LoadServer server = iterator.next();

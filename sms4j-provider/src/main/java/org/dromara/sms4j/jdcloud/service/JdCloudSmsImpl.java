@@ -31,7 +31,7 @@ public class JdCloudSmsImpl extends AbstractSmsBlend<JdCloudConfig> {
 
     private final SmsClient client;
 
-    private int retry = 0;
+    private final ThreadLocal<Integer> retry = ThreadLocal.withInitial(() -> 0);
 
     public JdCloudSmsImpl(SmsClient client, JdCloudConfig config, Executor pool, DelayedTime delayed) {
         super(config, pool, delayed);
@@ -99,8 +99,8 @@ public class JdCloudSmsImpl extends AbstractSmsBlend<JdCloudConfig> {
         } catch (SmsBlendException e) {
             smsResponse = errorResp(e.message);
         }
-        if (smsResponse.isSuccess() || retry >= getConfig().getMaxRetries()) {
-            retry = 0;
+        if (smsResponse.isSuccess() || retry.get() >= getConfig().getMaxRetries()) {
+            retry.remove();
             return smsResponse;
         }
         return requestRetry(phones, templateId, messages);
@@ -108,8 +108,8 @@ public class JdCloudSmsImpl extends AbstractSmsBlend<JdCloudConfig> {
 
     private SmsResponse requestRetry(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
         http.safeSleep(getConfig().getRetryInterval());
-        retry++;
-        log.warn("短信第 {} 次重新发送", retry);
+        retry.set(retry.get() + 1);
+        log.warn("短信第 {} 次重新发送", retry.get());
         return massTexting(phones, templateId, messages);
     }
 

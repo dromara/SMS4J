@@ -2,14 +2,13 @@ package org.dromara.sms4j.api.dao;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.sms4j.comm.exception.SmsBlendException;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * DAO 默认实现（内部缓存）
@@ -22,7 +21,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SmsDaoDefaultImpl implements SmsDao {
 
     private static volatile SmsDaoDefaultImpl INSTANCE;
-    private static final Timer TIMER = new Timer();
+    // 使用 daemon 调度线程清理过期缓存，避免 Timer 任务异常导致后续清理停止。
+    private static final ScheduledExecutorService CLEANER = Executors.newSingleThreadScheduledExecutor(runnable -> {
+        Thread thread = new Thread(runnable, "sms4j-default-dao-cleaner");
+        thread.setDaemon(true);
+        return thread;
+    });
     private static final ConcurrentHashMap<String, DataWrapper> DATA_MAP = new ConcurrentHashMap<>();
 
     /**
@@ -95,17 +99,13 @@ public class SmsDaoDefaultImpl implements SmsDao {
      * 初始化定时器
      */
     private static void initTimer() {
-        TIMER.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                try {
-                    clearExpiredData();
-                } catch (Exception e) {
-                    log.error(e.getMessage());
-                    throw new SmsBlendException(e.getMessage());
-                }
+        CLEANER.scheduleAtFixedRate(() -> {
+            try {
+                clearExpiredData();
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
             }
-        }, TIMER_INTERVAL, TIMER_INTERVAL);
+        }, TIMER_INTERVAL, TIMER_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -167,7 +167,8 @@ public class SmsDaoDefaultImpl implements SmsDao {
          */
         public boolean isExpired() {
             if (this.expiredTime > 0) {
-                return System.currentTimeMillis() > this.expiredTime;
+                // cacheTime=0 应立即过期；使用 >= 避免同一毫秒内仍能读到旧值。
+                return System.currentTimeMillis() >= this.expiredTime;
             }
             return true;
         }

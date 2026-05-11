@@ -27,7 +27,8 @@ public class SupplierConfig {
      */
     @Bean
     @ConfigurationProperties(prefix = "sms.blends")
-    @ConditionalOnProperty(prefix = "sms", name = "config-type", havingValue = "yaml")
+    // SmsConfig 默认使用 YAML；未显式配置 sms.config-type 时也应创建 blends，避免默认启动缺少该 Bean。
+    @ConditionalOnProperty(prefix = "sms", name = "config-type", havingValue = "yaml", matchIfMissing = true)
     protected Map<String, Map<String, Object>> blends() {
         return new LinkedHashMap<>();
     }
@@ -43,9 +44,9 @@ public class SupplierConfig {
                 Map<String, Object> configMap = blends.get(configId);
                 Object factoryPath = configMap.get(Constant.FACTORY_PATH);
                 if (ObjectUtil.isNotEmpty(factoryPath)) {
-                    //反射创建实例
+                    // 使用构造器 API 替代已废弃的 Class#newInstance，保留更明确的反射异常语义。
                     Class<BaseProviderFactory<? extends SmsBlend, ? extends org.dromara.sms4j.api.universal.SupplierConfig>> newClass = (Class<BaseProviderFactory<? extends SmsBlend, ? extends org.dromara.sms4j.api.universal.SupplierConfig>>) Class.forName(factoryPath.toString());
-                    BaseProviderFactory<? extends SmsBlend, ? extends org.dromara.sms4j.api.universal.SupplierConfig> factory = newClass.newInstance();
+                    BaseProviderFactory<? extends SmsBlend, ? extends org.dromara.sms4j.api.universal.SupplierConfig> factory = newClass.getDeclaredConstructor().newInstance();
                     factoryList.add(factory);
                 }
             }

@@ -29,7 +29,7 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class BaiduSmsImpl extends AbstractSmsBlend<BaiduConfig> {
 
-    private int retry = 0;
+    private final ThreadLocal<Integer> retry = ThreadLocal.withInitial(() -> 0);
 
     public BaiduSmsImpl(BaiduConfig config, Executor pool, DelayedTime delayedTime) {
         super(config, pool, delayedTime);
@@ -160,8 +160,8 @@ public class BaiduSmsImpl extends AbstractSmsBlend<BaiduConfig> {
         } catch (SmsBlendException e) {
             smsResponse = errorResp(e.message);
         }
-        if (smsResponse.isSuccess() || retry == config.getMaxRetries()) {
-            retry = 0;
+        if (smsResponse.isSuccess() || retry.get() == config.getMaxRetries()) {
+            retry.remove();
             return smsResponse;
         }
         return requestRetry(phone, templateId, messages, clientToken);
@@ -169,8 +169,8 @@ public class BaiduSmsImpl extends AbstractSmsBlend<BaiduConfig> {
 
     private SmsResponse requestRetry(String phone, String templateId, LinkedHashMap<String, String> messages, String clientToken) {
         http.safeSleep(getConfig().getRetryInterval());
-        retry ++;
-        log.warn("The SMS has been resent for the {}th time.", retry);
+        retry.set(retry.get() + 1);
+        log.warn("The SMS has been resent for the {}th time.", retry.get());
         return getSmsResponseWithClientToken(phone, templateId, messages, clientToken);
     }
 

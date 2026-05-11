@@ -27,7 +27,7 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class DanMiSmsImpl extends AbstractSmsBlend<DanMiConfig> {
 
-    private int retry = 0;
+    private final ThreadLocal<Integer> retry = ThreadLocal.withInitial(() -> 0);
 
     public DanMiSmsImpl(DanMiConfig config, Executor pool, DelayedTime delayedTime) {
         super(config, pool, delayedTime);
@@ -130,8 +130,8 @@ public class DanMiSmsImpl extends AbstractSmsBlend<DanMiConfig> {
         } catch (SmsBlendException e) {
             smsResponse = errorResp(e.message);
         }
-        if (smsResponse.isSuccess() || retry == config.getMaxRetries()) {
-            retry = 0;
+        if (smsResponse.isSuccess() || retry.get() == config.getMaxRetries()) {
+            retry.remove();
             return smsResponse;
         }
         return requestRetry(phones, message, templateId);
@@ -139,8 +139,8 @@ public class DanMiSmsImpl extends AbstractSmsBlend<DanMiConfig> {
 
     private SmsResponse requestRetry(List<String> phones, String message, String templateId) {
         http.safeSleep(getConfig().getRetryInterval());
-        retry ++;
-        log.warn("短信第 {} 次重新发送", retry);
+        retry.set(retry.get() + 1);
+        log.warn("短信第 {} 次重新发送", retry.get());
         return getSmsResponse(phones, message, templateId);
     }
 

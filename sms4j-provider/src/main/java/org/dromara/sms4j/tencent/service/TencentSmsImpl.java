@@ -29,7 +29,7 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
 
-    private int retry = 0;
+    private final ThreadLocal<Integer> retry = ThreadLocal.withInitial(() -> 0);
 
     public TencentSmsImpl(TencentConfig tencentSmsConfig, Executor pool, DelayedTime delayed) {
         super(tencentSmsConfig, pool, delayed);
@@ -105,8 +105,8 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
         } catch (SmsBlendException e) {
             smsResponse = errorResp(e.message);
         }
-        if (smsResponse.isSuccess() || retry >= getConfig().getMaxRetries()) {
-            retry = 0;
+        if (smsResponse.isSuccess() || retry.get() >= getConfig().getMaxRetries()) {
+            retry.remove();
             return smsResponse;
         }
         return requestRetry(phones, messages, templateId);
@@ -114,8 +114,8 @@ public class TencentSmsImpl extends AbstractSmsBlend<TencentConfig> {
 
     private SmsResponse requestRetry(String[] phones, String[] messages, String templateId) {
         http.safeSleep(getConfig().getRetryInterval());
-        retry++;
-        log.warn("短信第 {} 次重新发送", retry);
+        retry.set(retry.get() + 1);
+        log.warn("短信第 {} 次重新发送", retry.get());
         return getSmsResponse(phones, messages, templateId);
     }
 

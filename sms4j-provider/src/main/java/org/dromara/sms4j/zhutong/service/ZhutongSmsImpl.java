@@ -33,7 +33,7 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
 
-    private int retry = 0;
+    private final ThreadLocal<Integer> retry = ThreadLocal.withInitial(() -> 0);
 
     /**
      * ZhutongSmsImpl
@@ -155,8 +155,8 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
         } catch (SmsBlendException e) {
             smsResponse = errorResp(e.message);
         }
-        if (smsResponse.isSuccess() || retry >= getConfig().getMaxRetries()) {
-            retry = 0;
+        if (smsResponse.isSuccess() || retry.get() >= getConfig().getMaxRetries()) {
+            retry.remove();
             return smsResponse;
         }
         return requestRetry(phones, content);
@@ -164,8 +164,8 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
 
     private SmsResponse requestRetry(List<String> phones, String content) {
         http.safeSleep(getConfig().getRetryInterval());
-        retry++;
-        log.warn("短信第 {} 次重新发送", retry);
+        retry.set(retry.get() + 1);
+        log.warn("短信第 {} 次重新发送", retry.get());
         return getSmsResponse(phones, content);
     }
 
@@ -241,8 +241,8 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
         } catch (SmsBlendException e) {
             smsResponse = errorResp(e.message);
         }
-        if (smsResponse.isSuccess() || retry >= getConfig().getMaxRetries()) {
-            retry = 0;
+        if (smsResponse.isSuccess() || retry.get() >= getConfig().getMaxRetries()) {
+            retry.remove();
             return smsResponse;
         }
         return requestRetry(templateId, phones, messages);
@@ -250,8 +250,8 @@ public class ZhutongSmsImpl extends AbstractSmsBlend<ZhutongConfig> {
 
     private SmsResponse requestRetry(String templateId, List<String> phones, LinkedHashMap<String, String> messages) {
         http.safeSleep(getConfig().getRetryInterval());
-        retry++;
-        log.warn("短信第 {} 次重新发送", retry);
+        retry.set(retry.get() + 1);
+        log.warn("短信第 {} 次重新发送", retry.get());
         return getSmsResponseTemplate(templateId, phones, messages);
     }
 

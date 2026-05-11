@@ -25,7 +25,7 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
 
-    private int retry = 0;
+    private final ThreadLocal<Integer> retry = ThreadLocal.withInitial(() -> 0);
 
     public YunPianSmsImpl(YunpianConfig config, Executor pool, DelayedTime delayed) {
         super(config, pool, delayed);
@@ -58,8 +58,8 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
         } catch (SmsBlendException e) {
             smsResponse = errorResp(e.message);
         }
-        if (smsResponse.isSuccess() || retry >= getConfig().getMaxRetries()) {
-            retry = 0;
+        if (smsResponse.isSuccess() || retry.get() >= getConfig().getMaxRetries()) {
+            retry.remove();
             return smsResponse;
         }
         return requestRetry(phone, message);
@@ -75,8 +75,8 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
 
     private SmsResponse requestRetry(String phone, String message) {
         http.safeSleep(getConfig().getRetryInterval());
-        retry++;
-        log.warn("短信第 {} 次重新发送", retry);
+        retry.set(retry.get() + 1);
+        log.warn("短信第 {} 次重新发送", retry.get());
         return sendMessage(phone, message);
     }
 
@@ -94,8 +94,8 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
         } catch (SmsBlendException e) {
             smsResponse = errorResp(e.message);
         }
-        if (smsResponse.isSuccess() || retry >= getConfig().getMaxRetries()) {
-            retry = 0;
+        if (smsResponse.isSuccess() || retry.get() >= getConfig().getMaxRetries()) {
+            retry.remove();
             return smsResponse;
         }
         return requestRetry(phone, templateId, messages);
@@ -103,8 +103,8 @@ public class YunPianSmsImpl extends AbstractSmsBlend<YunpianConfig> {
 
     private SmsResponse requestRetry(String phone, String templateId, LinkedHashMap<String, String> messages) {
         http.safeSleep(getConfig().getRetryInterval());
-        retry++;
-        log.warn("短信第 {} 次重新发送", retry);
+        retry.set(retry.get() + 1);
+        log.warn("短信第 {} 次重新发送", retry.get());
         return sendMessage(phone, templateId, messages);
     }
 

@@ -165,8 +165,10 @@ public class SmsUtils {
         if (CollUtil.isEmpty(phones)){
             return Collections.emptyList();
         }
-        phones.replaceAll(SmsUtils::addCodePrefixIfNot);
-        return phones;
+        // 工具方法不应修改调用方传入的号码列表，避免上层复用列表时出现隐式副作用。
+        List<String> result = new ArrayList<>(phones);
+        result.replaceAll(SmsUtils::addCodePrefixIfNot);
+        return result;
     }
 
     /**

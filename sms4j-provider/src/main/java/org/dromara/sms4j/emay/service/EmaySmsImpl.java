@@ -28,7 +28,7 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class EmaySmsImpl extends AbstractSmsBlend<EmayConfig> {
 
-    private int retry = 0;
+    private final ThreadLocal<Integer> retry = ThreadLocal.withInitial(() -> 0);
 
     public EmaySmsImpl(EmayConfig config, Executor pool, DelayedTime delayed) {
         super(config, pool, delayed);
@@ -57,8 +57,8 @@ public class EmaySmsImpl extends AbstractSmsBlend<EmayConfig> {
         } catch (SmsBlendException e) {
             smsResponse = errorResp(e.message);
         }
-        if (smsResponse.isSuccess() || retry == config.getMaxRetries()) {
-            retry = 0;
+        if (smsResponse.isSuccess() || retry.get() == config.getMaxRetries()) {
+            retry.remove();
             return smsResponse;
         }
         return requestRetry(phone, message);
@@ -74,8 +74,8 @@ public class EmaySmsImpl extends AbstractSmsBlend<EmayConfig> {
 
     private SmsResponse requestRetry(String phone, String message) {
         http.safeSleep(getConfig().getRetryInterval());
-        retry++;
-        log.warn("短信第 {} 次重新发送", retry);
+        retry.set(retry.get() + 1);
+        log.warn("短信第 {} 次重新发送", retry.get());
         return sendMessage(phone, message);
     }
 

@@ -26,7 +26,7 @@ public class UniClient {
     private boolean isSimple;
     private final int retryInterval;
     private final int maxRetries;
-    private int retry = 0;
+    private final ThreadLocal<Integer> retry = ThreadLocal.withInitial(() -> 0);
     private final SmsHttpUtils http = SmsHttpUtils.instance();
 
     protected UniClient(Builder b) {
@@ -105,8 +105,8 @@ public class UniClient {
             smsResponse = new UniResponse();
             smsResponse.message = "Error";
         }
-        if ("Success".equals(smsResponse.message) || retry == maxRetries) {
-            retry = 0;
+        if ("Success".equals(smsResponse.message) || retry.get() == maxRetries) {
+            retry.remove();
             return smsResponse;
         }
         return requestRetry(action, data);
@@ -114,8 +114,8 @@ public class UniClient {
 
     private UniResponse requestRetry(String action, Map<String, Object> data) {
         http.safeSleep(retryInterval);
-        retry++;
-        log.warn("短信第 {} 次重新发送", retry);
+        retry.set(retry.get() + 1);
+        log.warn("短信第 {} 次重新发送", retry.get());
         return request(action, data);
     }
 

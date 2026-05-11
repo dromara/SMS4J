@@ -10,6 +10,7 @@ import org.dromara.sms4j.api.universal.SupplierConfig;
 import org.dromara.sms4j.api.utils.SmsRespUtils;
 import org.dromara.sms4j.comm.delayedTime.DelayedTime;
 import org.dromara.sms4j.comm.utils.SmsHttpUtils;
+import org.dromara.sms4j.provider.config.BaseConfig;
 import org.dromara.sms4j.provider.factory.BeanFactory;
 
 import java.util.LinkedHashMap;
@@ -42,10 +43,12 @@ public abstract class AbstractSmsBlend<C extends SupplierConfig> implements SmsB
         this.pool = pool;
         this.delayed = delayed;
         ProxyConfig proxy = config.getProxy();
+        // 每个供应商可能有独立的代理和超时配置，HTTP 工具实例不能全局混用。
+        Integer timeout = getTimeout(config);
         if (proxy != null && proxy.getEnable()){
-            this.http = SmsHttpUtils.instance(proxy.getHost(), proxy.getPort());
+            this.http = SmsHttpUtils.instance(proxy.getHost(), proxy.getPort(), timeout);
         }else {
-            this.http = SmsHttpUtils.instance();
+            this.http = timeout == null ? SmsHttpUtils.instance() : SmsHttpUtils.instance(timeout);
         }
     }
 
@@ -55,11 +58,20 @@ public abstract class AbstractSmsBlend<C extends SupplierConfig> implements SmsB
         this.pool = BeanFactory.getExecutor();
         this.delayed = BeanFactory.getDelayedTime();
         ProxyConfig proxy = config.getProxy();
+        // 每个供应商可能有独立的代理和超时配置，HTTP 工具实例不能全局混用。
+        Integer timeout = getTimeout(config);
         if (proxy != null && proxy.getEnable()){
-            this.http = SmsHttpUtils.instance(proxy.getHost(), proxy.getPort());
+            this.http = SmsHttpUtils.instance(proxy.getHost(), proxy.getPort(), timeout);
         }else {
-            this.http = SmsHttpUtils.instance();
+            this.http = timeout == null ? SmsHttpUtils.instance() : SmsHttpUtils.instance(timeout);
         }
+    }
+
+    private Integer getTimeout(C config) {
+        if (config instanceof BaseConfig) {
+            return ((BaseConfig) config).getTimeout();
+        }
+        return null;
     }
 
     /**

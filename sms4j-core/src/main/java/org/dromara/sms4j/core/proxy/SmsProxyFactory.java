@@ -38,10 +38,12 @@ public abstract class SmsProxyFactory {
     /**
      * 增加拦截器
      */
-    public static void addPreProcessor(SmsProcessor processor) {
+    public static synchronized void addPreProcessor(SmsProcessor processor) {
         //校验拦截器是否正确
         processorValidate(processor);
         awareTransfer(processor);
+        // Spring 多 context、测试或重复初始化时，同类处理器只保留最后一次注册的实例。
+        PROCESSORS.removeIf(item -> item.getClass().equals(processor.getClass()));
         PROCESSORS.add(processor);
         PROCESSORS.sort(Comparator.comparingInt(Order::getOrder));
     }
@@ -52,7 +54,7 @@ public abstract class SmsProxyFactory {
      * @param processor 拦截器对象
      * @author :Wind
     */
-    public static void removePreProcessor(SmsProcessor processor) {
+    public static synchronized void removePreProcessor(SmsProcessor processor) {
         PROCESSORS.remove(processor);
     }
 
@@ -61,8 +63,9 @@ public abstract class SmsProxyFactory {
      * <p> 获取全部拦截器
      * @author :Wind
     */
-    public static LinkedList<SmsProcessor> getProcessors() {
-        return PROCESSORS;
+    public static synchronized LinkedList<SmsProcessor> getProcessors() {
+        // 返回快照，避免调用方遍历时被并发注册/移除影响。
+        return new LinkedList<>(PROCESSORS);
     }
 
     /**
@@ -72,7 +75,7 @@ public abstract class SmsProxyFactory {
      * @param phoneVerify 手机号验证器
      * @author :Wind
     */
-    public static void setPhoneProcessor(PhoneVerify phoneVerify) {
+    public static synchronized void setPhoneProcessor(PhoneVerify phoneVerify) {
         PROCESSORS.forEach(processor -> {
             if (processor instanceof CoreMethodParamValidateProcessor){
                 ((CoreMethodParamValidateProcessor) processor).setPhoneVerify(phoneVerify);

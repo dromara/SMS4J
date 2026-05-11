@@ -29,7 +29,7 @@ public class BudingV2SmsImpl extends AbstractSmsBlend<BudingV2Config> {
     /**
      * 重试次数
      */
-    private int retry = 0;
+    private final ThreadLocal<Integer> retry = ThreadLocal.withInitial(() -> 0);
 
     private static final String URL = Constant.HTTPS_PREFIX + "smsapi.idcbdy.com";
 
@@ -73,8 +73,8 @@ public class BudingV2SmsImpl extends AbstractSmsBlend<BudingV2Config> {
         } catch (SmsBlendException e) {
             smsResponse = errorResp(e.message);
         }
-        if (smsResponse.isSuccess() || retry >= getConfig().getMaxRetries()) {
-            retry = 0;
+        if (smsResponse.isSuccess() || retry.get() >= getConfig().getMaxRetries()) {
+            retry.remove();
             return smsResponse;
         }
         return requestRetry(phone, message);
@@ -82,7 +82,7 @@ public class BudingV2SmsImpl extends AbstractSmsBlend<BudingV2Config> {
 
     private SmsResponse requestRetry(String phone, String message) {
         http.safeSleep(getConfig().getRetryInterval());
-        retry++;
+        retry.set(retry.get() + 1);
         log.warn("短信第 {" + retry + "} 次重新发送");
         return sendMessage(phone, message);
     }

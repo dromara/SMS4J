@@ -83,7 +83,7 @@ public class ZhangJunSmsImpl extends AbstractSmsBlend<ZhangJunConfig> {
     @Override
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
         String messageStr = JSONUtil.toJsonStr(messages);
-        return getSmsResponse(SmsUtils.addCodePrefixIfNot(phones), messageStr, templateId);
+        return getSmsResponse(SmsUtils.joinComma(SmsUtils.addCodePrefixIfNot(phones)), messageStr, templateId);
     }
 
     private SmsResponse getSmsResponse(String phone, String message, String templateId) {

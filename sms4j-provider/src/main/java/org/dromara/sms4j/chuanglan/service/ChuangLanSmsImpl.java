@@ -24,7 +24,7 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class ChuangLanSmsImpl extends AbstractSmsBlend<ChuangLanConfig> {
 
-    private int retry = 0;
+    private final ThreadLocal<Integer> retry = ThreadLocal.withInitial(() -> 0);
 
     public ChuangLanSmsImpl(ChuangLanConfig config, Executor pool, DelayedTime delayed) {
         super(config, pool, delayed);
@@ -107,20 +107,20 @@ public class ChuangLanSmsImpl extends AbstractSmsBlend<ChuangLanConfig> {
         }catch (SmsBlendException e) {
             smsResponse = errorResp(e.message);
         }
-        if (smsResponse.isSuccess() || retry >= getConfig().getMaxRetries()) {
-            retry = 0;
+        if (smsResponse.isSuccess() || retry.get() >= getConfig().getMaxRetries()) {
+            retry.remove();
             return smsResponse;
         }
         http.safeSleep(getConfig().getRetryInterval());
-        retry++;
+        retry.set(retry.get() + 1);
         log.warn("短信第 {" + retry + "} 次重新发送");
         return requestRetry(body);
     }
 
     private SmsResponse requestRetry(LinkedHashMap<String, Object> body) {
         http.safeSleep(getConfig().getRetryInterval());
-        retry ++;
-        log.warn("短信第 {} 次重新发送", retry);
+        retry.set(retry.get() + 1);
+        log.warn("短信第 {} 次重新发送", retry.get());
         return getSmsResponse(body);
     }
 

@@ -24,7 +24,7 @@ import java.util.concurrent.Executor;
 
 @Slf4j
 public class LianLuSmsImpl extends AbstractSmsBlend<LianLuConfig> {
-    private int retry = 0;
+    private final ThreadLocal<Integer> retry = ThreadLocal.withInitial(() -> 0);
     private static final String NORMAL_MSG = "1";
     private static final String TEMPLATE_MSG = "3";
 
@@ -182,10 +182,10 @@ public class LianLuSmsImpl extends AbstractSmsBlend<LianLuConfig> {
             headers.put(Constant.CONTENT_TYPE, Constant.APPLICATION_JSON_UTF8);
             headers.put(Constant.ACCEPT, Constant.APPLICATION_JSON);
             SmsResponse smsResponse = this.getResponse(this.http.postJson(reqUrl, headers, requestBody));
-            if (!smsResponse.isSuccess() && this.retry != this.getConfig().getMaxRetries()) {
+            if (!smsResponse.isSuccess() && this.retry.get() != this.getConfig().getMaxRetries()) {
                 return this.requestRetry(req);
             } else {
-                this.retry = 0;
+                this.retry.remove();
                 return smsResponse;
             }
         } catch (SmsBlendException e) {
@@ -195,8 +195,8 @@ public class LianLuSmsImpl extends AbstractSmsBlend<LianLuConfig> {
 
     private SmsResponse requestRetry(LianLuRequest req) {
         this.http.safeSleep(this.getConfig().getRetryInterval());
-        ++this.retry;
-        log.warn("短信第{}次重新发送, 请求参数:{}", this.retry, req);
+        this.retry.set(this.retry.get() + 1);
+        log.warn("短信第{}次重新发送, 请求参数:{}", this.retry.get(), req);
         return this.getSmsResponse(req);
     }
 

@@ -7,7 +7,6 @@ import org.dromara.sms4j.comm.utils.SmsUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -69,9 +68,7 @@ public class SmsUtilsTest {
 
     @Test
     public void joinComma() {
-        List<String> list = new ArrayList<>();
-        list.add("12312341234");
-        list.add("12312341235");
+        List<String> list = List.of("12312341234", "12312341235");
         String str = SmsUtils.joinComma(list);
         log.info(str);
         Assert.isTrue(str.equals("12312341234,12312341235"));
@@ -79,19 +76,15 @@ public class SmsUtilsTest {
 
     @Test
     public void addCodePrefixIfNot() {
-        List<String> list = new ArrayList<>();
-        list.add("12312341234");
-        list.add("12312341235");
-        String str = SmsUtils.addCodePrefixIfNot(list);
-        log.info(str);
-        Assert.isTrue(str.equals("+8612312341234,+8612312341235"));
+        List<String> list = List.of("12312341234", "12312341235");
+        List<String> prefixedPhones = SmsUtils.addCodePrefixIfNot(list);
+        log.info(prefixedPhones.toString());
+        Assert.isTrue(prefixedPhones.equals(List.of("+8612312341234", "+8612312341235")));
     }
 
     @Test
     public void addCodePrefixIfNotToArray() {
-        List<String> list = new ArrayList<>();
-        list.add("12312341234");
-        list.add("12312341235");
+        List<String> list = List.of("12312341234", "12312341235");
         String[] str = SmsUtils.addCodePrefixIfNotToArray(list);
         Assert.isTrue(str[0].equals("+8612312341234") && str[1].equals("+8612312341235"));
     }

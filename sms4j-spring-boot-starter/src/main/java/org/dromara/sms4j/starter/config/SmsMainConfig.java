@@ -8,6 +8,7 @@ import org.dromara.sms4j.provider.factory.BeanFactory;
 import org.dromara.sms4j.starter.utils.ConfigUtils;
 import org.dromara.sms4j.starter.utils.SmsSpringUtils;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
@@ -17,6 +18,7 @@ import org.springframework.core.env.Environment;
 
 
 @Data
+@AutoConfiguration
 public class SmsMainConfig {
 
     @Bean

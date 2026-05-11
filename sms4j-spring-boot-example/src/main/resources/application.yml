@@ -141,7 +141,7 @@ sms:
       action: 默认请求方法 messages
       templateName: 模板变量名称
       voice: action设置为voice_codes有效 语音验证码播报语言选择，0：中文播报，1：英文播报，2：中英混合播报
-      ttl: action设置为voice_codes有效 验证码有效期，默认为 60 秒
+      ttl: 60
       tag: action设置为messages/batch有效 标签
     # 螺丝帽
     luosimao:

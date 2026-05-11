@@ -4,6 +4,7 @@ import lombok.Data;
 import org.dromara.oa.comm.task.delayed.DelayedTime;
 import org.dromara.oa.core.provider.config.OaConfig;
 import org.dromara.oa.core.provider.factory.OaBeanFactory;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +17,7 @@ import java.util.concurrent.Executor;
  * 2023-11-01 18:05
  */
 @Data
+@AutoConfiguration
 public class OaMainConfig {
 
     @Bean

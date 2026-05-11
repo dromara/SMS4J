@@ -9,10 +9,10 @@ import org.dromara.sms4j.comm.constant.Constant;
 import org.dromara.sms4j.comm.utils.SmsDateUtils;
 import org.dromara.sms4j.tencent.config.TencentConfig;
 
-import javax.xml.bind.DatatypeConverter;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HexFormat;
 import java.util.Map;
 
 /**
@@ -37,7 +37,7 @@ public class TencentUtils {
     }
 
     private static String sha256Hex(String s) throws Exception {
-        return DatatypeConverter.printHexBinary(DigestUtil.sha256(s)).toLowerCase();
+        return HexFormat.of().formatHex(DigestUtil.sha256(s));
     }
 
     /**
@@ -71,7 +71,7 @@ public class TencentUtils {
         byte[] secretDate = hmac256(("TC3" + tencentConfig.getAccessKeySecret()).getBytes(StandardCharsets.UTF_8), date);
         byte[] secretService = hmac256(secretDate, tencentConfig.getService());
         byte[] secretSigning = hmac256(secretService, "tc3_request");
-        String signature = DatatypeConverter.printHexBinary(hmac256(secretSigning, stringToSign)).toLowerCase();
+        String signature = HexFormat.of().formatHex(hmac256(secretSigning, stringToSign));
         return ALGORITHM + " Credential=" + tencentConfig.getAccessKeyId() + "/" + credentialScope + ", SignedHeaders=" + signedHeaders + ", Signature=" + signature;
     }
 

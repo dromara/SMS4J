@@ -4,6 +4,7 @@ import org.dromara.oa.api.OaSender;
 import org.dromara.oa.core.provider.config.OaConfig;
 import org.dromara.oa.core.provider.factory.OaBaseProviderFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +17,7 @@ import java.util.Map;
  * @author dongfeng
  * 2023-10-22 12:50
  */
+@AutoConfiguration
 public class OaSupplierConfig {
     /**
      * 注入配置

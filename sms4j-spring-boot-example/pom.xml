@@ -12,6 +12,7 @@
     </parent>
 
     <artifactId>sms4j-spring-boot-example</artifactId>
+    <name>sms4j-spring-boot-example</name>
 
     <properties>
         <maven.install.skip>true</maven.install.skip>
@@ -46,5 +47,18 @@
             <version>${jdcloud.version}</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <!-- 示例模块不发布到中央仓库 -->
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <configuration>
+                    <skipPublishing>true</skipPublishing>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

@@ -9,6 +9,7 @@
     </parent>
 
     <artifactId>sms4j-email-jakarta-api</artifactId>
+    <name>sms4j-email-jakarta-api</name>
     <description>email-api</description>
 
     <dependencies>

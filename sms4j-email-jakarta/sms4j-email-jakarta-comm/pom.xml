@@ -9,6 +9,7 @@
     </parent>
 
     <artifactId>sms4j-email-jakarta-comm</artifactId>
+    <name>sms4j-email-jakarta-comm</name>
     <description>email通用配置</description>
 
     <dependencies>

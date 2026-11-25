@@ -9,6 +9,7 @@
     </parent>
 
     <artifactId>sms4j-email-jakarta-core</artifactId>
+    <name>sms4j-email-jakarta-core</name>
     <description>email依赖引入包</description>
 
     <dependencies>

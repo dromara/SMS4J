@@ -139,6 +139,11 @@ public abstract class SmsProxyFactory {
             Class<?> clazz = Class.forName(className);
             Method getSmsDao = clazz.getMethod("getSmsDao", null);
             SmsDao smsDao = (SmsDao) getSmsDao.invoke(null, null);
+            if (null == smsDao) {
+                // 框架存在但尚未注册 SmsDao（如 JavaSE 未调用 SESmsDaoHolder.setSmsDao），应继续尝试其他框架，避免 NPE 打断加载流程
+                log.debug("{}:未注册SmsDao，尝试其他框架加载......", frameworkName);
+                return null;
+            }
             log.debug("{}:加载SmsDao成功，使用{}", frameworkName,smsDao.getClass().getName());
             return smsDao;
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {

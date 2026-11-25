@@ -188,7 +188,7 @@ public class SubMailSmsImpl extends AbstractSmsBlend<SubMailConfig> {
         body.put("appid", config.getAccessKeyId());
         body.put("to", StrUtil.addPrefixIfNot(phone, "+86"));
         if (StrUtil.isNotBlank(config.getSignature())){
-            content = StrUtil.addPrefixIfNot(content, "【 " + config.getSignature() + "】") + StrUtil.sub(content, 0, 1000);
+            content = StrUtil.addPrefixIfNot(StrUtil.sub(content, 0, 1000), "【" + config.getSignature() + "】");
         }else {
             content = StrUtil.sub(content, 0, 1000);
         }
@@ -244,7 +244,7 @@ public class SubMailSmsImpl extends AbstractSmsBlend<SubMailConfig> {
         LinkedHashMap<String, Object> body = new LinkedHashMap<>();
         body.put("appid", config.getAccessKeyId());
         if (StrUtil.isNotBlank(config.getSignature())){
-            content = StrUtil.addPrefixIfNot(content, "【 " + config.getSignature() + "】") + StrUtil.sub(content, 0, 1000);
+            content = StrUtil.addPrefixIfNot(StrUtil.sub(content, 0, 1000), "【" + config.getSignature() + "】");
         }else {
             content = StrUtil.sub(content, 0, 1000);
         }
@@ -316,7 +316,7 @@ public class SubMailSmsImpl extends AbstractSmsBlend<SubMailConfig> {
         phones = CollUtil.sub(phones, 0, 10000);
         body.put("to", SmsUtils.addCodePrefixIfNot(phones));
         if (StrUtil.isNotBlank(config.getSignature())){
-            content = StrUtil.addPrefixIfNot(content, "【 " + config.getSignature() + "】") + StrUtil.sub(content, 0, 1000);
+            content = StrUtil.addPrefixIfNot(StrUtil.sub(content, 0, 1000), "【" + config.getSignature() + "】");
         }else {
             content = StrUtil.sub(content, 0, 1000);
         }

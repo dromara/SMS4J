@@ -82,7 +82,7 @@ public class SmsUtilsTest {
         List<String> list = new ArrayList<>();
         list.add("12312341234");
         list.add("12312341235");
-        String str = SmsUtils.addCodePrefixIfNot(list);
+        String str = SmsUtils.addCodePrefixIfNot(list, true);
         log.info(str);
         Assert.isTrue(str.equals("+8612312341234,+8612312341235"));
     }

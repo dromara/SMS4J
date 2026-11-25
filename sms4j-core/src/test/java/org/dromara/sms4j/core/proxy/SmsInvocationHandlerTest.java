@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SmsInvocationHandlerTest {
 
@@ -27,6 +28,60 @@ class SmsInvocationHandlerTest {
 
         assertSame(ThrowingSmsBlend.EXCEPTION, processor.exception.get());
         SmsProxyFactory.removePreProcessor(processor);
+    }
+
+    @Test
+    void shouldGiveEveryExceptionProcessorAChanceAndThrowFirstException() {
+        SmsBlendException first = new SmsBlendException("first");
+        AtomicReference<Exception> seenByCleanup = new AtomicReference<>();
+        SmsProcessor throwingProcessor = new SmsProcessor() {
+            @Override
+            public Object[] preProcessor(Method method, Object source, Object[] param) {
+                return param;
+            }
+
+            @Override
+            public int getOrder() {
+                return 0;
+            }
+
+            @Override
+            public void exceptionHandleProcessor(Method method, Object source, Object[] param, Exception exception) {
+                throw first;
+            }
+        };
+        SmsProcessor cleanupProcessor = new SmsProcessor() {
+            @Override
+            public Object[] preProcessor(Method method, Object source, Object[] param) {
+                return param;
+            }
+
+            @Override
+            public int getOrder() {
+                return 1;
+            }
+
+            @Override
+            public void exceptionHandleProcessor(Method method, Object source, Object[] param, Exception exception) {
+                seenByCleanup.set(exception);
+            }
+        };
+        SmsProxyFactory.addPreProcessor(throwingProcessor);
+        SmsProxyFactory.addPreProcessor(cleanupProcessor);
+        try {
+            SmsBlend blend = new ThrowingSmsBlend();
+            Method method = SmsBlend.class.getMethod("sendMessage", String.class, String.class);
+            SmsBlendException thrown = assertThrows(SmsBlendException.class,
+                    () -> new SmsInvocationHandler(blend).invoke(blend, method, new Object[]{"13800138000", "test"}));
+            // 首个异常仍然抛给调用方，同时后续处理器也有机会做状态清理
+            assertSame(first, thrown);
+            assertSame(ThrowingSmsBlend.EXCEPTION, seenByCleanup.get());
+        } catch (NoSuchMethodException e) {
+            throw new IllegalStateException(e);
+        } finally {
+            SmsProxyFactory.removePreProcessor(throwingProcessor);
+            SmsProxyFactory.removePreProcessor(cleanupProcessor);
+        }
     }
 
     private static class CapturingProcessor implements SmsProcessor {

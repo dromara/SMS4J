@@ -47,7 +47,7 @@ public abstract class SmsFactory {
      */
     public static void createSmsBlend(SupplierConfig config) {
         SmsBlend smsBlend = create(config);
-        register(smsBlend);
+        registerWithConfig(smsBlend, config);
     }
 
 
@@ -64,7 +64,7 @@ public abstract class SmsFactory {
     public static void createSmsBlend(SmsReadConfig smsReadConfig, String configId) {
         BaseConfig supplierConfig = smsReadConfig.getSupplierConfig(configId);
         SmsBlend smsBlend = create(supplierConfig);
-        register(smsBlend);
+        registerWithConfig(smsBlend, supplierConfig);
     }
 
     /**
@@ -80,7 +80,7 @@ public abstract class SmsFactory {
         List<BaseConfig> supplierConfigList = smsReadConfig.getSupplierConfigList();
         supplierConfigList.forEach(supplierConfig -> {
             SmsBlend smsBlend = create(supplierConfig);
-            register(smsBlend);
+            registerWithConfig(smsBlend, supplierConfig);
         });
     }
 
@@ -94,7 +94,7 @@ public abstract class SmsFactory {
     @Deprecated
     public static void createRestrictedSmsBlend(SupplierConfig config) {
         SmsBlend smsBlend = create(config);
-        register(smsBlend);
+        registerWithConfig(smsBlend, config);
     }
 
     /**
@@ -111,7 +111,7 @@ public abstract class SmsFactory {
     public static void createRestrictedSmsBlend(SmsReadConfig smsReadConfig, String configId) {
         BaseConfig supplierConfig = smsReadConfig.getSupplierConfig(configId);
         SmsBlend smsBlend = create(supplierConfig);
-        register(smsBlend);
+        registerWithConfig(smsBlend, supplierConfig);
     }
 
     /**
@@ -128,8 +128,24 @@ public abstract class SmsFactory {
         List<BaseConfig> supplierConfigList = smsReadConfig.getSupplierConfigList();
         supplierConfigList.forEach(supplierConfig -> {
             SmsBlend smsBlend = create(supplierConfig);
-            register(smsBlend);
+            registerWithConfig(smsBlend, supplierConfig);
         });
+    }
+
+    /**
+     * registerWithConfig
+     * <p>注册短信服务对象，并按厂商配置中的 weight 将其加入负载均衡器
+     * <p>此前注册流程固定以权重 1 加入负载均衡，导致配置的 weight 不生效
+     *
+     * @param smsBlend 短信服务对象
+     * @param config   厂商配置
+     */
+    private static void registerWithConfig(SmsBlend smsBlend, SupplierConfig config) {
+        if (smsBlend == null) {
+            throw new SmsBlendException("短信服务对象不能为空");
+        }
+        BLENDS.put(smsBlend.getConfigId(), smsBlend);
+        SmsLoad.starConfig(smsBlend, config);
     }
 
     private static SmsBlend create(SupplierConfig config) {

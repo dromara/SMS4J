@@ -85,7 +85,7 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
         }
         Optional.ofNullable(phone).orElseThrow(() -> new SmsBlendException("手机号不能为空"));
         Optional.ofNullable(getConfig().getTemplateId()).orElseThrow(() -> new SmsBlendException("模板ID不能为空"));
-        String messageStr = messages.get("params");
+        String messageStr = extractParams(messages, "params");
         return getSmsResponse(getConfig().getTemplateUrl(), Collections.singletonList(phone), messageStr, templateId);
     }
 
@@ -110,8 +110,22 @@ public class NeteaseSmsImpl extends AbstractSmsBlend<NeteaseConfig> {
             throw new SmsBlendException("单次发送超过最大发送上限，建议每次群发短信人数低于100");
         }
         Optional.ofNullable(getConfig().getTemplateId()).orElseThrow(() -> new SmsBlendException("模板ID不能为空"));
-        String messageStr = messages.get("message");
+        String messageStr = extractParams(messages, "message");
         return getSmsResponse(getConfig().getTemplateUrl(), phones, messageStr, templateId);
+    }
+
+    /**
+     * 提取模板变量
+     * <p>兼容两种传参方式：约定的 JSON 数组字符串（key 为 params/message），
+     * 或与其他厂商一致的普通多变量 map（按传入顺序取全部变量值），
+     * 避免传入普通 map 时只有固定 key 被读取、其余模板变量被丢弃
+     */
+    private static String extractParams(LinkedHashMap<String, String> messages, String key) {
+        String messageStr = messages.get(key);
+        if (messageStr == null && !messages.isEmpty()) {
+            messageStr = JSONUtil.toJsonStr(messages.values());
+        }
+        return messageStr;
     }
 
     private SmsResponse getSmsResponse(String requestUrl, List<String> phones, String message, String templateId) {

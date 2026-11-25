@@ -177,20 +177,21 @@ public class LianLuSmsImpl extends AbstractSmsBlend<LianLuConfig> {
         String reqUrl = getRequestUrl(req.getType());
         log.debug("requestBody:{}", requestBody);
 
+        Map<String, String> headers = new HashMap<>(2);
+        headers.put(Constant.CONTENT_TYPE, Constant.APPLICATION_JSON_UTF8);
+        headers.put(Constant.ACCEPT, Constant.APPLICATION_JSON);
+        SmsResponse smsResponse;
         try {
-            Map<String, String> headers = new HashMap<>(2);
-            headers.put(Constant.CONTENT_TYPE, Constant.APPLICATION_JSON_UTF8);
-            headers.put(Constant.ACCEPT, Constant.APPLICATION_JSON);
-            SmsResponse smsResponse = this.getResponse(this.http.postJson(reqUrl, headers, requestBody));
-            if (!smsResponse.isSuccess() && this.retry.get() != this.getConfig().getMaxRetries()) {
-                return this.requestRetry(req);
-            } else {
-                this.retry.remove();
-                return smsResponse;
-            }
+            smsResponse = this.getResponse(this.http.postJson(reqUrl, headers, requestBody));
         } catch (SmsBlendException e) {
-            return this.requestRetry(req);
+            // HTTP 异常同样受 maxRetries 限制，避免持续异常时绕过限制无限递归重试
+            smsResponse = errorResp(e.message);
         }
+        if (smsResponse.isSuccess() || this.retry.get() >= this.getConfig().getMaxRetries()) {
+            this.retry.remove();
+            return smsResponse;
+        }
+        return this.requestRetry(req);
     }
 
     private SmsResponse requestRetry(LianLuRequest req) {

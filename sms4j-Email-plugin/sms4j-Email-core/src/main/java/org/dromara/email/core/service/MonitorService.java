@@ -1,6 +1,7 @@
 package org.dromara.email.core.service;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.dromara.email.api.Monitor;
 import org.dromara.email.comm.config.MailImapConfig;
 import org.dromara.email.comm.entity.MonitorMessage;
@@ -30,6 +31,7 @@ import java.util.TimerTask;
  * @author :Wind
  * 2023/7/18  16:10
  **/
+@Slf4j
 public class MonitorService{
     private final Store store;
     private Monitor monitor;
@@ -119,10 +121,27 @@ public class MonitorService{
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                startListening();
+                try {
+                    startListening();
+                } catch (Exception e) {
+                    // 监听过程中的异常（如邮件服务器断开连接）不应终止整个监听任务，记录后尝试重连，等待下个周期继续
+                    log.warn("邮件监听出现异常，将在下个周期重试: {}", e.getMessage());
+                    reconnect();
+                }
             }
         },0,mailImapConfig.getCycle()*1000);
         return this;
+    }
+
+    private void reconnect() {
+        try {
+            if (!store.isConnected()) {
+                store.connect(mailImapConfig.getImapServer(), mailImapConfig.getUsername(), mailImapConfig.getAccessToken());
+                log.info("邮件服务连接已重新建立");
+            }
+        } catch (Exception e) {
+            log.error("邮件服务重连失败: {}", e.getMessage());
+        }
     }
 
     public void stop(){

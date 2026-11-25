@@ -55,8 +55,20 @@ public class SmsInvocationHandler implements InvocationHandler {
      * 异常执行器
      * */
     public void doErrorHandleProcess(Object o, Method method, Object[] objects,Exception e) throws RuntimeException{
+        RuntimeException toThrow = null;
         for (SmsProcessor processor : SmsProxyFactory.getProcessors()) {
-            processor.exceptionHandleProcessor(method, o, objects,e);
+            try {
+                processor.exceptionHandleProcessor(method, o, objects,e);
+            } catch (RuntimeException ex) {
+                // 所有执行器都应有机会做状态清理（如回滚计数），因此不中断循环；
+                // 只要有执行器抛出异常，最终仍将首个异常抛给调用方，调用方可见行为不变。
+                if (toThrow == null) {
+                    toThrow = ex;
+                }
+            }
+        }
+        if (toThrow != null) {
+            throw toThrow;
         }
     }
 

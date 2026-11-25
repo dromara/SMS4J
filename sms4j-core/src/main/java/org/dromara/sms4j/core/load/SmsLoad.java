@@ -105,8 +105,8 @@ public class SmsLoad {
      */
     public static void starConfig(SmsBlend smsBlend, SupplierConfig supplierConfig) {
         Map<String, Object> supplierConfigMap = BeanUtil.beanToMap(supplierConfig);
-        Object weight = supplierConfigMap.getOrDefault("weight", 1);
-        SMS_LOAD.addLoadServer(smsBlend, Integer.parseInt(weight.toString()));
+        Object weight = supplierConfigMap.get("weight");
+        SMS_LOAD.addLoadServer(smsBlend, null == weight ? 1 : Integer.parseInt(weight.toString()));
     }
 
     public static void starConfig(SmsBlend smsBlend,Integer weight) {

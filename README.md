@@ -6,8 +6,9 @@
 <a href="https://gitee.com/dromara/sms4j"><img src="https://img.shields.io/badge/version-v3.3.6-blue"></a>
 </p>
 <img src="/public/logo.png">
-##项目推荐
-[herald](https://gitee.com/MR-wind/herald) 一次调用，全渠道可靠送达。类 MQ 的投递语义、可热插拔的协议插件、配置驱动的工作流，以及 AI 可以直接操作的管理面。短信，邮件，钉钉各种推送一键全达！
+##项目推荐  
+[herald](https://gitee.com/MR-wind/herald)  
+ 一次调用，全渠道可靠送达。类 MQ 的投递语义、可热插拔的协议插件、配置驱动的工作流，以及 AI 可以直接操作的管理面。短信，邮件，钉钉各种推送一键全达！
 
 ## 前言
 
